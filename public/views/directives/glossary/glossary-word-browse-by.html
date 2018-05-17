@@ -1,0 +1,15 @@
+<div ng-switch="by">
+    <div ng-switch-when="alphabet">
+        <alphabet-filter ng-model="selected.filter"></alphabet-filter>
+    </div>
+    <div ng-switch-when="tags">
+        <select-glossary-tags ng-model="selected.filter" org-id="orgId"
+                              word-count="selected.count"
+                              start-search-tags="callbacks.startSearchTags"
+                              options="callbacks.tagOptions"
+        ></select-glossary-tags>
+    </div>
+    <div ng-switch-when="author">
+        <glossary-author-filter ng-model="selected.filter" org-id="orgId"></glossary-author-filter>
+    </div>
+</div>

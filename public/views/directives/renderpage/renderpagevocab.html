@@ -1,0 +1,45 @@
+<!-- heading -->
+<div>
+	<h3 ng-bind="page.name"></h3>
+</div>
+<div ng-show="page.content" ng-bind-html="page.content"></div>
+<span>Number of phrases: <strong><span ng-bind="page.phrases.length"></span></strong></span>
+<hr />
+<!-- Vocab activities -->
+<tabset ng-show="page.phrases">
+	<!-- TAB: Vocabulary -->
+	<tab heading="Vocabulary">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="col-md-1">Star</th>
+					<th class="col-md-1">Play</th>
+					<th>Phrase</th>
+					<th>Translation</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="phrase in page.phrases">
+					<td>
+						<a href ng-click="toggleStarred(phrase)">
+							<div>
+								<i class="fa fa-star" ng-class="{'starred': phrase.starred}"></i>
+							</div>
+						</a>
+					</td>
+					<td>
+						<a href ng-click="play(phrase.audios)">
+							<div>
+								<i class="fa fa-play"></i>
+							</div>
+						</a></td>
+					<td ng-bind="phrase.phrase"></td>
+					<td ng-bind="phrase.translation"></td>
+				</tr>
+			</tbody>
+		</table>
+	</tab>
+	<tab heading="Flashcards" ng-hide="options.preview"></tab>
+	<tab heading="Speed Challenge" ng-hide="options.preview"></tab>
+	<tab heading="Audio Challenge" ng-hide="options.preview"></tab>
+</tabset>

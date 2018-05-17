@@ -1,0 +1,87 @@
+<!-- ************************************************************** -->
+<!-- ************************* SIDEBAR **************************** -->
+<!-- ************************************************************** -->
+<div  id="sidebargrader" class="col-sm-3 sidebar" ng-controller="GraderNavController" ng-cloak>
+  <div class="row-fluid">
+    <div class="col-xs-12">
+      <div class="dropdown course-dropdown" ng-controller="CourseController">
+
+        <table style="margin: auto;">
+          <tr>
+            <td>
+              <select selectize ng-model="currentCourseID"
+                      style="width:100%"
+                      ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                      ng-change="changeCourse(currentCourseID);currentCourseID && $root.windowWidth<768 ?toggleSidebar():''">
+              </select>
+              <!--<a class="dropdown-toggle sidebar-course-title" data-toggle="dropdown" dir="ltr">{{ currentname }} <span class="caret"></span></a>-->
+              <!--<ul class="dropdown-menu course-dropdown-menu">-->
+              <!--<li ng-repeat="course in courses | orderBy:'name'"><a ng-click="changeCourse(course.id)">{{ course.name }}</a></li>-->
+              <!--</ul>-->
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div ng-hide="sidebarCollapsed || $root.windowWidth<768" class="collapse-menu-icon">
+        <!--<img src="/public/img/collapse-menu-icon.png" ng-click="toggleSidebar()" style="cursor:pointer;display:table-cell">-->
+        <span class="fa fa-list-ul" ng-click="toggleSidebar()" style="cursor:pointer"> </span>
+      </div>
+    </div>
+  </div>
+  <br>
+  <ul class="nav nav-tabs" ng-show="archiveView">
+    <!--<li><a href="#/graderalll/{{contentid}}">Feedback Needed</a></li>-->
+    <li><a id="FeedbackNeeded" href="/grader/#/graderall/{{getCurrentCourseId()}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Feedback Needed</a></li>
+    <li class="active"><a href="#/graderarchive/{{getCurrentCourseId()}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Feedback Archive</a></li>
+  </ul>
+  <ul class="nav nav-tabs" ng-show="!archiveView">
+    <li class="active"><a href="#/graderall/{{getCurrentCourseId()}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Feedback Needed</a></li>
+    <li><a href="#/graderarchive/{{getCurrentCourseId()}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Feedback Archive</a></li>
+  </ul>
+
+
+  <ul class="nav nav-list nav-pills nav-stacked" style="padding-bottom:5px;" ng-if="navData.units && !archiveView">
+    <li ng-class="{'active': isActive('all')}" class="nav-item">
+      <a id="GetAllGrader" href="#/grader{{getGraderAllViewMode()}}/{{getCurrentCourseId()}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''" style="float:left; width:100%; padding: 5px 7px;cursor:pointer" target="_self">
+        <div style="float:left; font-size:1.15em;cursor:pointer" >All</div> <div style="float:right; font-size:1.15em; color:red;cursor:pointer">
+          {{total_count_needing_grading}}
+        </div>
+        <div style="clear:both"></div></a>
+    </li>
+  </ul>
+  <ul class="nav nav-list nav-pills nav-stacked grader" ng-repeat="unit in navData.units" style="padding-bottom:9px;">
+    <li>
+      <!--Golabs if text is greater then 30 we will add a tool tip-->
+      <div ng-if="unit.description.length>30" data-original-title="{{unit.description}}"  rel="tooltip" tooltip="{{unit.description}}" data-placement='right'>
+        {{unit.description}}
+      </div>
+      <!--Golabs if text is less then 30 no tool tip-->
+      <div ng-if="unit.description.length<30">
+        {{unit.description}}
+      </div>
+    </li>
+    <li ng-repeat="nav in unit.pages| orderBy:'position' |filter:nav.label" ng-class="isActive(nav.id)" class="nav-item">
+      <a href="#/grader{{getGraderPageViewMode()}}{{nav.layout}}/{{nav.id}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''" style="float:left; width:100%; padding: 5px 7px;">
+        <div style="float:left" class="tooltip-relative">
+          <span ng-show="nav.onlyQuestion" class="fa fa-question-circle" tooltip="Only page question" tooltip-placement="right"></span>
+            {{nav.label}}
+        </div>
+        <div style="color:red; float:right;">
+          {{ nav.count_needing_grading}}
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- ************************************************************** -->
+<!-- ************************* SIDEBAR COLLAPSED ****************** -->
+<!-- ************************************************************** -->
+<div class="hide-menu-icon" style="margin-top: 62px; transform: translate3d(0px, 0px, 0px);">
+  <div class="collapsed btn btn-xs btn-default" ng-show="sidebarCollapsed || $root.windowWidth<768" ng-click="toggleSidebar()">
+    <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+  </div>
+</div>
+

@@ -1,0 +1,81 @@
+<div ng-controller="EditUnitController">
+	<h2>Edit Unit</h2>
+	<table>
+		<tr ng-show="useSuperUnits">
+			<td style="padding-bottom:15px;"><label for="superUnit" class="control-label" style="font-size:1.4em">Super unit</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<select selectize
+						ng-options="unit.id as unit.name for unit in superUnit.units"
+						ng-model="superUnitId">
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="unitTitle" class="control-label" style="font-size:1.4em">Title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitTitle" name="unitTitle" ng-model="unit_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Unit Title" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="unitNumber" class="control-label" style="font-size:1.4em">Number</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitNumber" data-ng-disabled="is_intro_unit" name="unitNumber" ng-model="unit_number" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="tabName" class="control-label" style="font-size:1.4em">Tab name
+			</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="tabName"
+																	   data-ng-disabled="is_intro_unit" name="tabName"
+																	   ng-model="tabName"
+																	   class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label class="control-label" style="font-size:1.4em">Image</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<ul class="logo-admin-container">
+					<li >
+
+						<img  ng-if="unitImageUrl && !unitImage" ng-src="{{unitImageUrl}}">
+						<img id=preview ng-if="unitImage" ng-src="data:{{unitImage.filetype}};base64,{{unitImage.base64}}">
+
+					</li>
+					<li >
+						<label class="btn btn-sm btn-default">
+							<input style="position: fixed;top: -5000px;" id="unitInputfile" accept="image/*" type="file" on-change="onFileChange" ng-model='unitImage' base-sixty-four-input>
+							<span class="fa fa-folder-open" ></span>
+						</label>
+						<!--<div class="btn btn-sm btn-default fa fa-folder-open" ng-click="selectFile($event)"></div>-->
+						<!--<input ng-hide="true" id="unitInputfile" accept="image/*" type="file" on-change="onFileChange" ng-model='unitImage' base-sixty-four-input>-->
+
+
+					</li>
+					<li>
+							<span class="btn btn-sm btn-danger" ng-click="removeImage()">
+								<i class="fa fa-remove"></i>
+							</span>
+					</li>
+					<li >
+						{{unitImage.filename}}
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<input type="checkbox" ng-model="is_intro_unit" ng-change="toggleIntroUnit(is_intro_unit)">
+				Is introduction unit
+			</td>
+		<tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" ng-model="hide_from_student"> Hide from students</td>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<button type="button" class="btn btn-primary btn-sm" ng-click="updateUnit()">Update Unit</button>
+				<button type="button" class="btn btn-primary btn-sm" ng-hide="is_intro_unit" ng-click="cloneUnit()">Clone this Unit</button>
+			</td>
+		</tr>
+	</table>
+	<div ng-show="cloning">Cloning..</div>
+	<h2>Delete Unit</h2>
+	<button type="button" class="btn btn-danger btn-sm" ng-click="deleteUnit()">Delete Unit</button>
+</div>

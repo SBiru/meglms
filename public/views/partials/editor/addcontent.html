@@ -1,0 +1,1066 @@
+<ul class="nav nav-tabs" style="margin-bottom: 20px">
+    <li  class="active"><a data-toggle="tab" data-target="#Settings">Settings</a></li>
+    <li ng-hide="canHideContent()" ><a data-toggle="tab" data-target="#Content">Content</a></li>
+    <li><a data-toggle="tab" data-target="#AdvancedSettings">Advanced <span class="display-none">settings</span></a></li>
+</ul>
+
+<table ng-show="page_type">
+    <tbody>
+    <tr>
+        <td style="padding-bottom:15px;"></td>
+        <td style="padding-bottom:15px;">
+            <table>
+                <tr>
+                    <td>
+                        <async-button color-style="primary" text="Save Changes" flash-text="Saved!" loading="loading.addPage" ng-click="addPage()"></async-button>
+
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="openExemptModal()" ng-hide="loading.addPage" ng-disabled="!canExempt()">
+                            <span ng-bind="buttons.exempt"></span>
+                            <span ng-show="exemptStudents.length" ng-bind="'(' + exemptStudents.length + ')'"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<div class="tab-content">
+
+    <div id="Settings" class="tab-pane fade in active">
+        <div class="row">
+
+            <div class="col-sm-6  tooltip-relative">
+                <table style="width: 100%;margin-bottom: 15px;" class="editor-table">
+                    <tbody>
+                    <tr>
+                        <td ><label for="pageType" class="control-label" style="font-size:1.2em">Page Type</label></td>
+                        <td >
+                            <select id="pageType" name="pageType" ng-model="page_type" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="pageType.name for pageType in allowed_pages" required>
+                            </select>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.page_type.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.page_type.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowPageGroupingSelector()">
+                        <td >
+                            <label for="pageGrouping" class="control-label" style="font-size:1.2em">Group</label>
+                        </td>
+                        <td >
+                            <select id="pageGrouping" name="pageGrouping" ng-model="page_group" ng-options="subunit.name for subunit in subunits" class="form-control ng-pristine ng-valid ng-valid-required" required><option value="">--Optional Grouping--</option></select>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.page_group.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.page_group.tooltip}}"></span></td>
+                    </tr>
+
+                    <tr ng-show="isShowPageTitleField()" >
+                        <td ><label for="pageTitle" class="control-label" style="font-size:1.2em">Page Title</label></td>
+                        <td ><input type="text" id="pageTitle" name="pageTitle" ng-model="page_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Title" required></td>
+                        <td class="info" ng-show="orgPreferences.page_title.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.page_title.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-if="page_type.id=='vocab'" ng-init="getVocabs(true)">
+                        <td >
+                            <label for="vocab" class="control-label" style="font-size:1.2em">Vocabulary group</label>
+                        </td>
+                        <td  >
+                            <select selectize
+                                    id="vocab" name="vocab" ng-model="vocab.id" ng-options="vocab.module_id as vocab.name for vocab in vocabs"  required></select>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.vocab.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.vocab.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="useGradebookCategory()">
+                        <td>
+                            <label for="is_private_post" class="control-label" style="font-size:1.2em">Gradebook category</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <select ng-model="category_id" selectize ng-options="category.id as category.name for category in gradebookCategories" ></select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="margin-bottom: 20px" ng-show="page_type">
+                    <a ng-click="show_standards=!show_standards" style="cursor: pointer" >Select standards for this activity</a>
+                </div>
+                <div ng-show="show_standards">
+                    <div ng-include="'/public/views/partials/standard-links.html'"
+                         ng-init="standard={type:'page',referred_id:contentid};hide_save=true"></div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 tooltip-relative">
+                <table style="width:100%;font-size:13px" class="editor-table">
+                    <tbody>
+                    <tr ng-show="page_type">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="hide_activity" name="hide_activity" ng-model="hide_activity">&nbsp;<label for="hide_activity" class="control-label" style="font-size:1.1em">Hide from students</label>
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.hide_activity.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.hide_activity.tooltip}}"></span></td>
+                    </tr >
+                    <tr ng-show="isShowSubmissionTypeCheckboxes() && !isScormPageType()">
+                        <td ></td>
+                        <td >
+
+                            <div class="display-flex"><input type="checkbox" ng-disabled="isTakePicture() || isUserForm()" id="require_submission" name="require_submission" ng-model="require_submission">&nbsp;<label for="require_submission" class="control-label" style="font-size:1.1em">This assignment requires a submission</label>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            <div ng-show="require_submission" class="panel panel-default editor-panel">
+                            <span style="font-size:11px">
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" value="video" id="allow_video_post" name="allow_submission" ng-model="allow_submission">&nbsp;<label for="allow_video_post" class="control-label" style="font-size:1.1em">Video Post</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" value="text" id="allow_text_post" name="allow_submission" ng-model="allow_submission">&nbsp;<label for="allow_text_post" class="control-label" style="font-size:1.1em">Text Post</label>&nbsp;&nbsp;&nbsp;&nbsp;<br class="display-block" style="display: none">
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" class="margin-left-m19" value="file" id="allow_upload_post" name="allow_submission" ng-model="allow_submission">&nbsp;<label for="allow_upload_post" class="control-label display-inline" style="font-size:1.1em">File Upload + Text</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <br>
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" value="video_text" id="allow_video_text_post"
+                                       name="allow_submission"
+                                       ng-model="allow_submission">&nbsp;<label for="allow_video_text_post"
+                                                                                class="control-label"
+                                                                                style="font-size:1.1em">Video/Text
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" value="file_only" id="allow_upload_only_post" name="allow_submission" ng-model="allow_submission">&nbsp;<label for="allow_upload_only_post" class="control-label" style="font-size:1.1em">File Upload<span ng-show="!isProficiencyClass()">/Link</span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input ng-disabled="isTakePicture() || isUserForm()" type="radio" value="template" id="allow_template_post" name="allow_submission" ng-model="allow_submission">&nbsp;<label for="allow_upload_post" class="control-label" style="font-size:1.1em">Template</label>
+                            </span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span ng-show="show_template_buttons" canvas-template="canvasTemplate" canvas-template-select></span>
+                                <br>
+                                <input type="checkbox" id="is_private_post" name="is_private_post" ng-model="is_private_post">&nbsp;<label for="is_private_post" class="control-label" style="font-size:1.1em">Make Posts Private</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <br>
+                                <input type="checkbox" id="is_cant_leave" name="is_cant_leave" ng-model="is_cant_leave">&nbsp;<label for="is_cant_leave" class="control-label" style="font-size:1.1em">Can't leave and return</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="display: flex;">
+                                    <input type="checkbox"  onclick="getElementById('post_limit_id').value = 1"  id="limited_post_page" ng-model="limited_post_page">&nbsp;<label for="limited_post_page" class="control-label" style="font-size:1.1em">Limit the number of times a student can post</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div ng-show="limited_post_page"><input type="number" id="post_limit_id" ng-model="post_limit"  class="form-control"></div>
+                                </div>
+                                <div style="display: flex;" ng-show="isTimedReview()">
+                                    <input type="checkbox" id="append_timed_prompts" ng-model="append_timed_prompts">&nbsp;<label for="append_timed_prompts" class="control-label" style="font-size:1.1em">Append prompts to user responses</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div style="display: flex;" ng-show="allow_submission!='file_only'">
+                                    <label style="width: 120px;margin-top:4px">New post text</label>
+                                    <input style="width: calc(100% - 120px);    padding: 0 2px;height: 26px; " class="form-control" type="text" ng-model="new_post_text" placeholder="New post">
+                                </div>
+                                <div style="display: flex;" ng-show="allow_submission=='file_only'">
+                                    <label style="width: 120px;margin-top:4px">Upload button text</label>
+                                    <input style="width: calc(100% - 120px);    padding: 0 2px;height: 26px; " class="form-control" type="text" ng-model="new_post_text" placeholder="Upload file">
+                                </div>
+                                <div style="display: flex;" >
+                                    <label style="width: 120px;margin-top:4px">{{allow_submission!='file_only'?'New post':'Upload button'}} color</label>
+                                    <new-post-color ng-model="meta.new_post_color"></new-post-color>
+                                </div>
+
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.require_submission.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.require_submission.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type && !(isQuizPageType() || isVocabQuizPageType() || isQuizListPageType()|| isShowSurveySelector())">
+                        <td></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" id="is_gradeable_post" name="is_gradeable_post" ng-model="is_gradeable_post">&nbsp;<label for="is_gradeable_post" class="control-label" style="font-size:1.1em">Make Posts Gradeable</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <select ng-show="is_gradeable_post" ng-model="use_rubric" >
+                                    <option value="0" selected="selected">Manually Grade</option>
+                                    <option value="2" ng-if="allow_submission!='template'&&!isJournal()">Automatically Grade</option>
+                                    <option value="1">Grade With a Rubric</option>
+                                </select>
+                                <br>
+                                <input type="checkbox" ng-show="is_gradeable_post && !isForum()" id="keep_highest_score"
+                                       name="keep_highest_score" ng-model="keep_highest_score"><label
+                                    ng-show="is_gradeable_post && !isForum()" class="control-label" for="keep_highest_score"
+                                    style="font-size:1.1em">&nbsp;Keep Highest Score</label>
+                            </div>
+                            <div ng-show="use_rubric==2" ng-include="'/public/views/partials/editor/autograde-table.html'"></div>
+                            <div class="panel panel-default margin-right-0 margin-left-0" style="margin: 10px -11px 0px -11px;min-height: 72px" ng-show="is_gradeable_post">
+                                <div ng-show="isJournal()" class="journal-grade-type">
+                                    <form>
+                                        <div>
+                                            <input type="radio" name="gradingType" value="0" ng-model="journalGradingType"> Grade the each post separately
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="gradingType" value="1" ng-model="journalGradingType"> Grade the whole journal
+                                        </div>
+                                    </form>
+                                </div>
+                                <table class="display-none" style="margin:10px;  font-size: 13px;">
+                                    <thead>
+                                    <tr>
+
+                                        <th >
+                                            Points
+                                        </th>
+                                        <th style="width:100px; padding-left: 10px"
+                                            ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()) && !no_due_date">
+                                            <label for="assignmentDueDate" class="control-label" >Due Date</label>
+                                        </th>
+                                        <th style="width:100px; padding-left: 20px"
+                                            ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()) && !no_due_date">
+                                            <label class="control-label" >Due Time</label>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tr>
+                                        <td style="width:65px;padding-left:5px">
+                                            <input ng-if="(rubricService.data.selected!=0 && use_rubric=='1') || use_rubric=='2' " readonly id="maximumPoints" type="text" ng-model="grade.max_points" class="form-control" value="50" >
+                                            <div class="input-group spinner editor-spinner" ng-if="rubricService.data.selected==0 && use_rubric=='0' ">
+                                                <input id="maximumPoints" type="text" ng-model="grade.max_points" class="form-control" value="50" >
+                                                <div class="input-group-btn-vertical">
+                                                    <button class="btn btn-default" ng-click="incrementMaxpoints()"><i class="fa fa-caret-up"></i></button>
+                                                    <button class="btn btn-default" ng-click="decrementMaxpoints()"><i class="fa fa-caret-down"></i></button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="assignment-due-date-wrapper" style="width:110px;padding-right:10px"
+                                            ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType() ) && !no_due_date"><input id="assignmentDueDate" type="text" type="text" class="form-control"  ng-model="due_date">
+                                        </td>
+                                        <td style=" width: 140px;"
+                                            ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType() ) && !no_due_date">
+                                            <timepicker class="timepicker no-controls" ng-model="due_time" hour-step="1" minute-step="1"></timepicker>
+                                        </td>
+
+                                        <td style="padding-left:10px;" ng-style="{width:no_due_date?'':'130px'}"
+                                            ng-show="isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()">
+                                            <input type="checkbox" id="no_due_date" name="no_due_date" ng-model="no_due_date">
+                                            <label for="no_due_date"
+                                                   class="control-label">{{orgOptions.calculate_progress?(no_due_date?'Due date calculated by the system':'Calculated by the system'):'No
+                                                due date'}}</label>
+
+                                    </tr>
+                                    <tr ng-show="isForum()">
+                                        <td colspan="2" style="padding-top: 10px;">
+                                            <b>Grading mode:</b>
+                                            <select ng-model="meta.grade_mode">
+                                                <option value="perPost">Per Post (Average)</option>
+                                                <option value="perPostMax">Per Post (Max Score)</option>
+                                                <option value="wholeForum">Whole Forum</option>
+                                            </select>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <!--------------------->
+                                <!--Mobile view start-->
+                                <!--------------------->
+                                <div  class="display-block" style="display: none;" >
+                                    <div style="float: left; display: inline-block;margin: 5px">
+                                        <label>Points</label>
+                                        <input ng-if="(rubricService.data.selected!=0 && use_rubric=='1') || use_rubric=='2' " readonly id="maximumPoints" type="text" ng-model="grade.max_points" class="form-control" value="50" >
+                                        <div class="input-group spinner editor-spinner" ng-if="rubricService.data.selected==0 && use_rubric=='0' ">
+                                            <input id="maximumPoints" type="text" ng-model="grade.max_points" class="form-control" value="50" >
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" ng-click="incrementMaxpoints()"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" ng-click="decrementMaxpoints()"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float: left; display: inline-block;margin: 5px">
+                                        <div style="width:100px; padding-left: 10px"
+                                             ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()) && !no_due_date">
+                                            <label for="assignmentDueDate" class="control-label" >Due Date</label>
+                                        </div>
+                                        <div id="assignment-due-date-wrapper" style="width:110px;padding-right:10px"
+                                             ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType() ) && !no_due_date"><input id="assignmentDueDate" type="text" type="text" class="form-control"  ng-model="due_date">
+                                        </div>
+                                    </div>
+                                    <div style="float: left; display: inline-block;margin: 5px">
+                                        <div style="width:100px; padding-left: 20px"
+                                             ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()) && !no_due_date">
+                                            <label class="control-label" >Due Time</label>
+                                        </div>
+                                        <div style=" width: 140px;"
+                                             ng-show="(isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType() ) && !no_due_date">
+                                            <timepicker class="timepicker no-controls" ng-model="due_time" hour-step="1" minute-step="1"></timepicker>
+                                        </div>
+                                    </div>
+                                    <div style="padding-left:10px;" ng-style="{width:no_due_date?'':'130px'}"
+                                         ng-show="isShowQuizSelector() || is_gradeable_post || isShowVocabQuizSelector() || isQuizListPageType()">
+                                        <input ng-style="{'margin-top':no_due_date?'38px':'0px'}" type="checkbox" id="no_due_date" name="no_due_date" ng-model="no_due_date">
+                                        <label for="no_due_date" style="display: inline;"
+                                               class="control-label">{{orgOptions.calculate_progress?(no_due_date?'Due date calculated by the system':'Calculated by the system'):'No due date'}}</label></div>
+                                </div>
+                                <!--------------------->
+                                <!--Mobile view end-->
+                                <!--------------------->
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td ></td>
+
+                        <td >
+                            <div>
+                                <input type="checkbox" id="is_gate" name="is_gate" ng-model="is_gate">&nbsp;<label for="is_gate" class="control-label display-inline" style="font-size:1.1em">Should be completed before student can continue</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                            <div class="panel panel-body  tooltip-relative" ng-show="is_gate && is_gradeable_post" style="  margin: 0 -11px;margin-top: 10px;">
+                                <label>Minimum Score: </label>
+                                <input type="number" class="form-control  minimum_score" ng-model="minimum_score" min="0">
+                                <span class="fa fa-question-circle" tooltip="This will stop the student from moving on to the next assignment until they have completed the assignment. If you have not added a minimum score, then completion means that they have clicked on the page or submitted the assignment.
+"></span>
+                            </div>
+
+                        </td>
+                        <td class="info" ng-show="orgPreferences.is_gate.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.is_gate.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table style="width: 100%">
+                    <tbody ng-show="isLessonListening()">
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="listen_course" class="control-label" style="font-size:1.2em">Course ID</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="listen_course" type="text" ng-model="listen_course"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Course ID" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="listen_lesson" class="control-label" style="font-size:1.2em">Lesson Number</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="listen_lesson" type="text" ng-model="listen_lesson"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Lesson Number" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.lesson_number.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.lesson_number.tooltip}}"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="listen_numEx" class="control-label" style="font-size:1.2em">Number of Exercizes</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="listen_numEx" type="text" ng-model="listen_numEx"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Number of Exercizes" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.listen_numEx.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.listen_numEx.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="isNimble()">
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="native_lang" class="control-label" style="font-size:1.2em">Native Lang</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="native_lang" type="text" ng-model="native_lang"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="NativeLang" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.native_lang.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.native_lang.tooltip}}"></span></td>
+
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="target_lang" class="control-label" style="font-size:1.2em">Target Lang</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="target_lang" type="text" ng-model="target_lang"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="TargetLang" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.target_lang.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.target_lang.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="isExternalLink()">
+                    <tr>
+                        <td style="padding-bottom:15px;"><label for="externalLink" class="control-label" style="font-size:1.2em">Link URL</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="externalLink" name="externalLink" ng-model="external_link" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="http://" required></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-show="use_rubric==1" ng-include="'/public/views/partials/editor/rubric_table.html'" style="clear:both"></div>
+        <div ng-hide="page_type">
+            <a style="cursor: pointer;" ng-click="use_clone=true"> Create page based on content from an existing activity</a>
+            <div ng-if="use_clone" ng-include="'/public/views/partials/editor/clone_activity.html'"></div>
+        </div>
+    </div>
+
+    <div id="Content" class="tab-pane fade">
+
+        <table>
+            <tbody
+                    ng-show="isShowQuizSelector() || isShowVocabQuizSelector() || isQuizListPageType() || isShowSurveySelector()">
+            <tr ng-show="isShowQuizSelector() || isShowSurveySelector()" class="new-quiz-button">
+                <td></td>
+                <td><span class="btn btn-primary btn-default" ng-click="openCreateQuiz()">Create new
+                        {{isShowSurveySelector()?'Survey/Pre-test':'quiz'}}</span></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="row"  ng-show="isShowSurveySelector()">
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody>
+                    <tr >
+                        <td style="padding-bottom:15px;width:120px;"><label for="surveySelect" class="control-label" style="font-size:1.2em">Survey/Pre-test</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <select selectize id="surveySelect" name="surveySelect" ng-model="quiz_select" ng-options="quiz.title + ' (' + quiz.questions + ')' for quiz in surveys" required ></select>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.survey.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.survey.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody>
+                    <tr>
+                        <td style="font-weight: 700;font-size: 15px;width: 150px;">Completion points </td>
+                        <td >
+                            <div>
+                                <input type="number" id="surveyPoints" name="surveyPoints" ng-model="survey_points">
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.survey_points.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.survey_points.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" ng-show="isShowQuizSelector() || isShowVocabQuizSelector() || isQuizListPageType()">
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td style="padding-bottom:15px;width:120px;"><label for="quizSelect" class="control-label margin-bottom-20" style="font-size:1.2em">Quiz</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <div class="width-100" style="width:70%;float:left">
+                                <select selectize id="quizSelect" name="quizSelect" ng-model="quiz_select" ng-options="quiz.title + ' (' + quiz.questions + ')' for quiz in quizzes | filter:filterQuizzes" required ng-disabled="loading.quiz"></select>
+                            </div>
+
+                            <span class="width-100 float-none margin-left-145" style="width:30%;float:left;display:block;padding-left: 5px">
+                            <input type="checkbox" data-ng-model="quizFilter.flag"> Only from this course
+                        </span>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.quiz.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.quiz.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-if="isShowVocabQuizSelector()" ng-init="getVocabs()">
+                        <td style="padding-bottom:15px;width:130px;"><label for="vocabGroupSelect" class="control-label" style="font-size:1.2em">Vocab Group</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <select selectize
+                                    id="vocabGroupSelect" name="vocab" ng-model="vocab.id" ng-options="vocab.module_id as vocab.name + ' ('+vocab.count+')' for vocab in vocabs"  required></select>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.vocab_group.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.vocab_group.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isQuizListPageType()">
+                        <td style="padding-bottom:15px;width:120px;"><label for="searchquiz" class="control-label" style="font-size:1.2em">Search Text</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="searchquiz" name="searchquiz" ng-model="searchquiz" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Search text" required></td>
+                        <td class="info" ng-show="orgPreferences.search_text.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.search_text.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="!isQuizListPageType()">
+                        <td style="padding-bottom:15px;width:120px;"><label for="allowedTakes" class="control-label" style="font-size:1.2em">Max Attempts</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><input type="number" min="0" id="allowedTakes" name="allowedTakes" ng-model="allowed_takes" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Allowed Takes" required></td>
+                        <td class="info" ng-show="orgPreferences.max_attempts.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.max_attempts.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td style="padding-bottom:15px;width:120px;"><label class="control-label"
+                                                                            style="font-size:1.2em">Start quiz text</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input  class="form-control" type="text" ng-model="new_post_text"
+                                    placeholder="Start">
+                        </td>
+                    </tr>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td style="padding-bottom:15px;width:120px;"><label class="control-label"
+                                                                            style="font-size:1.2em">Finish quiz text</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input  class="form-control" type="text" ng-model="meta.finish_quiz_text"
+                                    placeholder="Finish">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;"><label for="timeLimit" class="control-label" style="font-size:1.2em">Time Limit</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><input type="number" min="0" id="timeLimit" name="timeLimit" ng-model="time_limit" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Time Limit" required>&nbsp; minutes</td>
+                        <td class="info" ng-show="orgPreferences.time_limit.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.time_limit.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td style="padding-bottom:15px;width:120px;"><label for="allowedTakes" class="control-label"
+                                                                            style="font-size:1.2em">Start quiz color</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <new-post-color ng-model="meta.new_post_color"></new-post-color>
+                        </td>
+                    </tr>
+                    <tr ng-show="is_gate">
+                        <td style="padding-bottom:15px;width:120px;"><label class="control-label" style="font-size:1.2em">Minimum Score:</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><input type="number" class="form-control" ng-model="minimum_score" min="0"></td>
+                        <td class="info"><span class="fa fa-question-circle" tooltip="This will stop the student from moving on to the next assignment until they have completed the assignment. If you have not added a minimum score, then completion means that they have clicked on the page or submitted the assignment.
+"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" ng-show="isTimedReview()">
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody >
+                    <input id="timed_id" type="hidden" ng-model="timed_id"
+                           class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Timed Review ID" required>
+                    <!--
+        <tr>
+            <td style="padding-bottom:15px;width:120px;">
+                <label for="timed_id" class="control-label" style="font-size:1.2em">Timed Review ID</label>
+            </td>
+            <td style="padding-bottom:15px; padding-left:20px;">
+                <input id="timed_id" type="text" ng-model="timed_id"
+                       class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Timed Review ID" required>
+            </td>
+        </tr>
+                --> <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="timed_prepare" class="control-label" style="font-size:1.2em">Time to Prepare</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="timed_prepare" type="text" ng-model="timed_prepare"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Time to Prepare (0 for self-directed)" required>
+                        </td>
+                        <!-- <td class="info" ng-show="orgPreferences.time_limit.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.time_limit.tooltip}}"></span></td> -->
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="timed_limit" class="control-label" style="font-size:1.2em">Time Limit</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="timed_limit" type="text" ng-model="timed_limit"
+                                   class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Time Limit (0 for self-directed)" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.time_limit.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.time_limit.tooltip}}"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="timed_pause" class="control-label" style="font-size:1.2em">Pause Time</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="timed_pause" type="text" ng-model="timed_pause"
+                                   class="form-control ng-pristine ng-valid ng-valid-required"
+                                   placeholder="Pause between questions (to view example). Ignored if time limit is 0" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.pause_time.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.pause_time.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table style="width: 100%">
+                    <tbody >
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="timed_title" class="control-label" style="font-size:1.2em">Timed Title</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="timed_title" type="text" ng-model="timed_title"
+                                   class="form-control ng-pristine ng-valid ng-valid-required"
+                                   placeholder="Timed Tiled" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.timed_title.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.timed_title.tooltip}}"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:15px;width:120px;">
+                            <label for="timed_description" class="control-label" style="font-size:1.2em">Timed Description</label>
+                        </td>
+                        <td style="padding-bottom:15px; padding-left:20px;">
+                            <input id="timed_description" type="text" ng-model="timed_description"
+                                   class="form-control ng-pristine ng-valid ng-valid-required"
+                                   placeholder="Timed Description" required>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.timed_description.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.timed_description.tooltip}}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div ng-show="isTimedReview()">
+            <div class="btn btn-primary" ng-click="openTimedGroupEditor()">Manage prompts and groups</div>
+            <div class="input-group" style="margin-top:20px">
+                <span class="input-group-addon">Instructions</span>
+                <input ng-if="!instructionsAsHtml" type="text" name="timed_instruction" id="timed_instruction" ng-model="timed_instruction" class="form-control" placeholder="Instructions" required />
+                <textarea ng-if="instructionsAsHtml" ng-model="$parent.timed_instruction" disable-double-bind="true" ckeditor></textarea>
+                <span class="input-group-btn">
+                <span class="btn btn-default" data-ng-class="{active:instructionsAsHtml}" data-ng-click="instructionsAsHtml=!instructionsAsHtml">Html</span>
+            </span>
+            </div>
+            <div id="timedEdi'torHolder" ng-if="isTimedReview()" timed-editor prompts="timeReviewPrompts" org-id="courseInfo.data.orgId" timedid="timed_id" />
+
+
+
+        </div>
+        <div ng-if="isUserForm() && navService.navData.orgDetails" class="col-sm-12">
+            <user-form-options page-options="meta" org-details="navService.navData.orgDetails"></user-form-options>
+        </div>
+        <div ng-if="isShowVocabQuizSelector() && vocab.id" class="col-sm-12">
+            <vocab-config vocab-id="vocab.id" ng-model="$parent.vocabOptions"></vocab-config>
+        </div>
+        <div ng-show="isShowQuizSelector() || isShowSurveySelector() " class="col-sm-12">
+            <quiz-editor quiz-id="quiz_select.id" ng-if="quiz_select.id" disabled="quiz_select.disabled" loading-quiz="loading.quiz"></quiz-editor>
+        </div>
+        <div ng-if="isShowGlossarySelector() " class="col-sm-12">
+            <h4><small>Please, save the page to start editing your glossary</small></h4>
+        </div>
+
+        <div ng-if="isScormPageType()">
+            <scorm-import scorm-config="scormConfig"></scorm-import>
+        </div>
+
+        <hr ng-show="isTimedReview()" />
+        <div style="clear:both; margin-left:20px"></div>
+        <div style="clear:both" ng-show="isContent()" ng-if="true">
+            <div class="pointer cp-select" ng-click="setUseLayouts(false)">
+                <span>Use HTML Editor</span>
+                <i ng-class="{'fa fa-check': !isUsingLayouts()}"></i>
+            </div>
+            <div class="pointer cp-select" ng-click="setUseLayouts(true)">
+                <span>Use Layouts</span>
+                <i ng-class="{'fa fa-check': isUsingLayouts()}"></i>
+            </div>
+            <div custom-include template-path="/public/views/partials/editor/cp_editlayout.html" ng-show="isUsingLayouts()"></div>
+        </div>
+        <forum-settings settings="forumSettings" ng-if="isForum()"></forum-settings>
+        <table>
+            <tr ng-show="(isContent()&&!isUsingLayouts())||isTimedReview()||isForum()||isWelcome()||isScormPageType()||isTakePicture()||isUserForm()">
+                <td style="padding-bottom:15px;"></td>
+                <td style="padding-bottom:15px;">
+                    <!--<textarea ng-model="page_content" style="width:100%;height: 350px;"></textarea>-->
+                    <style>
+                        .cke_button__meglmstemplates .cke_button_label {
+                            display: block;
+                            cursor: pointer;
+                        }
+
+                        .cke_dialog_background_cover {
+                            background-color: black !important;
+                        }
+
+                        table .cke_tpl_preview {
+                            width: 100% !important;
+                        }
+                    </style>
+                    <textarea name="editor1" id="editor1" rows="15" cols="80"></textarea>
+                    <script>
+                        // Replace the <textarea id="editor1"> with a CKEditor
+                        // instance, using default configuration.
+                        CKEDITOR.config.allowedContent = true;
+                        CKEDITOR.config.disableNativeSpellChecker = false;
+
+                        var ck = CKEDITOR.replace('editor1', {
+                            toolbar: [
+                                { name: 'Meglmstemplates', items: ['Meglmstemplates'] },
+                                { name: 'mathjax', items: ['Mathjax'] },
+                                { name: 'document', items: ['Source'] },
+                                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'], items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat', 'Smiley'] },
+                                { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'], items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'CreateDiv', 'JustifyBlock'] },
+                                { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+                                { name: 'colors', items: ['TextColor', 'BGColor'] },
+                                { name: 'tools', items: ['Maximize'] },
+                                { name: 'insert', items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak', 'Iframe', 'Video', 'audio'] },
+                                { name: 'links', items: ['Link', 'Unlink'] }
+
+                            ],
+                            filebrowserUploadUrl: '/uploadckeditormedia/',
+                            extraPlugins: 'mathjax',
+                            height: 650
+                        });
+                        ck.on( 'paste', function( evt ) {
+                            var data = evt.data;
+
+                            data.dataValue = E3replaceUrl(data.dataValue);
+                            data.type = 'html';
+                        });
+
+                    </script>
+                </td>
+            </tr>
+
+        </table>
+        <table ng-if="isQuizListPageType()" class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table" style="  width: 60%;margin: auto;">
+
+            <thead>
+            <tr>
+                <th data-halign="left">Title</th>
+                <th data-halign="left">Questions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="quiz in previewQuizzes">
+                <td>{{quiz.title}}</td>
+                <td>{{quiz.count}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="AdvancedSettings" class="tab-pane fade">
+        <div class="row">
+            <div class="col-sm-6  tooltip-relative">
+                <table style="width: 100%" class="editor-table">
+                    <tbody>
+                    <tr ng-show="isShowPageTitleField()">
+                        <td ><label class="control-label" style="font-size:1.2em">Objective</label></td>
+                        <td >
+                            <input class="form-control" type="text" ng-model="objective" placeholder="(optional)">
+                        </td>
+                        <td class="info" ng-show="orgPreferences.objective.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.objective.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowPageTitleField()">
+                        <td ><label for="taskDuration" class="control-label" style="font-size:1.2em">Task Duration</label></td>
+                        <td ><input type="text" id="taskDuration" name="taskDuration" ng-model="taskDuration" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="(optional)" required></td>
+                        <td class="info" ng-show="orgPreferences.taskDuration.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.taskDuration.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowPageTitleField()">
+                        <td ><label for="taskType" class="control-label" style="font-size:1.2em">Task Type</label></td>
+                        <td ><input type="text" id="taskType" name="taskType" ng-model="taskType" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="(optional)" required></td>
+                        <td class="info" ng-show="orgPreferences.taskType.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.taskType.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="isShowPageSubTitleField()">
+                        <td ><label for="pageSubTitle" class="control-label" style="font-size:1.2em">Translation</label></td>
+                        <td ><input type="text" id="pageSubTitle" name="pageSubTitle" ng-model="page_sub_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="(optional)" required></td>
+                        <td class="info" ng-show="orgPreferences.pageSubTitle.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.pageSubTitle.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type && meta.auto_start != 1">
+                        <td ><label for="password" class="control-label" style="font-size:1.2em">Password</label></td>
+                        <td><input type="text" id="password" name="password" ng-model="password" class="form-control ng-pristine ng-valid" placeholder="(optional)"></td>
+                        <td class="info" ng-show="orgPreferences.password.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.password.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td ><label for="external_id" class="control-label" style="font-size:1.2em">External Id</label></td>
+                        <td ><input type="text" id="external_id" name="external_id" ng-model="external_id" class="form-control ng-pristine ng-valid" placeholder="(optional)"></td>
+                        <td class="info" ng-show="orgPreferences.external_id.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.external_id.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td ><label for="export_id" class="control-label" style="font-size:1.2em">Export Id</label></td>
+                        <td ><input type="text" id="export_id" name="export_id" ng-model="export_id" class="form-control ng-pristine ng-valid" placeholder="(optional)"></td>
+                        <td class="info" ng-show="orgPreferences.export_id.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.export_id.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type.id=='content'">
+                        <td ><label class="control-label" style="font-size:1.2em">Background</label></td>
+                        <td >
+                            <div style="width: 80px">
+                                <div selectize2 options="Pagebackground.backgroundOptions" ng-model="meta.backgroundUrl" config="Pagebackground.backgroundConfig"></div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr ng-if="page_type && proficiencyAreas && page_type.id=='sub_unit'">
+                        <td style="padding-bottom:15px;width:100px;"><label class="control-label" style="font-size:1.2em">Area of proficiency</label></td>
+                        <td style="padding-bottom:15px; padding-left:20px;"><select selectize placeholder="Area of proficiency" ng-model="meta.proficiency_area" data-ng-options="area.id as area.name for area in proficiencyAreas" required></select></td>
+                    </tr>
+                    <tr ng-if="categories && (categories.org || categories.course)" ng-show="isGradeable()  && user.org.category_dashboard ">
+                        <td colspan="2">
+                            <div class="panel panel-default panel-body">
+                                <div ng-show="categories.course"><b>Course level category:</b>
+                                    <select selectize placeholder="Category" data-ng-options="cat.id as cat.name for cat in categories.course" ng-model="courseCategory"></select>
+                                </div>
+                                <div ng-show="categories.org"><b>Organization level category:</b>
+                                    <select selectize placeholder="Category" data-ng-options="cat.id as cat.name for cat in categories.org" ng-model="orgCategory"></select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td colspan="2">
+                            <div class="panel panel-default"
+                                 ng-show="(isShowQuizSelector() || isShowVocabQuizSelector() || isQuizListPageType())">
+                                <table class="display-none" style="margin:10px;  font-size: 13px;">
+                                    <thead>
+                                    <tr>
+
+                                        <th style="width:100px; padding-left: 10px"
+                                            ng-show="!no_due_date">
+                                            <label for="assignmentDueDate" class="control-label" >Due Date</label>
+                                        </th>
+                                        <th style="width:100px; padding-left: 20px"
+                                            ng-show="!no_due_date">
+                                            <label class="control-label" >Due Time</label>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tr>
+                                        <td id="assignment-due-date-wrapper" style="width:110px;padding-right:10px"
+                                            ng-show="!no_due_date"><input id="assignmentDueDate" type="text" type="text" class="form-control"  ng-model="due_date">
+                                        </td>
+                                        <td style=" width: 140px;"
+                                            ng-show="!no_due_date">
+                                            <timepicker class="timepicker no-controls" ng-model="due_time" hour-step="1" minute-step="1"></timepicker>
+                                        </td>
+
+                                        <td style="padding-left:10px;" ng-style="{width:no_due_date?'':'130px'}">
+                                            <input type="checkbox" id="no_due_date" name="no_due_date" ng-model="no_due_date">
+                                            <label for="no_due_date"
+                                                   class="control-label">{{orgOptions.calculate_progress?(no_due_date?'Due date calculated by the system':'Calculated by the system'):'No
+                                                due date'}}</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!--mobile view start-->
+                                <div class="display-block" style="display: none;min-height: 35px">
+                                    <div style="float: left;display: inline-block;margin: 5px">
+                                        <div style="width:100px; padding-left: 10px" ng-show="!no_due_date">
+                                            <label for="assignmentDueDate" class="control-label" >Due Date</label>
+                                        </div>
+                                        <div id="assignment-due-date-wrapper" style="width:110px;padding-right:10px" ng-show="!no_due_date"><input id="assignmentDueDate" type="text" type="text" class="form-control"  ng-model="due_date">
+                                        </div>
+                                    </div>
+                                    <div style="float: left;display: inline-block;margin: 5px">
+                                        <div style="width:100px; padding-left: 20px" ng-show="!no_due_date">
+                                            <label class="control-label" >Due Time</label>
+                                        </div>
+                                        <div style=" width: 140px;" ng-show="!no_due_date">
+                                            <timepicker class="timepicker no-controls" ng-model="due_time" hour-step="1" minute-step="1"></timepicker>
+                                        </div>
+                                    </div>
+                                    <div style="padding-left:10px;" ng-style="{width:no_due_date?'':'130px'}">
+                                        <input type="checkbox" id="no_due_date" name="no_due_date" ng-model="no_due_date" style="margin-top: 9px;">
+                                        <label for="no_due_date" class="control-label" style="display: inline">{{orgOptions.calculate_progress?(no_due_date?'Due date calculated by the system':'Calculated by the system'):'Nodue date'}}</label>
+                                    </div>
+                                </div>
+                                <!--mobile view end-->
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6  tooltip-relative">
+                <table style="width:100%;font-size:13px" class="editor-table">
+                    <tbody>
+                    <tr ng-show="page_type && (isShowQuizSelector() || isShowVocabQuizSelector() || isTimedReview())">
+                        <td></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" id="hide_default_instructions" name="hide_default_instructions" ng-model="meta.hide_default_instructions">&nbsp;<label for="hide_default_instructions" class="control-label" style="font-size:1.1em">Hide default instructions</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type.id=='sub_unit'">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="is_lesson" name="is_lesson" ng-model="is_lesson">&nbsp;<label for="is_lesson" class="control-label" style="font-size:1.1em">Is Lesson</label>
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.is_lesson.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.is_lesson.tooltip}}"></span></td>
+                    </tr >
+                    <tr ng-show="page_type && isContent() && isProficiencyTest">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" ng-model="meta.is_id_verification">&nbsp;<label class="control-label" style="font-size:1.1em">Is ID Verification</label>
+                            </div>
+                        </td>
+                    </tr >
+                    <tr ng-show="page_type.id=='welcome'">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox"  ng-model="meta.hide_title">&nbsp;<label for="hide_activity"
+                                                                                                class="control-label" style="font-size:1.1em">Hide
+                                page title</label>
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.hide_activity.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.hide_activity.tooltip}}"></span></td>
+                    </tr >
+
+                    <tr ng-show="page_type && hasGlossary">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="exclude_glossary" name="exclude_glossary"
+                                       ng-model="meta.exclude_glossary">&nbsp;
+                                <label for="exclude_glossary" class="control-label" style="font-size:1.1em">Do not
+                                    link glossary words</label>
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.hide_activity.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.hide_activity.tooltip}}"></span></td>
+                    </tr >
+                    <tr ng-show="isShowSubmissionTypeCheckboxes() && !isScormPageType() && !isTakePicture() && !isUserForm()">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="hide_reply" name="hide_reply" ng-model="hide_reply">&nbsp;<label for="hide_reply" class="control-label" style="font-size:1.1em">Hide "reply" button</label>
+                            </div>
+                        </td>
+                    </tr >
+                    <tr ng-show="isShowSubmissionTypeCheckboxes() && navService.navData.orgDetails.can_delete_posts && !isScormPageType()" >
+                        <td colspan="2">
+                            <div>
+                                <input type="checkbox" id="cannot_delete_posts" name="cannot_delete_posts" ng-model="meta.cannot_delete_posts">&nbsp;<label for="hide_reply" class="control-label" style="font-size:1.1em">Students cannot delete posts</label>
+                            </div>
+                        </td>
+                    </tr >
+                    <tr ng-show="page_type.id=='sub_unit'">
+                        <td colspan="2">
+                            <div>
+                                <input type="checkbox" id="disable_visual_indicators" name="disable_visual_indicators" ng-model="disable_visual_indicators">&nbsp;<label for="disable_visual_indicators" class="control-label" style="font-size:1.1em">Disable visual indicators</label>
+                            </div>
+                        </td>
+                        <td class="info"><span class="fa fa-question-circle" tooltip-placement="bottom" tooltip="If enabled, the parent container and any nested activities will not show checkmark when users visit the pages."></span></td>
+                    </tr>
+
+                    <tr ng-show="page_type">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="show_created_date" name="show_created_date" ng-model="show_created_date">&nbsp;<label for="show_created_date" class="control-label" style="font-size:1.1em">Show created date</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.show_created_date.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.show_created_date.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <input type="checkbox" id="show_objectives" name="show_objectives" ng-model="show_objectives">&nbsp;<label for="show_objectives" class="control-label" style="font-size:1.1em">Show objectives</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.show_objectives.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.show_objectives.tooltip}}"></span></td>
+                    </tr>
+                    <tr ng-show="page_type && !(isQuizPageType() || isVocabQuizPageType() || isQuizListPageType()|| isShowSurveySelector())">
+                        <td></td>
+                        <td>
+                            <div class="mastery">
+                                <input type="checkbox" id="show_mastery" name="show_mastery" ng-model="show_mastery">&nbsp;<label for="show_mastery" class="control-label" style="font-size:1.1em">Show mastery</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="percentage display-flex" ng-show="show_mastery">
+                                    <input ng-model="mastery_percentage">%
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td ></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" id="show_score_per_standard" name="show_score_per_standard" ng-model="show_score_per_standard">&nbsp;<label for="show_score_per_standard" class="control-label" style="font-size:1.1em">Show score per standard</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="isShowQuizSelector()">
+                        <td ></td>
+                        <td>
+                            <div class="mastery">
+                                <input type="checkbox" id="show_mastery" name="show_mastery" ng-model="show_mastery">&nbsp;<label for="is_private_post" class="control-label" style="font-size:1.1em">Show mastery</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="percentage display-flex" ng-show="show_mastery">
+                                <input ng-model="mastery_percentage">%
+                            </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type">
+                        <td ></td>
+                        <td >
+                            <div>
+                                <div><input type="checkbox" id="use_colors" name="use_colors" ng-model="use_color">&nbsp;<label for="use_colors" class="control-label" style="font-size:1.1em">Show frame around page</label>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                <div ng-if="use_color">
+                                    <div>
+                                        <input minicolors ng-model="page_border_color" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="info" ng-show="orgPreferences.use_frame.tooltip"><span class="fa fa-question-circle" tooltip="{{orgPreferences.use_frame.tooltip}}"></span></td>
+                    </tr>
+
+
+                    <tr ng-show="page_type" ng-if="(isShowQuizSelector() || isShowVocabQuizSelector() || isQuizListPageType()||grade.max_points)">
+                        <td ></td>
+                        <td colspan="2">
+                            <input type="checkbox" id="require_minimum_score" name="require_minimum_score" ng-model="require_minimum_score">&nbsp;<label for="is_gate" class="control-label display-inline" style="font-size:1.1em">Require minimum completion score</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span data-ng-show="require_minimum_score"><input ng-nodel="$parent.minimum_score_for_completion" style="width: 45px;">%</span>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type && !isShowGlossarySelector() && !isForum() && !isScormPageType() && !isShowSurveySelector()">
+                        <td colspan="2">
+                            <div>
+                                <input type="checkbox" id="can_doublecheck_cam_audio" name="can_doublecheck_cam_audio" ng-model="can_doublecheck_cam_audio">&nbsp;<label for="can_doublecheck_cam_audio" class="control-label display-inline" style="font-size:1.1em">Should doublecheck cam/audio is working</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type && (isShowQuizSelector() || isShowVocabQuizSelector())">
+                        <td></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" id="auto_start" name="auto_start" ng-model="meta.auto_start">&nbsp;<label for="auto_start" class="control-label" style="font-size:1.1em">Auto start</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type && noMenu()">
+                        <td></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" id="no_menu_go_back" name="no_menu_go_back" ng-model="no_menu_go_back">&nbsp;<label for="no_menu_go_back" class="control-label" style="font-size:1.1em">Student can go back (appliable for no-menu courses)</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="page_type && noMenu()">
+                        <td colspan="2">
+                            <label style="margin-right: 10px;;margin-top:4px">Next button text</label>
+                            <input style="width: calc(100% - 140px);max-width: 516px;padding: 0 2px;height: 26px;display:
+                        inline-block; " class="form-control" type="text" ng-model="meta.next_text" placeholder='NEXT <span class="fa fa-chevron-right"></span>'>
+                        </td>
+                    </tr>
+
+                    <tr ng-show="page_type && noMenu()">
+                        <td colspan="2">
+                            <div style="display: flex;" >
+                                <label style="width: 135px;margin-top:4px">Next button color</label>
+                                <new-post-color ng-model="meta.next_class_name"></new-post-color>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div>
+
+
+
+    <table ng-show="page_type">
+        <tbody>
+        <tr>
+            <td style="padding-bottom:15px;"></td>
+            <td style="padding-bottom:15px; padding-top: 15px">
+                <table>
+                    <tr class="display-grid">
+                        <td>
+                            <async-button color-style="primary" text="Save Changes" flash-text="Saved!" loading="loading.addPage" ng-click="addPage()"></async-button>
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="openExemptModal()" ng-hide="loading.addPage" ng-disabled="!canExempt()">
+                                <span ng-bind="buttons.exempt"></span>
+                                <span ng-show="exemptStudents.length" ng-bind="'(' + exemptStudents.length + ')'"></span>
+                            </button>
+                        </td>
+                        <td style="padding-left:20px;" class="padding-left-0" ng-if="isQuizListPageType()"><button type="button" class="btn btn-primary btn-sm margin-top-5" ng-click="previewQuizList()">Preview List</button></td>
+                    </tr>
+                </table>
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $('#assignment-due-date-wrapper input').datepicker({});
+    // (function ($) {
+    //     $('.spinner .btn:first-of-type').on('click', function() {
+    //         $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 1);
+    //     });
+    //     $('.spinner .btn:last-of-type').on('click', function() {
+    //         $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 1);
+    //     });
+    // })(jQuery);
+</script>
+
+

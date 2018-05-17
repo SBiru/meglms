@@ -1,0 +1,57 @@
+<div class="responses_container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            Organization:
+            <select selectize ng-options="org.id as org.name for org in orgs" ng-model="selected.org_id"></select>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            Teacher:
+            <i class="fa fa-spinner fa-pulse" ng-if="loading.teacher"></i>
+            <select selectize ng-options="teacher.id as teacher.fname + ' ' + teacher.lname for teacher in teachers" ng-model="selected.teacher_id" placeholder="All"></select>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="col-md-6 col-sm-12">
+                From:
+                <input type="date" class="form-control" datepicker-popup ng-model="selected.min_date" ng-required="true" close-text="Close" />
+            </div>
+            <div class="col-md-6 col-sm-12">
+                To:
+                <input type="date" class="form-control" datepicker-popup ng-model="selected .max_date" ng-required="true" close-text="Close" />
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="responses_table">
+        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+            <thead>
+                <tr>
+                    <th data-halign="left">Teacher</th>
+                    <th data-halign="left">Classes</th>
+                    <th data-halign="left">Text</th>
+                    <th data-halign="left">Video</th>
+                    <th data-halign="left">File</th>
+                    <th data-halign="left">Total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="loading">
+                    <td>Loading...</td>
+                </tr>
+                <tr ng-repeat="teacher in teachers | filter:{id:selected.teacher_id}" ng-show="teacher.id">
+                    <td>{{teacher.fname}} {{teacher.lname}}</td>
+                    <td>{{teacher.classes_text}}</td>
+                    <td>{{totalPostsPerType(teacher,'text')}}</td>
+                    <td>{{totalPostsPerType(teacher,'video')}}</td>
+                    <td>{{totalPostsPerType(teacher,'file')}}</td>
+                    <td>{{teacher.total_posts}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

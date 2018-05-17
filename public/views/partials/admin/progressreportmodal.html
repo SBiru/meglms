@@ -1,0 +1,22 @@
+<div class="edit-sites-modal">
+    <div class="modal-header">
+        <!-- close button -->
+        <button type="button" class="close " ng-click="cancel()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+                <span class="sr-only">Close</span>
+            </div>
+        </button>
+
+        <h4 class="modal-title">Progress report</h4>
+    </div>
+    <div class="modal-body">
+        <!-- LOADING -->
+        <div class="loading" ng-show="loading">LOADING...</div>
+        <!-- ACTUAL BODY -->
+        <div ng-hide="loading">
+            <progress-report org-id="orgId"></progress-report>
+        </div>
+
+    </div>
+</div>

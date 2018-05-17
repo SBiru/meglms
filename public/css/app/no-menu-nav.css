@@ -1,0 +1,56 @@
+no-menu-nav .unit-title{
+    text-align: center;
+    padding: 2px;
+    border-bottom: 2px solid #CCC;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+no-menu-nav .pagegroup-box{
+    padding: 3px;
+}
+no-menu-nav .pagegroup-title{
+    font-size: 20px;
+}
+
+no-menu-nav .page-checkmark{
+    padding-right: 2px;
+    color: #bdbaba;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+no-menu-nav .page-checkmark.checked{
+    color: #62c354;
+}
+no-menu-nav .circle-progress{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+.unitInfo{
+    border: none;
+    /*margin-bottom: 45px;*/
+    /*border-bottom: 4px solid #ddd;*/
+}
+.unitInfo.welcome{
+    border-bottom: none;
+}
+.no-menu .page-content-wrapper{
+    max-width: 700px;
+    display: inline-block;
+    position: relative;
+}
+.no-menu-next{
+    margin-top: 50px;
+    text-align: center;
+}
+.btn-success.disabled.btn-id-verification,.btn-success.btn-id-verification[disabled]{
+    color: #22b14c;
+    background-color: #ffffff;
+    border-color: #92f192;
+    border-width: 2px;
+}
+.no-menu-page-title.welcome{
+    text-align: center;
+}

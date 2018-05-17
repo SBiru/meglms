@@ -1,0 +1,382 @@
+<!--Golabs 05/02/2015 Template for graders-->
+<div grader-pagination class="grader-post-controller" ng-class="{'j1-class':isJ1Class()}">
+<div>
+  <!-- The grader filter fields table-->
+  <table ng-if="user.graderMenuPreference=='left'" style="margin-left: -20px;">
+    <tr>
+      <td style="padding-bottom:15px;padding-left: 25px;   width: 300px;">
+        <select id="studentSelect" name="studentSelect" ng-model="student_select"
+                selectize
+                ng-options="student.name for student in studentsNeedingGrading | orderBy:user.org.sort_users_by"
+                ng-change="applyStudentFilter(student_select.user_id)" required>
+          <option value="" selected>All students</option>
+        </select>
+      </td>
+      <td class="display-none" style="padding-bottom:15px; padding-left:20px;" id="submission_start_date_select_wrapper">
+        <form id="dateRangeForm">
+          <p class="input-group" style="    margin-bottom: 0;">
+            <input  placeholder="Start" style="max-width:90px" id="submissionStartDateSelect"
+                    name="submissionStartDateSelect" type="text" class="form-control pull-left"
+                    datepicker-popup="{{ format }}" ng-model="graderData.dateRange.min"
+                    is-open="dateFilter.openedStartDate" ng-required="true" close-text="Close"  datepicker-options="dateOptions" ng-change="startDateChanged(submission_start_date_select)" placeholder="Start" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default pull-right" ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </form>
+      </td>
+      <td class="display-none" style="padding-bottom:15px;padding-left: 10px;width:20px;"><label for="submissionEndDateSelect" class="control-label" style="font-size:1em;margin-right: 5px;">to</label></td>
+      <td class="display-none" style=" padding-bottom:15px; padding-left:5px;" id="submission_end_date_select_wrapper">
+        <form id="endDateForm">
+          <p class="input-group"  style="    margin-bottom: 0;">
+            <input  id="submissionEndDateSelect" style="max-width:90px" name="submissionEndDateSelect" type="text" class="form-control pull-left" datepicker-popup="{{ format }}" ng-model="graderData.dateRange.max" is-open="dateFilter.openedEndDate" ng-required="true" close-text="Close"  datepicker-options="dateOptions"  placeholder="Now" ng-change="endDateChanged(submission_end_date_select)" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default pull-right"  ng-click="openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </form>
+      </td>
+
+      <td class="display-none" ng-show="isGraderArchiveView" style="padding-bottom:15px; padding-left:20px;">
+        <div style="display:flex">
+          <label for="teacherSelect" class="control-label"
+                 style="font-size:1em;padding-right: 3px;margin-top: 8px;">Grader</label>
+          <select id="teacherSelect" name="teacherSelect" ng-model="teacher_select"
+                  class="form-control ng-pristine ng-valid ng-valid-required"
+                  ng-options="teacher.name for teacher in teachersThatHaveGraded" ng-change="applyTeacherFilter(teacher_select)" required>
+            <option value="" selected>All graders</option>
+          </select>
+        </div>
+      </td>
+      <td style="padding-bottom:15px; padding-left:20px;">
+        <div style="display:flex">
+          <b>Posts Shown</b>
+          <select id="numPosts" name="numPosts" ng-model="pagination.itemsPerPage"
+                  class="form-control ng-pristine ng-valid ng-valid-required"required>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+          </select>
+        </div>
+      </td>
+      <td style="padding-bottom:15px; padding-left:20px;">
+        <select class="form-control" ng-model="currentSortOrder" data-ng-change="changeSortOrder(currentSortOrder)">
+          <option value="asc"> Oldest first</option>
+          <option value="desc"> Newest first</option>
+          <option value="alphabet"> Alphabetically</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <div  style="margin-bottom: 15px" class="waiting-to-be-graded" ng-show="user.graderMenuPreference=='left'">
+    <div  class="btn btn-default" ng-controller="PostsSummaryIconController" ng-click="open()"
+          ng-show="user.is_super_admin || user.is_organization_admin || user.teacher_supervisor">
+      Waiting for grade
+    </div>
+  </div>
+
+</div>
+
+<div ng-if="postedMessages.length===0" style="width:100%;text-align:center">
+  <strong>No Feedback required.</strong>
+</div>
+<grader-pagination-nav pag-info="pagination"></grader-pagination-nav>
+<div class="grader_outline" ng-if="postedMessages.length>0&&message.morethenone!=2 && message.show" ng-style="style()" ng-repeat="message in postedMessages track by $index" >
+  <div ng-if="message.type!='quiz' && message.type!='forum'">
+  <div class = "grader_top_heading" >
+    <span class="activity-name"> {{ message.unit_name}} - {{message.page_name}} : </span>
+    <span class="student-name"> {{ prepareUserName(user.org.sort_users_by,message.fname,message.lname) }} </span>
+    <span class="btn-email" ng-controller="EmailController" ng-click="open(message)" ng-init="specificUser=true">
+      <span class="fa fa-envelope"> </span>
+    </span>
+    <span class="btn btn-sm btn-default preview-button" ng-show="pageInfo" data-ng-click="openPreview(postedMessages)">View assignment page</span>
+  </div>
+
+    <!--morethenone Start-->
+    <ul class="nav nav-tabs" ng-if="message.morethenone===1 || message.morethenone===0">
+      <li ng-repeat="messageS in message.grouped track by $index" ng-class="messageClassActive(messageS.id,message)" ng-model="deleted">
+        <a ng-if="(messageS.id==messageS.postrootparentid || messageS.postrootparentid==0)&&messageS.created" ng-click="ChangecurrentMessageId(messageS.id, messageS.page_name,$event)" data-id="{{messageS.id}}"
+           ng-class="{'needing-grade':messageS.needingGrade,'graded':!messageS.needingGrade}" >
+          <span ng-show="messageS.replies&&messageS.replies.length" class="fa fa-comment"></span>
+          <span ng-bind="messageS.created"></span>
+        </a>
+        <a ng-if="!messageS.isQuestion && messageS.id!=messageS.postrootparentid && messageS.postrootparentid!=0" ng-click="ChangecurrentMessageId(messageS.id, messageS.page_name,$event)" data-id="{{messageS.id}}" ng-bind="'REPLY - ' + messageS.created" class="reply-tab"></a>
+        <a ng-if="messageS.isQuestion" data-id="{{messageS.id}}" ng-click="ChangecurrentMessageId(messageS.id, messageS.page_name,$event)">
+          <span>Question</span>
+        </a>
+      </li>
+    </ul>
+    <!--morethenone End-->
+    <div class="div-tabs" ng-if="!message.isQuestion" ng-style="styleDiv({{message.morethenone}})" >
+      <!-- bootstrap modal -->
+      <div id="videoMessageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="videoMessageModal" aria-hidden="true">
+        <div class="modal-dialog" style="width: 380px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Message</h4>
+            </div>
+            <div class="modal-body" ng-bind-html='current_video_player'>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--End Basic Boot Strap Modal-->
+    <!-- <div ng-repeat="message in postedMessages" ng-hide="currentMessageId!==message.id" class="grader_PostedMessage" > -->
+    <div class="grader_PostedMessage" >
+      <!--message by Student start-->
+      <div  class="grader_box" ng-hide="message.isQuestion" >
+        <div id="grader_GraderHelperController" ng-controller="GraderHelperController"  class="grader_GraderHelperController">
+          <!--Posted message by Student-->
+          <div class="grader_left_block "
+               ng-class="{'grader_only_pre':message.===false,'video_only':allow_video_post}" >
+            <div ng-show="allow_video_post" class="grader_left_video_box" ng-if="message.video_url"  >
+              <img class="grader_left_video videoimage " style="color:black" ng-click="message.loadvideo=true"
+                   ng-hide="message.loadvideo || message.video_thumbnail_url=='audioOnly'"
+                   ng-src="{{message.video_thumbnail_url}}" tooltip="Click to Play Video">
+              <span class="btn btn-sm btn-default" ng-hide="message.loadvideo || message.video_thumbnail_url!='audioOnly'" ng-click="message.loadvideo=true">
+                <span class="fa fa-2x fa-play fa-fw" ></span>
+              </span>
+              <video autoplay ng-if= "message.loadvideo"  class="grader_left_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+                <source src="{{message.video_url}}" type="video/mp4" >
+                Your browser does not support the HTML5 video tag.
+              </video>
+            </div>
+              <!--Conditional based on video or message has text start-->
+              <div class="grader_left_message" ng-if="message.video_url"  class="ng-class:{ 'grader_showupload': message.upload_file_name }">
+                <span ng-if="message.upload_file_name">Uploaded-file:</span> <a href="{{ message.upload_url}}" target="_blank" ng-if="message.upload_file_name">{{message.upload_file_name}}</a>
+                <div class="grader_pre" ng-if="message.message!=''" ng-bind-html="trustAsHtml(message.message)">
+                </div>
+              </div>
+              <div class="grader_left_message"  ng-if="!message.video_url"  class="ng-class:{ 'grader_showupload': message.upload_file_name }">
+                <div data-ng-repeat="file in message.upload_url track by $index">
+                  <span >|</span>
+                  <a href="{{ file}}" target="_blank" ng-if="message.upload_file_name[$index]" data-ng-bind="message.upload_file_name[$index]"></a>
+                  <span>|</span>
+                </div>
+
+                <a href="../graderpost/showfile?{{ message.upload_url}}" target="_blank" ng-if="message.upload_file_name && message.html_content">View in Seperate Window</a>
+                <div style="max-height:600px" ng-if="message.upload_file_name && message.html_file && message.html_file != 'Error'" dynamic="message.html_content">
+                </div>
+
+
+                <div class="grader_pre_wrapper" data-ng-mouseover="mouseOver=true" data-ng-mouseleave="mouseOver=false">
+                  <div class="grader_pre" ng-if="message.message!='' && message.allow_template_post != 1" ng-bind-html="trustAsHtml(message.message)"></div>
+                  <button ng-click="expandResponse(message.message)" class="btn btn-default btn-expand"
+                          ng-show="mouseOver">Expand</button>
+                </div>
+
+                <div class="grader_pre" ng-if="message.allow_template_post == 1">
+                  <html-template-response user-id="message.user_id" post-id="message.id"
+                                          page-name="message.page_name"></html-template-response>
+                </div>
+
+              </div>
+              <!--Conditional based on video or message has text end-->
+
+            <div class="text_prompts" ng-show="message.layout=='TIMED_REVIEW' && message.textPrompts && message.textPrompts.length ">
+              <div class="small-heading">Text Prompts</div>
+              <ul class="list-group">
+                <li ng-repeat="prompt in message.textPrompts" >
+
+                  <div class="pointer text-heading" ng-click="prompt.showTextPrompt = !prompt.showTextPrompt">
+                    <a >
+                      <span> Id: {{prompt.id}}</span>
+                      <span ng-bind-html="$root.trustAsHtml(prompt.name || prompt.shortPrompt)"></span>
+                    </a>
+                  </div>
+
+                  <div ng-show="prompt.showTextPrompt"  class="text-body" ng-bind-html="$root.trustAsHtml(prompt.prompt)">
+
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="post-replies" ng-show="message.replies.length">
+              <div class="small-heading">Replies</div>
+              <ul class="list-group">
+                <li data-ng-repeat="child in message.replies" class="list-group-item post-reply" ng-class="{'opened':child.showBody}">
+                  <div class="reply-heading pointer" data-ng-click="child.showBody=!child.showBody">
+                    <span class="fa" data-ng-class="child.showBody?'fa-minus':'fa-plus'"></span>
+                    <span data-ng-bind="prepareUserName(user.org.sort_users_by,child.fname,child.lname)" style="color:#428bca" ></span>
+                    <span data-ng-bind="child.created" ></span>
+                  </div>
+
+                    <div class="reply-body" ng-show="child.showBody">
+                      <div ng-show="allow_video_post" class="grader_left_video_box" ng-if="child.video_url"  >
+                        <img class="grader_left_video videoimage " style="color:black" ng-click="child.loadvideo=true" ng-hide="child.loadvideo || child.video_thumbnail_url=='audioOnly'"
+                             ng-src="{{child.video_thumbnail_url}}" tooltip="Click to Play Video">
+                        <span class="btn btn-sm btn-default" ng-hide="child.loadvideo || child.video_thumbnail_url!='audioOnly'" ng-click="child.loadvideo=true">
+                          <span class="fa fa-2x fa-play fa-fw" ></span>
+                        </span>
+                        <video autoplay ng-if= "child.loadvideo"  class="grader_left_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+                          <source src="{{child.video_url}}" type="video/mp4" >
+                          Your browser does not support the HTML5 video tag.
+                        </video>
+                      </div>
+                      <div data-ng-bind-html="trustAsHtml(child.message)"></div>
+                    </div>
+
+                  </li>
+                </ul>
+
+              </div>
+
+            </div>
+
+          <!--message by Student end-->
+          <div class="grader_right_block" ng-class="{'video_only':allow_video_post}"
+               ng-if="(message.id==message.postrootparentid || message.postrootparentid==0) || message.automatically_grade==1">
+              <div ng-if="message.rubricid!=0 && !reloadingRubric" ng-include="'/public/views/rubrics/rubric-grader.html'" ng-controller="RubricGraderController" class="rubric panel panel-body"
+                   style="  padding: 5px;border: 1px solid transparent;border-color: rgb(168, 168, 168);border-radius: 4px;margin-bottom: 5px;overflow-x:scroll"></div>
+              <div ng-class="indentClass(message.indent_count)" class="grader_right_block_inner">
+                <div class="grader_right_form_div panel panel-body" >
+
+                  <table class="grader_right_table">
+                    <tr>
+                      <td class="grader_gradeTd">
+                        <div>
+                          <input style="width: 50%;float:left" ng-if="message.rubricid==0" name="grade"  ng-model-onblur ng-change="addGradeComments(message.id, message.grade, 'grade')" ng-model="message.grade" placeholder="Grade" class="form-control ng-pristine ng-valid ng-valid-required grader_grade" required>
+                          <input ng-if="message.rubricid!=0"  readonly name="grade"  ng-model-onblur
+                                 ng-change="addGradeComments(message.id, message.grade, 'grade')" ng-model="message.grade" placeholder="Grade" class="form-control ng-pristine ng-valid ng-valid-required grader_grade" required>
+                          <span style="width: 50%;margin-left:30px;line-height: 2" ng-if="message.rubricid==0">Max: {{message.max_points}}</span>
+                        </div>
+                        <div ng-if="message.scoreOverride" class="clearboth tooltip-relative">
+                          Score override: {{message.scoreOverride}} <span class="fa fa-question-circle"
+                                                                          tooltip="This score was set in the gradebook. You can regrade this task if you want to set a new score"></span>
+                        </div>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="position: relative">
+                        <div class="btn btn-default btn-xs advanced-grader" style="position: absolute;right: 5px;top: 5px;text-decoration: underline;font-weight: bold;"
+                             data-toggle="modal" data-target="#advancedGrader"
+                              ng-click="setCurrentMessageBeingEdited(message)">
+                          <i >A</i>
+                        </div>
+                        <textarea id="grade_comments_{{message.id}}" name="grade_comments" ng-model="message.grade_comments" class="form-control grade_comments" placeholder="Feedback Comments to Student"></textarea>
+                      </td>
+                      <script>
+
+                      
+                    </script>
+                  </tr>
+                  <tr>
+                    <td >
+                      <div class="rubric-grade">
+                        <span ng-cloak>Grade: {{message.grade}}</span>
+                      </div>
+                      <textarea  name="teacher_notes" ng-model="message.teacher_notes"
+                                 ng-if="!isJ1Class()"
+                                 ng-change="addGradeComments(message.id, message.teacher_notes, 'teacher_notes')"
+                                 class="form-control teacher_notes"  placeholder="Teacher notes"></textarea>
+                      <textarea  name="teacher_notes" ng-model="message.teacher_notes"
+                                 ng-if="isJ1Class()" ng-change="addGradeComments(message.id, message.teacher_notes, 'teacher_notes')"
+                                 class="form-control teacher_notes"  placeholder="Grader notes"></textarea>
+                      <div class="clearfix"></div>
+                      <div class="post-to-student">
+                        <async-button color-style="primary" text="Submit" flash-text="Done!" disabled="!canSavePost()"
+                                      loading="loadingPost" ng-click="applyGradeTo(message)"></async-button>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div  ng-class="rightby10(message.children.length)" class="grader_teacherVideo_block panel panel-body">
+                <ul class="nav nav-list nav-pills nav-stacked tooltip-white-space-normal">
+                  <li><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#basicModal" ng-click="videoFeedBackTo(message.id)">Record Video</button></li>
+
+                  <li ng-repeat="child in message.children" ng-if="child.video_thumbnail_url!='' && child.is_teacher==1" >
+                    <div class="grader_teacherVideo_div">{{ child.created}}</div>
+                    <img ng-src="{{ child.video_thumbnail_url}}" width='120px' height='120px' ng-hide="child.video_thumbnail_url=='audioOnly'" ng-click="openVideoPlayer(child.id, 'videoMessageModal')" />
+                    <span class="btn btn-sm btn-default" ng-hide="child.video_thumbnail_url!='audioOnly'" ng-click="openVideoPlayer(child.id, 'videoMessageModal')">
+                      <span  class="fa fa-2x fa-play fa-fw"></span>
+                    </span>
+                    <button data-ng-show="showReplyTeacherButton()"
+                            type="button" class="btn btn-primary btn-sm pull-right grader_grader_teacherVideo_bin"
+                            data-ng-click="open(child.id)"
+                            data-ng-controller="ReplyToTeacherController">
+                      <span class="fa fa-reply" style="line-height:1em; font-size:1.4em;">
+                      </span>
+
+                      </button>
+                      <button  type="button" class="btn btn-danger btn-sm pull-right grader_grader_teacherVideo_bin" ng-click="deletePost(child.id)">
+                      <span class="fa fa-trash-o" style="line-height:1em; font-size:1.4em;">
+                      </span>
+                      </button>
+                    </li>
+                    <li ng-hide="message.children.length || !isArchive()">
+                      <button data-ng-show="showReplyTeacherButton()"
+                              type="button" class="btn btn-primary btn-sm grader_grader_teacherVideo_bin"
+                              data-ng-click="open(message.update_id)"
+                              data-ng-controller="ReplyToTeacherController"
+                              tooltip="Send Feedback to Teacher"
+                              tooltip-placement="bottom">
+                      <span class="fa fa-reply" style="line-height:1em; font-size:1.4em;">
+                      </span>
+
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div style='clear:both'></div>
+              </div>
+              <div class="graderSubmit panel panel-body send-file" ng-controller="FileUpload">
+                <span ng-show ="message.files">file<span ng-show ="message.files.length>1">s</span> : </span>
+                <div ng-show="message.files" ng-repeat="file in message.files">
+                <div><a target="_blank" ng-href="/public/useruploads/{{file.showfilename}}" >{{file.realfilename}}</a></div>
+                </div>
+                <div ng-if="message.uploaderror" style="color:red">File upload ERROR</div>
+                <button type="button" class="btn btn-success btn-sm" ng-click="open(message)" >Send a file to Student</button>
+              </div>
+              <div class="graderSubmit panel panel-body">
+                <async-button color-style="primary" text="Post to Student" flash-text="Done!" disabled="!canSavePost()" loading="loadingPost" ng-click="applyGradeTo(message)"></async-button>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+    <display-question class="question" where="'grader'" ng-if="message.isQuestion" question="message.questions[0]"></display-question>
+  </div>
+  <div ng-if="message.type=='quiz'">
+    <quiz-response quiz="message.quiz" page-info="message.pageInfo" grader-view="true" needing-feedback="needingFeedback"></quiz-response>
+  </div>
+  <div ng-if="message.type=='forum'">
+    <forum-grader-student-box student="message" page-info="message.pageInfo" is-archive="false"
+    />
+  </div>
+</div>
+<grader-pagination-nav pag-info="pagination"></grader-pagination-nav>
+</div>
+<div class="modal fade" id="advancedGrader" tabindex="-1" role="dialog" aria-labelledby="advancedGraderLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="clearGradeMessage()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="advancedGraderLabel">Feedback comments</h4>
+      </div>
+      <div class="modal-body">
+        <textarea ckeditor ng-model="advancedGrader.gradeComments"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearGradeMessage()">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="applyGradeMessage()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="expand-response-modal.html">
+  <button type="button" class="close " ng-click="$dismiss()">
+    <div class="btn btn-danger btn-sm">
+      <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+    </div>
+  </button>
+  <div class="expanded-response" ng-bind-html="trustAsHtml(message)"></div>
+</script>

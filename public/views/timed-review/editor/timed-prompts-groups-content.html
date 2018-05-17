@@ -1,0 +1,82 @@
+<div ng-show="!$root.promptsSidebarCollapsed " ng-click="$root.togglePromptsSidebar()" class="emptydiv" style="position: absolute;"></div>
+<div ng-show="loading.group==1">
+    Loading <span class="fa fa-spinner fa-pulse"></span>
+</div>
+<div ng-show="loading.group==2">
+    Sorry, something went wrong =(
+</div>
+<div ng-show="group.id && loading.group==0"></div>
+<h4>
+    <div style="display: inline-block;">
+        <div class="collapsed btn btn-xs btn-default" style="padding: 4px 10px;background: #f3f4f4;" ng-show="$root.promptsSidebarCollapsed " ng-click="$root.togglePromptsSidebar()">
+            <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+        </div>
+    </div>
+    <span ng-show="group.id=='new'">New group</span>
+    <span ng-hide="!group || group.id=='new'">
+        {{group.title}}
+        <i class="fa fa-edit text-primary pointer" ng-click="group.editing=true"></i>
+        <span class="btn btn-sm btn-primary margin-top-10 margin-left-50" data-ng-click="newPrompt()" >Create prompt</span>
+    </span>
+</h4>
+<div class="row" data-ng-show="group.id=='new' || group.editing">
+    <div class="col-xs-9">
+        <input placeholder="Title" class="form-control" ng-model="group.title">
+    </div>
+    <div class="col-xs-3">
+        <async-button color-style="primary" disabled="!canSaveGroup()" text="Save" flash-text="Saved!" loading="loading.saveGroup" ng-click="saveGroup()"></async-button>
+    </div>
+</div>
+<div class="row prompt-filter" ng-show="group.id && group.id!='new'">
+    <div class="col-sm-12">
+        <span ng-hide="filter.type=='modifiedOn'">
+            Filter:
+            <input placeholder="Filter for a prompt" data-ng-model="filter.text">
+        </span>
+        <span ng-show="filter.type=='modifiedOn'" class="filter-date-wrapper" ng-controller="TimedFiterDatepickerController">
+            <p class="input-group filter-date">
+                <input type="text" class="input-sm form-control" datepicker-popup="{{format}}" ng-model="filter.text" is-open="opened" datepicker-options="dateOptions" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-xs" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </span>
+        Type :
+        <select data-ng-model="filter.type">
+            <option value="name">Name</option>
+            <option value="creator">Author</option>
+            <option value="prompt">Content</option>
+            <option value="id">Id</option>
+            <option value="modifiedOn">Date</option>
+        </select>
+    </div>
+</div>
+
+<div class="row" data-ng-if="prompt.id=='new'">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            New prompt
+            <span>Name: </span> <input ng-model="prompt.name">
+        </div>
+        <div class="panel-body">
+            <timed-review-prompt key="prompt.id" value="prompt" prompts="group.prompts" group="group"></timed-review-prompt>
+        </div>
+    </div>
+</div>
+<div class="row prompts-container">
+
+    <div scroll-to-prompt="{{value.id}}" class="panel panel-default" id="{{'prompt_' + value.id}}"  data-ng-repeat=" value in group.prompts |  orderObjectBy:'name' | filterPromptsWith:filter  track by $index" ng-if="value.id!='new'">
+        <div class="panel-heading prompt-heading" e3-draggable drag-data="{srcGroupId:group.id,srcPromptId:value.id}" data-ng-mouseover="value.hovering=true" data-ng-mouseleave="value.hovering=false">
+           <b><span ng-hide="value.editing">{{value.name}} </span><input ng-model="value.name" ng-show="value.editing">
+               <i class="fa fa-copy pointer" ng-click="clonePrompt(value)"></i>
+               <i class="fa fa-edit pointer" ng-click="value.editing=!value.editing"></i>
+           </b>
+             Id: {{value.id}}. Author: {{value.creator}} <span class="fa fa-arrows" ng-show="value.hovering"></span>
+            <span class="prompt-modified-on">Modified on: <span ng-bind="value.modifiedOn"></span></span>
+        </div>
+        <div class="panel-body">
+            <timed-review-prompt key="value.id" value="value" prompts="group.prompts" group="group"></timed-review-prompt>
+        </div>
+    </div>
+</div>
+

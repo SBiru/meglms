@@ -1,0 +1,60 @@
+<script type="text/ng-template" id="check.html">
+    <i style="color:green" class="fa fa-check"></i>
+</script>
+<script type="text/ng-template" id="remove.html">
+    <i style="color:red" class="fa fa-times"></i>
+</script>
+<ng-include src=" '/public/views/partials/admin/userimportmodal.html' "></ng-include>
+<div  style="overflow:auto">
+    <table class="users_title">
+        <tr>
+            <td>
+                <h3>{{ className }} <span ng-show="groupName"> - {{groupName}}</span> Users
+                    <span ng-show="users.length">({{users.length}})</span>
+                </h3>
+            </td>
+        </tr>
+    </table>
+
+    <div class="row" style="margin: auto">
+        <input class="col-xs-3" type="text" placeholder="Search users" ng-model="inputFilter">
+        <span ng-hide="isModalView" class="col-xs-2" style="text-align: center"><a   href="{{addUserHref()}}">+Add User</a></span>
+        <span class="col-xs-2" style="text-align: center" ><a  ng-hide="isModalView" href="{{enrollUserHref()}}">+Enroll Users</a><a ng-show="isModalView" ng-click="enrollUserState()">+Enroll Users</a></span>
+        <!--<span class="col-xs-2" style="text-align: center"><a  data-toggle="modal" data-backdrop="static" data-target="#userImportModal">Upload Users</a></span>-->
+        <span class="col-xs-3"><span class="btn btn-primary btn-sm" ng-click="exportEnrollmentAsCsv()"><i class="fa fa-cloud-download"></i>.CSV</span></span>
+    </div>
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+        <thead>
+            <tr>
+                <th data-halign="left" style="width:15px;"></th>
+                <th data-halign="left">Last Name</th>
+                <th data-halign="left">First Name</th>
+                <th data-halign="left">Email</th>
+                <th data-halign="left">Student</th>
+                <th data-halign="left">Teacher</th>
+                <th data-halign="left">Content Editor</th>
+                <th data-halign="left">Observer</th>
+                <th data-halign="left">Suspend</th>
+                <th data-halign="left">Finished</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in users | filter:inputFilter|orderBy:classInfo.sort_user_by" ng-class="{'user-suspended':user.is_suspended}">
+                <td data-halign="left" style="width:15px;">
+                    <a ng-hide="isModalView" href="{{editUserHref(user)}}"><i class="fa fa-pencil-square-o"></i></a>
+                    <a ng-show="isModalView" ng-click="editUserView(user)"><i class="fa fa-pencil-square-o"></i></a>
+                </td>
+                <td data-halign="left">{{ user.lname }}</td>
+                <td data-halign="left">{{ user.fname }}</td>
+                <td data-halign="left">{{ user.email }}</td>
+                <td data-halign="left" ng-include="user.is_student==1?'check.html':'remove.html'"></td>
+                <td data-halign="left" ng-include="user.is_teacher==1?'check.html':'remove.html'"></td>
+                <td data-halign="left" ng-include="user.is_edit_teacher==1?'check.html':'remove.html'"></td>
+                <td data-halign="left" ng-include="user.is_observer==1?'check.html':'remove.html'"></td>
+                <td data-halign="left"><input type="checkbox" ng-model="user.is_suspended" ng-change="updateUser(user)"></td>
+                <td data-halign="left" ng-include="user.is_finished==1?'check.html':'remove.html'"></td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>

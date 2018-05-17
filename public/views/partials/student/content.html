@@ -1,0 +1,482 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        /*--------- Begin Modal Opacity Control ---------*/
+        $('body').on('show.bs.modal', '.modal', function() {
+            $('body').addClass('modal-backdrop-' + $(this).data('opacity'));
+        });
+        $('body').on('hidden.bs.modal', '.modal', function() {
+            $('body').removeClass('modal-backdrop-' + $(this).data('opacity'));
+        });
+        /*--------- End Modal Opacity Control ---------*/
+    });
+</script>
+<script type="text/ng-template" id="video-post-mobile-UI.html">
+    <div ng-show="mobileUploading">
+        <div class="file-upload-progress-container" style="width:auto;">
+            <div  class="progress progress-striped active">
+                <div id="upload-progress-bar" class="progress-bar upload" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" ng-init="showInputFileBox()"></div>
+</script>
+<script type="text/ng-template" id="new-post-box.html">
+    <div class="text-post-wrapper">
+        <span ng-show="p.scope.allow_video_post == '0' && p.scope.postAs!='video'"
+
+              ng-click="postBoxOwner.showTextBox=false;p.scope.resizeTriggers.content.setResize(false)"
+              class="btn btn-danger pull-right">
+            <span class="fa fa-close "></span>
+        </span>
+        <div ng-show="p.scope.selectingPostType">
+            <div class="btn btn-primary" ng-click="p.scope.selectPostType('video')">Post Video</div>
+            <div class="btn btn-primary" ng-click="p.scope.selectPostType('text')">Post Text</div>
+        </div>
+
+        <div ng-if="!p.scope.selectingPostType">
+            <div class="video-recorder-wrapper"
+                 ng-if="postBoxOwner.showTextBox && (p.scope.allow_video_post==1 || p.scope.postAs=='video')"
+                 ng-show="p.scope.allow_video_post == '1' || p.scope.postAs=='video'">
+                <record-video options="{showComments:true}" ng-model="p.scope.studentVideoRecorder.videoData" close-action="p.scope.postBoxOwner.showTextBox"></record-video>
+            </div>
+            <div ng-show="p.scope.allow_video_post == '0' && p.scope.postAs!='video'">
+
+                <div style="margin-bottom: 10px;" class="instruction">
+                    Type or paste your text below <span ng-show="p.scope.allow_upload_post">, or upload your document</span>
+                </div>
+                <div class="clearfix" style="margin-bottom: 5px;"></div>
+                <div style="margin-bottom: 5px;" class="file-wrapper" ng-show="p.scope.allow_upload_post">
+                    <p>Max. file size allowed: 200 MB</p>
+                    <div style="text-align: center">
+                        <div class="btn btn-default" ng-click="selectFiles('new_post_file_input')">
+                            <span class="fa fa-paperclip"></span>
+                            Attach file(s)</div>
+                    </div>
+
+                    <input type="file" id="new_post_file_input" ng-file-select="p.scope.onFileSelect($files,$event)" style="visibility: hidden" multiple>
+                    <div ng-repeat="file in selectedFiles track by $index" >
+                        <div style="    padding: 8px;background: #f7f3f3;display: inline-block;border: 1px solid #ccc;margin-bottom: 5px;">
+                            <span ng-bind="file.name"></span>
+                            <span ng-bind="humanFileSize(file.size,true)"></span>
+                            <span class="fa fa-close pointer" style="color:dimgrey " ng-click="removeFile($index)"></span>
+                        </div>
+
+
+                    </div>
+                    <br />
+                    <div ng-show="p.scope.is_uploading">
+                        <span>Uploaded {{ p.scope.progress_upload }}%</span>
+                        <div class="file-upload-progress-container" style="width:300px;">
+                            <div  class="progress progress-striped active">
+                                <div id="upload-progress-bar" class="progress-bar" style="width:0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <textarea ckeditor custom-options="{height:98}" ng-model="video_comment"></textarea>
+                <button ng-click="p.scope.submitPost(0,video_comment)" data-ng-disabled="p.scope.submitting" class="text-comment">
+                    <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                    <span class="fa fa-spinner fa-pulse" ng-show="p.scope.submitting"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<div ng-if="need_password">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="CC.user_password">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+            </span>
+        </div>
+        <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+</div>
+<div class="" ng-if="!need_password">
+    <div ng-controller="ObjectivesController" ng-class="{'bordered-page':pageinfo.meta.page_border_color}" ng-style="{'border-color':pageinfo.meta.page_border_color}">
+        <div id="objectivesTable" ng-include="'/public/views/partials/student/objectives_table.html'" ng-hide="pageinfo.isJ1OrProficiency"> </div>
+
+        <!--If we have Mathjax in content-->
+
+
+        <div ng-controller="PostController as pc">
+
+            <div  ng-if="contentPlusMathjac">
+            <span ng-repeat="obj in contentPlusMathjac">
+            <span ng-if="obj.html"dynamic="obj.html"></span>
+            <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+            </span>
+            </div>
+            <!--If we do not have Mathjax in content-->
+            <div class="content-wrapper" ng-show="!isScorm || ((isScorm) && (display_description || !isStudent))">
+                <resize bind-html-compile="contenthtml" ng-if="!contentPlusMathjac"  trigger="resizeTriggers.content"
+                        resize-y = "resizeFunctions.content" class="content" ng-class="{'resizing':resizeTriggers.content.doResize()}"></resize>
+                <a ng-show="resizeTriggers.content.doResize()" class="btn btn-primary btn-new-tab" href="/singlepage/#/{{contentid}}" target="_blank">Show content in a new tab</a>
+            </div>
+
+            <div style="clear:both"></div>
+                <div  ng-show="showTextBox && isVideoPostInMobile" ng-include="'video-post-mobile-UI.html'"></div>
+                <div ng-if="showTextBox && !isVideoPostInMobile" ng-include="'new-post-box.html'"></div>
+            <div>
+                <div ng-show="showNewPost()" style="margin-top:10px;margin-bottom:20px" data-ng-style="{'text-align':noMenuOptions.isIdVerification?'center':''}">
+                    <button type="button" ng-if="allow_template_post" class="btn btn-big margin-top-10" ng-class="post_options.new_post_color" ng-click="openTemplatePostModal()">{{ $root.custom_new_post_text?$root.custom_new_post_text:preference.navs.new_post.translation }}</button>
+
+                    <button type="button"
+                            ng-show="allow_template_post == 0 && allow_text_post == 1 || allow_upload_post==1"
+                            ng-class="post_options.new_post_color"  class="btn btn-big margin-top-10" ng-disabled="postBoxOwner.showTextBox"
+                            ng-click="newPost();togglePostBox(p.scope)">{{ $root.custom_new_post_text?$root.custom_new_post_text:preference.navs.new_post.translation }}</button>
+                    <span ng-if="allow_upload_only_post==1" type="{{layout}}" btn-text="{{$root.custom_new_post_text}}"
+                          btn-class="{{noMenuOptions.isIdVerification?'btn btn-upload-id ' + (noMenuOptions.newPostClassName?noMenuOptions.newPostClassName:' btn-success'):null}}"
+                          upload-only></span>
+                    <div ng-show="allow_upload_only_post==1 && noMenuOptions.isIdVerification && selectedFiles && selectedFiles.length">
+                        <p></p>
+                        <p>{{selectedFiles[0].name}} {{fileSize}}</p>
+                    </div>
+
+                    <button type="button"
+                            ng-show="!isVideoPostInMobile && allow_template_post == 0 && (allow_video_post == 1 || allow_video_text_post == 1) && allow_upload_post!=1"  ng-class="post_options.new_post_color"  class="btn  btn-big margin-top-10" ng-disabled="postBoxOwner.showTextBox" ng-disabled="postBoxOwner.showTextBox" ng-click="newPost();togglePostBox(p.scope)">{{ $root.custom_new_post_text?$root.custom_new_post_text:preference.navs.new_post.translation }}</button>
+                    <div ng-show="isVideoPostInMobile">
+                    <button ng-class="post_options.new_post_color"  class="btn  btn-big margin-top-10" ng-click="getFile($event)" type="file" >Record video</button>
+                    <input  id="mobileFileSelect" accept="video/*" type="file" ng-file-select="newPost();togglePostBox(p.scope);mobileOnFileSelect($files,$event)" ng-show="false">
+                    </div>
+                    <button id="showArchiveButton" ng-show="showArchiveButton()" ng-click="pc.archiveOpened=!pc.archiveOpened" class="btn btn-info btn-big margin-top-10">Show archived posts</button>
+                </div>
+
+
+
+                <!-- bootstrap modal -->
+                <div id="basicModal" class="modal fade active" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" data-opacity="0">
+                    <div class="modal-dialog" style="width: 380px; left: 10px; position: absolute;" ng-class="{Modal50perc : allow_video_post === '0'}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <!--<h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation }}</h4>-->
+                            </div>
+
+                            <div ng-if="alternateReplies" style="width:100%;margin-top:20px" role="group" aria-label="...">
+                                <button ng-show="allow_video_post == '0'" type="button" class="btn btn-success center-block" ng-click="allowVideoPost()"><span style="margin-right:10px" class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>Reply with a Video Post</button>
+                                <button ng-show="allow_video_post == '1'" type="button" class="btn btn-success center-block" ng-click="allowTextPost()"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> | <span style="margin-right:10px" class="glyphicon glyphicon-upload" aria-hidden="true"></span>Reply with a Text or fileupload Post</button>
+                            </div>
+
+                            <div class="modal-body" ng-init="currentTab='video'">
+                                <div class="alert alert-warning"
+                                     ng-show="reply_to_id && currentCourse.is_student==1">
+                                    <b>NOTE:</b> If you need to resubmit your assignment, please use the "New Post" button. Otherwise your post will be treated as a comment and will not be graded by your teacher.
+                                </div>
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist" ng-show="allow_video_post">
+                                    <li class="active" ng-hide="is_mobile">
+                                        <a href="" role="tab" data-toggle="tab" ng-click="currentTab='video'">{{ preference.navs.webcam.translation }}</a>
+                                    </li>
+                                    <li ng-class="{'active': is_mobile}" ng-show="allow_video_post">
+                                        <a href="" role="tab" data-toggle="tab" ng-click="currentTab='upload_video'">{{ preference.navs.uploadvideo.translation }}</a>
+                                    </li>
+                                    <li ng-show="allow_upload_post" ng-class="{active: allow_upload_post}" class='active'>
+                                        <a href="" role="tab" data-toggle="tab" ng-click="currentTab='upload_file'">Upload File</a>
+                                    </li>
+                                </ul>
+                                <script type="text/javascript">
+                                    window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+
+                                        if (errorMsg == 'Uncaught Error: Error: An invalid exception was thrown.') {
+                                            //	$('.modal').modal('hide');
+                                            //	alert("Your computer can't connect to the video recording service. Please contact customer service if you continue to see this error.");//or any message
+                                            //	return false;
+                                        }
+                                    }
+                                    $(function () {
+                                        $('.modal').on('hide.bs.modal', function (e) {
+                                            // Check if video was started
+                                            var scope = angular.element(document.getElementById("submitted")).scope();
+
+                                            if (scope.showSaving) {
+                                                if (!confirm('Your video has not finished saving. If you close now, the video might be saved incomplete. Are you sure you want to continue?')) {
+                                                    e.preventDefault();
+                                                } else {
+                                                    scope.submitting = false;
+                                                    scope.showSaving = false;
+                                                    scope.showSubmit = false;
+                                                    scope.$apply();
+                                                }
+                                            } else {
+                                                scope.submitting = false;
+                                                scope.showSaving = false;
+                                                scope.showSubmit = false;
+                                                scope.$apply();
+                                            }
+
+                                        });
+                                    });
+
+                                </script>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div  ng-show="!is_mobile && currentTab=='video'" id="video_reply_tab">
+                                        <!-- Beginning Of Flash Video Recorder -->
+                                        <div style="margin-top: 10px;">
+                                            <div ng-show="allow_video_post" align="center">
+                                                <div ng-bind-html="videoWidget" style="width: 272px; height:224px;"></div>
+                                                <br />
+                                                <div id="buttonsarea" align="center">
+                                                    <span ng-bind-html="videoRecordButton" class="videoRecordButton"></span> &nbsp;&nbsp;
+                                                    <button ng-click="submitPost('video')" id="submitted" data-ng-disabled="submitting" ng-show="showSubmit">
+                                                        <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                                                        <span class="fa fa-spinner fa-pulse" ng-show="submitting"></span>
+                                                    </button>
+												<span ng-show="showSaving" style="font-weight:bold; font-size:x-large;">
+													<img src="/public/img/ajax-loader.gif"  /> Please wait... your video is being processed
+												</span>
+                                                    <!--<img id="submitted" src="/public/img/submitbttn.png" ng-click="submitPost(0)">-->
+                                                </div>
+                                                <div id="bottompart">
+                                                    <!--<div align="center">
+                                                        <input id="private_video" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video">Make Private</label>
+                                                    </div>-->
+                                                    <p align="center">If necessary, add a text comment below.
+                                                        <br>Click submit when you are finished.</p>
+                                                </div>
+                                            </div>
+                                            <div id="commentsarea" align="center">
+                                                <textarea ng-show="allow_video_post == '1'" id="comments" class="form-control" rows="3" placeholder="" ng-model="video_comment"></textarea>
+
+                                                <div ng-show="allow_video_post == '0'" style="padding-bottom:10px">
+                                                    <div style="margin-bottom: 10px;">
+                                                        Type or paste your text below, or upload your document
+                                                    </div>
+                                                    <div style="margin-bottom: 5px;">
+                                                        <p>Max. file size allowed: 200 MB</p>
+                                                        <input type="file" ng-file-select="onFileSelect($files,$event)" multiple>
+                                                        <br />
+                                                        <div ng-show="is_uploading">
+
+                                                            <span>Uploaded {{ progress_upload }}%</span>
+                                                            <div class="file-upload-progress-container" style="width:300px;">
+                                                                <div  class="progress progress-striped active">
+                                                                    <div id="upload-progress-bar" class="progress-bar" style="width: 0%;"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <textarea id="commentsText" name="commentsText" ng-model="video_comment" cols="35" rows="6" placeholder="Type Message Here"></textarea>
+                                                </div>
+                                                <div ng-hide="allow_video_post == 1">
+                                                    <!--<div>
+                                                        <input id="private_text" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_text">Make Private</label>
+                                                    </div>-->
+                                                    <button ng-click="submitPost(0)" data-ng-disabled="submitting">
+                                                        <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                                                        <span class="fa fa-spinner fa-pulse" ng-show="submitting"></span>
+                                                    </button>
+                                                    <!--<img src="/public/img/submitbttn.png" ng-click="submitPost(0)">-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Of Flash Video Recorder -->
+                                    </div>
+                                    <div  id="upload_reply_tab" ng-show="is_mobile || currentTab=='upload_video'">
+                                        <div style="margin-top: 10px;">
+                                            <p>Max. file size allowed: 200 MB</p>
+                                            <input type="file" ng-file-select="onFileSelect($files,$event)">
+                                            <br />
+                                            <div ng-show="is_uploading">
+                                                <span>Uploaded {{ progress_upload }}%</span>
+                                                <div class= "file-upload-progress-container" style="width:300px;">
+                                                    <div class="progress progress-striped active">
+                                                        <div id="upload-progress-bar" class="progress-bar" style="width: 0%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="bottompart">
+                                                <!--<div align="center">
+                                                    <input id="private_video_file" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video_file">Make Private</label>
+                                                </div>-->
+                                                <p align="center">If necessary, add a text comment below.
+                                                    <br>Click submit when you are finished.</p>
+                                            </div>
+                                            <div align="center">
+                                                <textarea ng-disabled="is_uploading" id="upload_comments" name="upload_comments" ng-model="video_upload_comment" cols="35" rows="6" placeholder="Type Message Here"></textarea>
+                                                <button ng-disabled="is_uploading" ng-click="uploadPost()">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    CKEDITOR.config.allowedContent = true;
+                                    CKEDITOR.config.disableNativeSpellChecker = false;
+                                    var ck = CKEDITOR.replace('commentsText', {
+                                        toolbar: [
+                                            { name: 'document',items: [ 'Source']},
+                                            {
+                                                name: 'basicstyles',
+                                                groups: ['basicstyles', 'cleanup'],
+                                                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat', 'Smiley']
+                                            }, {
+                                                name: 'paragraph',
+                                                groups: ['list', 'indent', 'blocks', 'align', 'bidi'],
+                                                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+                                            }, {
+                                                name: 'colors',
+                                                items: ['TextColor', 'BGColor']
+                                            }, {
+                                                name: 'tools',
+                                                items: ['Maximize']
+                                            },
+                                        ],
+                                        filebrowserUploadUrl: '/uploadckeditormedia/'
+                                    });
+
+                                    if(!ON_MOBILE){
+                                        ck.on( 'paste', function( evt ) {
+                                            var data = evt.data;
+                                            data.dataValue = E3replaceUrl(data.dataValue);
+
+
+//                            // Text could be pasted, but you transformed it into HTML so update that.
+                                            data.type = 'html';
+                                        });
+                                    }
+
+                                </script>
+                                <!-- End Tab panes -->                    </div>
+                            <!--<div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <!--End Basic Boot Strap Modal-->
+
+                <!-- bootstrap File Template modal -->
+                <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" data-opacity="0">
+                    <div class="modal-dialog" style="width: 98%;">
+                        <div class="modal-content" style="min-height: 650px">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation }}</h4>
+                                <div ng-bind-html="contenthtml"></div>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="file_upload_reply_tab">
+                                        <div style="margin-top: 10px;">
+                                            <div  dynamic="rawHtml" style="width:98%;min-height:450px;margin-top:10px;overflow:auto;background-color:`;padding-left:15px;padding-bottom:15px;padding-right:15px;padding-top:15px;border:1px solid #ccc;border-radius:5px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Tab panes -->
+                            </div>
+                            <div class="modal-footer" style="width:100%;text-align:center">
+                                <button type="button" class="btn btn-success" ng-click="submitTemplateContent()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Basic Boot Strap File Template Modal-->
+                <!-- bootstrap File UPload modal -->
+                <div id="basicFileUploadModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" data-opacity="0">
+                    <div class="modal-dialog" style="width: 380px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Nav tabs -->
+                                <div class="alert alert-warning"
+                                     ng-show="reply_to_id && currentCourse.is_student==1">
+                                    <b>NOTE:</b> If you need to resubmit your assignment, please use the "New Post" button. Otherwise your post will be treated as a comment and will not be graded by your teacher.
+                                </div>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class='active'><a href="#file_upload_reply_tab" role="tab" data-toggle="tab">Upload File</a>
+                                    </li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="file_upload_reply_tab">
+                                        <div style="margin-top: 10px;">
+                                            <p>Max. file size allowed: 200 MB</p>
+                                            <input type="file" ng-file-select="onFileSelect($files,$event)" multiple>
+                                            <br />
+                                            <div ng-show="is_uploading">
+                                                <span>Uploaded {{ progress_upload }}%</span>
+                                                <div class="file-upload-progress-container" style="width:300px;">
+                                                    <div class="progress progress-striped active">
+                                                        <div id="upload-progress-bar" class="progress-bar" style="width: 0%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="bottompart">
+                                                <!--<div align="center">
+                                                    <input id="private_upload_file" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video_file">Make Private</label>
+                                                </div>-->
+                                                <p align="center">If necessary, add a text comment below.
+                                                    <br>Click submit when you are finished.</p>
+                                            </div>
+                                            <div align="center">
+                                                <textarea ng-disabled="is_uploading" id="upload_comments" name="upload_comments" ng-model="file_upload_comment" cols="35" rows="6" placeholder="Type Message Here"></textarea>
+                                                <button ng-disabled="is_uploading" ng-click="onFileUploadGenericSelect()">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Tab panes -->
+                            </div>
+                            <!--<div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <!--End Basic Boot Strap File UPload Modal-->
+                <glossary-viewer page-id="contentid" org-id="orgId" ng-if="isGlossary"></glossary-viewer>
+                <div ng-controller="PostedMessagesController" ng-if="$root.layout!=='PICTURE'">
+
+                    <style>
+                        .template100{
+                            width:100% !important;
+                        }
+                    </style>
+                    <!-- bootstrap modal -->
+                    <div id="videoMessageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="videoMessageModal" aria-hidden="true" data-opacity="0">
+                        <div class="modal-dialog" style="width: 380px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">Message</h4>
+                                </div>
+                                <div class="modal-body" ng-bind-html='current_video_player'>
+                                </div>
+                                <!--<div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-archive" ng-show="pc.archiveOpened">
+                        <span ng-click="pc.archiveOpened=false" class="fa fa-close close text-danger pointer "></span>
+                        <div class="h4">Archived posts</div>
+                        <div class="post-archive-body">
+                            <posted-messages messages="archiveMessages" is-archive="true"></posted-messages>
+                        </div>
+
+                    </div>
+                    <!--End Basic Boot Strap Modal-->
+                    <posted-messages messages="postedMessages"></posted-messages>
+                    <div ng-show="isScorm && isStudent" style="font-size: 15px">
+                        <p>Click here to launch <a ng-click="takeTest()">{{scorm_name}}</a></p>
+                        <br>
+                        <p ng-show="score != null" id="currentScore">Score : {{score}}</p>
+                    </div>
+                    <p ng-show="isScorm && !isStudent">Click here to launch <a ng-click="previewScorm()">{{scorm_name}}</a></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

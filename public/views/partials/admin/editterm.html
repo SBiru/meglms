@@ -1,0 +1,61 @@
+<div>
+    <h2>Edit Term</h2>
+    <table>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termName" class="control-label" style="font-size:1.4em">Name</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termName" name="termName" ng-model="term.name" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Term Name" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termStartDate" class="control-label" style="font-size:1.4em">Start Date</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termStartDate" name="termStartDate" ng-model="term.start_date" class="form-control ng-pristine ng-valid ng-valid-required date" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termEndDate" class="control-label" style="font-size:1.4em">End Date</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termEndDate" name="termEndDate" ng-model="term.end_date" class="form-control ng-pristine ng-valid ng-valid-required date" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="updateTerm()">Update Term</button></td>
+        </tr>
+    </table>
+    <h3>Classes</h3>
+    <input type="text" placeholder="Search" ng-model="inputFilter">
+    <ul id="termsTab" class="nav nav-tabs" ng-init="hasTerms=''">
+        <li class="active">
+            <a data-toggle="tab" ng-click="hasTerms=''">All</a>
+        </li>
+        <li >
+            <a data-toggle="tab" ng-click="hasTerms='1'">Has term</a>
+        </li>
+        <li >
+            <a data-toggle="tab" ng-click="hasTerms='0'">Doesn't have term</a>
+        </li>
+    </ul>
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+
+        <thead>
+        <tr>
+            <th data-halign="left"></th>
+            <th data-halign="left">Class Name</th>
+            <th data-halign="left">Term</th>
+            <th data-halign="left"></th>
+            <th data-halign="left"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat='class in classes | filter:inputFilter | filter:{has_term:hasTerms}'
+            ng-class="{'enrolled': class.has_term=='1'}">
+            <td data-halign="left" style="width:15px;"><a href="#/editcourseclass/{{ class.id }}"><i class="fa fa-pencil-square-o"></i></a></td>
+            <td data-halign="left">{{ class.name }}</td>
+            <td data-halign="left" >{{class.term_name}}</td>
+            <td data-halign="left" ><input type="checkbox" ng-model="class.editing" ></td>
+            <td data-halign="left" >
+                <button class="btn btn-primary btn-sm" ng-show="class.editing" ng-click="updateClass(class)">
+                    Update
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

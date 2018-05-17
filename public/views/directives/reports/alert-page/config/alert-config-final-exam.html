@@ -1,0 +1,82 @@
+<style>
+    [alert-config-final-exam]{
+        display: block;
+    }
+    [alert-config-final-exam] .add-new{
+        padding: 10px;
+        border-radius: 4px ;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+    [alert-config-final-exam] .buttons-area{
+        clear: both;
+    }
+    [alert-config-final-exam] .table{
+        margin-bottom: 0;
+    }
+    [alert-config-final-exam] .add-new .table.inline th{
+        width: 33%;
+    }
+    [alert-config-final-exam] .add-new .table.stacked th{
+        width: 100px;
+    }
+    [alert-config-final-exam] .add-new .table.stacked th,[alert-config-final-exam] .add-new .table.stacked td{
+        padding:0
+    }
+</style>
+<div ng-if="alert.addingNew" class="add-new">
+    <table class="table inline" ng-if="options.layout.class=='col-xs-12' || options.layout.class=='col-xs-6'">
+        <tr>
+            <th>Class</th>
+            <th>Final exam</th>
+        </tr>
+        <tr>
+            <td><select-class role="'teacher'" options="{filter:{exclude_from_alerts:0}}" ng-model="new.selectedClass">Select class</select-class></td>
+            <td><select-assignment for-class="new.selectedClass" only-gradeable="true" ng-model="new.selectedAssignment">Select assignment</select-assignment></td>
+        </tr>
+    </table>
+    <table class="table stacked" ng-if="options.layout.class=='col-xs-4' || options.layout.class=='col-xs-3'">
+        <tr>
+            <th>Class</th>
+            <td><select-class role="'teacher'" options="{filter:{exclude_from_alerts:0}}" ng-model="new.selectedClass">Select class</select-class></td>
+        </tr>
+        <tr>
+            <th>Final exam</th>
+            <td><select-assignment for-class="new.selectedClass" only-gradeable="true" ng-model="new.selectedAssignment">Select assignment</select-assignment></td>
+        </tr>
+    </table>
+    <div class="row">
+        <div class="col-xs-12">
+            <span class="btn btn-sm btn-primary pull-right" ng-click="addNew(new)">Add</span>
+        </div>
+
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th >Class</th>
+        <th >Assigment</th>
+        <th style="width: 50px"></th>
+    </tr>
+    </thead>
+
+    <tr data-ng-repeat="assignment in alert.params.assignments track by $index">
+        <td>
+            {{assignment.className}}
+        </td>
+        <td>
+            {{assignment.name}}
+        </td>
+        <td ng-click="removeAssignment($index)">
+            <span class="fa fa-trash text-danger"></span>
+        </td>
+    </tr>
+</table>
+<div class="buttons-area">
+    <span class="pull-right">
+        <span class="btn btn-sm btn-default" ng-click="alert.addingNew = true">Add new</span>
+        <alert-ok-button></alert-ok-button>
+    </span>
+</div>
+

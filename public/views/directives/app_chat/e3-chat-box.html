@@ -1,0 +1,33 @@
+<div class="boxHeader">
+    <img src="{{user.profilePicture}}" style="width:24px;height: 24px" ng-hide="users && users.length">
+    <span class="fa fa-users" ng-show="users && users.length"></span>
+    <b data-ng-bind="preparedUserName" style="max-width: 70%;display: inline-table;"></b>
+    <span class="fa fa-minus pull-right pointer right-button chat-icons" ng-click="close(user)"></span>
+    <span class="fa fa-user-plus pull-right pointer right-button chat-icons" ng-show="!user.isTeacher" ng-click="showAddUser=true"></span>
+    <span class="fa fa-download pull-right pointer right-button chat-icons" tooltip="Download conversation" ng-click="downloadLog()"></span>
+    <div class="btn btn-default btn-xs" ng-if="!user.closed && users.length" ng-hide="isStudent()" tooltip="Students can no longer chat but the conversation group stays so everyone involved in that conversation can read old messages written." ng-click="toggleConversationStatus()">Close chat</div>
+    <div class="btn btn-default btn-xs" ng-if="user.closed && users.length" ng-hide="isStudent()" tooltip="Allow students to chat." ng-click="toggleConversationStatus()">Open chat</div>
+</div>
+
+<div class="conversation">
+    <e3-chat-add-user class="clearfix" done="addUser" current-users="users" current-user="user" ng-show="showAddUser"></e3-chat-add-user>
+    <div class="day-separator" ng-show="loadingLog">
+        <i class="fa fa-spinner fa-pulse"></i>
+    </div>
+    <div data-ng-repeat="dayInfo in logGroupedByDays">
+        <div ng-bind="dayInfo.day" class="day-separator"></div>
+        <div data-ng-repeat="msg in dayInfo.messages" class="message-box clearfix" ng-class="{'right-message':msg.from==myId&&!msg.isInfo,'left-message':msg.from!=myId&&!msg.isInfo}">
+            <div ng-if="!msg.isInfo">
+                <span ng-bind="msg.fromName" ng-if="msg.from!=myId" class="from-name"></span>
+                <span ng-bind="msg.message" class="message"></span>
+                <span class="time" ng-bind="msg.sentAt"></span>
+            </div>
+            <div ng-if="msg.isInfo" class="message-info" ng-bind="msg.message"></div>
+
+        </div>
+    </div>
+
+</div>
+<div ng-style="inputAreaheight" class="inputbox inputArea">
+    <textarea class="inputArea" placeholder="{{textAreaPlaceholder}}" data-ng-disabled="!canType()"></textarea>
+</div>

@@ -1,0 +1,173 @@
+.blink {
+  animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+  color: red;
+}
+@keyframes blinker {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+#prompt-video> video::-webkit-media-controls {
+  display: none;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.global-header {
+  width: 100%;
+  background-color: cyan;
+  font-size: 20px;
+  padding: 10px 20px;
+}
+.global-body {
+  padding: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.ConversationsList {
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+.ConversationsList_item a {
+  display: block;
+  padding: 10px 20px;
+  font-size: 20px;
+  border-bottom: 1px solid #aaa;
+  cursor: pointer;
+  text-decoration: none;
+}
+.ConversationsList_item a:hover {
+  background-color: #eee;
+}
+.Game {
+  position: relative;
+}
+.Game_body-finishing {
+  margin: 100px;
+  text-align: center;
+}
+.Game_title {
+  font-weight: bold;
+}
+.Game_progress {
+  top: 0;
+  right: 0;
+  position: absolute;
+  font-size: 17px;
+}
+.Game_loading {
+  margin-right: 20px;
+  margin-top: -5px;
+}
+.Game_finished {
+  text-align: center;
+  margin: 50px auto;
+}
+.Timer {
+  text-align: center;
+}
+.Timer path {
+  stroke: #66f;
+  stroke-width: 10px;
+  fill: none;
+}
+.Timer circle {
+  stroke: #bbe;
+  stroke-width: 10px;
+  fill: #eee;
+}
+.Timer svg {
+  margin: 20px auto;
+}
+.Dialog_prompt {
+  font-size: 30px;
+  color: #111b30;
+  font-weight: bold;
+}
+.Dialog_empty {
+  color: #666;
+  font-style: italic;
+  font-size: 20px;
+  font-family: sans-serif;
+}
+.Dialog_words {
+  font-size: 20px;
+  font-family: sans-serif;
+}
+.Dialog_feedback {
+  color: green;
+  font-size: 20px;
+  text-align: center;
+  margin: 30px 10px;
+}
+.Dialog_word {
+  color: #666;
+}
+.Dialog_word.final {
+  color: black;
+}
+.Dialog_example {
+  font-size: 20px;
+  font-family: sans-serif;
+}
+.Dialog_loading {
+  margin-left: 20px;
+  margin-top: -5px;
+}
+.Dialog {
+  display: flex;
+}
+.Dialog_left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+}
+.Dialog_middle {
+  flex: 1;
+  padding: 30px;
+}
+.Dialog_button button {
+  display: block;
+  width: 100%;
+  font-size: 25px;
+  font-weight: bold;
+}
+.Dialog_right {
+  position: relative;
+  width: 500px;
+  height: 380px;
+}
+.Dialog_webcam {
+  width: 100%;
+  opacity: .5;
+  transform: scaleX(-1);
+}
+.Dialog_webcam-recording {
+  opacity: 1;
+}
+.Dialog_recording {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: #fff;
+  color: black;
+  text-align: center;
+  opacity: .3;
+  padding-bottom: 0px;
+}
+.text-type{
+  padding-left: 40px;
+}
+#prompt.timed-review-container {
+  min-height: 450px;
+}
+.timed-review-modal .modal-dialog{
+  width:95%;
+
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+	<head>
+		<?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta charset="utf-8">
+		<?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+		<link rel="stylesheet" href="/public/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/public/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/public/css/render-page.css">
+
+	</head>
+	<body ng-app="app">
+
+		<div ui-view></div>
+
+		<script src="/public/lib/angular.min.js"></script>
+		<script src="/public/lib/angular-route.min.js"></script>
+		<script src="/public/lib/angular-resource.min.js"></script>
+		<script src="/public/lib/angular-sanitize.min.js"></script>
+		<script src="/public/lib/angular-ui-router.min.js"></script>
+		<script src="/public/lib/ui-bootstrap-tpls-0.12.0.min.js"></script>
+		<script src="/public/js/singlepageapp.js"></script>
+
+		<!-- Required by render-page.min.js -->
+		<script src="/public/lib/howler.min.js"></script>
+
+		<!-- app libraries -->
+		<script src="/public/js/services/page.js"></script>
+		<script src="/public/js/directives/render-page.min.js"></script>
+	</div></div></body>
+</html>

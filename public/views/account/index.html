@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/css/app.css?ver=1.1.2">
+    <link rel="stylesheet" href="/public/css/app/editor.css">
+    <link rel="stylesheet" href="/public/css/app/email.css">
+
+    <link rel="stylesheet" href="/public/css/meg2.css" type="text/css" media="screen" />
+
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <link rel="stylesheet" href="/public/css/responsive.css" type="text/css" />
+    <link rel="stylesheet" href="/public/css/angular-img-crop.css">
+
+    <script src="/public/lib/jquery-1.11.0.min.js"></script>
+    <script src="/public/lib/jquery-ui.min.js"></script>
+    <script src="/public/lib/jquery.ui.touch-punch.min.js"></script>
+    <script src="/public/lib/bootstrap.min.js"></script>
+    <script src="/public/js-util/flash-video-helper.js"></script>
+	<script src="/public/js-util/url-replacer.js"></script>
+    <script src="/public/lib/angular-file-upload-shim.min.js"></script>
+    <!-- <script src="lib/holder.js"></script> --><!-- TESTING ONLY -->
+    <script src="/public/lib/howler.min.js"></script>
+    <script src="/public/lib/underscore-min.js"></script>
+
+    <script src="/public/lib/angular.min.js"></script>
+    <script src="/public/lib/angular-resource.min.js"></script>
+    <script src="/public/lib/angular-route.min.js"></script>
+    <script src="/public/lib/angular-ui-router.min.js"></script>
+    <script src="/public/lib/angular-file-upload.js"></script>
+	<script src="/public/lib/angular-base64-upload.js"></script>
+	<script src="/public/lib/angular-animate.js"></script>
+    <script src="/public/lib/toastr.js"></script>
+
+    <script src="/public/lib/d3.js"></script>
+    <script src="/public/lib/nv.d3.js"></script>
+    <script src="/public/lib/angularjs-nvd3-directives.min.js"></script>
+
+    <script src="/public/js/directives/audio-flashit.js"></script>
+    <script src="/public/build/timed-review.js"></script>
+    <script src="/public/lib/angular-treeview.js"></script>
+    <script src="/public/lib/angular-img-crop.js"></script>
+
+
+    <link rel="stylesheet" href="/public/lib/select2/selectize.default.css" />
+    <script src="/public/lib/selectize.js"></script>
+    <script src="/public/lib/select2/angular-selectize.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload-shim.min.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload.min.js"></script>
+
+    <script src="/public/lib/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="/public/lib/ui-utils.min.js"></script>
+
+    <script src="/public/js/app.js?ver=1.0"></script>
+    <script src="/public/js/controllers.js?ver=1.0.6"></script>
+    <script src="/public/js/controllers/HelpController.js"></script>
+
+    <script src="/public/js/controllers/nav.js"></script>
+    <script src="/public/js/controllers/utility.js?ver=1.0"></script>
+    <script src="/public/js/controllers/email/EmailController.js"></script>
+    <script src="/public/js/controllers/AccountController.js"></script>
+    <script src="/public/js/controllers/PreferenceController.js"></script>
+    <script src="/public/js/controllers/editor/ProfilePhotoModalController.js"></script>
+    <script src="/public/js/controllers/file_folder/filefolder.js"></script>
+    <script src="/public/js/filters.js"></script>
+    <script src="/public/js/services.js?ver=1.1"></script>
+    <script src="/public/js/services/email/Email.js"></script>
+    <script src="/public/js/services/posts.js"></script>
+    <script src="/public/js/services/usermeta.js"></script>
+    <script src="/public/js/services/user.js"></script>
+    <script src="/public/js/directives.js"></script>
+    <script src="/public/js-util/bootstrap-modifications.js"></script>
+    <script src="/public/js-util/slider.js"></script>
+    <script src="/public/js-util/angular-toggle-switch.min.js"></script>
+    <script src="/public/js-util/timer.js"></script>
+    <script src="/public/lib/angular.rangeSlider.js"></script>
+    <!-- Golabs 26/03/2015 Drag and drop-->
+    <script src="/public/js-util/dragdrop/draganddrop.js"></script>
+</head>
+<body ng-controller="PreferenceController">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+        <div class="navbar-collapse collapse" id="main-navbar">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+
+<div ui-view></div>
+
+
+</div></div></body>
+</html>
+

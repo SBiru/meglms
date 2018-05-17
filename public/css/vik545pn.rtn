@@ -1,0 +1,834 @@
+@import "app/feedback.css";
+@import "app/sidebar.css";
+
+body {
+    padding-top: 60px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight : 700;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/*a {*/
+    /*color: #2e998d;*/
+    /*text-decoration: none;*/
+/*}*/
+/*.flashing {*/
+    /*background-color: #2e998d;*/
+/*}*/
+
+.main-nav-pager > li > span {
+    height: 32px;
+    font-size: 40px;
+    line-height: 32px;
+}
+
+.main-nav-pager > li > span > span {
+    display: block;
+    margin-top: -11px;
+}
+
+.pager > li > span {
+    cursor: pointer;
+    color: #428bca;
+}
+
+.nav-stacked>li+li {
+    margin-top: 0px;
+    margin-left: 0;
+}
+
+/* Side Nav */
+
+.sidebar {
+    position: fixed;
+    top: 52px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #f3f4f4;
+    /*border-right: 1.5px solid #636363;*/
+}
+
+.nav > li.sidebar-header > a {
+    padding-left: 45px;
+}
+
+.nav > li.sidebar-nav-child > a {
+    padding-left: 45px;
+}
+
+.course-units-nav{
+    font-size: 15px;
+    padding-botom: 5px;
+    padding-top: 16px;
+
+}
+
+.unit-button-active{
+    background-color: #fff;
+    /*border-top: 1px solid;*/
+    /*border-left: 1px solid;*/
+    /*border-right: 1px solid;*/
+}
+
+.unit-button-inactive{
+    background-color: #e9e9ea;
+    color: #fff !important;
+}
+
+.sidebar-fa-bars{
+    text-align: center;
+    padding-top: 15px;
+    padding-right: 16px;
+    padding-left: 10px;
+    font-size: 22px;
+    color: #62c354;
+}
+
+.sidebar-course-title{
+    cursor: pointer;
+    text-align: left;
+    padding-top: 40px;
+    padding-bottom: 0px;
+    font-size: 20px;
+    color: #414042;
+    padding-left: 20px;
+}
+
+.course-units-nav.nav > li > a:focus {
+    background-color: white;
+}
+
+.course-dropdown a {
+    cursor: pointer;
+}
+
+.sidebar-course-title-collapsed{
+    text-align: left;
+    font-size: 18px;
+    color: #414042;
+}
+
+.course-dropdown{
+    padding-top: 20px;
+    padding-left: 18px;
+}
+
+.admin-course-dropdown{
+    padding-top: 10px;
+    padding-left: 18px;
+}
+
+.course-dropdown-collapsed{
+    padding-left: 5px;
+}
+
+.course-dropdown-menu {
+    left: 80px;
+    top: 48px;
+}
+
+.course-dropdown-menu-collapsed {
+    left: 5px;
+    top: 100px;
+    z-index: 9999;
+    width: 100%;
+}
+
+.sidebar-unit-title,.sidebar-unit-title-collapsed {
+    padding: 5px 0;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.sidebar-unit-title-collapsed {
+    font-size: 18px;
+}
+
+.sidebar-unit-title-collapsed {
+    font-size: 12px !important; 
+}
+
+.course-menu{
+    padding-left: 50px;
+}
+
+.sidebar-item-grouped{
+    font-size: 15px;
+    padding: 30px 7px;
+}
+
+.sidebar-item-regular{
+    font-size: 15px;
+    padding: 20px 16px;
+}
+
+/*.sidebar-subtask-item-active{*/
+    /*background-color: #75c5b9 !important;*/
+/*}*/
+
+.sidebar-subtask-item-inactive{
+    background-color: #e9e9ea !important;
+}
+
+/*.sidebar-item-header-active{*/
+    /*background-color: #008783 !important;*/
+/*}*/
+
+.sidebar-points{
+    float: right;
+    color: #666666;
+}
+
+.sidebar-icon-span{
+    width: 100%;
+}
+
+.sidebar-icon-span img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Top Navigation */
+.navbar-brand {
+    float: left;
+    padding: 0px 0px;
+    font-size: 18px;
+    /*line-height: 20px;*/
+}
+
+.navbar-inverse {
+	background-color: #000;
+}
+
+/*.navbar-inverse .navbar-nav>li>a {*/
+    /*color: #008783;*/
+/*}*/
+
+/*.nav-pills > li.active > a,*/
+/*.nav-pills > li.active > a:hover,*/
+/*.nav-pills > li.active > a:focus {*/
+  /*color: #fff;*/
+  /*background-color: #36a89f;*/
+/*}*/
+
+/*.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {*/
+    /*background-color: #36a89f;*/
+    /*color: #fff;*/
+/*}*/
+
+/*.course-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+/*.user-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+/*.notify-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+/*.chat-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+/*.utility-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+/*.grade-btn {*/
+    /*border-left: 1px solid #077570;*/
+/*}*/
+
+
+/*.navbar {*/
+    /*border: 1px solid transparent;*/
+    /*border-bottom: 2px solid;*/
+/*}*/
+
+.navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 30px;
+}
+
+/*.dropdown-menu > li > a:hover,*/
+/*.dropdown-menu > li > a:focus {*/
+    /*color: #ffffff;*/
+    /*text-decoration: none;*/
+    /*background-color: #75c5b9;*/
+/*}*/
+
+/* Main Content */
+
+.main {
+    padding-right: 40px;
+    padding-left: 40px;
+}
+
+/* Listening */
+
+.listening_practice,
+.reading_practice,
+.lesson_listening {
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 700px;
+}
+
+/* Vocabulary */
+
+.star {
+
+}
+
+.star.active {
+    color: yellow;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: orange;
+}
+
+.microphone {
+
+}
+
+.microphone.active {
+    color: red;
+}
+
+/* Flashcards */
+
+.flip {
+    perspective: 800;
+    -webkit-perspective: 800;
+    width: 600px;
+    height: 300px;
+    position: relative;
+    margin: 50px auto;
+}
+
+.flip .card.flipped {
+    transform: rotatex(-180deg);
+    -webkit-transform: rotatex(-180deg);
+}
+.flip .card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+}
+.flip .card .face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    z-index: 2;
+    font-family: Georgia;
+    font-size: 3em;
+    text-align: center;
+    padding-top: 100px;
+}
+.flip .card .front {
+    position: absolute;
+    z-index: 1;
+    background-color: black;
+    color: white;
+}
+.flip .card .back {
+    transform: rotatex(-180deg);
+    -webkit-transform: rotatex(-180deg);
+    background-color: #ddd;
+    color: black;
+}
+
+/* Angular Bootstrap Nav Plugin Classes */
+/*
+.abn-tree-animate-enter,
+li.abn-tree-row.ng-enter {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  opacity: 0;
+  max-height:0px;
+}
+.abn-tree-animate-enter.abn-tree-animate-enter-active,
+li.abn-tree-row.ng-enter-active{
+  opacity: 1;
+  max-height:30px;
+}
+.abn-tree-animate-leave,
+li.abn-tree-row.ng-leave {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  height:30px;
+  max-height: 30px;
+  opacity: 1;
+}
+.abn-tree-animate-leave.abn-tree-animate-leave-active,
+li.abn-tree-row.ng-leave-active {
+  height: 0px;
+  max-height:0px;
+  opacity: 0;
+}
+.abn-tree-animate.ng-enter{
+
+}
+.abn-tree-animate.ng-enter{
+
+}
+ul.abn-tree li.abn-tree-row {
+  padding: 0px;
+  margin:0px;
+}
+
+ul.abn-tree li.abn-tree-row a {
+  padding: 3px 10px;
+}
+
+ul.abn-tree i.indented {
+  padding: 2px;
+}
+
+.abn-tree {
+  cursor: pointer;
+}
+ul.nav.abn-tree .level-1 .indented {
+  position: relative;
+  left: 0px;
+}
+ul.nav.abn-tree .level-2 .indented {
+  position: relative;
+  left: 20px;
+}
+ul.nav.abn-tree .level-3 .indented {
+  position: relative;
+  left: 40px;
+}
+ul.nav.abn-tree .level-4 .indented {
+  position: relative;
+  left: 60px;
+}
+ul.nav.abn-tree .level-5 .indented {
+  position: relative;
+  left: 80px;
+}
+ul.nav.abn-tree .level-6 .indented {
+  position: relative;
+  left: 100px;
+}
+ul.nav.nav-list.abn-tree .level-7 .indented {
+  position: relative;
+  left: 120px;
+}
+ul.nav.nav-list.abn-tree .level-8 .indented {
+  position: relative;
+  left: 140px;
+}
+ul.nav.nav-list.abn-tree .level-9 .indented {
+  position: relative;
+  left: 160px;
+}
+*/
+
+.indent-0 {
+  padding-left: 5px;
+}
+
+.indent-1 {
+  padding-left: 40px;
+}
+
+.indent-2 {
+  padding-left: 75px;
+}
+
+.indent-3 {
+  padding-left: 110px;
+}
+
+.indent-4 {
+  padding-left: 145px;
+}
+
+.indent-5 {
+  padding-left: 180px;
+}
+
+.indent-6 {
+  padding-left: 205px;
+}
+
+.indent-7 {
+  padding-left: 240px;
+}
+
+.indent-8 {
+  padding-left: 275px;
+}
+
+.indent-9 {
+  padding-left: 310px;
+}
+
+.file-upload-progress-container {
+    margin-top: 10px;
+    width: 400px;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.chat-window-title-icon{
+    margin-right: 8px;
+}
+
+.chat-window {
+    background-color: #f3f4f4;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-width: 1px 1px 0px 1px;
+    bottom: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    line-height: 24.4px;
+    position: fixed;
+    width: 300px;
+    z-index: 10000;
+}
+
+.chat-window-title {
+    background: none repeat scroll 0 0 #008783;
+    color: #ffffff;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 6px;
+}
+
+.chat-window-title .close {
+    background-image: url("/public/img/clear.png");
+    float: right;
+    height: 16px;
+    width: 16px;
+    opacity: 1;
+}
+
+.chat-window-title .close:hover {
+    opacity: 0.5;
+}
+
+.chat-window-title .text {
+    margin-top: 1px;
+}
+
+.chat-window-content { /*min-height: 100px;*/
+}
+
+.chat-window-content input[type=text] {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    border-radius: 0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    box-sizing: border-box; /* Opera/IE 8+ */
+    height: auto;
+    margin: 0;
+    margin: 0;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+.chat-window-inner-content {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.message-board {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    position: relative;
+    overflow: hidden;
+}
+
+.message-board.pm-window {
+    margin-bottom: 3px;
+}
+
+.message-board .messages-wrapper {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2px 0;
+}
+
+.message-board .messages-wrapper .profile-picture {
+    height: 22px;
+    width: 22px;
+}
+
+.message-board .chat-window-text-box-wrapper {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    padding: 0px;
+}
+
+.message-board .chat-window-text-box-wrapper .chat-window-text-box {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    outline: 0;
+}
+
+.chat-message {
+    margin: 0 5px;
+    overflow: hidden;
+    padding: 2px 0;
+}
+
+.chat-message:last-child {
+    border-bottom: none;
+}
+
+.chat-message .chat-gravatar-wrapper {
+    float: left;
+}
+
+.chat-message .chat-text-wrapper {
+    line-height: 1.2em;
+    margin-left: 30px;
+}
+
+.chat-message p {
+    margin: 0;
+}
+
+.chat-fade{opacity:0;}
+.chat-fade.in{opacity:1;}
+
+textarea.chat-window-text-box {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #66cccc;
+    border-image: none;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.2em;
+    margin: 0px;
+    overflow: hidden;
+    padding: 3px;
+    resize: none;
+    width: 100%;
+}
+
+
+/*  Test skill question  */
+
+.test-skill-question h3{font-size: 18px;
+background: none repeat scroll 0% 0% rgb(243, 243, 243);
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 0;
+padding: 12px 26px;}
+
+.test-skill-main{background:#f4f0ea;
+float: left;
+    padding: 10px;
+width: 100%;}
+
+.test-skill-question > h3 > span {font-size:11px ;
+color: #3071A9;}
+
+.test-skill-main .form-row .form-control{width: auto;clear: both;}
+.test-skill-main .form-row .control-label{float: left;}
+
+.test-skill-main h4{
+    border-bottom: 1px solid rgb(204, 204, 204);
+    padding: 5px 14px;
+    margin: 8px 0px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.test-skill-question .radio .number{float: left;
+margin-left: -15px;
+margin-right: 10px;}
+
+.test-skill-question .radio input[type="radio"]{margin-left:0;
+margin-right: 10px;}
+.test-skill-question .radio{margin-top:0;
+}
+
+.seeitandwrite .btn-pd{
+padding: 6px;
+border-radius: 5px;
+margin-bottom: 10px;
+}
+#seeItCurrentQuestionText {
+font-size: 2em;
+}
+#seeitStartOverFinished {
+	margin-right: 9px;
+}
+.seeItSpacer {
+	width:0;
+}
+.seeitandwrite .start-over{
+/*padding: 20px 0px;*/
+margin-top: 15px;
+/* border-top: 1px solid #ccc; */
+/*border-bottom: 1px solid #ccc; */
+width: 100%;}
+
+.flashItAnswerButton {
+ margin-bottom:5px;
+ display: block;
+margin-left: auto;
+margin-right: auto;
+}
+
+
+.test-skill-main .modal-content{box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+border: none;
+padding: 10px;}
+.test-skill-main .modal-content .control-label{width: 100%;
+border-bottom: 1px solid #ccc;
+padding-bottom: 5px;
+margin-bottom: 10px;}
+
+.test-skill-main .seeitandwrite .modal-content .scoreKeeping .control-label {
+	margin-bottom: 0
+}
+#flashitScoreKeeping {
+margin-left:6px;
+}
+#flashitAnswerFeedbackImage {
+	margin: 0 auto;
+    margin-top: 10px;
+}
+.flashitHeaderWord {
+	margin-bottom:10px;
+}
+
+.flashitHeaderWord h1 {
+	margin-bottom:inherit;
+}
+
+#flashitModelValue {
+	display: inline;
+	margin-left:4px;
+	margin-right:3px;
+	width:31%;
+}
+
+#flashitSecondsDisplay {
+margin-left: 17%;
+}
+
+.hide-fade.ng-hide-add, .hide-fade.ng-hide-remove {
+  -webkit-transition:all linear 1s;
+  -moz-transition:all linear 1s;
+  -o-transition:all linear 1s;
+  transition:all linear 1s;
+  display:block!important;
+}
+.hide-fade.ng-hide-add.ng-hide-add-active,
+.hide-fade.ng-hide-remove {
+  opacity:0;
+}
+.hide-fade.ng-hide-add,
+.hide-fade.ng-hide-remove.ng-hide-remove-active {
+  opacity:1;
+}
+
+
+/*
+Course Builder Styles
+*/
+
+.assignment-due-date-wrapper{
+    width: 300px;
+}
+
+.spinner {
+    width: 150px;
+}
+.spinner input {
+    text-align: right;
+}
+.input-group-btn-vertical {
+    position: relative;
+    white-space: nowrap;
+    width: 1%;
+    vertical-align: middle;
+    display: table-cell;
+}
+.input-group-btn-vertical > .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin-left: -1px;
+    position: relative;
+    border-radius: 0;
+}
+.input-group-btn-vertical > .btn:first-child {
+    border-top-right-radius: 4px;
+}
+.input-group-btn-vertical > .btn:last-child {
+    margin-top: -2px;
+    border-bottom-right-radius: 4px;
+}
+.input-group-btn-vertical i{
+    position: absolute;
+    top: 0;
+    left: 4px;
+}
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
+
+.padding-right-20 {
+    padding-right: 20px;
+}
+
+/* Modal Backdrop Change */
+
+.modal-backdrop-0 .modal-backdrop.fade.in {
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.question-display
+{
+    margin-bottom:40px;
+}
+
+.question-display table
+{
+    width: calc(100% - 50px);
+}

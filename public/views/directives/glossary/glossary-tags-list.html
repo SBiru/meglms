@@ -1,0 +1,19 @@
+<div e3-pagination-async update="callbacks.changePage" config="paginationConfig">
+
+    <div class="clearfix"></div>
+    <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="column in columns">
+        <glossary-tags-list-item
+                ng-repeat="tag in tags | slice:column.start:column.end"
+                tag="tag"
+                edit="callbacks.edit"
+                delete="callbacks.delete"
+                select="callbacks.select"
+                show-select="showSelect"
+                show-edit="showEdit"
+                show-delete="showDelete"
+                pagination-config="paginationConfig"
+        ></glossary-tags-list-item>
+    </div>
+
+    <h4 ng-show="!tags.length" class="text-center">No entries were found</h4>
+</div>

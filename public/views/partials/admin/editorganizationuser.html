@@ -1,0 +1,270 @@
+<div>
+	<h2>Edit User</h2>
+	<span class="panel panel-danger" style="padding: 5px;display: inline-block;border-color: #C40020;">
+		<input type="checkbox" ng-model="is_disabled"> Disable this user
+	</span>
+	<span class="panel panel-default" style="padding: 5px;display: inline-block;">
+		<input type="checkbox" ng-model="use_license"> Use license
+	</span>
+	<div class="panel panel-default" style="padding: 5px;display: inline-flex;">
+		<span style="line-height: 2;">Expiration Date:</span>
+		<p class="input-group" style="width:160px">
+			<input type="text" class="form-control" datepicker-popup="{{format}}" is-open="datepickerOpened" ng-model="expirationDate" min-date="minDate" ng-required="true" close-text="Close" datepicker-options="dateOptions"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+		</p>
+	</div>
+	<div class="row user-password-wrapper">
+
+		<div class="col-sm-6 display-block">
+			<b>Password set on:</b> <input class="form-control" data-ng-model="editorUser.password_set_on">
+		</div>
+		<div class="col-sm-6 display-block">
+			<b>Password expires on:</b><input class="form-control" data-ng-model="editorUser.password_set_on">
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userExternalId" name="userExternalId" ng-model="userExternalId" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="External Id" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userFirstName" name="userFirstName" ng-model="userFirstName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="First Name" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userLastName" name="userLastName" ng-model="userLastName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Last Name" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-envelope"></i></span>
+				<input placeholder="Email" id="userEmail" name="userEmail" ng-model="userEmail" class="form-control ng-pristine ng-valid ng-valid-required" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-phone"></i></span>
+				<input placeholder="Phone" type="text" id="userPhone" name="userPhone" ng-model="userPhone" class="form-control ng-pristine ng-valid ng-valid-required" required>
+			</div><br>
+
+			<div class="input-group input-group-md" ng-hide="systemGeneratePassword">
+				<span class="input-group-addon"><i class=" fa fa-lock"></i></span>
+				<input placeholder="Leave it blank if you don't want to make any changes" type="text" id="userPassword" name="userPassword" ng-model="userPassword" class="form-control ng-pristine ng-valid ng-valid-required">
+			</div><br>
+			<input type="checkbox" id="systemGeneratePassword" name="systemGeneratePassword" ng-model="systemGeneratePassword">  <label for="systemGeneratePassword" class="control-label display-inline" style="font-size:15px">System Generate Password. User Will Be Emailed The Password. Admin Will Not Know Password.</label>
+		</div>
+		<div class="col-sm-6">
+			<table class="margin-top-15 margin-bottom-15">
+				<tr class="display-grid">
+					<td style="padding-bottom:15px;" class="padding-bottom-0"><label for="preferred_language" class="control-label" style="font-size:15px">Preferred Language</label></td>
+					<td style="padding-bottom:15px; padding-left:20px;" class="padding-left-0 padding-bottom-0">
+						<select id="preferred_language" name="preferred_language" ng-model="preferred_language" class="form-control ng-pristine ng-valid ng-valid-required margin-5" ng-options="language.language_name for language in languages" required></select>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<tr ng-show="editorUser.can_create_super_user=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_super_admin" name="is_super_admin" ng-model="is_super_admin">  <label for="is_super_admin" class="control-label" style="font-size:15px">Is Super Admin</label></td>
+				</tr>
+				<tr ng-show="editorUser.can_create_super_user=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_super_admin" name="can_add_super_admin" ng-model="can_add_super_admin">  <label for="can_add_super_admin" class="control-label" style="font-size:15px">Can Add Super Admin</label></td>
+				</tr>
+				<tr>
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_sites_admin" name="is_sites_admin"
+																			   ng-model="is_sites_admin"
+																			   ng-change="toggleAdminRole('is_sites_admin')">  <label for="is_sites_admin" class="control-label tooltip-relative" style="font-size:15px">
+						Is Site Admin <span class="fa fa-question-circle"
+											tooltip="If you click this option you will be able to select a site"></span>
+						<span></span>
+					</label>
+						<admin-sites-for-user ng-if="is_sites_admin" user-id="userId" org-id="organizationId"></admin-sites-for-user>
+					</td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1' || editorUser.can_add_organization_admin=='1'">
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" ng-change="toggleAdminRole('is_organization_admin')" id="is_organization_admin" name="is_organization_admin" ng-model="is_organization_admin">  <label for="is_organization_admin" class="control-label display-inline" style="font-size:15px">Is Organization Admin</label></td>
+				</tr>
+
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1'" >
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_organization_admin" name="can_add_organization_admin" ng-model="can_add_organization_admin">  <label for="can_add_organization_admin" class="control-label display-inline" style="font-size:15px">Can Add Organization Admin</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1' || editorUser.can_add_users=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_user" name="can_add_user" ng-model="can_add_user">  <label for="can_add_user" class="control-label" style="font-size:15px">Can Add Users</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.is_organization_admin">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_edit_course" name="can_edit_course" ng-model="can_edit_course">  <label for="can_edit_course" class="control-label" style="font-size:15px">Can Edit Courses</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.is_organization_admin">
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="teacher_supervisor" name="teacher_supervisor" ng-model="teacher_supervisor">  <label for="teacher_supervisor" class="control-label" style="font-size:15px">Teacher Supervisor</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.is_organization_admin">
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="private_student" name="private_student" ng-model="private_student">  <label for="private_student" class="control-label" style="font-size:15px">Private Student</label></td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+
+	<ul class="ul-buttons">
+		<li class="btn btn-primary btn-sm" ng-click="updateUser()">
+			<a>Update</a>
+		</li>
+		<li class="btn btn-danger btn-sm" ng-click="delete()">
+			<a>Delete</a>
+		</li>
+		<li class="btn btn-warning btn-sm" ng-click="loginAs()" ng-if="canShowLoginAsBtn()">
+			<a>Login as this user</a>
+		</li>
+	</ul>
+	<br>
+
+	<ul id="userInfo" class="nav nav-tabs" ng-init="tableTab='classes'">
+		<li class="active font-size-12" style="font-size: 20px;">
+			<a data-toggle="tab" ng-click="tableTab='classes'">Classes</a>
+		</li>
+		<li class="font-size-12" style="font-size: 20px;">
+			<a data-toggle="tab" ng-click="tableTab='dependents'">User dependents</a>
+		</li>
+		<li class="font-size-12" style="font-size: 20px;">
+			<a data-toggle="tab" ng-click="tableTab='guardians'">User guardians</a>
+		</li>
+	</ul>
+	<br>
+	<div ng-show="tableTab=='guardians'">
+		<input type="text" class="margin-bottom-20" placeholder="Search user" ng-model="inputGuardiansFilter"><br>
+		<ul id="guardiansTab" class="nav nav-tabs" ng-init="guardianStatus=''">
+			<li class="active">
+				<a data-toggle="tab" ng-click="guardianStatus=''">All</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="guardianStatus='1'">Guardians</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="guardianStatus='0'">Not guardians</a>
+			</li>
+		</ul>
+
+		<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+
+			<thead>
+			<tr>
+				<th data-halign="left">First name</th>
+				<th data-halign="left">Last name</th>
+				<th data-halign="left">Email</th>
+				<th data-halign="left"></th>
+				<th data-halign="left"></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat='user in users.all_users | filter:inputGuardiansFilter | filter:{guardianFilter:guardianStatus} | limitTo:70'  ng-class="{enrolled : is_guardian(user.id)}" >
+				<td data-halign="left" >{{user.fname}}{{user.teste}}</td>
+				<td data-halign="left" >{{user.lname}}</td>
+				<td data-halign="left" >{{user.email}}</td>
+				<td data-halign="left" ><input type="checkbox" ng-model="user.is_guardian" ng-change="user.editing=!user.editing"></td>
+				<td data-halign="left">
+					<button class="btn btn-primary btn-sm" ng-show="user.editing" ng-click="updateGuardianUser(user)">
+						Update
+					</button>
+				</td>
+			</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<div ng-show="tableTab=='dependents'">
+		<input type="text" class="margin-bottom-20" placeholder="Search user" ng-model="inputDependentsFilter"><br>
+		<ul id="dependentsTab" class="nav nav-tabs" ng-init="dependentStatus=''">
+			<li class="active">
+				<a data-toggle="tab" ng-click="dependentStatus=''">All</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="dependentStatus='1'">Dependents</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="dependentStatus='0'">Not dependents</a>
+			</li>
+		</ul>
+
+		<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+
+			<thead>
+			<tr>
+				<th data-halign="left">First name</th>
+				<th data-halign="left">Last name</th>
+				<th data-halign="left">Email</th>
+				<th data-halign="left"></th>
+				<th data-halign="left"></th>
+			</tr>
+			</thead>
+			<tbody>
+
+
+			<tr ng-repeat='user in users.all_users | filter:inputDependentsFilter | filter:{dependentFilter:dependentStatus} |limitTo:70' ng-class="{enrolled : is_dependent(user.id)}" >
+				<td data-halign="left" >{{user.fname}}</td>
+				<td data-halign="left" >{{user.lname}}</td>
+				<td data-halign="left" >{{user.email}}</td>
+				<td data-halign="left" ><input type="checkbox" ng-model="user.is_dependent" ng-change="user.editing=!user.editing"></td>
+				<td data-halign="left">
+					<button class="btn btn-primary btn-sm" ng-show="user.editing" ng-click="updateDependentUser(user)">
+						Update
+					</button>
+				</td>
+			</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<div ng-show="tableTab=='classes'">
+		<input type="text" class="margin-bottom-20" placeholder="Search classes" ng-model="inputFilter"><br>
+		<ul id="enrollingTab" class="nav nav-tabs" ng-init="enrollingStatus=''">
+			<li class="active">
+				<a data-toggle="tab" ng-click="enrollingStatus=''">All</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="enrollingStatus='1'">Enrolled</a>
+			</li>
+			<li >
+				<a data-toggle="tab" ng-click="enrollingStatus='0'">Not enrolled</a>
+			</li>
+		</ul>
+
+		<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+
+			<thead>
+			<tr>
+				<th data-halign="left">Class Name</th>
+				<th data-halign="left">Student</th>
+				<th data-halign="left">Teacher</th>
+				<th data-halign="left">Content Editor</th>
+				<th data-halign="left">Observer</th>
+				<th data-halign="left"></th>
+			</tr>
+			</thead>
+			<tbody>
+
+
+			<tr ng-repeat='class in classes | filter:inputFilter | filter:{is_enrolled:enrollingStatus}' ng-class="{enrolled : class.is_enrolled=='1' && enrollingStatus==''}">
+				<td data-halign="left" >{{class.name}}</td>
+				<td data-halign="left" ><input type="checkbox" ng-model="class.is_student" ng-change="toggleEditing(class,'is_student')"></td>
+				<td data-halign="left" ><input type="checkbox" ng-model="class.is_teacher" ng-change="toggleEditing(class,'is_teacher')"></td>
+				<td data-halign="left" ><input type="checkbox" ng-model="class.is_edit_teacher" ng-change="toggleEditing(class,'is_edit_teacher')"></td>
+				<td data-halign="left" ><input type="checkbox" ng-model="class.is_observer" ng-change="toggleEditing(class,'is_observer')"></td>
+				<td data-halign="left">
+					<button class="btn btn-primary btn-sm" ng-show="class.editing_is_student||class.editing_is_teacher||class.editing_is_edit_teacher||class.editing_is_observer" ng-click="updateClass(class)">
+						Update
+					</button>
+				</td>
+			</tr>
+			</tbody>
+
+		</table>
+	</div>
+
+
+
+</div>

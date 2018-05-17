@@ -1,0 +1,539 @@
+.grader{
+}
+
+.grader_outline{
+  margin: auto;
+  margin-bottom: 15px;
+  background-color: #f3f4f4;
+  padding-left: 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  height: auto !important;
+}
+
+.grader_top_heading{
+  margin-left:15px;
+  margin-bottom:15px
+}
+
+.grader_box
+{
+
+  margin-bottom: 0px;
+
+
+  margin-right: 5px;
+
+
+  margin-left: 5px;
+
+
+  margin-top: 5px;
+  background-color: #d9d9d9;
+  padding:5px;
+  border: 1px solid #e4e4e4;
+  border-radius: 5px;
+  position: static;
+  /* height: calc(100% - 25px); */
+}
+
+.grader_GraderHelperController,.grader_right_block_inner{
+  /* height:90%; */
+  display: flex;
+
+}
+
+
+.grade_comments,
+.grader_left_block,
+.grader_teacherVideo_block,
+.teacher_notes,
+.grader_right_block_inner,
+.grader_right_form_div,
+.grader_PostedMessage,
+.grader_left_messageA,
+.graderSubmit{
+  /* height:100% !important; */
+}
+
+
+.grader_GraderHelperController,
+.grader_grade,
+.grade_comments,
+.teacher_notes,
+.grader_left_video_box,
+.grader_right_table{
+  width:100%}
+
+.grader_left_block,
+.grader_right_form_div{
+  float:left;
+}
+
+.grader_left_video_box
+{
+  text-align: center;
+  overflow: auto;
+}
+
+.graderSubmit
+{
+  text-align: center;
+  border-color: rgb(168,168,168);
+  background:  #d9d9d9;
+  margin-top: -15px;
+}
+.j1-class .graderSubmit{
+  display: none;
+}
+.j1-class input[name="grade"][readonly]{
+  display: none;
+}
+.j1-class .waiting-to-be-graded{
+  display: none;
+}
+.post-to-student{
+  margin: 10px auto 0;
+  text-align: center;
+  width: 150px;
+}
+.post-to-student .btn{
+  width: 100%;
+}
+.grader-post-controller:not(.j1-class) .post-to-student{
+  display: none;
+}
+
+.graderSubmit button{
+  min-width:155px;
+}
+.grader_block{
+  width: 100%;
+  overflow:auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  height: 100%;
+}
+.grader_left_block{
+  width: 60%;
+  /* overflow:auto; */
+
+
+  max-height:700px;
+  height: 100%;
+}
+.grader_left_video{
+  width: 82%;
+  max-width: 60% !important;
+}
+
+.grader_left_message{
+  margin-top:10px;
+  max-height:500px;
+  overflow:auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+
+}
+.post-replies, .text_prompts{
+  margin-top: 10px;
+  max-height: 400px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  overflow: auto;
+}
+.text_prompts ul > li{
+  list-style: none;
+}
+.text_prompts .text-heading {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background: white;
+}
+.text_prompts .text-body{
+  padding: 10px 20px;
+  -moz-box-shadow: inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+}
+.reply-heading:hover,.text_prompts .text-heading:hover{
+  background: #E4E4E4
+}
+.reply-body{
+  padding-top: 5px;
+
+  border-top: 1px solid #ddd;
+  margin-left: -5px;
+  margin-right: -5px;
+  padding-left: 10px;
+}
+.reply-heading{
+  margin: -10px -15px 0 -15px;
+  padding: 10px 15px;
+}
+.post-reply.opened .reply-heading{
+  background-color: #EFEFEF;
+}
+.post-reply.opened{
+
+  margin: 7px 0;
+}
+.post-reply{
+  padding-bottom: 0 ;
+}
+.grader_right_block .panel-body{
+  padding:5px;
+}
+.has-topbar .grader_right_block,.has-topbar .grader_left_block{
+  width: 50%;
+}
+.grader_right_block{
+  float:right;
+  width: 40%;
+  /* height:100%
+ */
+  /* display: flex; */
+}
+.j1-class{
+  max-width: 1350px;
+  margin:auto;
+}
+.j1-class .grader_top_heading .activity-name{
+  display: none;
+}
+.j1-class .grader_top_heading .student-name{
+  font-size: 18px;
+}
+.j1-class .grader_right_block.video_only{
+  width: calc(100% - 320px);
+  max-width: 910px;
+  margin: auto;
+
+}
+.j1-class .grader_left_block.video_only{
+  width: 320px;
+  margin: 0 20px;
+}
+
+.nav-item.active div{
+  color: white !important;
+}
+
+
+
+.grader_right_table{
+  /* height: 103%; */
+}
+.grader_right_table tr td{
+  padding-bottom :5px
+}
+
+.table.grader_right_table > textarea{
+  height:100%
+
+}
+
+
+.grader_gradeTd
+{
+  height: 45px;
+
+}
+
+table.grader_right_table tr + tr ,
+table.grader_right_table tr + tr + tr
+{
+  /* height: calc(50% - 22px); */
+}
+
+.grader_right_form_div{
+  width: calc(65% - 10px);
+  background: rgb(217, 217, 217);
+  border-color: rgb(168, 168, 168);
+}
+.j1-class .grader_right_form_div{
+  width:100%;
+}
+
+.grader_teacherVideo_block{
+  float:right;
+  width:35%;
+  background-color: #d9d9d9;
+  overflow-y: auto;
+  text-align:center
+;
+  overflow-x: hidden;
+  border-color: rgb(168, 168, 168);
+  margin-left: 10px;
+  /* font-size: 11px; */
+}
+.j1-class .grader_teacherVideo_block{
+  display: none;
+}
+.grader_teacherVideo_div{
+  width:100%;
+  text-align:center
+}
+.j1-class .grader_right_table tr:nth-child(2),
+.j1-class .grader_right_table tr:nth-child(1){
+  display: none;
+}
+
+
+
+
+.grader_teacherVideo{
+  height:75%;
+  width:100%;
+}
+
+.grader_grader_teacherVideo_bin{
+  margin-top: 5px;
+  position:relative;
+  z-index:400
+;
+  margin-left: 2px;
+}
+
+.grader_outline  > ul{
+  white-space: nowrap;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.grader_outline>.nav-tabs>li{
+  display: inline-block;
+  float: none;
+}
+
+
+.grader_only_pre{
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+}
+
+.grader_pre{
+  height:100%;
+  border:none;
+  /* margin-left: 7%; */
+}
+
+.grader_showupload{
+  text-align: center;
+}
+.question .correct{
+  color:green;
+font-weight:bold;
+}
+.question .incorrect{
+  color:red;
+  font-weight:bold;
+}
+.score{
+  width:40px;
+}
+.rubric{
+  width: 100%;    overflow: auto;
+  margin-bottom: 10px;
+}
+.rubric tr td:first-child{
+  width:1px;
+}
+.reply-tab{
+  background:rgb(214, 196, 236);
+}
+.width-1000{
+  width:1000px;
+}
+.tooltip-white-space-normal .tooltip .tooltip-inner{
+  white-space: normal !important;
+  font-size:13px;
+  color:white;
+}
+.wordmatch-row{
+  display: block;
+
+}
+.wordmatch-row .word-wrapper{
+  padding:1px 10px;
+  text-align:center;
+  display: flex;
+
+}
+
+.wordmatch-row .word-wrapper .right-side,.wordmatch-row .word-wrapper .left-side{
+  width:45%;
+  float:left;
+  margin:5px 0px;
+  color:white;
+  vertical-align: bottom;
+  padding: 2px;
+  position:relative;
+  background-color: white;
+  border: 4px solid #c2e1f5;
+  pointer-events:none !important;
+  white-space: normal !important;
+}
+
+.wordmatch-row .word-wrapper .right-side{
+  margin-left:-3px;
+}
+.wordmatch-row .word-wrapper.correct .right-side,.wordmatch-row .word-wrapper.correct .left-side{
+  color:green
+}
+.wordmatch-row .word-wrapper.incorrect .right-side,.wordmatch-row .word-wrapper.incorrect .left-side{
+  color:red
+}
+.wordmatch-row .word-wrapper.blank .right-side,.wordmatch-row .word-wrapper.blank .left-side{
+
+  color:black;
+}
+
+.wordmatch-row .word-wrapper .right-side:after, .wordmatch-row .word-wrapper .right-side:before {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.wordmatch-row .word-wrapper.correct .right-side:after{
+  border-right-color: white;
+}
+.wordmatch-row .word-wrapper.incorrect .right-side:after{
+  border-right-color: white;
+}
+.wordmatch-row .word-wrapper.blank .right-side:after{
+  border-right-color: white;
+}
+.wordmatch-row .word-wrapper .right-side:after {
+  border-color: rgba(18, 99, 12, 0);
+
+  border-width: 13px;
+  margin-top: -13px;
+}
+.wordmatch-row .word-wrapper .right-side:before {
+  border-color: rgba(194, 225, 245, 0);
+  border-right-color: #c2e1f5;
+  border-width: 18px;
+  margin-top: -18px;
+}
+.nav-tabs .needing-grade{
+  background: #F7F7F7;
+  color: red;
+}
+.nav-tabs .graded{
+  background: #d1d1d1;
+}
+.has-topbar .main{
+  margin-top: 15px;
+}
+.topbar {
+  padding: 0 10px 0 30px;
+  z-index: 1000;
+  margin-top: 60px;
+  position: relative;
+}
+.topbar .menu-table td{
+  padding:0 5px;
+}
+.advanced-grader{
+  display: none;
+}
+td:hover .advanced-grader{
+  display: inline-block;
+}
+.grader-body.modal-open{
+  overflow: initial;
+}
+.grader_block h2{
+  font-size: 25px;
+}
+.grader-date-range-values{
+  display: inline-block;
+  top: 10px;
+  position: relative;
+  margin-left: 10px;
+}
+.grader-date-range-wrapper{
+  top: -10px;
+  position: relative;
+}
+.grader-date-range-wrapper.has-values{
+  top:-15px;
+}
+.j1-class .teacher_notes{
+  width: calc(100% - 115px);
+  float: right;
+}
+.rubric-grade{
+  display: none;
+}
+.j1-class .rubric-grade {
+  height: 53px;
+  float: left;
+  background: white;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  width: 110px;
+}
+.j1-class .grader_left_video{
+  width: 100%;
+  max-width: 100% !important;
+}
+.j1-class .rubric-grade span{
+  font-size: 13px;
+  font-weight: bold;
+  position: relative;
+  top: 17px;
+  margin-left: 10px;
+  padding-right: 10px;
+}
+.j1-class .preview-button{
+  display: none;
+}
+.j1-class .width-1000{
+  width: 100%;
+}
+.j1-class .rubric-modal-grid{
+  table-layout: fixed;
+}
+.j1-class .rubric tr td:first-child{
+  width: 1%;
+}
+.j1-class .rubric-modal-grid tr td{
+  width: 2%;
+}
+.j1-class .rubric-score-percentage{
+  display: none;
+}
+.grader_pre{
+  min-height: 44px;
+}
+.grader_pre_wrapper{
+  position: relative;
+}
+.btn-expand{
+  position: absolute;
+  right: 5px;
+  top:5px;
+}
+.expanded-response{
+  width: calc(100% - 40px);
+  font-size: 14px;
+}
+.template-response-modal .modal-dialog{
+  max-width: 90%;
+}
+.template-response-modal .modal-content{
+  padding: 20px 30px 30px 30px;
+}

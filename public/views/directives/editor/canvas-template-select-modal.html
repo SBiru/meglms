@@ -1,0 +1,39 @@
+<div class="modal-header">
+    Templates (BETA)
+    <span aria-hidden="true" ng-click="$dismiss()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+<div class="modal-body template-select" >
+    <div ng-if="selected.tab=='open'">
+        <div class="row">
+            <div class="col-sm-6">
+                <div  style="max-width: 360px">
+                    <testbank-filters ng-model="filter" hide-view-btn="true" on-change="onChangeFilter" ></testbank-filters>
+                </div>
+                <div class="search-for-template">
+                    <input placeholder="Search for a template" ng-model="selected.filter" class="form-control">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row" style="    margin-bottom: 20px;">
+            <div class="col-sm-6">
+                <div data-ng-include="'/public/views/directives/app_fabric/menus/file/select-template-table.html'"></div>
+            </div>
+            <div class="col-sm-6">
+                <fabric-previewer preview-id="selected.row" ng-if="selected.row"></fabric-previewer>
+            </div>
+            <div class="col-sm-12" style="margin-top: 10px;text-align: right">
+                <button class="btn btn-primary" ng-click="selected.tab='edit';selected.row=null">Add new</button>
+                <button class="btn btn-primary" ng-click="ok()" data-ng-disabled="!selected.row">Ok</button>
+            </div>
+        </div>
+
+    </div>
+    <div ng-if="selected.tab=='edit'">
+        <div fabric-editor template-id="selected.row"></div>
+        <div style="text-align:right;margin-top: 20px;"><div class="btn btn-primary" ng-click="selected.tab='open'">Back</div></div>
+    </div>
+
+
+</div>

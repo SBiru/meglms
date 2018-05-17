@@ -1,0 +1,85 @@
+<div>
+    <div class="btn btn-default btn-sm" ngf-select ngf-change="check($files)" ng-disabled="isBusy()">Select File</div>
+    <div class="btn btn-primary btn-sm" ng-disabled="!isReady() || isBusy()" ng-click="upload()">Upload</div>
+    <div class="btn btn-primary btn-sm" ng-hide="importComplete" ng-disabled="!isReadyToImport() || importing"
+         ng-click="import()">
+        <div ng-hide="importing">Proceed to Import</div>
+        <div ng-show="importing">Importing <i class="fa fa-spin fa-spinner"></i></div>
+    </div>
+</div>
+<div ng-show="selected && !complete">
+    <div>
+        File:
+        <span class="custom-font normal" ng-bind="selected.name"></span>
+    </div>
+    <div>
+        Import Type:
+        <span class="custom-font normal" ng-bind="selected.type"></span>
+        <span class="custom-font green" ng-show="selected.ready">(ready)</span>
+        <span class="custom-font red" ng-show="!selected.ready">(incompatible)</span>
+    </div>
+    <div>
+        Size:
+        <span class="custom-font normal" ng-bind="selected.size"></span>
+    </div>
+</div>
+<!-- UPLOADING/FINISHED -->
+<div ng-show="isBusy()">
+    <div ng-show="inProgress && !complete">
+        Progress:
+        <span class="custom-font normal" ng-bind="progress"></span>
+        <span class="custom-font normal">% completed</span>
+        <span class="custom-font normal" ng-show="progress === 100">- Preparing tree...</span>
+    </div>
+    <div class="custom-font green" ng-show="complete && !retrieving">Upload complete</div>
+    <div ng-show="complete && !importing">
+        <div>
+            File name: <span class="custom-font normal" ng-bind="selectedFileToImport.filename"></span>
+        </div>
+        <div>
+            Entries: <span class="custom-font normal" ng-bind="selectedFileToImport.entries"></span>
+        </div>
+        <div>
+            <h3 class="small-heading">
+                You can select tags to be added to all the imported entries
+            </h3>
+            <span glossary-word-tags word="fakeWord" class="glossary-tags"></span>
+        </div>
+
+
+    </div>
+</div>
+<div ng-show="importing">Importing. Please wait... Window will be closed automatically when finished</div>
+<div class="import-course">
+    <div ng-show="!isBusy() && previousUploads" class="previous-uploads">
+        <!-- FORM -->
+        <h2>From Previous Uploads</h2>
+        <h2><small>The following list contains files which you uploaded but were not imported</small></h2>
+        <div class="row" ng-show="!retrieving">
+            <div class="col-sm-12">
+                <span class="col-sm-2">Uploaded</span>
+                <span class="col-sm-2">Type</span>
+                <span class="col-sm-5">Name</span>
+                <span class="col-sm-2">Entries</span>
+                <span class="col-sm-1 text-center">Discard</span>
+            </div>
+            <div class="col-sm-12 table">
+                <div ng-repeat="upload in previousUploads">
+					<span ng-click="selectFromPrevious(upload)">
+						<span class="col-sm-2 date" ng-bind="upload.created_on | date:medium"></span>
+						<span class="col-sm-2 type" ng-bind="upload.ext"></span>
+						<span class="col-sm-5 name" ng-bind="upload.filename"></span>
+						<span class="col-sm-2 entries" ng-bind="upload.entries"></span>
+					</span>
+                    <span class="col-sm-1 icon text-center" ng-click="discard(upload)">
+						<i class="fa fa-trash"></i>
+					</span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="retrieving">
+            <i class="fa fa-spin fa-spinner"></i>
+            Retreving and preparing tree. Please wait...
+        </div>
+    </div>
+</div>

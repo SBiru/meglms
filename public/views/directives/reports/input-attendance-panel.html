@@ -1,0 +1,47 @@
+<div class="time-spent-table panel panel-default"
+     ng-class="{'panel-danger':student.daysWithErrors && student.daysWithErrors.length }"
+     id="{{student.userId}}">
+    <div id="attendancePanelHeading" class="panel-heading pointer"  data-ng-click="student.show=!student.show">
+        <span class="fa" ng-hide="student.loading" data-ng-class="student.show?'fa-minus-square':'fa-plus-square'"></span>
+        <span data-ng-bind="student.lastName + ', ' + student.firstName " ng-hide="isMissingTab" ng-class="{'text-red':isStudentMissingAttendance(student.id||student.userId)}"></span>
+        <span ng-hide="selected.filter=='course' || !student.classes.length">{{'('+student.classes.length+' class'}}<span>{{student.classes.length>1?'es)':')'}}</span></span>
+        <span ng-show="!student.loading && student.totalAttendance>=0 && student.classes.length" ng-bind="'Hours reported: ' + (student.totalAttendance/3600)" class="missing-report-extra-info"></span>
+        <span ng-show="!student.loading && student.missing_Dates.length && student.classes.length" data-ng-bind="'Missing dates : '+student.missing_Dates.length" class="missing-report-extra-info"></span>
+                    <span ng-show="student.approving==1 || student.saving==1">
+                        {{student.approving==1?'Approving':'Saving'}} <span class="fa fa-spinner fa-pulse"></span>
+                    </span>
+
+            <span data-ng-show="student.show && student.classes.length">
+                <span class="btn-group">
+                    <label class="btn btn-default" ng-model="student.timeUnit" btn-radio="'hours'" ng-click="changeUnit(student,'hours',$event)">Hours</label>
+                    <label class="btn btn-default" ng-model="student.timeUnit" btn-radio="'minutes'" ng-click="changeUnit(student,'minutes',$event)">Minutes</label>
+                </span>
+            </span>
+
+            <span data-ng-show="student.show">
+                <!--<async-button color-style="info" text="Save hours" flash-text="Saved!" loading="student.saving" ng-click="save(student,$event)" disabled="!canSave(student)"></async-button>-->
+                <async-button color-style="primary" text="Submit" flash-text="Saved!" loading="student.approving" ng-click="save(student,$event,true)" disabled="!canSave(student)"></async-button>
+                <br class="break">
+                <span id="withdrawal-date" class="pull-right" ng-click="$event.stopPropagation()" class="withdraw-date">
+                    <input type="checkbox" ng-model="student.addWithdrawDate" >
+                    Add withdrawal date
+                    <attendance-datepicker  ng-if="student.addWithdrawDate" class="pull-right withdraw-datepicker">
+                        <p class="input-group">
+                            <input type="text" disabled class="form-control pull-left" datepicker-popup="{{ format }}" ng-model="student.attendanceWithdrawDate" is-open="opened" ng-required="true" close-text="Close"  datepicker-options="dateOptions"/>
+                            <span class="input-group-btn">
+                              <button type="button" class="btn btn-default pull-right" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </attendance-datepicker>
+
+                </span>
+            </span>
+
+        <span ng-show="student.loading" class="fa fa-spinner fa-pulse"></span>
+    </div>
+    <div class="panel-body attendance-table-body padding-5" ng-if="student.show && student.classes.length">
+        <div class="alert alert-danger" ng-show="student.error" ng-bind="student.error.message"></div>
+        <attendance-table days="days"></attendance-table>
+
+    </div>
+</div>

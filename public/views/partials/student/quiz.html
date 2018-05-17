@@ -1,0 +1,235 @@
+<style>
+    #donotremovesecret
+    {
+        position: absolute;
+        visibility: hidden;
+        height: auto;
+        width: auto;
+        white-space: nowrap; /* Thanks to Herb Caudill comment */
+    }
+</style>
+<div id="donotremovesecret">
+    a
+</div>
+
+<script type="text/ng-template" id="new-post-box.html">
+    <div class="text-post-wrapper">
+        <div class="video-recorder-wrapper" ng-if="postBoxOwner.showTextBox && p.scope.allow_video_post==1" ng-show="p.scope.allow_video_post == '1'">
+            <record-video options="{showComments:true}" ng-model="p.scope.studentVideoRecorder.videoData" close-action="p.scope.postBoxOwner.showTextBox"></record-video>
+        </div>
+        <div ng-show="p.scope.allow_video_post == '0'">
+            <span ng-click="postBoxOwner.showTextBox=false;p.scope.resizeTriggers.content.setResize(false)" class="fa fa-close close text-danger pointer "></span>
+            <div style="margin-bottom: 10px;" class="instruction">
+                Type or paste your text below, or upload your document
+            </div>
+            <div style="margin-bottom: 5px;" class="file-wrapper">
+                <input type="file" ng-file-select="p.scope.onFileSelect($files,$event)" multiple>
+                <br />
+                <div ng-show="p.scope.is_uploading">
+                    <span>Uploaded {{ p.scope.progress_upload }}%</span>
+                    <div class="file-upload-progress-container" style="width:300px;">
+                        <div  class="progress progress-striped active">
+                            <div id="upload-progress-bar" class="progress-bar" style="width:0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <textarea ckeditor custom-options="{height:98}" ng-model="video_comment"></textarea>
+            <button ng-click="p.scope.submitPost(0,video_comment)" data-ng-disabled="p.scope.submitting" class="text-comment">
+                <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                <span class="fa fa-spinner fa-pulse" ng-show="p.scope.submitting"></span>
+            </button>
+        </div>
+    </div>
+</script>
+
+
+<div ng-if="need_password">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="user_password">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+      </span>
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+</div>
+<div class="" ng-if="!need_password">
+
+    <div id="objectivesTable" ng-include="'/public/views/partials/student/objectives_table.html'" ng-controller="ObjectivesController"></div>
+    <div>
+        <!-- ************************************************************** -->
+        <!-- ************************* QUIZ VIEW **************************** -->
+        <!-- ************************************************************** -->
+        <div>
+
+            <span class="quiz_timer"
+                  ng-if="isTimed && !quizEnded && quizStarted && !isPasswordProtected">
+                <timer  finish-callback="finishQuiz()" countdown="timeRemaining" interval="1000" >{{minutes}} minutes, {{seconds}} seconds</timer>
+           </span>
+
+        </div>
+
+        <div style="width:100%;height:40px" ng-show="quizStarted && !quizEnded && !isPasswordProtected" >
+            <button  ng-show="currentPage != questionNumber  && pagebreaks === true" type="button" class="btn btn-warning pull-right" ng-click="nextpage()">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+            <button  ng-show="currentPage != 0 && pagebreaks === true" type="button" class="btn btn-warning pull-left" ng-click="previouspage()">Previous <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+        </div>
+
+        <div ng-include="'basicFileUploadModal.display.html'"></div>
+
+<div class="row" ng-show="quizStarted && !quizEnded && !isPasswordProtected && allMultipa" ng-init="currentShow = 0">
+<ul" class="pager main-nav-pager col-sm-12" >
+                            <li ng-show="currentShow >= 1" class="previous"><span data-ng-click="currentShow = currentShow  - 1"><span class="fa fa-angle-left"></span></span></li>
+                            <li style="font-weight:bold;font-size:x-larger">{{currentShow+1}}/{{questions.length}}</li>
+                            <li ng-show="currentShow !== questions.length - 1"  class="next"><span data-ng-click="currentShow = currentShow + 1"><span class="fa fa-angle-right"></span></span></li>
+                        </ul>
+</div>
+        <!--removed class question-->
+        <script ng-if="teacher_true">
+        function triggerclicksnow(){
+         angular.element('.tobechecked').trigger('click');
+         angular.element('.tobeDoubleClicked').trigger('dblclick');
+
+        }
+        </script>
+        <div ng-show="teacher_true && quizStarted" style="margin-bottom: 20px">
+        <button ng-hide="quizEnded" type="button" class="btn btn-warning ng-pristine ng-valid" onclick="triggerclicksnow()"  style="padding-right: 50px;padding-left: 50px;font-weight: bold;font-size: large;margin-bottom">Get 100% Correct Multiple Choice|multipart|oneword only at the moment</button>
+
+
+        </div>
+        <quizzes-pagination quiz-info="quizPagination" ng-if="quizStarted && !quizEnded && !isPasswordProtected && quizPagination.showNav"></quizzes-pagination>
+        <div class="question-display" ng-class="{'no-heading':!quiz.advancedSettings.show_question_number}" ng-repeat="question in questions track by $index" ng-style="setheight(question)" ng-show="question.currentpage == currentPage && quizStarted && !quizEnded && !isPasswordProtected && canShowQuestion($index)">
+            <div ng-show="checktoshowF($index,currentShow)" ng-style="{'font-size':quiz.advancedSettings.font_size,'font-family':quiz.advancedSettings.font_family}" >
+                <div ng-class="quiz.advancedSettings.show_question_box?'panel panel-default':''" style="margin-bottom:3em" ng-mouseenter="createCKEditor(question)" ng-hide="isidrandom(question)">
+                    <div class="panel-heading" ng-hide="!quiz.advancedSettings.show_question_number" style="">
+                        <div>
+                            <span style="font-size:1.5em">Question {{$index + 1}}</span> &nbsp;&nbsp;
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <display-question where="'student'" question="question"></display-question>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <quizzes-pagination quiz-info="quizPagination" ng-if="quizStarted && !quizEnded && !isPasswordProtected && quizPagination.showNav"></quizzes-pagination>
+        <div style="width:100%;height:40px" ng-show="pagebreaks && quizStarted && !quizEnded && !isPasswordProtected" >
+            <button  ng-show="currentPage != questionNumber  && pagebreaks === true" type="button" class="btn btn-warning pull-right" ng-click="nextpage()">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+            <button  ng-show="currentPage != 0 && pagebreaks === true" type="button" class="btn btn-warning pull-left" ng-click="previouspage()">Previous <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+        </div>
+
+
+        <div ng-show="quizStarted && !quizEnded && !isPasswordProtected" style="width:100%;text-align:center">
+
+            <button ng-show="!pagebreaks && currentShow === questions.length - 1 && allMultipa" title="Click to Finish" type="button" class="btn btn-success pull-center" ng-click="finishQuiz()" style="padding-right: 50px;padding-left: 50px;font-weight: bold;font-size: large;margin-bottom"
+                    data-ng-disabled="finishing">{{pageOptions.finish_quiz_text || 'Finish'}}
+                <span ng-show="finishing" class="fa fa-spinner fa-pulse"></span>
+            </button>
+
+            <button ng-show="!pagebreaks && !allMultipa" title="Click to Finish" type="button" class="btn btn-success pull-center" ng-click="finishQuiz()" style="padding-right: 50px;padding-left: 50px;font-weight: bold;font-size: large;margin-bottom"
+                    data-ng-disabled="finishing">{{pageOptions.finish_quiz_text || 'Finish'}}
+                <span ng-show="finishing" class="fa fa-spinner fa-pulse"></span>
+            </button>
+
+            <button ng-show="pagebreaks && currentPage === questionNumber " title="Click to Finish" type="button" class="btn btn-success pull-center" ng-click="finishQuiz()" style="padding-right: 50px;padding-left: 50px;font-weight: bold;font-size: large;"
+                    data-ng-disabled="finishing">{{pageOptions.finish_quiz_text || 'Finish'}}
+                <span ng-show="finishing" class="fa fa-spinner fa-pulse"></span>
+            </button>
+        </div>
+
+        <!-- ************************************************************** -->
+        <!-- ************************* QUIZ START SCREEN **************************** -->
+        <!-- ************************************************************** -->
+
+
+        <div ng-hide="quizStarted">
+            <!--<h1>{{quizTitle}}</h1>
+            <br>-->
+            <p style="font-size: 1.2em;" ng-bind-html="trustAsHtml(quizDescription)"></p>
+            <p style="font-size: 1.2em;" ng-show="notReady">Loading..</p>
+            <div ng-hide="quiz.meta.hide_default_instructions == 1">
+                <p style="font-size: 1.2em;" ng-hide="notReady" ng-if="totalQuestions > 1">There are {{totalQuestions}} questions.</p>
+                <p style="font-size: 1.2em;" ng-hide="notReady" ng-if="totalQuestions == 1">There is {{totalQuestions}} question.</p>
+
+                <div ng-hide="isUnlimitedAttempts  || isSurvey || !quiz.isStudent">
+                    <p style="font-size: 1.2em;"
+                       data-ng-bind="'You have ' + getRemainingAttempts() + ' attempts remaining.'"></p>
+                </div>
+                <div ng-show="isUnlimitedAttempts && !isSurvey">
+                    <p style="font-size: 1.2em;">You may do this activity as many times as you would like.</p>
+                    <p style="font-size: 1.2em;">Please DON’T close the browser window while taking the test.</p>
+                </div>
+                <div ng-show="isTimed">
+                    <p>You have {{timeLimit}} {{minute(timeLimit)}} to answer all questions.</p>
+                </div>
+                <br>
+                <div ng-show="isPasswordProtected">
+                    You must enter a password to take this quiz: <input type="password" ng-keyup="checkPassword()" id="quiz_password_field">
+                </div>
+            </div>
+
+
+
+            <async-button ng-if="pageOptions"
+                          class-name="(pageOptions.new_post_color || 'btn-primary btn-post') + ' btn-big'"
+                          text="{{pageOptions.custom_new_post_text || 'Start'}}"
+                          ng-hide="isPasswordProtected || (quizJustEnded || showRetake()) || (!isUnlimitedAttempts && !hasMoreAttempts)" flash-text="Started!" loading="starting" disabled="starting || gettingQuiz" ng-click="startQuiz()"></async-button>
+            <async-button ng-if="pageOptions"  class-name="(pageOptions.new_post_color || 'btn-primary btn-post') + ' btn-big'"
+                          text="Resume previous attempt" ng-show="!isPasswordProtected && showRetake()&& !loadingPrevious && quiz.canReturn && (quiz.is_finished==0 || quiz.is_finished==null) " flash-text="Started!" loading="starting  || gettingQuiz" ng-click="retakeQuiz()"></async-button>
+            <async-button ng-if="pageOptions"  class-name="(pageOptions.new_post_color || 'btn-primary btn-post') + ' btn-big'"
+                          text="{{pageOptions.custom_new_post_text || 'Start'}}"
+                          ng-show="!isPasswordProtected && showRetake()&& !loadingPrevious && (quiz.is_finished==1 || !quiz.canReturn)" flash-text="Started!" loading="starting  || gettingQuiz" ng-click="retakeQuiz()"></async-button>
+            <div ng-show="loadingPrevious">Loading previous attempt <span class="fa fa-spinner fa-pulse"></span></div>
+        </div>
+
+
+        <div ng-show="quizStarted && isPasswordProtected">
+            <div ng-show="isPasswordProtected">
+                The password you entered was incorrect,
+                <br><br>
+                You must enter a password to take this quiz: <input type="password" ng-keyup="checkPasswordFailed()" id="quiz_password_field_failed">
+            </div>
+        </div>
+
+        <!-- ************************************************************** -->
+        <!-- ************************* QUIZ FINISH SCREEN **************************** -->
+        <!-- ************************************************************** -->
+        <div ng-show="quizEnded && isSurvey">
+            <h1>Completed</h1>
+        </div>
+        <div ng-show="quizEnded && !isSurvey">
+            <div ng-show="hasMoreAttempts ">
+                <async-button color-style="default" text="Start" ng-show="!quizEnded && showRetake()" flash-text="Started!" loading="starting" ng-click="retakeQuiz()"></async-button>
+            </div>
+            <br>
+            <div ng-if="quizJustEnded || quiz.showPrevious" class="question-display"  ng-repeat="question in questions">
+                <display-question where="'review'" question="question"></display-question>
+            </div>
+            <h1 ng-hide="waitingForGrade">YOUR SCORE: {{quizScore}}/{{maxPoints}}</h1>
+            <div class="panel panel-default" ng-if="nshowStandards()">
+                <div class="panel-heading">This test evaluates the following standards:</div>
+                <div class="panel-body objective-list">
+                    <div ng-repeat="o in quiz.objectives track by $index">
+                        <b data-ng-bind="o.name"></b>
+                        <span
+                          ng-if="quiz.show_score_per_standard"
+                          data-ng-bind="'- ' + objectivePoints(o) + ' out of ' + objectiveMaxPoints(o) + ' (' +  objectivePercentage(o) + '%)'"
+                        >
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-default" ng-show="!quizStarted && waitingForGrade">
+                This activity has one or more questions that need to be manually graded. Once your teacher grades all questions, you will be able to see the grade.
+            </div>
+        </div>
+        <div ng-show="showNextButton()" ng-controller="NoMenuController">
+            <button ng-click="nextPage()" >Continue</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+

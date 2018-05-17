@@ -1,0 +1,48 @@
+<div class="sidebar">
+    <div class="classes-container" ng-if="vc_dash.classes">
+        <select selectize class="selectize-flat" ng-options="c.id as c.name for c in vc_dash.classes" ng-model="vc_dash.classId"
+                data-ng-change="vc_sidebar.changeClass(vc_dash.classId)"></select>
+    </div>
+
+    <div class="search-container tooltip-relative">
+        <input class="form-control search-applicant" placeholder="Search for an applicant"
+               ng-model="vc_sidebar.searchText">
+        <span class="btn btn-flat btn-flat-secondary no-border" tooltip-placement="bottom"
+              tooltip-append-to-body="true"
+              tooltip=" Download report for all applicants"
+              ng-click="export()"><i class="fa fa-download" style="font-size: 24px"></i></span>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="applicants-container">
+        <ul class="rows">
+            <li class="header j1-text-left">
+                <a>
+                    <div data-ng-repeat="col in vc_sidebar.columns" ng-click="vc_sidebar.sortBy(col)">
+                        <span ng-bind="col.label"></span>
+                        <span ng-show="col.label=='Applicant' && vc_sidebar.uniqueStudentCount"
+                              ng-bind="'('+vc_sidebar.uniqueStudentCount+')'"></span>
+                        <span ng-class="col.symbol"></span>
+                    </div>
+                </a>
+
+            </li>
+        </ul>
+        <ul class="rows">
+            <li
+                    data-ng-repeat="student in vc_sidebar.students | filter:vc_sidebar.searchText | orderBy:vc_sidebar.activeColumn.orderBy"
+                ng-class="{active:$stateParams.studentId==student.id}">
+                <a
+                        ng-click="$state.go(vc_sidebar.navState + '.applicant',{studentId:student.id,classId:student.testId || $stateParams.classId});vc_sidebar.checkSidebar()">
+                    <div >
+                        <span class="student-img" ng-bind="vc_sidebar.studentInitials(student)"></span>
+                        <span class="student-name" ng-bind="student.name"></span>
+                    </div>
+                    <div ng-bind="student.date"></span></div>
+                    <div ng-bind="student.finishedGradeClass?student.actualTotalScore:'-'">5.5</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div ui-view="content"/>

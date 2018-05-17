@@ -1,0 +1,15 @@
+<div data-ng-repeat="student in data | orderBy:'name'" class="panel panel-default">
+    <div class="panel-heading pointer" ng-click="student.opened = !student.opened">
+        <span class="fa" ng-class="student.opened?'fa-minus-square':'fa-plus-square'"></span>
+        <span ng-bind="student.name"></span>
+        <span ng-bind="'('+student.classCount+')'"></span>
+    </div>
+    <div class="panel-body" ng-if="student.opened">
+        <sortable-table
+                header="tableHeader"
+                rows="student.classArray"
+                perPage="20"
+                table-height="150px"
+        ></sortable-table>
+    </div>
+</div>

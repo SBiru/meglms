@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <script src="/public/js-util/ckeditor/ckeditor.js"></script>
+    <!-- inject:css -->
+
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+
+<!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+    <?php echo $customStyles->createStyleSheet(); ?>
+</head>
+<body ng-controller='PreferenceController' ng-class="{uploadusers:uploadUsers}">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+        <!-- bootstrap modal -->
+        <div id="basicChatModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicChatModal" aria-hidden="true">
+            <div class="modal-dialog" style="width: 380px;">
+                <div class="modal-content" ng-controller="ChatBoxController">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Chatting To {{ chatter.fname }} {{ chatter.lname }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+				<div ng-repeat="message in messages">
+					<p>{{ message.fname }} {{ message.lname }}<br />{{ message.created }}</p>
+                                   <p>{{ message.message }}</p>
+				</div>
+
+				<textarea ng-model="chat_message" cols="35" rows="6" placeholder="Type Message Here"></textarea><br />
+                            <button type="button" class="btn btn-primary btn-sm" ng-click="send()">Send</button>
+
+                        </div>
+	             </div>
+                    <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <!--End Basic Boot Strap Modal-->
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header margin-left-40">
+            <a data-ng-show="user.org.white_label" class="navbar-brand" href="/" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <table style="float: right">
+                <?php include(__DIR__ . "/partials/topright-menu.html") ?>
+            </table>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="margin-top:20px;" ng-controller="AdminContextController">
+    <div class="row">
+
+        <!-- ************************************************************** -->
+        <!-- ************************* SIDEBAR **************************** -->
+        <!-- ************************************************************** -->
+        <div id="sidebar-super-admin-1" class="col-sm-3 sidebar sidebar-super-admin" ng-show="!isCourseManagementView" ng-controller="TranslationsController" ng-cloak>
+            <div ng-hide="sidebarCollapsed || $root.windowWidth<768" class="collapse-menu-icon" style="top: -9px;">
+                <span class="fa fa-list-ul" ng-click="toggleSidebar()" style="cursor:pointer"> </span>
+            </div> <ul class="nav nav-tabs" style="margin-left: 45px;">
+                <li><a href="#/manageclasses/" ng-click="$root.windowWidth<768?toggleSidebar():''">Class Management</a></li>
+                <li class="active"><a href="#/translations/en" ng-click="$root.windowWidth<768?toggleSidebar():''">Translations</a></li>
+            </ul>
+            <div>
+                <ul class="nav nav-list nav-pills nav-stacked sidebar-nav">
+                    <li ng-repeat="language in languages">
+                        <a href="#/translations/{{ language.language_id }}" ng-click="$root.windowWidth<768?toggleSidebar():''">{{ language.language_name }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="sidebar-super-admin-2" class="col-sm-3 sidebar sidebar-super-admin" ng-show="isCourseManagementView" ng-controller="ManageClassesController" ng-cloak>
+            <div ng-hide="sidebarCollapsed || $root.windowWidth<768" class="collapse-menu-icon" style="top: -9px;">
+                <span class="fa fa-list-ul" ng-click="toggleSidebar()" style="cursor:pointer"> </span>
+            </div><ul class="nav nav-tabs" style="margin-left: 45px;">
+                <li class="active"><a href="#" ng-click="$root.windowWidth<768?toggleSidebar():''">Class Management</a></li>
+                <li><a href="#/translations/en" ng-click="$root.windowWidth<768?toggleSidebar():''">Translations</a></li>
+            </ul>
+
+
+
+
+            <div class="dropdown admin-course-dropdown" ng-controller="OrganizationController">
+                <table style="width:100%">
+                    <!--<tr>Organization</tr>-->
+                    <tr>
+                        <td rowspan="2"><a class="dropdown-toggle sidebar-dropdown-title" data-toggle="dropdown">{{ currentname }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu course-dropdown-menu">
+                                <li ng-repeat="organization in organizations"><a href="#/editorganization/{{ organization.id }}" ng-click="changeOrganization(organization.id);$root.windowWidth<768?toggleSidebar():''">{{ organization.name }}</a></li>
+                                <li data-ng-show="user.is_super_admin"><a href="#/addorganization/" ng-click="$root.windowWidth<768?toggleSidebar():''">+Add Organization</a></li>
+                            </ul>
+                        </td>
+                        <td style="padding-right:30px;text-align: right">
+                            <a href="#/editorganization/{{ currentid}}" ng-click="$root.windowWidth<768?toggleSidebar():''"><span class="fa fa-pencil-square-o" style="font-size: 25px;"> </span></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="dropdown admin-course-dropdown" ng-controller="DepartmentController">
+                <table style="width:100%">
+                <!--<tr>Department</tr>-->
+                <tr>
+                    <td rowspan="2"><a class="dropdown-toggle sidebar-dropdown-title" data-toggle="dropdown">{{currentname }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu course-dropdown-menu">
+                            <li ng-repeat="department in departments"><a href="#/editdepartment/{{ department.id }}" ng-click="changeDepartment(department.id);$root.windowWidth<768?toggleSidebar():''">{{ department.name }}</a></li>
+                            <li><a href="#/adddepartment/" ng-click="$root.windowWidth<768?toggleSidebar():''">+Add Department</a></li>
+                        </ul>
+                    </td>
+                    <td style="padding-right:30px;text-align: right">
+                        <a href="#/editdepartment/{{ currentid}}" ng-click="$root.windowWidth<768?toggleSidebar():''"><span class="fa fa-pencil-square-o" style="font-size: 25px;"> </span></a>
+                    </td>
+                </tr>
+                </table>
+            </div>
+            <div class="dropdown admin-course-dropdown" ng-controller="ClassAdminController">
+                <table style="width:100%">
+                    <!--<tr>Department</tr>-->
+                    <tr>
+                        <td rowspan="2"><a class="dropdown-toggle sidebar-dropdown-title" data-toggle="dropdown" ><span ng-bind="currenttermname||'Term'"></span><span class="caret"></span></a>
+                            <ul class="dropdown-menu course-dropdown-menu">
+                                <li ng-repeat="term in terms"><a href="#/editterm/{{ term.id }}" ng-click="changeTerm(term.id);$root.windowWidth<768?toggleSidebar():''" ng-bind="term.name||'Term'"></a></li>
+                                <li><a href="#/addterm/" ng-click="$root.windowWidth<768?toggleSidebar():''">+Add Term</a></li>
+                            </ul>
+                        </td>
+                        <td style="padding-right:30px;text-align: right">
+                            <a ng-href="{{currenttermid?'#/editterm/'+currenttermid:''}}" ng-click="$root.windowWidth<768?toggleSidebar():''"><span class="fa fa-pencil-square-o" style="font-size: 25px;"> </span></a>
+                        </td>
+                    </tr>
+                </table >
+                <table style="width:100%;margin-top:30px">
+                    <tr>
+                        <td rowspan="2">
+                            <input type="text" placeholder="Search class" ng-model="inputFilter">
+                        </td>
+                        <td style="padding-right:30px;text-align: right">
+                            <a href="#/addcourseclass/{{departmentId}}" ng-click="$root.windowWidth<768?toggleSidebar():''">+ Add Class</a>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-hover classes" data-height="10" data-row-style="rowStyle" data-toggle="table">
+                    <thead>
+                    <tr>
+
+                        <th data-halign="center" style="color: rgb(66, 139, 202);">Class</th>
+                        <th data-halign="left"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat='class in classes | filter:inputFilter | filter:{term_id:currenttermid}'
+                            ng-class="{'active':isActive(class)}">
+
+                    <td >
+                        <a href="#/editcourseclass/{{ class.id}} " ng-click="$root.windowWidth<768?toggleSidebar():''" style="text-decoration: none">
+                            <span style="color:#818181">{{ class.name }}</span>
+                        </a>
+                    </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+        <!-- ************************************************************** -->
+        <!-- *********************** MAIN CONTENT ************************* -->
+        <!-- ************************************************************** -->
+        <div class="hide-menu-icon" style="margin-top: 62px;">
+            <div class="collapsed btn btn-xs btn-default" ng-show="sidebarCollapsed || $root.windowWidth<768" ng-click="toggleSidebar()">
+                <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+            </div>
+        </div>
+        <div ng-show="!sidebarCollapsed " ng-click="toggleSidebar()" class="emptydiv"></div>
+        <div id="superadmin-content"ui-view class="col-sm-9 col-sm-offset-3 main"></div>
+
+    </div>
+</div>
+
+<!-- TODO: Load Scripts Here -->
+<script>
+    angular.module('app').requires.push('uiSwitch');
+    angular.module('app').requires.push('ngCkeditor');
+    angular.module('app').requires.push('selectize2');
+</script>
+</div></div></body>
+</html>

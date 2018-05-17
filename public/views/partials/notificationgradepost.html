@@ -1,0 +1,85 @@
+<button class="close-btn" ng-click="ok()">&times;</button>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <div class="modal-header">
+                <a ng-href="#/{{grade_post.layout}}/{{grade_post.pageid}}"  target='_blank'><h3 class="modal-title">{{grade_post.page_name}}</h3></a>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="modal-header">
+                <h4>Your Submission</h4>
+            </div>
+        </td>
+        <td>
+            <div class="modal-header">
+                <h4>Feedback</h4>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top;" class="student-submission-td">
+            <div class="section" style = "width: 360px;
+                 word-wrap: break-word;">
+                <div class="well" ng-show="grade_post.student_video_url">
+                    <div data-ng-show="grade_post.student_video_url">
+                        <video ng-src="{{ grade_post.student_video_url }}" width="192" height="144" controls>
+                            Your browser does not support the video tag! Unable the show
+                            video. But right?
+                        </video>
+                    </div>
+                </div>
+                <div data-ng-show="grade_post.student_message && !grade_post.allow_template_post" ng-bind-html="grade_post.student_message"> </div>
+                <html-template-response  ng-if="grade_post.allow_template_post" opened="true" user-id="grade_post.student_user_id" post-id="grade_post.student_post_id"></html-template-response>
+                <div ng-show="grade_post.student_upload_url">
+                    File: <a ng-href="{{ grade_post.student_upload_url }}" target='_blank'>{{ grade_post.student_upload_file_name }}</a>
+                    <br/><br/>
+                </div>
+            </div>
+
+        </td>
+        <td>
+            <div class="section">
+                <h4 ng-show="show_grades && !isTeacher">Grade: {{ grade_post.grade | uppercase }}</h4>
+
+                <div ng-repeat="post in teacher_posts">
+                    <hr ng-show="$index != 0">
+
+                    <blockquote>
+                        <div ng-if="post.rubric.length>0" ng-include="'/public/views/rubrics/rubric-grader.html'" ng-controller="RubricFeedbackController" class="feedback_rubric"></div>
+                        <div ng-show="post.video_url">
+                            <video ng-src="{{ post.video_url }}" width="192" height="144" controls>
+                                Your browser does not support the video tag! Unable the
+                                show video.
+                            </video>
+                        </div>
+                        <p ng-show="post.message" ng-bind-html="trustAsHtml(post.message)"></p>
+                        <div ng-show="post.upload_url && post.uploadedfile.length==null"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            File:
+                            <a ng-href="{{ post.upload_url }}" target='_blank'>{{ post.upload_file_name }}</a>
+                            <br/><br/>
+                        </div>
+                        <div ng-show="post.uploadedfile.length!=null"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            File<span ng-show="post.uploadedfile.length>1" >s</span>:
+                            <div ng-repeat="file in post.uploadedfile">
+                            <a ng-href="{{ file.upload_url }}" target='_blank'>{{ file.upload_file_name }}</a>
+                            </div>
+                            <br/><br/>
+                        </div>
+                        <footer>
+                            <a href=""> {{ post.teacher_fname }} {{
+                                post.teacher_lname }}</a>&nbsp;{{ post.feedbackOn }}
+                        </footer>
+                        <div>
+                            <button class="btn btn-primary btn-sm" ng-hide="hide_reply" data-toggle="modal" data-backdrop="static" data-target="#basicModal"  ng-click="reply(post.id)">Reply</button>
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

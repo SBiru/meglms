@@ -1,0 +1,31 @@
+<div ng-if="error" data-ng-bind="error" class="alert alert-danger"></div>
+<div data-ng-show="amIAdmin()" class="row">
+    <div class="col-xs-6 width-100">
+        <div data-ng-include="'public/views/directives/reports/components/select-teacher.html'"></div>
+    </div>
+</div>
+<div data-ng-repeat="c in classes track by $index" ng-hide="c.empty">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer" data-ng-click="c.show=!c.show">
+            <span class="fa" data-ng-class="c.show?'fa-minus-square':'fa-plus-square'"></span>
+            <span data-ng-bind="c.name"></span>
+            <span data-ng-show="c.total" data-ng-bind="'('+c.total+')'"></span>
+            <span data-ng-show="loading[c.id]" class="fa fa-spinner fa-pulse"></span>
+        </div>
+        <div class="panel-body" ng-if="c.show">
+
+            <div class="panel panel-warning" data-ng-repeat="u in c.units track by $index" data-ng-if="u.pages.length">
+                <div class="panel-heading" data-ng-bind="u.description"></div>
+                <div class="panel-body">
+                    <table class="assignments">
+                        <tr data-ng-repeat="p in u.pages">
+                            <td data-ng-bind="p.label"></td>
+                            <td><b data-ng-bind="p.count_needing_grading"></b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

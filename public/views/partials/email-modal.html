@@ -1,0 +1,242 @@
+<style>
+    @media (max-width: 768px){
+        .modal-dialog{
+            width:auto !important;
+        }
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title" ng-if="$root.user.org.disallow_email == false">My Email Messages</h4>
+     <h4 class="modal-title" ng-if="$root.user.org.disallow_email == true">Messages</h4>
+</div>
+
+<div class="modal-body">
+    <div class="list-group" ng-show="modes.length > 1">
+        <ul class="nav nav-pills email-nav">
+            <li ng-repeat="mode in modes" ng-class="mode.type == currentMode ?  'active' : ''">
+                <a ng-click="changeToMode(mode.type)">{{mode.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="new_email" ng-show="currentMode=='new'">
+        <div class="user-wrapper" ng-show="showSpecificUser">
+            <h3>
+                <span ng-hide="student">Loading..</span>
+            <span ng-show="student">
+                Email to <span ng-if="!$root.user.org.disallow_email">{{student.fname}}  {{student.lname}}</span>
+                <span ng-if="$root.user.org.disallow_email"><a href="mailto:{{student.email}}" target="_top">{{student.fname}}  {{student.lname}}</a></span>
+                <span ng-if="$root.user.org.disallow_email"><br><br>Email Address : "{{student.email}}"</span>
+            </span>
+            </h3>
+        </div>
+        <div class="classes-wrapper" ng-show="showClasses">
+            <div class="input-group full-width no-label">
+                <!--<h5>Select a class</h5>-->
+                Select a class:
+                <select
+                        selectize
+                        ng-model="selected_class"
+                        ng-options="class.id as class.name for class in classes">
+                </select>
+                <!--<input class="class-autocomplete form-control" ng-model="selected_class" placeholder="Class">-->
+            </div>
+        </div>
+        <div class="users-wrapper" ng-show="showUsers">
+            <div class="input-group full-width no-label">
+                <!--<h5>Select users</h5>-->
+                <ul id="selected-users">
+                    <li style="display: list-item" ng-repeat="user in userList" ng-class="{'teacher':user.is_teacher} ">
+                        {{user.fname}} {{user.lname}}
+                        <a ng-click="removeUser(user)">x</a>
+                    </li>
+                </ul>
+                <h5 style="display:table-row" ng-show="students">Add a student:</h5>
+
+                <div class="input-group col-sm-9 float-none width-100" ng-show="students" style="float:left">
+                    <select
+                            selectize
+                            ng-model="selected_student"
+                            ng-options="user.id as user.fname + ' ' + user.lname + ' ' + user.email for user in students">
+                    </select>
+                    <!--<input type="text" class="form-control user-autocomplete" placeholder="Student or group" ng-model="student">-->
+                    <div class="input-group-btn display-block" ng-init="userType='Student'">
+                        <button type="button" class="btn btn-default
+                 dropdown-toggle" data-toggle="dropdown">
+                            {{userType}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right right-auto">
+                            <li ng-click="userType='Student'"><a>Student</a></li>
+                            <li ng-click="userType='Group of Students'"><a>Group of Students</a></li>
+                        </ul>
+                    </div><!-- /btn-group -->
+                </div><!-- /input-group -->
+                <div class="col-sm-3 padding-left-0 margin-top-5" ng-show="students">
+                    <div class="btn btn-primary btn-sm" ng-click="addAll(students)">Add All</div>
+                </div>
+
+
+                <br>
+                <h5 style="display:table-row;margin-top:10px" ng-show="teachers">Add a teacher:</h5>
+
+                <div class="input-group col-sm-9 width-100" ng-show="teachers" style="float: left;">
+                    <select
+                            selectize
+                            ng-model="selected_teacher"
+                            ng-options="user.id as user.fname + ' ' + user.lname + ' ' + user.email for user in teachers">
+                    </select>
+                </div>
+                <div class="col-sm-3 padding-left-0" ng-show="teachers">
+                    <div class="btn btn-primary btn-sm" ng-click="addAll(teachers)">Add All</div>
+                </div>
+            </div>
+        </div>
+        <div class="guardians full-width" ng-show="showGuardians()">
+            <input type="checkbox" ng-model="addGuardians">
+            Add guardians/advisors to the email copy list
+        </div>
+        <div class="subject-wrapper full-width" ng-if="!$root.user.org.disallow_email">
+            <input type="text" class="form-control" ng-model="content.subject" placeholder="Subject">
+        </div>
+        <div class="mail-wrapper">
+            <!--<h5>Email body</h5>-->
+        <textarea name="editor_email" id="editor_email" rows="15" cols="80" ng-if="!$root.user.org.disallow_email">
+                    </textarea>
+            <script ng-if="!$root.user.org.disallow_email">
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+
+                CKEDITOR.config.allowedContent = true;
+                CKEDITOR.config.disableNativeSpellChecker = false;
+                var ck = CKEDITOR.replace( 'editor_email', {
+                    toolbar : [
+                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat','Smiley' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',  'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+                        { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+                        { name: 'tools', items : [ 'Maximize'] },
+
+                    ],
+                    filebrowserUploadUrl: '/uploadckeditormedia/'
+                } );
+                ck.on( 'paste', function( evt ) {
+                    var data = evt.data;
+                    data.dataValue = E3replaceUrl(data.dataValue);
+                    // Text could be pasted, but you transformed it into HTML so update that.
+                    data.type = 'html';
+                });
+            </script>
+        </div>
+    </div>
+    <div class="student-feedback" ng-show="currentMode=='student_feedback'">
+        <div class="input-group">
+            <input ng-model="studentFeedbackFilter" class="form-control" placeholder="Search..">
+            <span class="input-group-addon"><i class=" fa fa-search"></i></span>
+        </div>
+        <ul class="notifications">
+            <div class="notifbox">
+                <li class="notification" ng-class="{unread:!notification.viewed}" ng-repeat="notification in student_feedbacks">
+                    <a ng-click="open(notification)">
+                        <div class="assignment-info-block">
+                            <div class="class-name">
+                                <b ng-bind="notification.className"></b> , Unit: <span ng-bind="notification.unitPosition"></span>
+                            </div>
+                            <div><b ng-bind="notification.pageName"></b></div>
+                        </div>
+                        <div class="message-block">
+                            <div class="sender">
+                                <b>{{notification.senderName}}:</b>
+                            </div>
+                            <div class="message-preview">
+                                {{notification.messagePreview}}
+                            </div>
+                            <div class="message-info">
+                                {{notification.dateTime_text}}
+                            </div>
+                        </div>
+
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </div>
+    <div class="feedback" ng-show="currentMode=='feedback'">
+        <div class="input-group">
+            <input ng-model="feedbackFilter" class="form-control" placeholder="Search..">
+            <span class="input-group-addon"><i class=" fa fa-search"></i></span>
+        </div>
+        <div class="list-group full-width">
+            <div class="notification"  >
+                <div class="list-group-item">
+                    <div style="overflow: auto;">
+                        <div class="col-xs-7"><b>Assignment</b></div>
+                        <div class="col-xs-2"><b>Grade</b></div>
+                        <div class="col-xs-3"><b>Date</b></div>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="notification in notifications | filter:feedbackFilter" class="notification"  >
+                <div class="list-group-item" ng-click="open(notification)" ng-class="{'unread':notification.viewed==0}">
+                    <div class="list-group" style="overflow: auto;">
+                        <div class="col-xs-7">{{notification.page_name}}</div>
+                        <div class="col-xs-2" ng-bind="notification.show_grades=='1'?notification.grade:''"></div>
+                        <div class="col-xs-3">{{notification.dateTime_text}}</div>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sent" ng-show="currentMode=='sent'">
+        <div class="input-group">
+            <input ng-model="inputFilter" class="form-control" placeholder="Search..">
+            <span class="input-group-addon"><i class=" fa fa-search"></i></span>
+        </div>
+
+
+        <br>
+        <ul class="list-group full-width filterMessages" ng-init="messageType=''">
+            <li><input type="radio" ng-click="messageType='received'" name="messageType"> Received</li>
+            <li><input type="radio" ng-click="messageType='sent'" name="messageType"> Sent</li>
+            <li><input type="radio" checked ng-click="messageType='!feedback'" name="messageType"> All</li>
+        </ul>
+        <div class="list-group full-width">
+            <div ng-repeat="email in emails | filter:inputFilter | filter:{type:messageType}  "  >
+                <div class="list-group-item" ng-class="{'sent':email.type=='sent','received':email.type!='sent','unread':email.read==0}">
+                    <div class="list-group email-collapse-btn" data-toggle="collapse"
+                         ng-href="#email-{{email.id}}-{{email.type}}" aria-expanded="false"
+                         aria-controls="collapseExample" ng-init="email.expanded=false" ng-click="email.expanded=!email.expanded;markAsRead(email);"
+                         >
+                        <div ng-hide="email.expanded" class="col-sm-1"><span class="fa" ng-class="email.type=='sent'?'fa-reply sent-arrow':'fa-mail-forward received-arrow'"></span></div>
+                        <div ng-hide="email.expanded" class="col-sm-2" ng-bind="email.type=='sent'?'To: ' + email.to_preview:'From: ' + email.fname + ' ' + email.lname "></div>
+                        <div ng-show="email.expanded" ng-bind="email.type=='sent'?'To: ' + email.to_list:'From: ' + email.fname + ' ' + email.lname "></div>
+                        <div ng-hide="email.expanded" class="col-sm-3">{{email.subject_preview}}</div>
+                        <div  ng-hide="email.expanded" class="col-sm-4 preview" >{{email.message_preview}}</div>
+                        <div  ng-hide="email.expanded" class="col-sm-2 datetime" >{{email.dateTime_text}}</div>
+                    </div>
+                    <div ng-attr-id="email-{{email.id}}-{{email.type}}" class="collapse email-message">
+                        <div ng-show="email.expanded" class="subject">{{email.subject}}</div>
+                        <div class="well" ng-bind-html="email.message">
+                        </div>
+                        <div class="btn btn-primary btn-sm" ng-show="email.type=='received'" ng-click="reply(email)">Reply</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div ng-show="response.error" class="alert alert-danger" role="alert">{{ response.error }}</div>
+    <div ng-show="response.message && !response.error" class="alert alert-success" role="alert">{{ response.message }}</div>
+
+</div>
+
+<div class="modal-footer" ng-if="!$root.user.org.disallow_email">
+    <!--<button type="button" class="btn btn-default" ng-click="cancel()">Close</button>-->
+    <button type="button" class="btn btn-primary" ng-click="ok()" ng-show="currentMode=='new'">Send</button>
+</div>

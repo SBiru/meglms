@@ -1,0 +1,188 @@
+<div class="panel panel-default" data-ng-init="isAnswersOpened=true">
+    <div class="panel-heading pointer" ng-click="isAnswersOpened=!isAnswersOpened">
+        <span class="fa" ng-class="isAnswersOpened?'fa-minus':'fa-plus'"></span>
+        Answer
+    </div>
+    <div class="panel-body" ng-show="isAnswersOpened">
+        <form>
+            <div class="form-group row">
+                <label for="formula" class="col-sm-2 form-control-label">Answer formula</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="formula" ng-model="calculatedSimple.formula">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info" type="button" ng-click="validateAndFind()" data-ng-disabled="!canValidate()"><span class="fa fa-spinner fa-pulse" ng-show="loading.validate"></span> Validate and find parameters</button>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="tolerance" class="col-sm-2 form-control-label float-left">Tolerance</label>
+                <div class="col-sm-2  pull-left float-none">
+                    <input type="text" class="form-control tolerance-input" ng-model="calculatedSimple.tolerance" id="tolerance" placeholder="0.1">
+                </div>
+                <div class="pull-left tolerance-type margin-left-15 margin-top-15">
+                    <label for="type" class="form-control-label">Type</label>
+                </div>
+                <div class="pull-left margin-top-15">
+                    <select id="type" ng-model="calculatedSimple.toleranceType">
+                        <option value="relative">Relative</option>
+                        <option value="nominal">Nominal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="decimals" class="col-sm-2 form-control-label float-left">Answer shows</label>
+                <div class="col-sm-2  pull-left float-none">
+                    <input type="number" class="form-control tolerance-input" id="decimals" placeholder="2" ng-model="calculatedSimple.decimals">
+                </div>
+                <div class="pull-left tolerance-type margin-left-15 margin-top-15">
+                    <label for="format" class="form-control-label">Format</label>
+                </div>
+                <div class="pull-left margin-top-15">
+                    <select id="format" ng-model="calculatedSimple.decimalsType">
+                        <option value="decimal">decimals</option>
+                        <option value="significant">significant figures</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default wildcardparameters" ng-show="shouldShowWildCardParameters()">
+    <div class="panel-heading pointer" ng-click="isWildCardParametersOpened=!isWildCardParametersOpened">
+        <div class="form-inline">
+            <div class="form-group">
+                <span class="fa" ng-class="isWildCardParametersOpened?'fa-minus':'fa-plus'"></span>
+                <span>Parameters range</span>
+            </div>
+            <div class="input-group form-group generate-sets">
+                  <span class="input-group-btn">
+                    <button class="btn btn-info" type="button" ng-click="generateSets($event)">Generate</button>
+                  </span>
+                <input type="text" class="form-control tolerance-input" placeholder="1" ng-click="stopPropagation($event)" ng-model="calculatedSimple.numberOfSets">
+            </div>
+        </div>
+    </div>
+    <div ng-show="isWildCardParametersOpened">
+        <ul class="list-group">
+            <li class="list-group-item" data-ng-repeat="param in parameters">
+                <div class="wild-card-heading small-heading">
+                    Param <span ng-bind="param.param"></span>
+                </div>
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Range</label>
+                        <div class="col-sm-3">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <span>Minimum</span>
+                                    <input type="number" class="form-control tolerance-input" id="minimum" placeholder="0.1" ng-model="param.min">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <span>Maximum</span>
+                                    <input type="number" class="form-control tolerance-input" id="maximum" placeholder="10" ng-model="param.max">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <span>Decimal places</span>
+                                    <input type="number" class="form-control tolerance-input" id="decimal_range" placeholder="2" ng-model="param.decimals">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="panel " ng-class="setsHaveError()?'panel-danger':'panel-default'" ng-if="shouldShowWildCardValues()">
+    <div class="panel-heading pointer" ng-click="isWildCardValuesClosed=!isWildCardValuesClosed">
+
+        <div class="form-inline">
+            <div class="form-group">
+                <span class="fa" ng-class="isWildCardValuesOpened?'fa-minus':'fa-plus'"></span>
+                <span>Available sets to be used in questions</span>
+            </div>
+            <div class="input-group form-group generate-sets">
+                  <span class="input-group-addon">
+                      Display
+                  </span>
+                <input type="text" class="form-control tolerance-input" ng-click="stopPropagation($event)" ng-model="that.display"  placeholder="1">
+            </div>
+        </div>
+        <div class="text-danger" ng-show="setsHaveError()">
+            <b>At least one of the sets contains error</b>
+        </div>
+
+    </div>
+    <resize-tables-when-change-set class="panel-body" ng-hide="isWildCardValuesClosed">
+        <div class="col-md-4 col-sm-6 col-xs-12" data-ng-repeat="set in sets | limitTo:that.display track by $index">
+            <span class="set-controls">
+                <span class="btn btn-primary btn-xs" ng-click="startEditingSet(set)"><i class="fa fa-edit"></i></span>
+                <span class="btn btn-danger btn-xs" ng-click="removeSet($index)"><i class="fa fa-trash"></i></span>
+            </span>
+            <table class="table" >
+                <thead ng-class="set.isValid?'thead-default':'table-danger'">
+                <tr>
+                    <th>
+                        <div class="wild-card-heading small-heading">
+                            Set <span ng-bind="$index+1"></span>
+                        </div>
+                    </th>
+                    <th class="small-column" ng-hide="set.editing">Correct answer</th >
+                    <th class="small-column" ng-hide="set.editing">Min</th >
+                    <th class="small-column" ng-hide="set.editing">Max</th >
+                </tr>
+                </thead>
+                <tr ng-hide="set.editing">
+                    <td ng-bind="set.formula"></td>
+                    <td class="small-column" ng-bind="set.answer"></td>
+                    <td class="small-column" ng-bind="set.range.min"></td>
+                    <td class="small-column" ng-bind="set.range.max"></td>
+                </tr>
+                <tr ng-show="!set.isValid && !set.editing">
+                    <td colspan="4">
+                        <div class="text-danger" ng-bind="set.error"></div>
+                    </td>
+                </tr>
+                <tr ng-if="set.editing">
+                    <td>
+                        <div class="edit-params-container pull-left">
+                            <div class="form-inline" data-ng-repeat="(param,value) in set.eParams">
+                                <div class="input-group form-group edit-param" >
+                                <span class="input-group-addon addon">
+                                    {{param}}
+                                </span>
+                                    <input type="number" class="form-control tolerance-input" ng-model="set.eParams[param]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="finish-edit-param">
+                            <span class="btn btn-default btn-xs" ng-click="stopEditingSet(set)">Cancel</span>
+                            <span class="btn btn-primary btn-xs" ng-click="finishEditingSet(set)">Ok</span>
+                        </span>
+
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+
+
+    </resize-tables-when-change-set>
+</div>

@@ -1,0 +1,148 @@
+<table class="cp-edit-layout-table">
+    <tr>
+        <td>
+            Choose a Layout
+            <br>
+            <div style="clear:both">
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(1)">
+                    <span><img src="/public/img/layout1.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 1}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(2)">
+                    <span><img src="/public/img/layout2.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 2}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(3)">
+                    <span><img src="/public/img/layout3.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 3}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(4)">
+                    <span><img src="/public/img/layout4.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 4}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(5)">
+                    <span><img src="/public/img/layout5.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 5}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(6)">
+                    <span><img src="/public/img/layout6.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 6}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(7)">
+                    <span><img src="/public/img/layout7.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 7}"></i>
+                </div>
+
+                <div class="pointer cp-select-layout" ng-click="setcpLayoutId(8)">
+                    <span><img src="/public/img/layout8.jpg" /></span>
+                    <i ng-class="{'fa fa-check': cpLayoutId == 8}"></i>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 1">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout1">
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1==null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).next().trigger('click')">click to add an image</div>
+                <input style="display:none" type='file' accept="image/*" fileread="cpLayoutObj.img1" use-spinner="true"/>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1!=null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).prev().trigger('click')">click to change the image</div>
+                <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 2">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout2">
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1==null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).next().trigger('click')">click to add an image</div>
+                <input style="display:none" type='file' accept="image/*" fileread="cpLayoutObj.img1" use-spinner="true"/>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1!=null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).prev().trigger('click')">click to change the image</div>
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 3">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout3">
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                </div>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1==null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).next().trigger('click')">click to add an image</div>
+                <input style="display:none" type='file' accept="image/*" fileread="cpLayoutObj.img1" use-spinner="true"/>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1!=null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).prev().trigger('click')">click to change the image</div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 4">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout4">
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                </div>
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html2"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 5">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout5">
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1==null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).next().trigger('click')">click to add an image</div>
+                <input style="display:none" type='file' accept="image/*" fileread="cpLayoutObj.img1" use-spinner="true"/>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1!=null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).prev().trigger('click')">click to change the image</div>
+
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html2"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 6">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout6">
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html2"></div>
+                </div>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1==null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).next().trigger('click')">click to add an image</div>
+                <input style="display:none" type='file' accept="image/*" fileread="cpLayoutObj.img1" use-spinner="true"/>
+                <div class="cp-image-upload" ng-show='cpLayoutObj.img1!=null' style="background:url('{{cpLayoutObj.img1}}'); background-size:cover; background-position:center;" onclick="$(this).prev().trigger('click')">click to change the image</div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 7">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout7">
+                <div>
+                    <div class="large-cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                </div>
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html2"></div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html3"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr ng-show="cpLayoutId == 8">
+        <td>
+            <div class="cp-edit-layout cp-edit-layout8">
+                <div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html1"></div>
+                    <div class="cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html2"></div>
+                </div>
+                <div>
+                    <div class="large-cp-html-input" contenteditable div-cke-pair ng-model="cpLayoutObj.html3"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

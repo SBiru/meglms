@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/css/app.css?ver=1.1.2">
+    <link rel="stylesheet" href="/public/build/timed-review.css">
+    <link rel="stylesheet" href="/public/css/meg2.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/public/css/signin.css" type="text/css" />    
+	<?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <link rel="stylesheet" href="/public/css/responsive.css">
+    
+    <script src="/public/lib/jquery-1.11.0.min.js"></script>
+    <script src="/public/lib/jquery-ui.min.js"></script>
+    <script src="/public/lib/bootstrap.min.js"></script>
+    <script src="/public/js-util/flash-video-helper.js"></script>
+	<script src="/public/js-util/url-replacer.js"></script>
+    <script src="/public/lib/angular-file-upload-shim.min.js"></script>
+    <!-- <script src="lib/holder.js"></script> --><!-- TESTING ONLY -->
+    <script src="/public/lib/howler.min.js"></script>
+    <script src="/public/lib/underscore-min.js"></script>
+    
+    <script src="/public/lib/angular.min.js"></script>
+    <script src="/public/lib/angular-resource.min.js"></script>
+    <script src="/public/lib/angular-ui-router.min.js"></script>
+    <script src="/public/lib/angular-file-upload.js"></script>
+	<script src="/public/lib/angular-base64-upload.js"></script>
+
+    <link rel="stylesheet" href="/public/lib/select2/selectize.default.css" />
+    <script src="/public/lib/selectize.js"></script>
+    <script src="/public/lib/select2/angular-selectize.js"></script>
+
+	<script src="/public/js/directives/audio-flashit.js"></script>
+
+	<script src="/public/lib/recorder.js"></script>
+	<script src="/public/js/directives/audio-flashit.js"></script>
+	<script src="/public/js/directives/timed-editor.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload-shim.min.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload.min.js"></script>
+
+    <script src="/public/lib/ui-bootstrap-custom-tpls-0.10.0.min.js"></script>
+	
+	
+    <script src="/public/js/app.js?ver=1.0"></script>
+    <script src="/public/js/controllers.js?ver=1.0.6"></script>
+    <script src="/public/js/controllers/nav.js"></script>
+    <script src="/public/js/filters.js"></script>
+    <script src="/public/js/services.js?ver=1.1"></script>
+    <script src="/public/js/directives.js"></script>
+    <script src="/public/js-util/bootstrap-modifications.js"></script>
+    <script src="/public/lib/angular.rangeSlider.js"></script>
+    <!-- Golabs 26/03/2015 Drag and drop-->
+    <script src="/public/js-util/dragdrop/draganddrop.js"></script>
+
+</head>
+<body>
+	<div class="container">
+    <img src="/public/img/Logo%20Teal%202.png" style="display: block; margin-left: auto; margin-right: auto;"/>
+    <br>
+    <br>
+		<form method="post" action="/apply/" class="form-signin" role="form">
+			
+			<input type="text" id="fname" name="fname"     class="form-control" placeholder="First Name" required autofocus>
+			<input type="text" id="lname" name="lname"     class="form-control" placeholder="Last Name" required autofocus>
+			<input type="email" id="email" name="email"     class="form-control" placeholder="Email address" required autofocus>
+			<input type="text" id="phone" name="phone"     class="form-control" placeholder="Phone #" required autofocus>
+			<input type="text" id="city" name="city"     class="form-control" placeholder="City" required autofocus>
+			<input type="text" id="state" name="state"     class="form-control" placeholder="State" required autofocus>
+			<input type="text" id="country" name="country"     class="form-control" placeholder="Country" required autofocus>
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="hs" required autofocus>&nbsp;High School Diploma/GED</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="college" required autofocus>&nbsp;College</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="technical" required autofocus>&nbsp;Technical Diploma</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="associates" required autofocus>&nbsp;Associates</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="bachelors" required autofocus>&nbsp;Bachelors</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="masters" required autofocus>&nbsp;Masters</label>
+				<label class="btn btn-default"><input type="radio" name="education" class="toggle" value="doctoral" required autofocus>&nbsp;Doctoral</label>
+			</div>
+			<input type="text" id="native" name="native"     class="form-control" placeholder="Native Language" required autofocus>
+			<input type="text" id="second" name="second"     class="form-control" placeholder="Second Language" required autofocus>
+			<input type="text" id="additional" name="additional"     class="form-control" placeholder="Additional Languages" autofocus>
+			<input type="text" id="hours" name="hours"     class="form-control" placeholder="Anticipated work hours per week" required autofocus>
+			<input type="text" id="hear" name="hear"     class="form-control" placeholder="How did you here about us?" autofocus>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Apply</button>
+		</form>
+	</div>
+</div></div></body>
+</html>

@@ -1,0 +1,48 @@
+<style>
+    body.splash-body{
+        background: white !important;
+    }
+
+    [test-student-dashboard] {
+         display: block;
+         position: relative;
+         transform: none;
+         left: 0;
+    }
+    .student-j1-dashboard-body{
+        text-align: center;
+    }
+    .welcome{
+        font-size: 28px;
+        padding: 50px 0;
+    }
+    .btn.j1-practice-button.disabled, .btn.j1-start-button.disabled{
+        background: #efefef !important;
+        color: #505050 !important;
+        border-color: #b5b5b5 !important;
+    }
+    .btn.j1-practice-button.disabled:hover, .btn.j1-start-button.disabled:hover{
+        cursor: not-allowed;
+    }
+</style>
+<div class="student-j1-dashboard-body">
+    <div class="welcome" ng-show="lastTest">Welcome <span ng-bind="lastTest.fname"></span>!</div>
+    <div class="buttons">
+        <div class="btn j1-practice-button"
+             style="margin-right: 10px;"
+             ng-show="practiceTest"
+             ng-class="{disabled:practiceTest.hasFinishedSubmitting || practiceTest.finishedGradeClass}"
+             ng-click="startPracticeInterview()"><span ng-show="practiceTest.hasStarted && !(practiceTest.hasFinishedSubmitting || practiceTest.finishedGradeClass)">
+            Resume
+        </span> Practice
+            Interview</div>
+        <a class="btn j1-start-button"
+           ng-class="{disabled:lastTest.hasFinishedSubmitting || lastTest.finishedGradeClass}"
+           ng-click="testAgainBtnClicked()" ng-show="lastTest"
+           href="{{testAgain.action=='redirects'?testAgain.url:''}}"><span
+                ng-bind="lastTest.hasStarted && !(lastTest.hasFinishedSubmitting || lastTest.finishedGradeClass)?'Resume':'Start'"></span> Interview</a>
+
+    </div>
+</div>
+
+

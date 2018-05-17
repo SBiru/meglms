@@ -1,0 +1,29 @@
+<div class="content">
+    <div class="section header">
+        <div class="student-name j1-text-right" ng-bind="vc_content.data.item.name"></div>
+        <div class="student-email" ng-bind="vc_content.data.item.email"></div>
+
+
+    </div>
+    <div class="section body">
+        <div class="section-heading">
+            {{vc_content.title}}
+            <input class="form-control width-100" style="width: 300px;display: inline-block" placeholder="{{vc_content.placeholder}}" ng-model="search">
+        </div>
+        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+            <tr>
+                <th class="no-border" data-ng-click="sortBy(vc_content.data.item,'name')"><a>Name</a></th>
+                <th class="no-border" data-ng-click="sortBy(vc_content.data.item,'status')"><a>Status</a></th>
+            </tr>
+            <tr data-ng-repeat="row in vc_content.data.item.rows |  orderBy:vc_content.data.item.sort.by:user.sort.reverse | filter:search">
+                <td>{{row.name}}</td>
+                <td>
+                <span ng-hide="row.hasNotLoggedIn">
+                    {{row.status}}
+                </span>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</div>

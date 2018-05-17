@@ -1,0 +1,239 @@
+
+<!-- ************************************************************** -->
+<!-- *********************** MAIN CONTENT ************************* -->
+<!-- ************************************************************** -->
+<div ng-show="!modes" class="main-content">
+            <h1 style="padding-top: 20px;padding-left: 20px;">Loading...</h1>
+</div>
+<div ng-show="!sidebarCollapsed " ng-click="toggleSidebar()" class="emptydiv"></div>
+<div ng-show="modes" class="main-content" ng-cloak>
+    <div class="hide-menu-icon" style="margin-top: 62px;">
+        <div class="collapsed btn btn-xs btn-default" ng-show="sidebarCollapsed || $root.windowWidth<768" ng-click="toggleSidebar()">
+            <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div id="contentGrades" class="col-md-10">
+            <h1>
+                {{menu.selected.name}}
+
+                <span ng-show="contentMode=='details'">- {{getTotalTimeV2(menu.selected)}}</span>
+                <span ng-controller="EmailController" ng-show="currentMode == 'teacher'">-
+                    <span class="fa fa-envelope"
+                            ng-init="specificUser=true"
+                            ng-click="open()">
+                    </span>
+                </span>
+            </h1>
+            <div>
+                <span data-ng-show="orgFlags.show_gender && menu.selected.gender">
+                    <b>Gender:</b> <span ng-bind="menu.selected.gender"></span>,
+                </span>
+                <span data-ng-show="orgFlags.show_site && menu.selected.site" >
+                    <b>Site:</b> <span ng-bind="menu.selected.site"></span>
+                </span>
+            </div>
+
+            <section class="advisors">
+                <div ng-show="menu.selected.advisors && menu.selected.advisors.length">
+                    <span class="title">Advisors</span>:
+                    <ul class="teachers-list">
+                        <li ng-repeat="teacher in menu.selected.advisors">
+                            {{teacher.fname}} {{teacher.lname}} <span class="btn-email" ng-controller="EmailController"><span class="fa fa-envelope" ng-click="open(teacher,null,false) " ng-init="specificUser=true"></span></span>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </section>
+            <h1  ng-show="modes.length == 0">
+                You aren't signed up for any classes
+            </h1>
+            <div class="list-group admin-group padding" ng-show="showTabs()">
+                <ul class="nav nav-pills" ng-init="contentMode='summary'">
+                    <li ng-class="{active:contentMode=='summary'}" ng-show="showGradesDetails()">
+                        <a  role="tab" href="#" ng-click="contentMode='summary'">Summary</a>
+                    </li>
+                    <li ng-class="{active:contentMode=='details'}" ng-show="showGradesDetails()">
+                        <a href="#" role="tab" ng-click="contentMode='details';getAssignmentDetails(menu.selected)">Details</a>
+                    </li>
+                    <li ng-class="{active:contentMode=='class_activity'}" ng-show="showGradesDetails()">
+                        <a  href="#" role="tab" ng-click="contentMode='class_activity';getClassHistory(menu.selected)">Class Activity</a>
+                    </li>
+                    <li ng-show="showGradesDetails()" ng-class="{active:contentMode=='allClasses_activity'}">
+                        <a  href="#" role="tab" ng-click="contentMode='allClasses_activity';getClassHistory(menu.selected,-1)">All Classes Activity</a>
+                    </li>
+                    <li ng-class="{active:contentMode=='progressReport'}" ng-if="currentMode!=='student'">
+                        <a  href="#" role="tab" ng-click="changeContentMode('progressReport')">Progress Report</a>
+                    </li>
+                    <li ng-class="{active:contentMode=='otherSettings'}" ng-if="currentMode=='teacher'">
+                        <a  href="#" role="tab" ng-click="changeContentMode('otherSettings')">Other Settings</a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="task-progress" data-ng-show="contentMode=='summary'" ng-if="rootAssignments">
+                <div class="row" data-ng-show="rootAssignments">
+
+                    <div class="col-lg-12">
+
+                        <div class="popover top progress-summary" >
+                            <!--<div class="arrow" style="left: {{getPercentComplete(menu.selected, 'date')}}%"></div>-->
+                            <h3 class="popover-title" style="    display: inline-block;width: 100%;margin-right: 7px">
+                                <span style="float:left">Progress Summary</span>
+                                <div class="col-md-4 col-sm-6" ng-if="superunits">
+                                    <select selectize ng-options="su.position as su.name for su in superunits_"
+                                            ng-model="menu.selected.superUnitId"
+                                            ></select>
+                                </div>
+                                <span style="margin-left: 6px" class="btn btn-sm btn-info btn-time-engagement grades-as-csv pull-right" ng-show="currentMode=='teacher'" ng-click="openTimeEngagement(true)"><span class="fa fa-bar-chart"></span> Show time engagement chart</span>
+                                <span class="btn btn-info btn-sm pull-right grades-as-csv" ng-click="downloadAsXls()"><i class="fa fa-cloud-download"></i> Download grades</span>
+                            </h3>
+                            <div class="popover-content">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <h4>Total time spent: {{getTotalTimeV2(menu.selected)}}</h4>
+                                        </div>
+                                        <div class="col-lg-3" ng-show="showFinalScore()">
+                                            <h4>Final Score: {{getFinalScore()}}</h4>
+                                        </div><div class="col-lg-3" ng-show="getEnrollmentDate()" style="width:40%">
+                                        <h4>Enrollment Date: {{getEnrollmentDate(menu.selected)}}</h4>
+                                    </div>
+
+                                    </div>
+                                    <div class="col-lg-6" ng-show="menu.selected.show_grades=='1' || menu.selected.showGrades">
+                                        <table class="progress-summary">
+                                            <tr ng-hide="orgFlags.hide_actual_score">
+                                                <th>Actual score</th>
+                                                <td colspan="3" ng-show="rootAssignments.hasNotLoggedIn">Hasn't logged in</td>
+                                                <td ng-show="showAsPercentage() && !rootAssignments.hasNotLoggedIn">{{ getFromProgressSummary('percTotalScore')}}%</td>
+                                                <td ng-show="showAsLetter() && !rootAssignments.hasNotLoggedIn">{{ getFromProgressSummary('letterTotalScore')}}</td>
+                                                <td ng-show="showAsScore() && !rootAssignments.hasNotLoggedIn" >{{ getFromProgressSummary('totalScoreIncludingNonDue')}} out of {{getFromProgressSummary('totalMaxScore')}}</td>
+                                            </tr>
+                                            <tr ng-show="orgFlags.show_overall_score">
+                                                <th>Current grade</th>
+                                                <td colspan="3" ng-show="rootAssignments.hasNotLoggedIn">Hasn't logged in</td>
+                                                <td ng-show="showAsPercentage() && !rootAssignments.hasNotLoggedIn">{{ rootAssignments.percExpectedOrCompletedScore }}%</td>
+                                                <td ng-show="showAsLetter() && !rootAssignments.hasNotLoggedIn">{{ rootAssignments.letterExpectedOrCompletedScore }}</td>
+                                                <td ng-show="showAsScore() && !rootAssignments.hasNotLoggedIn">{{ rootAssignments.totalScore }} out of {{rootAssignments.totalExpectedOrCompletedScore}}</td>
+                                            </tr>
+                                            <tr ng-hide="orgFlags.hide_grade_clompleted_word">
+                                                <th>Grade For Completed Work</th>
+                                                <td colspan="3" ng-show="rootAssignments.hasNotLoggedIn">Hasn't logged in</td>
+                                                <td ng-show="showAsPercentage() && !rootAssignments.hasNotLoggedIn">{{ getFromProgressSummary('percCompletedScore')}}%</td>
+                                                <td ng-show="showAsLetter() && !rootAssignments.hasNotLoggedIn">{{ getFromProgressSummary('letterCompletedScore')}}</td>
+                                                <td ng-show="showAsScore() && !rootAssignments.hasNotLoggedIn">{{ getFromProgressSummary('completedScore')}} out of {{getFromProgressSummary('totalWorkedScore')}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                    <div class="col-lg-6" >
+                                        <table class="progress-summary">
+                                            <tr ng-show="menu.selected.show_dates=='1' && !orgFlags.hide_expected_by_today">
+                                                <th>Expected by today</th>
+                                                <td>
+                                                    {{ getFromProgressSummary('percExpectedTasks') }}% of assignments
+                                                <td>
+                                            </tr>
+                                            <tr ng-hide="orgFlags.hide_completed_so_far">
+                                                <th>Completed so far</th>
+                                                <td>
+                                                    {{ getFromProgressSummary('percCompletedTasks') }}% of assignments
+                                                <td>
+                                            </tr>
+                                            <tr  ng-show="menu.selected.show_dates=='1' && !orgFlags.hide_progress"
+                                                    data-ng-class="{
+                                                    'text-danger': getStatusPercent(menu.selected, 'assignments')>0,
+                                                    'text-warning': getExpectedPercentComplete(menu.selected, 'assignments') <= 10 && getExpectedPercentComplete(class, 'assignments') > 3,
+                                                    'text-success': getStatusPercent(menu.selected, 'assignments')<=0
+
+                                            }">
+                                                <th>{{ getStatusText(menu.selected) }}</th>
+                                                <td>
+                                                    {{ getStatusPercent(menu.selected, 'assignments',true) | number:'0'  }}%
+
+                                                <td>
+                                            </tr>
+                                            <tr  ng-show="getFromProgressSummary('expectedEndDate')&& !orgFlags.hide_expected_end_date">
+                                                <th>Expected end date</th>
+                                                <td >
+                                                    {{getEndDate('expected')}}
+                                                <td>
+                                            </tr>
+                                            <tr  ng-show="getFromProgressSummary('expectedEndDate') && !orgFlags.hide_projected_end_date">
+                                                <th>Projected end date</th>
+                                                <td >
+                                                    {{getEndDate('projected')}}
+                                                <td>
+                                            </tr>
+                                        </table>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px" ng-show="rootAssignments.hasCategories">
+                    <span class="btn-group">
+                        <label class="btn btn-default" ng-model="viewType.selected" btn-radio="'course'">Course view</label>
+                        <label class="btn btn-default" ng-model="viewType.selected" btn-radio="'categories'">Gradebook view</label>
+                    </span>
+                </div>
+
+                <div class="panel-group" id="grades-summary-table" role="tablist" aria-multiselectable="true">
+                    <div ng-if="viewType.selected == 'categories'" style="padding: 0px 0px 10px 0px;">Points for each category represent the portion (out of 100) that each category contributes to the overall course grade.</div>
+                    <div class="panel panel-default" ng-repeat="unit in getUnitsOrCategories() | orderBy:'position*1' track by $index">
+                        <div class="panel-heading" role="tab" id="heading-{{$index}}" ng-init="unit.index = $index">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#grades-summary-table" data-target="#collapse-assignment-{{$index}}" aria-expanded="true" aria-controls="collapse-assignment-{{$index}}">
+                                    {{unit.description}}
+                                    <span ng-show="viewType.selected=='categories'" style="font-size: 12px;">
+                                        - <b>Actual score:</b> <span ng-show="canShowThisFormat('percentage')">{{((unit.actual_score/unit.max_score)*100) | number : 2}}% &nbsp;&nbsp;</span> <span ng-show="canShowThisFormat('score')">{{unit.actual_score}} out of {{unit.max_score}}</span>
+                                    </span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-assignment-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{$index}}">
+                            <div class="panel-body">
+                                <?php include(__DIR__ . "/summary-table.html") ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php include(__DIR__ . "/activityhistory-table.html") ?>
+            <?php include(__DIR__ . "/allhistory-table.html") ?>
+
+            <div class="task-progress" data-ng-show="contentMode=='details'">
+
+                <div class="panel-group" id="grades-details-table" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default" ng-repeat="unit in units track by $index" ng-if="hasActivity(unit)">
+                        <div class="panel-heading" role="tab" id="details-heading-{{$index}}" ng-init="unit.index = $index">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#grades-summary-table" data-target="#collapse-details-assignment-{{$index}}" aria-expanded="true" aria-controls="collapse-details-assignment-{{$index}}">
+                                    {{unit.description}}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-details-assignment-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{$index}}">
+                            <div class="panel-body">
+                                <?php include(__DIR__ . "/details-table.html") ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="task-progress" data-ng-if="contentMode=='progressReport'">
+                <progress-report org-id="user.org.id" grades-view="true"></progress-report>
+
+            </div>
+            <div class="" data-ng-if="contentMode=='otherSettings' && !hide.otherSettings"
+                 ng-init="studentClass=currentStudentClass()">
+                <gradebook-inline-student student-class="studentClass"/>
+            </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>

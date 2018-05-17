@@ -1,0 +1,88 @@
+<div class="custom-scrollbar-wrapper">
+    <div class="custom-scrollbar"></div>
+</div>
+<div style="position: relative;clear: both">
+
+    <div class="right-table scrollable-table class-names" style="overflow: hidden">
+        <table>
+            <tr>
+                <td data-ng-repeat="class in student.classes" class="input-th vr" >
+                    <b class="tooltip-relative" ng-class="{'text-warning':class.attendanceOnly}">
+                        <span ng-bind="class.name"></span>
+                        <span tooltip="Attendance only class. This class is not showed to the student" class="pointer" ng-show="class.attendanceOnly">*</span>
+                        <span class="fa fa-cog pointer" edit-dates-button ng-click="openModal(class.id,student.userId,class.attendanceOnly,class,true)" tooltip-append-to-body="true"  tooltip="Edit class start/end dates"></span>
+                    </b>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="input-table-body">
+        <div class="right-table scrollable-table input-table-content">
+            <table>
+                <tr data-ng-repeat="day in days" class="hr3" ng-hide="Datepicker.isBeyondToday(day) || Datepicker.isBeyondWithdraw(day,student)" ng-class="{'day-has-errors':dayHasErrors(student,day),'approved-row':student.approved[Datepicker.getDateString(day)]}" ng-init="transformTableIfLast($last)">
+                    <td data-ng-repeat="class in student.classes" class="input-td vr" ng-class="{'expand-first-column':student.reason[Datepicker.getDateString(day)].customHelperText}">
+                        <input class="form-control attendance-input" ng-model="class.attendance[Datepicker.getDateString(day)]" data-ng-disabled="student.absent[Datepicker.getDateString(day)] || Datepicker.isOutsideClassDateRange(class,day) || Datepicker.isBeyondToday(day) || Datepicker.isNotValidFiscalDate(day) || Datepicker.isBeyondWithdraw(day,student)">
+                    </td>
+                </tr>
+                <tr>
+                    <td data-ng-repeat="class in student.classes" class="input-td vr tooltip-relative" >
+                        <div class="attendance-input"><span class="badge" tooltip="Total attendance for class" data-ng-bind="getTotalTime('v',{class:class,calculated:false,student:student})"></span></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table class="right-table fixed-right-table">
+            <tr><td></td></tr>
+            <tr data-ng-repeat="day in days" class="hr3" ng-hide="Datepicker.isBeyondToday(day) || Datepicker.isBeyondWithdraw(day,student)" ng-class="{'day-has-errors':dayHasErrors(student,day),'approved-row':student.approved[Datepicker.getDateString(day)]}">
+                <td ng-class="{'expand-first-column':student.reason[Datepicker.getDateString(day)].customHelperText}">
+                    <span class="badge" data-ng-bind="getTotalTime('h',{day:day,student:student})"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="tooltip-relative" ng-show="selected.type=='week'">
+                    <div class="attendance-input"><span style="background-color: #428bca;" class="badge" tooltip="Total hours for the week" data-ng-bind="getTotalTime('both',{student:student})"></span></div>
+                </td>
+            </tr>
+        </table>
+        <table class="fixed-first-column">
+            <tr>
+                <td ></td>
+            </tr>
+            <tr data-ng-repeat="day in days" class="hr3" ng-hide="Datepicker.isBeyondToday(day) || Datepicker.isBeyondWithdraw(day,student)" ng-class="{'day-has-errors':dayHasErrors(student,day),'approved-row':student.approved[Datepicker.getDateString(day)]}">
+                <td ng-class="{'expand-first-column':student.reason[Datepicker.getDateString(day)].customHelperText}" style="position: relative;" >
+                    <div>
+                        <span class="pending-status" ng-class="{'approved-day':student.approved[Datepicker.getDateString(day)],'pending-day':student.pending[Datepicker.getDateString(day)]}" ng-bind="rowStatus(student,day)"></span>
+                    </div>
+                    <div data-ng-bind="Datepicker.getDayColumn(day,false)"></div>
+                    <div data-ng-bind="Datepicker.getDayColumn(day,true)"></div>
+                    <div ng-show="day<6" style="margin-bottom: 2px">
+                        <input type="checkbox" data-ng-model="student.absent[Datepicker.getDateString(day)]" data-ng-change="toggleAbsent(student.absent[Datepicker.getDateString(day)],Datepicker.getDateString(day),student);transformTableIfLast(true)"> Absent
+                                    <span style="position:absolute" ng-if="student.absent[Datepicker.getDateString(day)]">
+                                        <a class="btn btn-default dropdown-toggle absent-reason " data-toggle="dropdown">
+                                            <span ng-bind="student.reason[Datepicker.getDateString(day)].label" class="reason-text"></span>
+                                            <span class="fa fa-caret-down "></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li> <a class="pointer" data-ng-repeat="reason in config.absentReason.options" ng-bind="reason.label" ng-click="setReason(student,Datepicker.getDateString(day),reason);transformTableIfLast(true)"></a> </li>
+                                        </ul>
+                                    </span>
+
+                    </div>
+                    <div ng-show="student.reason[Datepicker.getDateString(day)].customHelperText && day<6" class="custom-reason">
+                        <span class="reason-label" ng-bind="student.reason[Datepicker.getDateString(day)].customHelperText"></span>
+                        <input class="reason-input" ng-model="student.reason[Datepicker.getDateString(day)].custom">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div style="text-align: right;margin-top: 10px;">
+        <!--<async-button color-style="info" text="Save hours" flash-text="Saved!" loading="student.saving" ng-click="save(student,$event)" disabled="!canSave(student)"></async-button>-->
+        <async-button color-style="primary" text="Submit" flash-text="Saved!" loading="student.approving" ng-click="save(student,$event,true)" disabled="!canSave(student)"></async-button>
+    </div>
+</div>
+

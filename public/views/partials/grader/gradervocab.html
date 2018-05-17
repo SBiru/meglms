@@ -1,0 +1,66 @@
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#vocab" target="_self" data-toggle="tab">{{ preference.navs.vocabulary.translation }}</a></li>
+        <li><a href="#cards" target="_self" data-toggle="tab">{{ preference.navs.flashcards.translation }}</a></li>
+    </ul>
+    
+    <div class="tab-content" ng-controller="VocabController">
+        
+        <!-- VOCABULARY -->
+        
+        <div class="tab-pane active" id="vocab">
+            <br>
+            <table class="table">
+                <tr ng-repeat="vocab in vocabItems">
+                    <td>
+                        <a href="" class="star" ng-click="setStarred()" ng-class="isStarred(vocab.id)"><span class="fa fa-star fa-fw"></span></a>
+                        <a href="" ng-click="playAudio()"><span class="fa fa-play fa-fw"></span></a>
+                    </td>
+                    <td>{{vocab.phrase}}</td>
+                    <td>{{vocab.translation}}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- FLASHCARDS -->
+        
+        <div class="tab-pane" id="cards">
+           
+            <div ng-repeat="vocab in filtered = (vocabItems | starFilter:starred) | startFrom:currentItem | limitTo:1">
+                
+                <br>
+                <a href="" class="star" ng-click="setStarred()" ng-class="isStarred(vocab.id)"><span class="fa fa-2x fa-star fa-fw"></span></a>
+                <a href="" class="microphone" ng-click="recordAudio()" ng-class="isRecording()"><span class="fa fa-2x fa-microphone fa-fw"></span></a>
+                <a href="" ng-click="playAudio()"><span class="fa fa-2x fa-play fa-fw"></span></a>
+                
+            
+                <div class="flip">
+                    <div class="card" ng-click="flip()">
+                        <div class="face front"><div ng-class="textWrapClass(vocab.phrase)">{{vocab.phrase}}</div></div>
+                        <div class="face back"><div ng-class="textWrapClass(vocab.translation)">{{vocab.translation}}</div></div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <h3 class="text-center">{{currentItem+1}} / {{filtered.length}}</h3>
+            
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{(((currentItem+1) / filtered.length) * 100).toFixed(2)}}%"></div>
+            </div>
+            
+            <button type="button" class="btn btn-default" ng-disabled="currentItem == 0" ng-click="prevItem()"><i class="fa fa-chevron-left" ></i>&nbsp;&nbsp;{{ preference.navs.prev.translation }}</button>
+            <button type="button" class="btn btn-default" ng-disabled="currentItem >= filtered.length - 1" ng-click="nextItem()">{{ preference.navs.next.translation }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+            
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary" ng-click="disableStarFilter()">
+                    <input type="radio" name="options" id="disableStarFilter">{{ preference.navs.all.translation }}&nbsp;&nbsp;<span class="badge">{{totalItems}}</span>
+                </label>
+                <label class="btn btn-primary" ng-click="enableStarFilter()">
+                    <input type="radio" name="options" id="enableStarFilter"><span class="fa fa-star fa-fw"></span>&nbsp;<span class="badge">{{starred.length}}</span>
+                </label>
+            </div>
+            
+        </div>
+    </div>
+</div>

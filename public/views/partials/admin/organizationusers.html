@@ -1,0 +1,41 @@
+<ng-include src=" '/public/views/partials/admin/userimportmodal.html' "></ng-include>
+<ng-include src=" '/public/views/partials/admin/classimportmodal.html' "></ng-include>
+<ng-include src=" '/public/views/partials/admin/enrollmentimportmodal.html' "></ng-include>
+<div>
+    <table class="users_title">
+        <tr>
+            <td>
+                <h3>{{ organizationName }} Users <span ng-show="users.length">({{users.length}})</span></h3>
+            </td>
+        </tr>
+    </table>
+
+    <!--<div style="margin-top: 15px; margin-bottom: 15px; margin-left: 20px;"><a href="#/addorganizationuser/">+Add User</a></div>-->
+    <div id="superadmin-users" class="row" style="margin: auto">
+        <input  class="col-xs-3" type="text" placeholder="Search users" ng-model="inputFilter">
+        <span class="col-xs-2" style="text-align: center;font-size: 14px"><a  href="#/addorganizationuser/">+Add User</a></span>
+        <span class="col-xs-2" style="text-align: center;font-size: 14px"><a  data-toggle="modal" data-backdrop="static" data-target="#userImportModal">Upload Users</a></span>
+        <span class="col-xs-2" style="text-align: center;font-size: 14px"><a  data-toggle="modal" data-backdrop="static" data-target="#classImportModal">Upload Classes</a></span>
+        <span class="col-xs-3" style="text-align: center;font-size: 14px"><a  data-toggle="modal" data-backdrop="static" data-target="#enrollmentImportModal">Upload Enrollments</a></span>
+    </div>
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+        <thead>
+            <tr>
+                <th data-halign="left" style="width:15px;"></th>
+                <th data-halign="left">First Name</th>
+                <th data-halign="left">Last Name</th>
+                <th data-halign="left">Email</th>
+                <th data-halign="left">Disable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat='user in users | filter:inputFilter | orderBy:org.sort_users_by | limitTo:70' ng-init="user.fullName=user.fname + ' ' + user.lname">
+                <td data-halign="left" style="width:15px;"><a href="#/editorganizationuser/{{ user.id }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td data-halign="left">{{ user.fname }}</td>    
+                <td data-halign="left">{{ user.lname }}</td>
+                <td data-halign="left">{{ user.email }}</td>
+                <td data-halign="left"><input type="checkbox" ng-model="user.is_disabled" ng-change="disableUser(user)"></td>
+            </tr>
+        </tbody> 
+    </table>
+</div>

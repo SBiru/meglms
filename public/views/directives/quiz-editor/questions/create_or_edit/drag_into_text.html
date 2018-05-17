@@ -1,0 +1,20 @@
+<div>
+
+    <div class="choices">
+        <div data-ng-repeat="choice in choices track by $index" class="row choices">
+            <div class="col-xs-2 choice width-auto margin-top-10">
+                <b>Choice <span ng-bind="$index+1"></span></b>
+            </div>
+            <div class="col-xs-4 answer width-auto margin-top-10">
+                <span class="answer-label">Answer:</span>
+                <input class="form-control input-sm answer-input margin-left-15" ng-model="choice.text">
+                    <span class="remove-answer">
+                    <span class="btn btn-danger btn-sm" ng-click="removeChoice($index)">
+                        <span class="fa fa-trash"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <button class="btn btn-primary margin-top-15" ng-click="addNew()">Add new choice</button>
+    </div>
+</div>

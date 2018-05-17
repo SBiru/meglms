@@ -1,0 +1,35 @@
+<div class="pagination-wrapper" ng-show="config.showNav || (config.perPageRange && config.total) ">
+    <div class="pagination-total" ng-show="config.showTotal && config.showNav">
+        {{currentTotalText()}}
+    </div>
+    <ul ng-show="config.showNav || config.itemsPerPage" class="pagination">
+        <li ng-class="{disabled: config.currentPage == 0}" ng-show="config.showNav">
+            <a href ng-click="previousPage()">« Prev</a>
+        </li>
+        <li ng-repeat="n in pageNumberButtons"
+            ng-class="{active: n == config.currentPage}"
+            ng-click="changePage(n)"
+            ng-show="config.showNav">
+            <a href ng-bind="n + 1"></a>
+        </li>
+        <li ng-class="{disabled: config.currentPage == pagedItems - 1}" ng-show="config.showNav" class="pagination-next">
+            <a href ng-click="nextPage()">Next »</a>
+        </li>
+        <li ng-if="config.total" class="total">
+            <div style="display: inline-block;margin-top: 7px;margin-left: 5px;" ng-bind="'Total: ' + config.total"></div>
+        </li>
+        <li ng-if="config.perPageRange && config.total" class="per-page"  style="margin-left: 10px;">
+            Entries per page:
+            <div style="display: inline-block;margin-top: 7px;">
+                <select ng-model="config.itemsPerPage" data-ng-change="forceUpdate()"
+                        ng-options="perPage==-1?'All':perPage for perPage in config.perPageRange"></select>
+            </div>
+        </li>
+    </ul>
+</div>
+<style>
+    .pagination-next{
+        border-bottom-right-radius: 4px !important;
+        border-top-right-radius: 4px !important;
+    }
+</style>

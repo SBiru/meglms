@@ -1,0 +1,304 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Organization Preferences</h4>
+</div>
+
+<div class="modal-body">
+    <form name="editOrganizationForm" ng-submit="updateOrganization()" novalidate>
+        <div class="row">
+            <div class="form-group col-sm-6 col-xs-12"  ng-class="{ 'has-error' : editOrganizationForm.name.$invalid && !editOrganizationForm.name.$pristine }">
+                <label for="organizationName" class="control-label"> Name</label>
+                <input id="organizationName" type="text" name="name" class="form-control" ng-model="org.name" required>
+
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : editOrganizationForm.domain.$invalid && !editOrganizationForm.domain.$pristine }">
+                <label for="organizationDomain" class="control-label"> Domain</label>
+                <input id="organizationDomain" type="text" name="domain" class="form-control" ng-model="org.domain" required>
+
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : editOrganizationForm.email.$invalid && !editOrganizationForm.email.$pristine }">
+                <label for="organizationEmail" class="control-label"> Email</label>
+                <input id="organizationEmail" type="email" name="email" class="form-control" ng-model="org.email" required>
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : editOrganizationForm.supportEmail.$invalid && !editOrganizationForm.supportEmail.$pristine }">
+                <label for="organizationSupportEmail" class="control-label"> Support Email</label>
+                <input id="organizationSupportEmail" type="email" name="supportEmail" class="form-control" ng-model="org.support_email" required>
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-class="{ 'has-error' : editOrganizationForm.phone.$invalid && !editOrganizationForm.phone.$pristine }">
+                <label for="organizationPhone" class="control-label"> Phone</label>
+                <input id="organizationPhone" type="text" name="phone" class="form-control" ng-model="org.phone" required>
+
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-if="user.is_super_admin">
+                <label for="placement_class" class="control-label"> Placement class</label>
+                <select id="placement_class" selectize ng-options="class.id.toString() as class.name for class in classes" ng-model="org.placement_class_id"></select>
+
+            </div>
+            <div class="form-group col-sm-6 col-xs-12">
+                <label class="control-label"> Session time (minutes)</label>
+                <input type="text" class="form-control" ng-model="org.session_time" required>
+            </div>
+            <div class="form-group col-sm-6 col-xs-12" ng-show="org.enable_certificate">
+            <label class="control-label">CEEB</label>
+            <input type="text" class="form-control" ng-model="org.ceeb">
+        </div>
+        <div class="form-group col-sm-6 pull-right col-xs-12" ng-show="user.is_super_admin">
+                <label for="org_logo" class="control-label"> Logo</label>
+                <div>
+                    <ul class="logo-admin-container">
+                        <li >
+
+                            <img  ng-if="org.logo && !logoImage" src="{{org.logo}}">
+                            <img id=preview ng-if="logoImage" src="data:{{logoImage.filetype}};base64,{{logoImage.base64}}">
+
+                        </li>
+                        <li >
+                            <div class="btn btn-sm btn-default fa fa-folder-open" ng-click="selectFile($event)">
+                                <input ng-hide="true" accept="image/*" type="file"  ng-model='logoImage' base-sixty-four-input>
+
+                            </div>
+
+
+                        </li>
+                        <li>
+							<span class="btn btn-sm btn-default" data-ng-click="uploadLogo()">
+								<i class="">Upload</i>
+							</span>
+                        </li>
+                        <li>
+							<span class="btn btn-sm btn-danger" ng-click="removeLogo()">
+								<i class="fa fa-remove"></i>
+							</span>
+                        </li>
+                        <li >
+                            {{logoImage.filename}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6 col-xs-12" ng-show="org.white_label">
+                <div class="panel panel-default">
+                    <div class="panel-heading pointer" ng-click="openTemplates=!openTemplates">
+                        <i class="fa" ng-class="openTemplates?'fa-minus':'fa-plus'"></i>
+                        <span> Email templates</span>
+                    </div>
+                    <div class="panel-body" ng-show="openTemplates">
+                        <b>Email header template:</b>
+                        <textarea ckeditor="" allowed-content="true" ng-model="org.email_header_template"></textarea>
+                        <br>
+                        <b>Email footer template:</b>
+                        <textarea ckeditor="" allowed-content="true" ng-model="org.email_footer_template"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6 col-xs-12">
+                <label class="control-label"> Default prompt group</label>
+                <input type="text" class="form-control" ng-model="org.default_prompt_group" required>
+            </div>
+            <div class="form-group col-sm-6 col-xs-12">
+                <label class="control-label"> Password expiration for users:</label>
+                <input type="checkbox" data-ng-model="org.enable_password_expiration"> Enabled
+                <div ng-if="org.enable_password_expiration" class="row password-expiration-wrapper">
+                    <div class="col-sm-9 no-padding">
+                        <div class="btn-group password-expiration-type">
+                            <label class="btn btn-primary btn-sm" ng-model="org.password_expiration_type" btn-radio="'fixed'">Fixed</label>
+                            <label class="btn btn-primary btn-sm" ng-model="org.password_expiration_type" btn-radio="'dynamic'">Dynamic</label>
+                        </div>
+                        <div ng-if="org.password_expiration_type=='fixed'">
+                            <password-dates ng-model="org.password_expiration_dates"></password-dates>
+                        </div>
+                        <div ng-show="org.password_expiration_type=='dynamic'" class="dynamic-expiration">
+                            Every: <input ng-model="org.password_expiration_time">
+                            <select data-ng-model="org.password_expiration_unit">
+                                <option value="days">days</option>
+                                <option value="months">months</option>
+                                <option value="years">years</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" ng-show="org.enable_password_expiration">
+                        <div><input type="checkbox" data-ng-model="org.password_expiration_users.teachers"> Teachers</div>
+                        <div><input type="checkbox" data-ng-model="org.password_expiration_users.students"> Students</div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="form-group col-sm-6 col-xs-12">
+                <label class="control-label"> Password expiration for classes:</label>
+                <input type="checkbox" data-ng-model="org.page_password_config.enable_password_expiration"> Enabled
+                <div ng-if="org.page_password_config.enable_password_expiration" class="row password-expiration-wrapper">
+                    <div class="col-sm-9 no-padding">
+                        <div class="btn-group password-expiration-type">
+                            <label class="btn btn-primary btn-sm" ng-model="org.page_password_config.password_expiration_type" btn-radio="'fixed'">Fixed</label>
+                            <label class="btn btn-primary btn-sm" ng-model="org.page_password_config.password_expiration_type" btn-radio="'dynamic'">Dynamic</label>
+                        </div>
+                        <div ng-if="org.page_password_config.password_expiration_type=='fixed'">
+                            <password-dates ng-model="org.page_password_config.password_expiration_dates"></password-dates>
+                        </div>
+                        <div ng-show="org.page_password_config.password_expiration_type=='dynamic'" class="dynamic-expiration">
+                            Every: <input ng-model="org.page_password_config.password_expiration_time">
+                            <select data-ng-model="org.page_password_config.password_expiration_unit">
+                                <option value="days">days</option>
+                                <option value="months">months</option>
+                                <option value="years">years</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default panel-body">
+                    <input type="checkbox" ng-model="org.use_custom_progress_bar">
+                    <label>Use custom progress bar</label>
+                    <div class="btn btn-primary btn-sm" ng-show="org.use_custom_progress_bar" ng-click="instanceScope.showProgressBarRangeControl=true">Edit progress bar colors</div>
+                    <div ng-show="org.use_custom_progress_bar">
+                        <ul class="list-group">
+                            <li class="list-group-item tooltip-relative">
+                                <b>Grade in course view</b>
+                                <div>
+                                    <input type="radio" name="gradeTypeCourseView" value="completed" ng-model="org.custom_progress_bar.gradeTypeCourseView"><label>Grade for completed work</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="gradeTypeCourseView" value="actual" ng-model="org.custom_progress_bar.gradeTypeCourseView"><label>Actual grade <span class="fa fa-question-circle" tooltip="Total points available for the course"></span></label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="gradeTypeCourseView" value="overall" ng-model="org.custom_progress_bar.gradeTypeCourseView"><label>Overall grade <span class="fa fa-question-circle" tooltip="Grade on expected work up until today"></span></label>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Grade in splash page</b>
+                                <div>
+                                    <input type="radio" name="gradeTypeSplashPage" value="completed" ng-model="org.custom_progress_bar.gradeTypeSplashPage"><label>Grade for completed work</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="gradeTypeSplashPage" value="actual" ng-model="org.custom_progress_bar.gradeTypeSplashPage"><label>Actual grade <span class="fa fa-question-circle" tooltip="Total points available for the course"></span></label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="gradeTypeSplashPage" value="overall" ng-model="org.custom_progress_bar.gradeTypeSplashPage"><label>Overall grade <span class="fa fa-question-circle" tooltip="Grade on expected work up until today"></span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <progress-bar-range-control ng-if="instanceScope.showProgressBarRangeControl" is-opened="instanceScope.showProgressBarRangeControl" ng-model="org.custom_progress_bar.ranges"></progress-bar-range-control>
+
+                </div>
+            </div>
+            <div class="col-xs-12" ng-show="user.is_super_admin">
+                <div class="panel panel-default panel-body">
+                    <input type="checkbox" ng-model="org.white_label">
+                    <label>White Label</label>
+                    <div class="btn btn-primary btn-sm" ng-show="org.white_label" ng-click="instanceScope.showOrgStyleCustomization=true">Customize colors and styles</div>
+                    <customize-org-colors style-settings="org.styleSettings" default-style-settings="org.defaultStyleSettings"  ng-if="instanceScope.showOrgStyleCustomization"   is-opened="instanceScope.showOrgStyleCustomization"></customize-org-colors>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default panel-body">
+                    <div class="small-heading">Dashboards</div>
+                    <div><input type="checkbox" ng-model="org.category_dashboard"> Use categorized dashboard</div>
+                    <div><input type="checkbox" ng-model="org.compliance_dashboard"> Use compliance dashboard (Users and Classes)</div>
+
+                    <div><input type="checkbox" ng-model="org.use_j1_dashboard"> Use J1 Dashboard
+                        <div ng-show="org.use_j1_dashboard" style="padding-left: 20px">
+                            <input type="checkbox" ng-model="org.enable_certificate"> Enable Certificate
+                        </div>
+                    </div>
+                    <div><input type="checkbox" ng-model="org.use_e3pt_dashboard"> Use E3PT Dashboard</div>
+                    <div><input type="checkbox" ng-model="org.use_alert_splash"> Use "My Alerts"</div>
+                    <div><input type="checkbox" ng-model="org.enable_reports"> Use "Reports"
+                        <div class="btn btn-primary btn-sm" ng-show="org.enable_reports" ng-click="instanceScope.showEnabledReports=true">Customize enabled reports</div>
+
+                    </div>
+                    <customize-enabled-reports ng-if="instanceScope.showEnabledReports" enabled-reports="org.enabledReports"   is-opened="instanceScope.showEnabledReports"></customize-enabled-reports>
+
+
+                </div>
+            </div>
+            <div class="form-group col-sm-12 col-xs-12">
+                <div class="form-group col-sm-6 col-xs-12">
+
+                    <div><input type="checkbox" ng-model="org.preferences.submit_file_automatically"> Submit files automatically</div>
+                    <div><input type="checkbox" ng-model="org.preferences.use_webrtc"> Use WebRTC</div>
+                    <div><input type="checkbox" ng-model="org.use_splash"> Use splash page</div>
+                    <div><input type="checkbox" ng-model="org.show_final_grade"> Show final grade</div>
+                    <div><input type="checkbox" ng-model="org.can_delete_posts"> Can delete own posts</div>
+                    <div><input type="checkbox" ng-model="org.save_deleted_posts"> Archive deleted posts</div>
+                    <div><input type="checkbox" ng-model="org.teacher_can_edit_classes"> Teacher can edit classes</div>
+                    <div><input type="checkbox" ng-model="org.calculate_progress"> Calculate due dates and progress</div>
+                    <div><input type="checkbox" ng-model="org.hide_grades_page"> Hide grades page from students</div>
+                    <div><input type="checkbox" ng-model="org.disallow_email"> Disallow email</div>
+                    <div><input type="checkbox" ng-model="org.enable_post_email_notifications"> Enable email
+                        notifications (posts and chat)</div>
+                    <div><input type="checkbox" ng-model="org.can_edit_profile"> Student can edit profile</div>
+                    <div><input type="checkbox" ng-model="org.disable_account_emails"> Disable emails sent when account changes</div>
+                    <div><input type="checkbox" ng-model="org.hide_all_messages"> Hide "All messages" tab</div>
+                    <div><input type="checkbox" ng-model="org.enable_attendance"> Enable attendance app</div>
+                    <div><input type="checkbox" ng-model="org.enable_attendance_warning"> Enable attendance warning</div>
+                    <div><input type="checkbox" ng-model="org.enable_chat_app"> Enable chat app</div>
+                    <div><input type="checkbox" ng-model="org.enable_gradebook_categories"> Enable gradebook categories</div>
+                    <div><input type="checkbox" ng-model="org.enable_credited_assignments"> Enable credited assigments</div>
+
+                    <div><input type="checkbox" ng-model="org.show_resubmit_button"> Show resubmit button</div>
+                    <div><input type="checkbox" ng-model="org.show_password_manager"> Show activity password manager</div>
+                    <div><input type="checkbox" ng-model="org.hide_eng_menu"> Hide "Eng" menu</div>
+                    <div><input type="checkbox" ng-model="org.show_user_profile"> Show user profile to other users</div>
+                    <div><input type="checkbox" ng-model="org.show_breadcrumbs"> Show breadcrumbs</div>
+                    <div><input type="checkbox" ng-model="org.show_unit_tabs"> Show unit tabs</div>
+
+                    <div class="tooltip-relative"><input type="checkbox" ng-model="org.enable_fix_quizzes">
+                        Enable Fix Quizzes
+                        <span class="fa fa-question-circle" tooltip="This flag enables a fix for quizzes that were taken before oct/29/2015 and were not adding up correctly"></span>
+                    </div>
+                    <div>Sort users by: <select data-ng-options="option.id as option.text for option in org.sortUsersByOptions"
+                                                data-ng-model="org.sort_users_by"></select>
+                    </div>
+                    <div>Sort posts in Grader: <select data-ng-options="option.id as option.text for option in org.sortPostsByOptions"
+                                                       data-ng-model="org.sort_posts_grader"></select>
+                    </div>
+                    <div><input type="checkbox" ng-model="org.allow_users_to_log_in_as_others"> Allow users to log in as others</div>
+                    <div class="usersToLogInAs" ng-if="org.allow_users_to_log_in_as_others">
+                    <div><switch class="green" ng-model="org.allowedUsersToLogInAsOthers.allow_organization_and_site_admins_to_log_in_as_others" > </switch><span>Organization and site admins</span></div>
+                    <div><switch class="green" ng-model="org.allowedUsersToLogInAsOthers.allow_teachers_to_log_in_as_others" > </switch><span>Teachers</span></div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-xs-12">
+                    <h4>Grades view settings</h4>
+                    <div><input type="checkbox" ng-model="org.hide_actual_score"> Hide "actual score"</div>
+                    <div><input type="checkbox" ng-model="org.hide_grade_clompleted_word"> Hide "grade for completed work"</div>
+                    <div><input type="checkbox" ng-model="org.show_overall_score"> Show "current grade"</div>
+                    <div><input type="checkbox" ng-model="org.hide_expected_by_today"> Hide "expected by today"</div>
+                    <div><input type="checkbox" ng-model="org.hide_completed_so_far"> Hide "completed so far"</div>
+                    <div><input type="checkbox" ng-model="org.hide_progress"> Hide progress</div>
+                    <div><input type="checkbox" ng-model="org.hide_projected_end_date"> Hide "projected end date"</div>
+                    <div><input type="checkbox" ng-model="org.hide_expected_end_date"> Hide "expected end date"</div>
+                    <div><input type="checkbox" ng-model="org.show_gender"> Show Gender</div>
+                    <div><input type="checkbox" ng-model="org.show_site"> Show Site</div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <async-button color-style="primary" text="Save" flash-text="Done!" loading="loading.update" ng-click="update()"></async-button>
+</div>

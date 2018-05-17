@@ -1,0 +1,122 @@
+<script type="text/ng-template" id="feedback.popover.title.html">
+    <div data-ng-controller="JournalFeedbackPopover">
+        <b>Journal Feedback</b>
+        <div>Teacher: <span data-ng-bind="post.feedback.teacher.fname+ ' ' +post.feedback.teacher.lname"></span></div>
+
+        <div data-ng-bind="post.feedback.submitted"></div>
+    </div>
+</script>
+<script type="text/ng-template" id="feedback.popover.content.html">
+    <div data-ng-controller="JournalFeedbackPopover">
+        <rubric-student
+                ng-if="page.rubricId!=0"
+                rubric-id="page.rubricId"
+                post-id="post.id"
+                user-id="'me'"
+                page-id="page.id"
+                >
+        </rubric-student>
+        <div data-ng-bind-html="trustAsHtml(post.feedback.message)"></div>
+    </div>
+</script>
+<div ng-if="need_password">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="user_password">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+            </span>
+        </div>
+        <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+</div>
+<div class="" ng-if="!need_password">
+    <div ng-controller="ObjectivesController" ng-class="{'bordered-page':pageinfo.meta.page_border_color}" ng-style="{'border-color':pageinfo.meta.page_border_color}">
+        <div id="objectivesTable" ng-include="'/public/views/partials/student/objectives_table.html'"> </div>
+        <div data-ng-bind-html="trustAsHtml(data.page.content)"></div>
+        <div class="start-journal">
+
+            <button class="btn btn-sm btn-primary" ng-show="showStartJournal()"
+                    data-ng-click="data.newJournal=true">Start journal</button>
+        </div>
+        <div class="panel panel-default" data-ng-show="data.newJournal">
+            <div class="panel-body">
+                <textarea ckeditor="" custom-options="ckeditorOptions" data-ng-model="data.newJournalMessage"></textarea>
+            </div>
+            <div >
+                <async-button class="center" color-style="primary" text="Submit" flash-text="Done!" loading="isSubmitting" ng-click="submitJournal()"></async-button>
+            </div>
+        </div>
+        <div class="panel panel-default" data-ng-repeat="student in data.students">
+            <div class="panel-heading">
+                <b data-ng-bind="student.fname + ' ' + student.lname"></b>
+                <span ng-show="student.journal.grade" data-ng-bind="'Journal grade: ' + student.journal.grade + ' out of ' + data.page.maxPoints + ' ('+student.journal.percGrade+'%)'"></span>
+                <button
+                        ng-if="student.journal.grade && data.page.gradingType==1"
+                        type="button"
+                        class="btn btn-default btn-sm"
+                        e3-popover e3-title-template="feedback.popover.title.html"
+                        e3-content-template="feedback.popover.content.html"
+                        info="{post:student.journal.gradeForWholeJournal,page:data.page}"
+                        class="btn btn-default" data-container=".journal"
+                        data-toggle="popover" data-placement="bottom"
+                        data-html="true" data-trigger="focus">
+                    <span class="fa fa-comment"></span>
+                </button>
+                <span data-ng-show="canSaveChanges(student)">
+                    <button class="btn btn-sm btn-default"
+                            data-ng-click="saveChanges(student)">Save changes
+                    </button>
+                </span>
+                <span ng-show="showEditButton(student)">
+                    <button class="btn btn-sm btn-default"
+                            data-ng-click="data.newPost=!data.newPost">New Post
+                    </button>
+                </span>
+            </div>
+            <div class="panel-body journal">
+                <div class="panel panel-default" data-ng-if="data.newPost">
+                    <div class="panel-body">
+                        <textarea ckeditor="" custom-options="ckeditorOptions" data-ng-model="data.newJournalMessage"></textarea>
+                    </div>
+                    <div >
+                        <async-button class="center" color-style="primary" text="Submit" flash-text="Done!" loading="isSubmitting" ng-click="submitJournal()"></async-button>
+                    </div>
+                </div>
+                <div class="posts">
+                    <div class="post-wrapper" data-ng-repeat="post in student.journal.posts">
+                        <div class="edit-button" ng-show="showEditButton(student)">
+                            <i class="fa fa-edit" data-ng-click="post.editing=post.editing?false:true;"></i>
+                        </div>
+                        <div class="post" data-ng-class="{'with-edit-button':showEditButton(student)}">
+                            <div class="post-header">
+                                <span data-ng-bind="post.submitted"></span>
+                                <span data-ng-show="post.feedback.id && data.page.gradingType!=1">Grade - <span data-ng-bind="post.feedback.grade"></span></span>
+                                <span data-ng-show="post.lastGrade && !post.feedback.grade" ng-show="data.page.gradingType!=1">Waiting for new grade (last grade: <span data-ng-bind="post.lastGrade"></span>)</span>
+                                <button
+                                        e3-popover type="button"
+                                        data-ng-show="post.feedback.id && data.page.gradingType!=1"
+                                        class="btn btn-default btn-sm"
+                                        e3-title-template="feedback.popover.title.html"
+                                        e3-content-template="feedback.popover.content.html"
+                                        info="{post:post,page:data.page}"
+                                        class="btn btn-default" data-container=".journal"
+                                        data-toggle="popover" data-placement="bottom"
+                                        data-html="true" data-trigger="focus">
+                                    <span class="fa fa-comment"></span>
+                                </button>
+
+                            </div>
+                            <div data-ng-bind-html="trustAsHtml(post.message)" data-ng-hide="post.editing"></div>
+                            <div class="edit-post" data-ng-if="post.editing">
+                                <textarea ckeditor="" custom-options="ckeditorOptions" data-ng-model="post.message"></textarea>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1346 @@
+{
+  "sections": [
+    {
+      "lms_code": 23820,
+      "sectionid": "37529",
+      "sectionname": "Human Anatomy and Physiology B 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 180,
+      "sectionid": "37503",
+      "sectionname": "Earth Science B 1608-00",
+      "teacher": {
+        "email": "jjedda@edkey.org",
+        "firstname": "John",
+        "id": "312",
+        "lastname": "Jedda"
+      }
+    },
+    {
+      "lms_code": 24046,
+      "sectionid": "39579",
+      "sectionname": "English Language Arts 8 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 193,
+      "sectionid": "40782",
+      "sectionname": "Personal Psychology II 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 24572,
+      "sectionid": "40784",
+      "sectionname": "Sociology II: Your Social Life 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 1065,
+      "sectionid": "40771",
+      "sectionname": "Public Speaking 1608-00",
+      "teacher": {
+        "email": "jnewsom@edkey.org",
+        "firstname": "Jeanine",
+        "id": "476",
+        "lastname": "Newsom"
+      }
+    },
+    {
+      "lms_code": 26013,
+      "sectionid": "36939",
+      "sectionname": "Heart of English 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 40,
+      "sectionid": "38789",
+      "sectionname": "Homeroom Orientation 1608: Wisniewski",
+      "teacher": {
+        "email": "jwisniewski@edkey.org",
+        "firstname": "Jeff",
+        "id": "320",
+        "lastname": "Wisniewski"
+      }
+    },
+    {
+      "lms_code": 25986,
+      "sectionid": "37553",
+      "sectionname": "U.S. History B 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 46,
+      "sectionid": "40854",
+      "sectionname": "Introduction to Culinary Arts 1608-00",
+      "teacher": {
+        "email": "kburbank@edkey.org",
+        "firstname": "Ken",
+        "id": "321",
+        "lastname": "Burbank"
+      }
+    },
+    {
+      "lms_code": 149,
+      "sectionid": "40777",
+      "sectionname": "Law & Order: Intro to Legal Studies 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 183,
+      "sectionid": "38808",
+      "sectionname": "Mrs. Cruz's Homeroom",
+      "teacher": {
+        "email": "kcruz@edkey.org",
+        "firstname": "Kim",
+        "id": "133",
+        "lastname": "Cruz"
+      }
+    },
+    {
+      "lms_code": 176,
+      "sectionid": "40770",
+      "sectionname": "Creative Writing I 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 24578,
+      "sectionid": "40818",
+      "sectionname": "Sports & Entertainment Marketing 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 87,
+      "sectionid": "38785",
+      "sectionname": "Homeroom Orientation 1608: Flohr",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 184,
+      "sectionid": "40822",
+      "sectionname": "Careers in Criminal Justice 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 158,
+      "sectionid": "40838",
+      "sectionname": "Real World Parenting 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25987,
+      "sectionid": "37557",
+      "sectionname": "U.S. History B 1608-11",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 160,
+      "sectionid": "40781",
+      "sectionname": "Personal Psychology I 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 25996,
+      "sectionid": "39557",
+      "sectionname": "Science 7 A 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 1162,
+      "sectionid": "37493",
+      "sectionname": "Probability and Statistics 1608-00",
+      "teacher": {
+        "email": "jgilgen@edkey.org",
+        "firstname": "Joseph",
+        "id": "310",
+        "lastname": "Gilgen"
+      }
+    },
+    {
+      "lms_code": 25874,
+      "sectionid": "37465",
+      "sectionname": "Geometry B 1608-11",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 139,
+      "sectionid": "37515",
+      "sectionname": "Biology A 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 157,
+      "sectionid": "40833",
+      "sectionname": "Veterinary Science: The Care of Animals 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 24713,
+      "sectionid": "39540",
+      "sectionname": "Science 6 1608-00: Riley",
+      "teacher": {
+        "email": "kriley@edkey.org",
+        "firstname": "Kimberly",
+        "id": "638",
+        "lastname": "Riley"
+      }
+    },
+    {
+      "lms_code": 101,
+      "sectionid": "38805",
+      "sectionname": "MS Homeroom Orientation 1608: Priego",
+      "teacher": {
+        "email": "rpriego@edkey.org",
+        "firstname": "Ronnette",
+        "id": "138",
+        "lastname": "Priego"
+      }
+    },
+    {
+      "lms_code": 195,
+      "sectionid": "40767",
+      "sectionname": "Lord of the Rings & Its Lit Influence 1608-00",
+      "teacher": {
+        "email": "jnewsom@edkey.org",
+        "firstname": "Jeanine",
+        "id": "476",
+        "lastname": "Newsom"
+      }
+    },
+    {
+      "lms_code": 1057,
+      "sectionid": "39528",
+      "sectionname": "Service Learning 1 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 163,
+      "sectionid": "40774",
+      "sectionname": "Social Problems I: A World in Crisis 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 156,
+      "sectionid": "40851",
+      "sectionname": "Hospitality and Tourism 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 155,
+      "sectionid": "40825",
+      "sectionname": "Forensic Science II 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 994,
+      "sectionid": "37509",
+      "sectionname": "Environmental Science B 1608-00",
+      "teacher": {
+        "email": "jjedda@edkey.org",
+        "firstname": "John",
+        "id": "312",
+        "lastname": "Jedda"
+      }
+    },
+    {
+      "lms_code": 1062,
+      "sectionid": "39526",
+      "sectionname": "Work Study 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 1060,
+      "sectionid": "40779",
+      "sectionname": "Anthropology II: More Human Mysteries 1608-00",
+      "teacher": {
+        "email": "jnewsom@edkey.org",
+        "firstname": "Jeanine",
+        "id": "476",
+        "lastname": "Newsom"
+      }
+    },
+    {
+      "lms_code": 25992,
+      "sectionid": "39547",
+      "sectionname": "Math 7 A (MS 1) 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 182,
+      "sectionid": "38809",
+      "sectionname": "Mrs. Riley's Homeroom",
+      "teacher": {
+        "email": "kriley@edkey.org",
+        "firstname": "Kimberly",
+        "id": "638",
+        "lastname": "Riley"
+      }
+    },
+    {
+      "lms_code": 33089,
+      "sectionid": "40837",
+      "sectionname": "Peer Counseling 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 34405,
+      "sectionid": "40776",
+      "sectionname": "Women Studies through Film 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 25221,
+      "sectionid": "36902",
+      "sectionname": "English Language Arts 9 A 1608-00",
+      "teacher": {
+        "email": "aburton@edkey.org",
+        "firstname": "Alicia",
+        "id": "115",
+        "lastname": "Burton"
+      }
+    },
+    {
+      "lms_code": 153,
+      "sectionid": "40816",
+      "sectionname": "Introduction to Social Media 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25999,
+      "sectionid": "39566",
+      "sectionname": "Social Studies 7 A 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25969,
+      "sectionid": "37507",
+      "sectionname": "Environmental Science A 1608-00",
+      "teacher": {
+        "email": "jjedda@edkey.org",
+        "firstname": "John",
+        "id": "312",
+        "lastname": "Jedda"
+      }
+    },
+    {
+      "lms_code": 25236,
+      "sectionid": "37477",
+      "sectionname": "Pre-Calculus 1608-00",
+      "teacher": {
+        "email": "jgilgen@edkey.org",
+        "firstname": "Joseph",
+        "id": "310",
+        "lastname": "Gilgen"
+      }
+    },
+    {
+      "lms_code": 40820,
+      "sectionid": "40820",
+      "sectionname": "Health Sciences II 1608-00",
+      "teacher": {
+        "email": "kcruz@edkey.org",
+        "firstname": "Kim",
+        "id": "133",
+        "lastname": "Cruz"
+      }
+    },
+    {
+      "lms_code": 24068,
+      "sectionid": "38800",
+      "sectionname": "Journey 9 1608-00",
+      "teacher": {
+        "email": "kmccarty@edkey.org",
+        "firstname": "Kimberly",
+        "id": "2351",
+        "lastname": "McCarty"
+      }
+    },
+    {
+      "lms_code": 25980,
+      "sectionid": "37524",
+      "sectionname": "Human Anatomy and Physiology A 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 186,
+      "sectionid": "40817",
+      "sectionname": "Entrepreneurship I 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 24804,
+      "sectionid": "40790",
+      "sectionname": "Theater, Cinema, & Film Production 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 25868,
+      "sectionid": "37447",
+      "sectionname": "Algebra II A 1608-00",
+      "teacher": {
+        "email": "jgilgen@edkey.org",
+        "firstname": "Joseph",
+        "id": "310",
+        "lastname": "Gilgen"
+      }
+    },
+    {
+      "lms_code": 24046,
+      "sectionid": "39577",
+      "sectionname": "English Language Arts 8 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 25998,
+      "sectionid": "39562",
+      "sectionname": "Science 7 B 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 159,
+      "sectionid": "40769",
+      "sectionname": "Gothic Literature: Monster Stories 1608-00",
+      "teacher": {
+        "email": "cpike@edkey.org",
+        "firstname": "Christin",
+        "id": "124",
+        "lastname": "Pike"
+      }
+    },
+    {
+      "lms_code": 26007,
+      "sectionid": "39590",
+      "sectionname": "Science 8 A 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 179,
+      "sectionid": "37496",
+      "sectionname": "Earth Science A 1608-00",
+      "teacher": {
+        "email": "jjedda@edkey.org",
+        "firstname": "John",
+        "id": "312",
+        "lastname": "Jedda"
+      }
+    },
+    {
+      "lms_code": 53,
+      "sectionid": "40824",
+      "sectionname": "Forensic Science I 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 161,
+      "sectionid": "40839",
+      "sectionname": "Personal & Family Finance 1608-00",
+      "teacher": {
+        "email": "kriley@edkey.org",
+        "firstname": "Kimberly",
+        "id": "638",
+        "lastname": "Riley"
+      }
+    },
+    {
+      "lms_code": 37482,
+      "sectionid": "37482",
+      "sectionname": "Financial Literacy 2 1701-00",
+      "teacher": {
+        "email": "kburbank@edkey.org",
+        "firstname": "Ken",
+        "id": "321",
+        "lastname": "Burbank"
+      }
+    },
+    {
+      "lms_code": 140,
+      "sectionid": "37519",
+      "sectionname": "Biology B 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 135,
+      "sectionid": "40788",
+      "sectionname": "Digital Photography I 1608-00",
+      "teacher": {
+        "email": "asitek@edkey.org",
+        "firstname": "Amanda",
+        "id": "118",
+        "lastname": "Sitek"
+      }
+    },
+    {
+      "lms_code": 26001,
+      "sectionid": "39572",
+      "sectionname": "Social Studies 7 B 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25403,
+      "sectionid": "37573",
+      "sectionname": "Economics 1608-00",
+      "teacher": {
+        "email": "jjarvis@edkey.org",
+        "firstname": "Jesse",
+        "id": "5506",
+        "lastname": "Jarvis"
+      }
+    },
+    {
+      "lms_code": 89,
+      "sectionid": "38788",
+      "sectionname": "Homeroom Orientation 1608: Priego",
+      "teacher": {
+        "email": "rpriego@edkey.org",
+        "firstname": "Ronnette",
+        "id": "138",
+        "lastname": "Priego"
+      }
+    },
+    {
+      "lms_code": 24915,
+      "sectionid": "38795",
+      "sectionname": "Homeroom Orientation 1608: Student Success Dream Center",
+      "teacher": {
+        "email": "bjones@edkey.org",
+        "firstname": "Bob",
+        "id": "2707",
+        "lastname": "Jones"
+      }
+    },
+    {
+      "lms_code": 23947,
+      "sectionid": "38787",
+      "sectionname": "Homeroom Orientation 1608: Havasu Academic Youth Center",
+      "teacher": {
+        "email": "phauchrog@edkey.org",
+        "firstname": "Patty",
+        "id": "137",
+        "lastname": "Hauchrog"
+      }
+    },
+    {
+      "lms_code": 26971,
+      "sectionid": "40836",
+      "sectionname": "Nutrition and Wellness 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 164,
+      "sectionid": "40768",
+      "sectionname": "Mythology & Folklore: Legendary Tales 1608-00",
+      "teacher": {
+        "email": "cpike@edkey.org",
+        "firstname": "Christin",
+        "id": "124",
+        "lastname": "Pike"
+      }
+    },
+    {
+      "lms_code": 24894,
+      "sectionid": "37491",
+      "sectionname": "Financial Literacy 1 1608-00",
+      "teacher": {
+        "email": "kburbank@edkey.org",
+        "firstname": "Ken",
+        "id": "321",
+        "lastname": "Burbank"
+      }
+    },
+    {
+      "lms_code": 24067,
+      "sectionid": "38799",
+      "sectionname": "Journey 12 1608-00",
+      "teacher": {
+        "email": "kmccarty@edkey.org",
+        "firstname": "Kimberly",
+        "id": "2351",
+        "lastname": "McCarty"
+      }
+    },
+    {
+      "lms_code": 23958,
+      "sectionid": "37541",
+      "sectionname": "World History B 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25989,
+      "sectionid": "37564",
+      "sectionname": "Government 1608-11",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 25856,
+      "sectionid": "36926",
+      "sectionname": "English Language Arts 11 B 1608-00",
+      "teacher": {
+        "email": "aburton@edkey.org",
+        "firstname": "Alicia",
+        "id": "115",
+        "lastname": "Burton"
+      }
+    },
+    {
+      "lms_code": 26004,
+      "sectionid": "39582",
+      "sectionname": "Math 8 A (MS 3) 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 170,
+      "sectionid": "37462",
+      "sectionname": "Geometry A 1608-11",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 24857,
+      "sectionid": "38801",
+      "sectionname": "Graduation Preparation 1608-00",
+      "teacher": {
+        "email": "jnewsom@edkey.org",
+        "firstname": "Jeanine",
+        "id": "476",
+        "lastname": "Newsom"
+      }
+    },
+    {
+      "lms_code": 99,
+      "sectionid": "38802",
+      "sectionname": "MS Homeroom Orientation 1608: Flohr",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 152,
+      "sectionid": "40815",
+      "sectionname": "World Religions: Exploring Diversity 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 54,
+      "sectionid": "40819",
+      "sectionname": "Health Science: The Whole Individual 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 25994,
+      "sectionid": "39553",
+      "sectionname": "Math 7 B (MS 2) 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 25853,
+      "sectionid": "36914",
+      "sectionname": "English Language Arts 10 B 1608-00",
+      "teacher": {
+        "email": "tjackson@edkey.org",
+        "firstname": "Tim",
+        "id": "641",
+        "lastname": "Jackson"
+      }
+    },
+    {
+      "lms_code": 25235,
+      "sectionid": "37476",
+      "sectionname": "Trigonometry 1608-00",
+      "teacher": {
+        "email": "jgilgen@edkey.org",
+        "firstname": "Joseph",
+        "id": "310",
+        "lastname": "Gilgen"
+      }
+    },
+    {
+      "lms_code": 26010,
+      "sectionid": "39593",
+      "sectionname": "Science 8 B 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 24571,
+      "sectionid": "40783",
+      "sectionname": "Sociology I: Human Relationships 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 41,
+      "sectionid": "38806",
+      "sectionname": "MS Homeroom Orientation 1608: Wisniewski",
+      "teacher": {
+        "email": "jwisniewski@edkey.org",
+        "firstname": "Jeff",
+        "id": "320",
+        "lastname": "Wisniewski"
+      }
+    },
+    {
+      "lms_code": 136,
+      "sectionid": "40789",
+      "sectionname": "Digital Photography II 1608-00",
+      "teacher": {
+        "email": "asitek@edkey.org",
+        "firstname": "Amanda",
+        "id": "118",
+        "lastname": "Sitek"
+      }
+    },
+    {
+      "lms_code": 25871,
+      "sectionid": "37463",
+      "sectionname": "Geometry A 1608-00",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 25861,
+      "sectionid": "36933",
+      "sectionname": "English Language Arts 12 B 1608-00",
+      "teacher": {
+        "email": "tjackson@edkey.org",
+        "firstname": "Tim",
+        "id": "641",
+        "lastname": "Jackson"
+      }
+    },
+    {
+      "lms_code": 25990,
+      "sectionid": "37565",
+      "sectionname": "Government 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 25863,
+      "sectionid": "37435",
+      "sectionname": "Algebra I A 1608-00",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 32988,
+      "sectionid": "38804",
+      "sectionname": "MS Homeroom Orientation 1608: Radigan",
+      "teacher": {
+        "email": "jradigan@edkey.org",
+        "firstname": "Jenny",
+        "id": "131",
+        "lastname": "Radigan"
+      }
+    },
+    {
+      "lms_code": 25985,
+      "sectionid": "37549",
+      "sectionname": "U.S. History A 1608-11",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 23943,
+      "sectionid": "38784",
+      "sectionname": "Homeroom Orientation 1608: Crossroads Academy",
+      "teacher": {
+        "email": "jcallender@edkey.org",
+        "firstname": "Jennifer",
+        "id": "128",
+        "lastname": "Callender"
+      }
+    },
+    {
+      "lms_code": 88,
+      "sectionid": "38786",
+      "sectionname": "Homeroom Orientation 1608: Hullenaar",
+      "teacher": {
+        "email": "jhullenaar@edkey.org",
+        "firstname": "Jennifer",
+        "id": "130",
+        "lastname": "Hullenaar"
+      }
+    },
+    {
+      "lms_code": 24011,
+      "sectionid": "38798",
+      "sectionname": "Journey 11 1608-00",
+      "teacher": {
+        "email": "kmccarty@edkey.org",
+        "firstname": "Kimberly",
+        "id": "2351",
+        "lastname": "McCarty"
+      }
+    },
+    {
+      "lms_code": 23957,
+      "sectionid": "37538",
+      "sectionname": "World History A 1608-00",
+      "teacher": {
+        "email": "jjarvis@edkey.org",
+        "firstname": "Jesse",
+        "id": "5506",
+        "lastname": "Jarvis"
+      }
+    },
+    {
+      "lms_code": 24088,
+      "sectionid": "39597",
+      "sectionname": "Social Studies 8 A 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 25851,
+      "sectionid": "36908",
+      "sectionname": "English Language Arts 9 B 1608-00",
+      "teacher": {
+        "email": "aburton@edkey.org",
+        "firstname": "Alicia",
+        "id": "115",
+        "lastname": "Burton"
+      }
+    },
+    {
+      "lms_code": 25875,
+      "sectionid": "37467",
+      "sectionname": "Geometry B 1608-00",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 148,
+      "sectionid": "40775",
+      "sectionname": "History of the Holocaust 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 26013,
+      "sectionid": "36941",
+      "sectionname": "Heart of English 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 25855,
+      "sectionid": "36921",
+      "sectionname": "English Language Arts 11 A 1608-00",
+      "teacher": {
+        "email": "aburton@edkey.org",
+        "firstname": "Alicia",
+        "id": "115",
+        "lastname": "Burton"
+      }
+    },
+    {
+      "lms_code": 33976,
+      "sectionid": "40853",
+      "sectionname": "Agriscience I 1608-00",
+      "teacher": {
+        "email": "pbattafarano@edkey.org",
+        "firstname": "Phillip",
+        "id": "331",
+        "lastname": "Battafarano"
+      }
+    },
+    {
+      "lms_code": 68,
+      "sectionid": "40786",
+      "sectionname": "Music Appreciation 1608-00",
+      "teacher": {
+        "email": "tjackson@edkey.org",
+        "firstname": "Tim",
+        "id": "641",
+        "lastname": "Jackson"
+      }
+    },
+    {
+      "lms_code": 26006,
+      "sectionid": "39586",
+      "sectionname": "Math 8 B (MS 4) 1608-00",
+      "teacher": {
+        "email": "emackey@edkey.org",
+        "firstname": "Emma",
+        "id": "1351",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 1072,
+      "sectionid": "39545",
+      "sectionname": "English Language Arts 7 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 137,
+      "sectionid": "40823",
+      "sectionname": "Criminology: Inside the Criminal Mind 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 24007,
+      "sectionid": "38794",
+      "sectionname": "Homeroom Orientation 1608: Thunderbird Resource Center",
+      "teacher": {
+        "email": "ezmyslinski@edkey.org",
+        "firstname": "Erica",
+        "id": "2505",
+        "lastname": "Zmyslinski"
+      }
+    },
+    {
+      "lms_code": 189,
+      "sectionid": "40834",
+      "sectionname": "Cosmetology: Cutting Edge Styles 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 1081,
+      "sectionid": "37485",
+      "sectionname": "Math for Financial Literacy A 1608-00",
+      "teacher": {
+        "email": "kburbank@edkey.org",
+        "firstname": "Ken",
+        "id": "321",
+        "lastname": "Burbank"
+      }
+    },
+    {
+      "lms_code": 25865,
+      "sectionid": "37438",
+      "sectionname": "Algebra I B 1608-00",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 26012,
+      "sectionid": "39601",
+      "sectionname": "Social Studies 8 B 1608-00",
+      "teacher": {
+        "email": "jsmith@edkey.org",
+        "firstname": "Jacque",
+        "id": "132",
+        "lastname": "Smith"
+      }
+    },
+    {
+      "lms_code": 23946,
+      "sectionid": "38791",
+      "sectionname": "Homeroom Orientation 1608: Arivaca Boys Ranch",
+      "teacher": {
+        "email": "labadvisor@arivacaboysranch.com",
+        "firstname": "Justin",
+        "id": "786",
+        "lastname": "Gibson"
+      }
+    },
+    {
+      "lms_code": 25984,
+      "sectionid": "37548",
+      "sectionname": "U.S. History A 1608-00",
+      "teacher": {
+        "email": "wmcfarland@edkey.org",
+        "firstname": "Wendy",
+        "id": "140",
+        "lastname": "McFarland"
+      }
+    },
+    {
+      "lms_code": 25866,
+      "sectionid": "37440",
+      "sectionname": "Algebra I B 1608-11",
+      "teacher": {
+        "email": "amackey@edkey.org",
+        "firstname": "Amanda",
+        "id": "117",
+        "lastname": "Mackey"
+      }
+    },
+    {
+      "lms_code": 1072,
+      "sectionid": "39541",
+      "sectionname": "English Language Arts 7 1608-00",
+      "teacher": {
+        "email": "aavis@edkey.org",
+        "firstname": "Angel",
+        "id": "616",
+        "lastname": "Avis"
+      }
+    },
+    {
+      "lms_code": 134,
+      "sectionid": "40772",
+      "sectionname": "Astronomy: Exploring the Universe 1608-00",
+      "teacher": {
+        "email": "jflohr@edkey.org",
+        "firstname": "Janet",
+        "id": "129",
+        "lastname": "Flohr"
+      }
+    },
+    {
+      "lms_code": 100,
+      "sectionid": "38803",
+      "sectionname": "MS Homeroom Orientation 1608: Hullenaar",
+      "teacher": {
+        "email": "jhullenaar@edkey.org",
+        "firstname": "Jennifer",
+        "id": "130",
+        "lastname": "Hullenaar"
+      }
+    },
+    {
+      "lms_code": 178,
+      "sectionid": "40835",
+      "sectionname": "Early Childhood Education 1608-00",
+      "teacher": {
+        "email": "kriley@edkey.org",
+        "firstname": "Kimberly",
+        "id": "638",
+        "lastname": "Riley"
+      }
+    },
+    {
+      "lms_code": 1045,
+      "sectionid": "37487",
+      "sectionname": "Math for Financial Literacy B 1608-00",
+      "teacher": {
+        "email": "kburbank@edkey.org",
+        "firstname": "Ken",
+        "id": "321",
+        "lastname": "Burbank"
+      }
+    },
+    {
+      "lms_code": 25859,
+      "sectionid": "36932",
+      "sectionname": "English Language Arts 12 A 1608-00",
+      "teacher": {
+        "email": "tjackson@edkey.org",
+        "firstname": "Tim",
+        "id": "641",
+        "lastname": "Jackson"
+      }
+    },
+    {
+      "lms_code": 25223,
+      "sectionid": "36911",
+      "sectionname": "English Language Arts 10 A 1608-00",
+      "teacher": {
+        "email": "tjackson@edkey.org",
+        "firstname": "Tim",
+        "id": "641",
+        "lastname": "Jackson"
+      }
+    },
+    {
+      "lms_code": 25869,
+      "sectionid": "37455",
+      "sectionname": "Algebra II B 1608-00",
+      "teacher": {
+        "email": "jgilgen@edkey.org",
+        "firstname": "Joseph",
+        "id": "310",
+        "lastname": "Gilgen"
+      }
+    },
+    {
+      "lms_code": 24010,
+      "sectionid": "38797",
+      "sectionname": "Journey 10 1608-00",
+      "teacher": {
+        "email": "kmccarty@edkey.org",
+        "firstname": "Kimberly",
+        "id": "2351",
+        "lastname": "McCarty"
+      }
+    }
+  ]
+}

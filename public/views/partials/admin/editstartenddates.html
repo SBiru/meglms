@@ -1,0 +1,60 @@
+<div class="clearfix" style="margin-top: 10px;position: relative;">
+    <div style="margin-bottom: 5px"><input type="checkbox" ng-model="options.editDates"  ng-change="changeStartEndDate()"> Edit start/end dates</div>
+    <div class="disabled" ng-hide="options.editDates" style="    width: 100%;background: rgba(255,255,255,0.3);height: calc(100% - 30px);;position: absolute;z-index: 100;"></div>
+    <div ng-show="options.isAttendanceApp">
+
+
+        <div>
+            <div style="padding: 8px;width:245px;float: left;">
+                Attendance start date:
+            </div>
+            <p class="input-group datepicker"  style="width:200px;float: left;">
+                <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="options.showedAttendanceStartDate" max-date="selected.endDate"  is-open="datePicker.start.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'start')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+            </p>
+            <div class="clearfix"></div>
+        </div>
+
+        <div>
+            <div  style="padding: 8px;width:245px;float: left;">
+                Attendance end date:
+            </div>
+
+            <p class="input-group datepicker" style="width:200px;float: left;">
+                <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="options.showedEndDate" is-open="datePicker.end.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'end')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+            </p>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div ng-hide="options.isAttendanceApp">
+        <div style="padding: 8px;width:245px;float: left;">
+            Progress report start date :
+        </div>
+        <p class="input-group datepicker"  style="width:200px;float: left;">
+            <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="options.showedStartDate" max-date="selected.endDate"  is-open="datePicker.start.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'start')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+        </p>
+        <div class="clearfix"></div>
+    </div>
+    <div ng-hide="options.isAttendanceApp">
+        <div  style="padding: 8px;width:245px;float: left;">
+            Progress report  end date:
+        </div>
+
+        <p class="input-group datepicker" style="width:200px;float: left;">
+            <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="options.showedExpectedEndDate" is-open="datePicker.expected_end.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'expected_end')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+        </p>
+        <div class="clearfix"></div>
+    </div>
+
+</div>

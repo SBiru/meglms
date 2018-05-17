@@ -1,0 +1,32 @@
+<script type="text/ng-template" id="page.html">
+    <h4 class="list-group-item-heading">{{assignment.name}}</h4>
+    <p class="list-group-item-text">
+        <span data-ng-show="menu.selected.show_dates==1"><strong>Due:</strong> {{moment(assignment.due_date).calendar()}} <br></span>
+        <span ng-show="isSubmitted(assignment)"><strong>Submitted:</strong> {{moment(assignment.submitted).calendar()}}</span><br>
+        <span ng-show="hasScore(assignment) && menu.selected.show_grades==1"><strong>Graded:</strong> {{getScore(assignment)}} <span ng-click="openFeedback(assignment.gradePostId)" id="feedbackAssignment-{{unit.index}}-{{$index}}"class="fa fa-comment" ng-show="assignment.hasFeedback" style="margin-left:5px;cursor:pointer"></span><br></span>
+        <!--<span><strong>Total Time Spent: </strong><span>{{getTimeSpent(unit.id,assignment.id,assignment.pageGroupId)}} </span></span>-->
+
+    </p>
+</script>
+<div class="list-group">
+    <div class="assignment list-group-item" ng-repeat="assignment in unit.pagegroups track by $index" ng-class="{'subgroup':assignment.pages0}" ng-if="hasActivity(assignment)">
+        <div class="panel-group" id="grades-details-parent-table" role="tablist" aria-multiselectable="true" ng-if="assignment.pages">
+            <div class="panel panel-default" style="margin: 0 -15px">
+                <div class="panel-heading" role="tab" id="details-parent-heading-{{$index}}" ng-init="parent.index = $index">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#grades-details-parent-table" data-target="#collapse-details-parent-assignment-{{$index}}" aria-expanded="true" aria-controls="collapse-details-parent-assignment-{{$index}}">
+                            {{assignment.name}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse-details-parent-assignment-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{$index}}">
+                    <div class="panel-body">
+                        <div class=list-group-item data-ng-include="'page.html'"
+                             ng-repeat="assignment in assignment.pages track by $index" ng-if="hasActivity(assignment)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div data-ng-include="'page.html'" ng-if="!assignment.pages"  ></div>
+    </div>
+</div>

@@ -1,0 +1,218 @@
+<div class="tooltip-relative">
+    <div ng-show="values.instructions" class="alert alert-info">
+        <span class="help" tooltip="{{values.instructions}}" tooltip-placement="right">Instructions <span
+                class="fa fa-question-circle"></span></span>
+    </div>
+</div>
+<div class="alert alert-info" role="alert">
+    <strong style="color: red;font-style: italic;">Hint</strong> : You can select the equation response items which you
+    want to make available for the student while answering
+</div>
+<div>
+    <div class="form-group pull-left">
+        <label>Equation Response Items:</label>
+        <span class="help"
+              tooltip="You can select the equation response items which you want to make available for the student while answering"
+              tooltip-placement="right"><span class="fa fa-question-circle"></span></span>
+    </div>
+
+    <div class="form-group pull-left">
+        <label class="margin-left-0" style="margin-left: 62px;">Select the grading type:</label>
+        <select ng-model="equation.gradeType">
+            <option value="manual">Manually Grade</option>
+            <option value="automatic">Automatically Grade</option>
+        </select>
+    </div>
+
+    <div class="clearfix"></div>
+    <!--FOR RESPONSE ITEMS-->
+    <div class="response-items-container" style="margin-bottom: 13px;">
+        <div class="row" style="margin-bottom: 2px; margin-left: 5px; margin-top: 5px">
+            <div id="eq-tools" class="pointer response-items" style="opacity: 1">
+                <span><img src="/public/img/eq.tools.png"/></span>
+            </div>
+        </div>
+        <div class="row" style=" margin-left: 5px; margin-bottom: 5px">
+            <div class="col-sm-3" style="width: auto; padding: inherit; margin-right: 2px">
+                <div id="eq-numbers" class="pointer response-items" style="opacity: 1">
+                    <span><img src="/public/img/eq.numbers.PNG"/></span>
+                </div>
+            </div>
+            <div class="col-sm-9" style="width: auto; padding: inherit;">
+                <div class="row" style="margin-bottom: 1px">
+                    <div class="pointer response-items"
+                         ng-click="addValueToArray(equation.responseItems,'variables')"
+                         ng-style="{opacity : issetValue(equation.responseItems,'variables') ? 1 : 0.3}">
+                        <span style="font-size:1.7em ">Variables</span>
+                    </div>
+                    <button ng-show="issetResponseItem('variables')" class="eq-solution-button"
+                            ng-repeat="variable in equation.variables track by $index">
+                        <span>{{variable}}</span>
+                        <span class="btn btn-xs btn-default" ng-click="removeVariable($index)">
+                            <span class="fa fa-trash"></span>
+                        </span>
+                    </button>
+                    <input id="eq-var-input" class="eq-solution-button" ng-show="issetResponseItem('variables')"
+                           style="height: 37px; width: 37px;" type="text" ng-model="variable">
+                    <button ng-disabled="variable.length===0" ng-show="issetResponseItem('variables')"
+                            class="btn btn-primary" ng-click="addVariable()">
+                        Add
+                    </button>
+                </div>
+                <div class="row" style="margin-bottom: 1px">
+                    <div class="pointer response-items"
+                         ng-click="addValueToArray(equation.responseItems,'operators')"
+                         ng-style="{opacity : issetValue(equation.responseItems,'operators') ? 1 : 0.3}">
+                        <i style="font-size:1.7em;vertical-align: middle; ">Operators</i>
+                    </div>
+                    <span ng-show="issetResponseItem('operators')">
+                        <button ng-repeat="operator in operators" class="eq-button"
+                                ng-click="addValueToArray(equation.operators,operator)"
+                                ng-style="{opacity : issetValue(equation.operators,operator) ? 1 : 0.3}">
+                            <span ng-if="operator!='.'">{{operator}}</span>
+                            <span ng-if="operator=='.'"><i style="font-size: 10px;" aria-hidden="true"
+                                                           class="fa fa-circle"></i></span>
+                        </button>
+                    </span>
+                </div>
+                <div class="row" style="margin-bottom: 1px">
+                    <div class="pointer response-items"
+                         ng-click="addValueToArray(equation.responseItems,'logicals')"
+                         ng-style="{opacity : issetValue(equation.responseItems,'logicals') ? 1 : 0.3}">
+                        <span style="vertical-align: middle;font-size:1.7em ">Logical Operators</span>
+                    </div>
+                    <button ng-show="issetResponseItem('logicals')" class="eq-button"
+                            ng-repeat="logical in logicals" ng-click=addValueToArray(equation.logicals,logical)
+                            ng-style="{opacity : issetValue(equation.logicals,logical) ? 1 : 0.3}">
+                        {{logical}}
+                    </button>
+                </div>
+                <div class="row" style="margin-bottom: 1px">
+                    <div class="pointer response-items"
+                         ng-click="addValueToArray(equation.responseItems,'specials')"
+                         ng-style="{opacity : issetValue(equation.responseItems,'specials') ? 1 : 0.3}">
+                        <span style="vertical-align: middle;font-size:1.7em ">Special Symbols</span>
+                    </div>
+                    <button ng-show="issetResponseItem('specials')" class="eq-button"
+                            ng-repeat="special in specials" ng-click=addValueToArray(equation.specials,special)
+                            ng-style="{opacity : (issetValue(equation.specials,special) && '1') || '0.3'}">
+                        <span ng-if="special =='||'">{{special}}</span>
+                        <span ng-if="!(special =='||')"><img ng-src="{{'/public/img/'+special+'.png'}}"/></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="eq-variable-error-{{$index}}" style="margin-left: 19%;" role="alert"
+         ng-repeat="variableError in errors.variableErrors track by $index">
+        <strong style="color: red;font-style: italic;">ERROR :</strong><span style="color: red;" data-ng-bind="' {{variableError}}'"></span>
+    </div>
+</div>
+<!--FOR AUTOMATIC GRADING-->
+<div id="eq-automatic-grade" ng-show="equation.gradeType == 'automatic'">
+    <span id="eq-static-hidden"></span>
+    <div class="eq-solutions" style="margin-left: 19%; margin-bottom: 3px;"
+         ng-repeat="solution in equation.solutions track by $index">
+            <span class="btn btn-danger btn-sm" ng-click="removeSolution($index)" ng-disabled="isEditing">
+                <span class="fa fa-trash"></span>
+            </span>
+        <span style="margin-right: 15px" class="btn btn-primary btn-sm" ng-click="editSolution($index)"
+              ng-disabled="isEditing">
+                <span class="fa fa-edit"></span>
+            </span>
+        <span ng-bind="'Solution '+($index+1)+':'"></span>
+        <!--<span id="static-math-{{$index}}" ng-bind-html="safeHtml(staticEls[$index])">{{solution}}</span>-->
+        <span id="static-math-{{$index}}" ng-bind-html="getMathEl($index)"></span>
+    </div>
+    <div style="margin-left: 19%;" role="alert" ng-if="validateSolutionsWithVariables()">
+        <strong style="color: red;font-style: italic;">ERROR :</strong><span style="color: red;" data-ng-bind="solunErrorsVariables"></span>
+    </div>
+    <div style="margin-left: 19%;" role="alert" ng-if="validateSolutionsWithItems()">
+        <strong style="color: red;font-style: italic;">ERROR :</strong><span style="color: red;" data-ng-bind="solunErrorsItems"></span>
+    </div>
+    <div style="margin-left: 19%;" ng-if="isEditing">
+        <span ng-bind="'Editing Solution ' + (getCurrentIndex()+1)+ ':'"></span>
+    </div>
+    <div class="response-items-container" style="margin-bottom: 13px; margin-top: 13px">
+        <div id="eq-editable-math" class="row equation-holder"></div>
+        <!--we are replacing this div element with mathquill mathfield--><!--Do not change the item position-->
+        <div class="row eq-navigation-buttons" style="margin-bottom: 2px; margin-left: 5px; margin-top: 5px">
+            <button class="eq-nav-button" ng-click="buttonOperation('left')">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <button class="eq-nav-button" ng-click="buttonOperation('right')">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button>
+
+            <button class="eq-nav-button" ng-disabled="undoStack.length == 0" type="button" ng-click="undo()"
+                    ng-style="{'opacity' : undoStack.length == 0 ? 0.3 : 1}">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+            </button>
+            <button class="eq-nav-button" ng-disabled="redoStack.length == 0" type="button" ng-click="redo()"
+                    ng-style="{opacity : redoStack.length == 0? 0.3 : 1}">
+                <i class="fa fa-repeat" aria-hidden="true"></i>
+            </button>
+            <button class="eq-nav-button" type="button" ng-click="buttonOperation('backspace')"><span><img
+                    style="width:18px; margin-bottom:3px; " src="/public/img/eq-nav-backspace.png"></span></button>
+        </div>
+        <div class="row" style="margin-left: 5px; margin-bottom: 5px; border:1px solid #99ebff; width: 98%;">
+            <div class="col-sm-3 col-xs-3"
+                 style="width: auto; padding: inherit; margin-right: 2px; border-right:1px solid #c1c1c1;">
+                <div class="row" style="margin: inherit;">
+                    <button class="eq-solution-button" ng-repeat="n in [1,2,3]" type="button"
+                            ng-click="buttonOperation(n)">{{n}}
+                    </button>
+                </div>
+                <div class="row" style="margin: inherit;">
+                    <button class="eq-solution-button" ng-repeat="n in [4,5,6]" type="button"
+                            ng-click="buttonOperation(n)">{{n}}
+                    </button>
+                </div>
+                <div class="row" style="margin: inherit;">
+                    <button class="eq-solution-button" ng-repeat="n in [7,8,9]" type="button"
+                            ng-click="buttonOperation(n)">{{n}}
+                    </button>
+                </div>
+                <div class="row" style="margin: inherit;">
+                    <button class="eq-solution-button" ng-repeat="n in [0,'.','-']" type="button"
+                            ng-click="buttonOperation(n)">{{n}}
+                    </button>
+                </div>
+            </div>
+            <div class="col-sm-9 col-xs-9" style="width: auto; padding: inherit;">
+                <div class="row" ng-if="issetResponseItem('variables')" style="margin: inherit; margin-left: 2px">
+                    <button class="eq-solution-button" ng-repeat="variable in equation.variables"
+                            ng-click="buttonOperation(variable)">{{variable}}
+                    </button>
+                </div>
+                <div class="row" ng-if="issetResponseItem('operators')" style="margin: inherit; margin-left: 2px;">
+                    <button class="eq-solution-button" ng-repeat="operator in equation.operators"
+                            ng-click=buttonOperation(operator)>
+                        <span ng-if="operator !='.'">{{operator}}</span>
+                        <i ng-if="operator =='.'" style="font-size: 10px;" aria-hidden="true" class="fa fa-circle"></i>
+                    </button>
+                </div>
+                <div class="row" ng-if="issetResponseItem('logicals')" style="margin: inherit; margin-left: 2px">
+                    <button class="eq-solution-button" ng-repeat="logical in equation.logicals"
+                            ng-click=buttonOperation(logical)>{{logical}}
+                    </button>
+                </div>
+                <div class="row" ng-if="issetResponseItem('specials')" style="margin: inherit; margin-left: 2px">
+                    <button class="eq-solution-button" ng-repeat="special in equation.specials"
+                            ng-click=buttonOperation(special)>
+                        <span ng-if="special =='||'">{{special}}</span>
+                        <span ng-if="!(special =='||')"><img ng-src="{{'/public/img/'+special+'.png'}}"/></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button ng-disabled="enteredMath.length <= 0" style="margin-left: 19%;"
+            data-ng-bind="isEditing?'Save Changes' : 'Add Solution'" class="btn btn-primary"
+            ng-click="isEditing?editSolution():saveSolution()">Add Solution
+    </button>
+    <button ng-if="isEditing" class="btn btn-primary" ng-click="cancelEditingSolution()">Discard Changes / Cancel
+        Editing
+    </button>
+</div>

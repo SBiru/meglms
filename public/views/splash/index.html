@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" ng-app="app">
+<head>
+
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8">
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <link href="/public/css/video-js2.css" rel="stylesheet">
+
+
+    <script src="/public/js-util/ckeditor/ckeditor.js"></script>
+    <!-- inject:css -->
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+<!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+
+    <?php echo $customStyles->createStyleSheet(); ?>
+</head>
+<body ng-controller='PreferenceController' ng-attr-dir="{{ language_direction }}" class="splash-body">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+        <nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+
+                    <a data-ng-show="user.org.white_label" class="navbar-brand"
+                       ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}" ng-if="user.org.logo"><img
+                            style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+                    <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img
+                            src="/public/img/e3-green-logo.png"/> </a>
+                    <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo" ng-if="user.org.logo"
+                        ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+                    <div class="dropdown" id="mobileMenu" style="display: none"
+                         ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'"  >
+
+                    </div>
+
+
+                </div>
+                <div class="navbar-collapse collapse" id="main-navbar">
+                    <!--DSerejo 2015-02-02-->
+                    <!--Moving topleft-menu to template file for easier maintenance.-->
+                    <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+                    <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+                </div>
+            </div>
+        </nav>
+        <div id="indexcontainer" class="container-fluid" style="margin-top: 63px;">
+            <!-- LANDING PAGE TABS -->
+            <div ng-class="{'cat-dashboard-left':user.org.category_dashboard && user.is_student}"
+                 ng-if="user.org.category_dashboard">
+                <div data-ng-include="'/public/views/splash/goals.html'"></div>
+            </div>
+            <div ng-class="{'cat-dashboard-right':user.org.category_dashboard && user.is_student}">
+                <tabset
+                        ng-if="!user.hasOnlyProficiencyClasses">
+                    <!-- ANNOUNCEMENTS -->
+                    <tab heading="Home">
+                        <div class="test-dashboard-container" ng-if="proficiencyTestStatus.used">
+                            <div ui-view="dashboard-nav" class="test-dashboard-nav"></div>
+                            <div ui-view="dashboard-content" class="test-dashboard"></div>
+                        </div>
+                        <div data-ng-include="'/public/views/splash/announcements.html?v=2'"
+                             ng-if="!user.hasOnlyProficiencyClasses"></div>
+
+                        <!--Shoud use the directive after finishing the tests-->
+                        <!--<splash-page-classes class="classes-container" ng-class="{'categories-container':user.org.category_dashboard}"></splash-page-classes>-->
+                        <div ng-if="!user.org.category_dashboard && !user.hasOnlyProficiencyClasses" class="classes-container"
+                             data-ng-include="'/public/views/splash/classes.html'"
+                             data-ng-controller="SplashClassesController"></div>
+                        <div ng-if="user.org.category_dashboard && !user.hasOnlyProficiencyClasses"
+                             class="classes-container categories-container"
+                             data-ng-include="'/public/views/splash/categories.html'"
+                             data-ng-controller="SplashCategoriesController"></div>
+                    </tab>
+                    <!-- ALERTS SHOULD CREATE A DIRECTIVE INSTEAD OF USE REPORTSCONTROLLER-->
+                    <tab select="initAlerts=true;"
+                         ng-if="user.org.use_alert_splash && (user.is_teacher||user.is_organization_admin||user.is_super_admin)"
+                         style="position:relative;height: 100%">
+                        <tab-heading>My Alerts <span class="badge badge-warning">beta</span></tab-heading>
+                        <alert-page ng-if="initAlerts" user-id="user.id"></alert-page>
+                    </tab>
+                    <tab heading="Alerts"
+                         ng-if="false && user.org.enable_reports && (user.is_advisor||user.is_organization_admin||user.is_super_admin) && user.org.id==10">
+                        <div data-ng-include="'/public/views/splash/alerts.html'" data-ng-controller="ReportsController"></div>
+                    </tab>
+                    <!-- REPORTS -->
+                    <tab heading="Reports"
+                         ng-if="user.org.enable_reports && (user.is_advisor||user.is_teacher||user.is_organization_admin||user.is_super_admin)">
+                        <div data-ng-include="'/public/views/splash/reports.html'" data-ng-controller="ReportsController"></div>
+                    </tab>
+                    <tab heading="Passwords" active="selectPasswordTab"
+                         ng-if="user.org.show_password_manager && (user.is_edit_teacher||user.is_organization_admin||user.is_super_admin)">
+                        <page-passwords></page-passwords>
+                    </tab>
+                </tabset>
+                <div ng-if="user.hasOnlyProficiencyClasses">
+                    <div class="test-dashboard-container" ng-if="proficiencyTestStatus.used">
+                        <div ui-view="dashboard-nav" class="test-dashboard-nav"></div>
+                        <div ui-view="dashboard-content" class="test-dashboard"></div>
+                    </div>
+                    <div ng-if="!user.org.category_dashboard && !user.hasOnlyProficiencyClasses" class="classes-container"
+                         data-ng-include="'/public/views/splash/classes.html'"
+                         data-ng-controller="SplashClassesController"></div>
+                    <div ng-if="user.org.category_dashboard && !user.hasOnlyProficiencyClasses"
+                         class="classes-container categories-container"
+                         data-ng-include="'/public/views/splash/categories.html'"
+                         data-ng-controller="SplashCategoriesController"></div>
+                </div>
+
+            </div>
+            <!-- END TABS -->
+        </div>
+    </div>
+
+</div>
+<div ng-include="'/public/views/timeout/index.html'"></div>
+
+
+
+<!-- TODO: Load Scripts Here -->
+<script>
+    angular.module('app').requires.push('ngCkeditor');
+    angular.module('app').requires.push('chart.js');
+    angular.module('app').requires.push('selectize2');
+    window.COMMERCIAL_SITE_URL = '<?php global $PATHS; echo $PATHS->commercial_site_url; ?>'
+</script>
+<script src="/public/lib/video-js.js"></script>
+<script src="https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min.js"></script>
+</div></div></body>
+</html>

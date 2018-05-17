@@ -1,0 +1,327 @@
+<style>
+    @page{
+        margin-bottom: 0cm;
+    }
+    .j1-certificate{
+        font-family: "Times New Roman";
+        font-size: 11px;
+        max-width: 700px;
+        margin: auto;
+        position: relative;
+        height: 900px;
+    }
+    .header{
+        width: 100%;
+        /* display: flex; */
+        height: 54px;
+        border-bottom: 2px solid #ccc;
+        position: relative;
+    }
+    .header .header-title{
+        display: inline-block;
+        font-size: 2.2em;
+        line-height: 3;
+    }
+    .logo-inline{
+        font-style: italic;
+        padding-right: 10px;
+    }
+    .logo-inline .first{
+        color:rgb(129, 177, 90)
+    }
+    .logo-inline .second{
+        color:rgb(80, 116, 68);
+    }
+    .logo-inline .sup{
+        font-size: 0.3em;
+        position: absolute;
+        top: 22px;
+        left: 48px;
+        color: rgb(80, 116, 68);
+    }
+    .header .header-image{
+        display: inline-block;
+        left: 560px;
+        top: 8px;
+        position: absolute;
+    }
+    .header-image,.footer-logo{
+        width: 144px;
+        height: 48px;
+        display: inline-block;
+        margin-top:10px;
+    }
+    .header-image img,.footer-logo img{
+        width: 100%;
+    }
+    .clearfix::after {
+        display: block;
+        content: "";
+        clear: both;
+    }
+    .user-info-row{
+        padding-top: 25px;
+    }
+    .right, .middle, .left{
+        float:left;
+    }
+    .right{
+        width: 380px;
+    }
+    .middle{
+        width: 190px;
+    }
+    .form-value{
+        font-size: 1.5em;
+    }
+    .form-group{
+        margin-bottom: 10px;
+    }
+    .user-image{
+        width: 125px;
+        height:125px;
+    }
+    .user-image img, .qr-code img{
+        width: 100%;
+    }
+    .qr-code{
+        width: 70px;
+        height: 70px;
+        position: relative;
+        margin-top: 20px;
+        left: 35px;
+    }
+    .section-title{
+        display: inline-block;
+        font-size: 1.8em;
+        border-bottom: 1px solid #ccc;
+    }
+    .score-wrapper{
+        position: relative;
+        margin-top: 120px;
+    }
+    .unofficial-message{
+        position: absolute;
+        top: -75px;
+        text-align: center;
+        color: #b70303;
+        width: 100%;
+        font-size: 1.2em;
+    }
+    .unofficial-message div:first-child{
+        font-size: 1.4em;
+    }
+    .unofficial-mark{
+        letter-spacing: 4px;
+        font-size: 9em;
+        position: absolute;
+        top: 34px;
+        color: #ccc;
+        opacity: 0.2;
+        transform: rotate(-12deg);
+        left: 41px;
+    }
+    .score-table{
+        border: 1px solid #ccc;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .score-table th, .score-table td{
+        text-align: left;
+        padding-left: 15px;
+        border: 1px solid #ccc;
+
+    }
+    .score-table th{
+        background: #e6e3e3;
+        font-weight: normal;
+        font-size: 1.7em;
+        padding-bottom: 5px;
+        padding-top: 5px;
+
+    }
+    .score-table th:first-child{
+        width: 200px;
+    }
+    .score-table td:first-child{
+        text-align: center;
+    }
+    .main-score{
+        font-size: 5em;
+        line-height: 1.5;
+        height: 150px;
+    }
+    .score-description{
+        font-size: 1.3em;
+    }
+    .section-body{
+        padding-top: 15px;
+        font-size: 1.3em;
+    }
+    .footer{
+        position: absolute;
+        bottom: 0;
+    }
+    .instructions{
+        font-size: 1.3em;
+        margin-top: 30px;
+    }
+    .copyright{
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 21px;
+    }
+    .footer-row{
+        position: relative;
+        border-top: 1px solid #ccc;
+    }
+    .page-info{
+        display: inline-block;
+        position: absolute;
+        right: 0;
+        top: 21px;
+        font-size: 1.1em;
+        color: #757575;
+    }
+</style>
+<div class="j1-certificate">
+    <div class="header">
+        <div class="header-title">
+            <span class="logo-inline">
+                <span class="first">E3</span><span class="second">J1</span><span class="sup">TM</span>
+            </span> English Interview Score Report
+        </div>
+        <div class="header-image">
+            <img src="##logo##">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="user-info-section">
+        <div class="user-info-row">
+            <div class="right">
+                <div class="form-group">
+                    <div class="form-label">Last name (Family/Surname), First name (Given)</div>
+                    <div class="form-value">##name##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Email Address</div>
+                    <div class="form-value">##email##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Nationality</div>
+                    <div class="form-value">##nationality##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Originating Institution (Code)</div>
+                    <div class="form-value">##institution##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Interview ID</div>
+                    <div class="form-value">##interviewid##</div>
+                </div>
+            </div>
+            <div class="middle">
+
+                <div class="form-group">
+                    <div class="form-label">Applicant ID</div>
+                    <div class="form-value">##applicantid##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Date of Birth</div>
+                    <div class="form-value">##date_of_birth##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Native Language</div>
+                    <div class="form-value">##language##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Interview Date</div>
+                    <div class="form-value">##interview_date##</div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Evaluator ID</div>
+                    <div class="form-value">##evaluatorid##</div>
+                </div>
+
+
+            </div>
+            <div class="left">
+                <div class="user-image">
+                    <img src="##user_picture##">
+                </div>
+                <div class="qr-code">
+                    <img src="##qrcode##">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="score-wrapper">
+            <div class="unofficial-message"
+                 style="display: ##display_unofficial##"
+            >
+                <div>UNOFFICIAL COPY</div>
+                <div>
+                    Applicants: Log in to your English3 account to send an official certificate
+                    to your sponsor or an additional institution.
+                </div>
+            </div>
+
+            <div class="unofficial-mark" style="display: ##display_unofficial##">
+                UNOFFICIAL
+            </div>
+            <table class="score-table">
+                <tr>
+                    <th>Interview Score</th>
+                    <th>Score Description</th>
+                </tr>
+                <tr>
+                    <td class="main-score">
+                        ##score##
+                    </td>
+                    <td class="score-description">
+                        ##score_description##
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+        <div class="footer">
+            <div class="instructions">
+
+                <p>
+                    The E3J1 interview is intended to validate sufficient proficiency to participate in the applicant's program and to
+                    function on a day-to-day basis. The E3J1 is not intended for use as a comprehensive academic English assessment
+                    (see the <a href="http://english3.com/english3-profiency-test.php" style="text-decoration: none;color: inherit">English3 Proficiency Test</a>).
+                    A complete rubric is available at english3.com.
+                </p>
+                <p>
+                    Scores are valid for five years from the interview date. Applicants can log in to elearn.english3.com to have official
+                    Score Reports sent to additional institutions.
+                </p>
+                <p>
+                    Applicants can retake the E3J1 interview every 14 days. For questions
+                    concerning the English3 E3J1 Score Report, please email info@english3.com.
+                </p>
+
+            </div>
+            <div class="footer-row">
+
+                <div class="footer-logo">
+                    <img src="##logo##">
+                </div>
+                <div class="copyright">
+                    Copyright &copy; 2018 English3 LLC. All rights reserved.
+                </div>
+                <div class="page-info">
+                    Page 1 of 1
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

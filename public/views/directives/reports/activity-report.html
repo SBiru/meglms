@@ -1,0 +1,274 @@
+<div class="panel panel-default panel-body panel-filter" ng-if="amIAdmin() && !startWithStudent">
+    <div class="col-sm-6 col-md-4">
+        <div  class="panel panel-body inner-panel-filter">
+            <span>Filter by:</span>
+                <span class="btn-group">
+                    <label class="btn btn-default" ng-model="selected.filter" btn-radio="'site'">Site</label>
+                    <label class="btn btn-default" ng-model="selected.filter" btn-radio="'advisor'">Coach</label>
+                    <label class="btn btn-default" ng-model="selected.filter" btn-radio="'course'">Class</label>
+                </span>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <div  class="panel panel-body inner-panel-filter">
+            <div ng-if="selected.filter=='site'">
+                <div class="col-xs-4 width-100 padding-left-0">
+                    Select a site: <span class="fa fa-spinner fa-pulse" ng-show="loading.sites"></span>
+                </div>
+                <div class="col-xs-6 width-100 padding-left-0" style="padding-right: 0px;width: calc(50% + 40px);">
+                    <select data-ng-model="selected.site"
+                            placeholder="-- Select a site --"
+                            selectize
+                            data-ng-options="site.text for site in select.sites | orderBy:'name'">
+
+                        <!--<optgroup label="All"></optgroup>-->
+                        <!--<option data-ng-bind="'All ('+sitesAll+') students'" value="all"></option>-->
+                        <!--<optgroup label="Sites"></optgroup>-->
+                        <!--<option data-ng-repeat="site in sites" ng-bind="site.name + ' (' + site.count + ' students)'" value="{{site.name}}"></option>-->
+                    </select>
+
+                </div>
+            </div>
+            <div ng-if="amIAdmin() && selected.filter=='advisor'">
+                <div class="col-xs-4 width-100 padding-left-0">
+                    Select a coach: <span class="fa fa-spinner fa-pulse" ng-show="loading.advisors"></span>
+                </div>
+                <div class="col-xs-6 width-100 padding-left-0" style="padding-right: 0px;width: calc(50% + 40px);">
+                    <select selectize data-ng-model="selected.advisor"
+                            placeholder="-- Select a coach --"
+                            data-ng-options="advisor.name for advisor in select.advisors | orderBy:'name'">
+                    </select>
+                </div>
+            </div>
+            <div ng-if="amIAdmin() && selected.filter=='course'">
+            <div class="col-xs-4 width-100 padding-left-0">
+                Select a class: <span class="fa fa-spinner fa-pulse" ng-show="loading.classes"></span>
+            </div>
+            <div class="col-xs-6 width-100 padding-left-0" style="padding-right: 0px;width: calc(50% + 40px);">
+                <select selectize data-ng-model="selected.class"
+                        placeholder="-- Select a class --"
+                        data-ng-options="class.id as class.name group by class.type for class in select.classes | orderBy:'name'">
+                </select>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row margin-bottom-15">
+
+            <div class="col-xs-3 width-100" data-ng-hide="isStudent || startWithClass">
+
+                Select a student
+                <select
+                        selectize
+                        data-ng-model="selectedStudent"
+                        data-ng-change="selectStudent()"
+                        data-ng-options="s.id as s.lastName + ', '+ s.firstName for s in students | orderBy:'lastName'">
+                </select>
+
+
+            </div>
+
+            <div class="col-xs-9 width-100">
+                <div class="col-xs-3 width-100 padding-left-0">
+                    <div>Initial date</div>
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="datePicker.rangeMin.dt" is-open="datePicker.rangeMin.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'rangeMin')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-xs-3 width-100 padding-left-0">
+                    <div>Final date</div>
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="datePicker.rangeMax.dt" is-open="datePicker.rangeMax.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'rangeMax')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-xs-6 width-100">
+                    <button  type="button" class="btn btn-primary chart-btn btn-sm" ng-click="refreshChart()"><span class="fa fa-refresh"></span> Refresh</button>
+                    <button ng-show="timeSpentChart.labels.length" type="button" class="btn btn-primary btn-sm chart-btn" ng-model="timeSpentChart.showChart" btn-checkbox><i class="fa fa-bar-chart"></i><span ng-bind="timeSpentChart.showChart()?' Hide chart':' View chart'"></span></button>
+                    <button ng-show="timeSpentChart.labels.length" type="button" class="btn btn-primary btn-sm chart-btn margin-top-5" ng-model="compareDateRanges" btn-checkbox><i class="fa fa-balance-scale"></i><span><span ng-show="compareDateRanges"> Disable </span> Compare</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 margin-top-15">
+                <input type="checkbox" ng-model="selected.includeWithdrawn"> Include withdrawn classes
+            </div>
+        </div>
+    </div>
+
+
+    <div data-ng-show="loading.user"><span class="fa fa-spinner fa-pulse"></span></div>
+    <div class="panel-body" data-ng-hide="loading.user">
+        <div class="row" ng-if="timeSpentChart.isLoaded()">
+            <div class="graph-container col-sm-12" >
+                <div class="row">
+                    <div ng-class="compareDateRanges?'col-sm-6':'col-sm-12'">
+                        <div class="col-sm-12">
+                            <div class="units">
+                                Time unit:
+                                <select data-ng-model="timeUnit.currentUnit">
+                                    <option value="seconds">Seconds</option>
+                                    <option value="minutes">Minutes</option>
+                                    <option value="hours">Hours</option>
+                                </select>
+                            </div>
+                            <p style="margin-top: 10px"><b>Click on a bar to see the time spent on each class</b></p>
+                        </div>
+                        <div class="row">
+                            <div ng-class="compareDateRanges?'col-sm-12':'col-sm-6'">
+                                <canvas id="bar" class="chart chart-stacked-bar"
+                                        chart-data="timeSpentChart.timeSpentPerDay"
+                                        chart-labels="timeSpentChart.labels"
+                                        chart-options="timeSpentChart.options"
+                                        chart-click="timeSpentChart.barWasClicked"
+                                        chart-colours="timeSpentChart.colours"
+                                        >
+                                </canvas>
+                            </div>
+                            <div class="classes-timespent-container" ng-if="timeSpentChart.currentSelectedBar.label!=undefined"
+                                 ng-class="compareDateRanges?'col-sm-12':'col-sm-6'">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <span data-ng-bind="timeSpentChart.currentSelectedBar.label"></span>
+                                    </div>
+                                    <div class="panel-body" >
+                                        <p><b>Time spent:</b> <span data-ng-bind="timeSpentChart.textCurrentBarTotalTime()"></span></p>
+                                        <sortable-table
+                                                header="tables.classesPerDayHeader"
+                                                rows="timeSpentChart.currentSelectedBar.classes"
+                                                table-height="250px"
+                                                show-filter="false"
+                                                >
+                                        </sortable-table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 data-ng-bind="'Total time in the platform: ' + formatDuration(totalTimeSpentInPlatform)"></h4>
+                    </div>
+                    
+
+                    <div class="col-sm-6" data-ng-repeat="chart in secondaryCharts">
+                        <div ng-controller="SecondaryChartController">
+                            <div class="col-xs-4">
+                                <div>Initial date</div>
+                                <p class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="{{chart.datePicker.format}}" ng-model="chart.datePicker.rangeMin.dt" is-open="chart.datePicker.rangeMin.opened" datepicker-options="chart.datePicker.dateOptions" date-disabled="chart.datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="chart.datePicker.open($event,'rangeMin')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-xs-4">
+                                <div>Final date</div>
+                                <p class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="{{chart.datePicker.format}}" ng-model="chart.datePicker.rangeMax.dt" is-open="chart.datePicker.rangeMax.opened" datepicker-options="chart.datePicker.dateOptions" date-disabled="chart.datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="chart.datePicker.open($event,'rangeMax')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="btn btn-primary btn-sm chart-btn" ng-click="refreshChart()"><span class="fa fa-refresh"></span> Refresh</div>
+                            </div>
+                            <canvas id="bar2" class="chart chart-stacked-bar"
+                                    chart-data="chart.timeSpentPerDay"
+                                    chart-labels="chart.labels"
+                                    chart-options="chart.options"
+                                    chart-click="chart.barWasClicked"
+                                    chart-colours="chart.colours"
+                                    >
+                            </canvas>
+                            <div class="classes-timespent-container" ng-if="chart.currentSelectedBar.label!=undefined"
+                                 ng-class="compareDateRanges?'col-sm-12':'col-sm-6'">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <span data-ng-bind="chart.currentSelectedBar.label"></span>
+                                    </div>
+                                    <div class="panel-body" >
+                                        <p><b>Time spent:</b> <span data-ng-bind="chart.textCurrentBarTotalTime()"></span></p>
+                                        <sortable-table
+                                                header="tables.classesPerDayHeader"
+                                                rows="chart.currentSelectedBar.classes"
+                                                table-height="250px"
+                                                show-filter="false"
+                                                >
+                                        </sortable-table>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 data-ng-bind="'Total time in the platform: ' + formatDuration(chart.totalTimeSpentInPlatform)"></h4>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <h4 ng-show="classes && classes.length && !compareDateRanges" class="row">
+
+            <div class="col-xs-6">
+                Group by:
+                <span class="btn-group">
+                    <label class="btn btn-default" ng-model="group.by" btn-radio="'class'">Class</label>
+                    <label class="btn btn-default" ng-model="group.by" btn-radio="'day'">Day</label>
+                </span>
+                <span class="export-csv btn btn-sm btn-info" data-ng-click="exportCsv()"><i class="fa fa-cloud-download"></i> .CSV</span>
+            </div>
+        </h4>
+        <div ng-if="!compareDateRanges" ng-switch on="group.by">
+            <div ng-switch-when="class">
+                <div data-ng-repeat="class in classes track by $index" class="panel panel-default" ng-show="getTotalTime(class)" >
+                    <div class="panel-heading pointer"  data-ng-click="class.show=!class.show">
+                        <span class="legend-box" ng-style="{'background-color':timeSpentChart.classColours[$index]}"></span>
+                        <span class="fa" data-ng-class="class.show?'fa-minus-square':'fa-plus-square'"></span>
+                        <b data-ng-bind="class.name"></b>
+                        <span data-ng-bind="'Total time spent: ('+formatDuration(getTotalTime(class))+')'"></span>
+
+                    </div>
+                    <div class="panel-body" ng-if="class.show">
+                        <sortable-table
+                                header="tables.tableHeader1"
+                                rows="class.filteredHistory"
+                                table-height="250px"
+                                external-filter="dateRangeFilter"
+                                default-sort="'time_in'"
+                                default-descending="true"
+                                >
+                        </sortable-table>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="day">
+                <div data-ng-repeat="day in days | orderBy:'-day2'" class="panel panel-default" ng-if="day.totalTimeSpent">
+                    <div class="panel-heading pointer"  data-ng-click="day.show=!day.show">
+                        <span class="fa" data-ng-class="day.show?'fa-minus-square':'fa-plus-square'"></span>
+                        <b data-ng-bind="day.day"></b>
+                        <span data-ng-bind="'Total time spent: ('+formatDuration(day.totalTimeSpent)+')'"></span>
+                    </div>
+                    <div class="panel-body" ng-if="day.show">
+                        <sortable-table
+                                header="tables.tableHeader2"
+                                rows="day.history"
+                                table-height="250px"
+                                external-filter="dateRangeFilter"
+                                default-sort="'time_in'"
+                                default-descending="true"
+                                >
+                        </sortable-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p ng-show="!studentHasResults() && reportWasLoaded">The student didn’t spend any time between the dates selected. Please select a different date range.</p>
+    </div>
+</div>

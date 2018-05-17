@@ -1,0 +1,141 @@
+<div>
+	<h2>Add User</h2>
+	<span class="panel panel-default" style="padding: 5px;display: inline-block;">
+		<input type="checkbox" ng-model="use_license"> Use license
+	</span>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userExternalId" name="userExternalId" ng-model="userExternalId" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="External Id" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userFirstName" name="userFirstName" ng-model="scope.userFirstName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="First Name" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-user"></i></span>
+				<input type="text" id="userLastName" name="userLastName" ng-model="scope.userLastName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Last Name" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-envelope"></i></span>
+				<input placeholder="Email" type="email" id="userEmail" name="userEmail" ng-model="scope.userEmail" class="form-control ng-pristine ng-valid ng-valid-required" required>
+			</div><br>
+			<div class="input-group input-group-md">
+				<span class="input-group-addon"><i class=" fa fa-phone"></i></span>
+				<input placeholder="Phone" type="text" id="userPhone" name="userPhone" ng-model="userPhone" class="form-control ng-pristine ng-valid ng-valid-required" required>
+			</div><br>
+
+			<div class="input-group input-group-md" ng-hide="systemGeneratePassword">
+				<span class="input-group-addon"><i class=" fa fa-lock"></i></span>
+				<input placeholder="Password" type="text" id="userPassword" name="userPassword" ng-model="scope.userPassword" class="form-control ng-pristine ng-valid ng-valid-required">
+			</div><br>
+			<input type="checkbox" id="systemGeneratePassword" name="systemGeneratePassword" ng-model="scope.systemGeneratePassword">  <label for="systemGeneratePassword" class="control-label display-inline" style="font-size:15px">System Generate Password. User Will Be Emailed The Password. Admin Will Not Know Password.</label>
+		</div>
+		<div class="col-sm-6">
+			<table class="margin-top-15 margin-bottom-15">
+				<tr class="display-grid">
+					<td style="padding-bottom:15px;" class="padding-bottom-0"><label for="preferred_language" class="control-label" style="font-size:15px">Preferred Language</label></td>
+					<td style="padding-bottom:15px; padding-left:20px;" class="padding-left-0 padding-bottom-0">
+						<select id="preferred_language" name="preferred_language" ng-model="scope.preferred_language" class="form-control ng-pristine ng-valid ng-valid-required margin-5" ng-options="language.language_name for language in languages" required></select>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<tr ng-show="editorUser.can_create_super_user=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_super_admin" name="is_super_admin" ng-model="scope.is_super_admin">  <label for="is_super_admin" class="control-label" style="font-size:15px">Is Super Admin</label></td>
+				</tr>
+				<tr ng-show="editorUser.can_create_super_user=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_super_admin" name="can_add_super_admin" ng-model="scope.can_add_super_admin">  <label for="can_add_super_admin" class="control-label" style="font-size:15px">Can Add Super Admin</label></td>
+				</tr>
+
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_organization_admin" name="is_organization_admin" ng-model="scope.is_organization_admin">  <label for="is_organization_admin" class="control-label display-inline" style="font-size:15px">Is Organization Admin</label></td>
+				</tr>
+
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1'" >
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_organization_admin" name="can_add_organization_admin" ng-model="scope.can_add_organization_admin">  <label for="can_add_organization_admin" class="control-label display-inline" style="font-size:15px">Can Add Organization Admin</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1' || editorUser.can_add_users=='1'">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_user" name="can_add_user" ng-model="scope.can_add_user">  <label for="can_add_user" class="control-label" style="font-size:15px">Can Add Users</label></td>
+				</tr>
+				<tr ng-show="editorUser.is_super_admin || editorUser.is_organization_admin">
+
+					<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_edit_course" name="can_edit_course" ng-model="scope.can_edit_course">  <label for="can_edit_course" class="control-label" style="font-size:15px">Can Edit Courses</label></td>
+				</tr>
+
+
+
+			</table>
+		</div>
+	</div>
+	<br>
+	<div class="col-sm-offset-5">
+		<button type="button" class="btn btn-primary btn-sm" ng-click="addUser()">Add User</button>
+	</div>
+
+	<!--<table>-->
+		<!--<tr>-->
+			<!--<td style="padding-bottom:15px;"><label for="userFirstName" class="control-label" style="font-size:1.4em">First Name</lable></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="userFirstName" name="userFirstName" ng-model="scope.userFirstName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="First Name" required></td>-->
+		<!--</tr>-->
+		<!--<tr>-->
+			<!--<td style="padding-bottom:15px;"><label for="userLastName" class="control-label" style="font-size:1.4em">Last Name</lable></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="userLastName" name="userLastName" ng-model="scope.userLastName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Last Name" required></td>-->
+		<!--</tr>-->
+              <!--<tr>-->
+			<!--<td style="padding-bottom:15px;"><label for="userEmail" class="control-label" style="font-size:1.4em">Email</lable></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="userEmail" name="userEmail" ng-model="scope.userEmail" class="form-control ng-pristine ng-valid ng-valid-required" required></td>-->
+		<!--</tr>-->
+              <!--<tr ng-hide="systemGeneratePassword">-->
+			<!--<td style="padding-bottom:15px;"><label for="userPassword" class="control-label" style="font-size:1.4em">Password</lable></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="userPassword" name="userPassword" ng-model="scope.userPassword" class="form-control ng-pristine ng-valid ng-valid-required" required></td>-->
+		<!--</tr>-->
+              <!--<tr>-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="systemGeneratePassword" name="systemGeneratePassword" ng-model="scope.systemGeneratePassword">&nbsp;<label for="systemGeneratePassword" class="control-label" style="font-size:1.1em">System Generate Password. User Will Be Emailed The Password. Admin Will Not Know Password.</label></td>-->
+		<!--</tr>-->
+		<!--<tr>-->
+			<!--<td style="padding-bottom:15px;"><label for="preferred_language" class="control-label" style="font-size:1.4em">Preferred Language</label></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;">-->
+				<!--<select id="preferred_language" name="preferred_language" ng-model="scope.preferred_language" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="language.language_name for language in languages" required></select>-->
+			<!--</td>-->
+		<!--</tr>-->
+
+		<!--<tr ng-show="editorUser.can_create_super_user=='1'">-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_super_admin" name="is_super_admin" ng-model="scope.is_super_admin">  <label for="is_super_admin" class="control-label" style="font-size:1.1em">Is Super Admin</label></td>-->
+		<!--</tr>-->
+		<!--<tr ng-show="editorUser.can_create_super_user=='1'">-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_super_admin" name="can_add_super_admin" ng-model="scope.can_add_super_admin">  <label for="can_add_super_admin" class="control-label" style="font-size:1.1em">Can Add Super Admin</label></td>-->
+		<!--</tr>-->
+		<!--<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1'">-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="is_organization_admin" name="is_organization_admin" ng-model="scope.is_organization_admin">  <label for="is_organization_admin" class="control-label" style="font-size:1.1em">Is Organization Admin</label></td>-->
+		<!--</tr>-->
+
+		<!--<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1'" >-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_organization_admin" name="can_add_organization_admin" ng-model="scope.can_add_organization_admin">  <label for="can_add_organization_admin" class="control-label" style="font-size:1.1em">Can Add Organization Admin</label></td>-->
+		<!--</tr>-->
+		<!--<tr ng-show="editorUser.is_super_admin || editorUser.can_add_admin_users=='1' || editorUser.can_add_users=='1'">-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_add_user" name="can_add_user" ng-model="scope.can_add_user">  <label for="can_add_user" class="control-label" style="font-size:1.1em">Can Add Users</label></td>-->
+		<!--</tr>-->
+		<!--<tr ng-show="editorUser.is_super_admin || editorUser.is_organization_admin">-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" id="can_edit_course" name="can_edit_course" ng-model="scope.can_edit_course">  <label for="can_edit_course" class="control-label" style="font-size:1.1em">Can Edit Courses</label></td>-->
+		<!--</tr>-->
+
+              <!--<tr>-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="addUser()">Add User</button></td>-->
+		<!--</tr>-->
+	<!--</table>-->
+</div>

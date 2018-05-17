@@ -1,0 +1,23 @@
+<div class="TimedEditor">
+    <h1 class="TimedEditor_title"><input ng-model="data.title" placeholder="Title"/></h1>
+    <textarea ng-model="data.description"
+        class="TimedEditor_description"
+        placeholder="Description"></textarea>
+    <ul ui-sortable="sortableOptions" ng-model="data.dialog_json" class="TimedEditor_dialog">
+        <li ng-repeat="item in data.dialog_json">
+            <span class="TimedEditor_handle">|||</span>
+            <input type="text" ng-model="item.prompt" placeholder="Prompt text"/>
+            <input type="text" ng-model="item.answers[0]" placeholder="Example response"/>
+            <button ng-click="remove($index)" class="TimedEditor_remove">&times;</button>
+        </li>
+    </ul>
+    <div ng-hide="data.dialog_json.length" class="TimedEditor_empty">
+        There are no dialog items for this review.
+    </div>
+    <button class="TimedEditor_btn" ng-click="addNew()">Add new item</button>
+    <button class="TimedEditor_btn" ng-disabled="isInvalid()" ng-click="save()">Save</button>
+    <button class="TimedEditor_btn" ng-hide="really_remove" ng-click="removeReview()">Delete</button>
+    <button class="TimedEditor_btn" ng-show="really_remove" ng-click="onRemove()">Really delete?</button>
+    <span ng-class="{visible: tick, saved: saved, TimedEditor_saver: true}">Saved</span>
+</div>
+

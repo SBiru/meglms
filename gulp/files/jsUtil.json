@@ -1,0 +1,27 @@
+[
+  "./public/lib/jquery-1.11.0.min.js",
+  "./public/lib/jquery-ui.min.js",
+  "./public/lib/jquery.ui.touch-punch.min.js",
+  "./public/js-util/jquery.webcam.js",
+  "./public/lib/bootstrap.min.js",
+  "./public/js-util/flash-video-helper.js",
+  "./public/js-util/url-replacer.js",
+  "./public/lib/howler.min.js",
+  "./public/lib/underscore-min.js",
+  "./public/lib/video.js",
+  "./public/lib/toastr.js",
+  "./public/lib/date.js",
+  "./public/lib/d3.js",
+  "./public/lib/nv.d3.js",
+  "./public/lib/recorder.js",
+  "./public/lib/selectize.js",
+  "./public/js-util/selectize-disable.js",
+  "./public/lib/moment.min.js",
+  "./public/lib/moment-duration-format.js",
+  "./public/lib/humanize-duration.js",
+  "./public/js-util/Chart.min.js",
+  "./public/js-util/Chart.StackedBar.js",
+  "./public/js-util/E3Util.js",
+  "./public/lib/jquery.fileDownload.js"
+  
+]

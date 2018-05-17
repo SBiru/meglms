@@ -1,0 +1,35 @@
+<div>
+    <h2 ng-bind="title"></h2>
+    <table>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="unitTitle" class="control-label" style="font-size:1.4em">Title</label></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitTitle" name="unitTitle" ng-model="unit.name" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Super Unit Title" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="unitNumber" class="control-label" style="font-size:1.4em">Position</label></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitNumber" name="unitNumnber" ng-model="unit.position" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="checkbox" ng-model="unit.hide_from_student"> Hide from students</td>
+        <tr>
+            <td style="padding-bottom:15px;"></td>
+            <td style="padding-bottom:15px; padding-left:20px;">
+                <button type="button" class="btn btn-primary btn-sm" ng-click="updateUnit()"><span ng-bind="unit.id?'Update':'Create'"></span> Super Unit</button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="cloneUnit()" ng-show="false">Clone this Unit</button>
+            </td>
+        </tr>
+    </table>
+    <div style="margin-bottom: 20px">
+        <a ng-click="showRequiredPages=!showRequiredPages" class="pointer" >Edit required activities to access this page</a>
+    </div>
+    <div class="required-pages-wrapper" ng-show="showRequiredPages && navService.navData">
+        <page-requirements class-id="unit.classid" allow-super-units="true" class-data="navService.navData" ng-model="unit.required_pages"></page-requirements>
+    </div>
+    <div ng-show="cloning">Cloning..</div>
+    <div ng-show="unit.id">
+        <h2>Delete Super Unit</h2>
+        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteUnit()">Delete Super Unit</button>
+    </div>
+
+</div>

@@ -1,0 +1,57 @@
+<div ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-hide="loading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    Select a class
+                    <select
+                            selectize
+                            data-ng-model="class.selected"
+                            data-ng-options="c.id as c.name for c in classes | filter:isTeacher| orderBy:'name'">
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div ng-show="report.classInfo" data-ng-bind="'Active students:'+ report.classInfo.studentCount"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 graph-container">
+                    <div>
+                        <b data-ng-show="selected.pageId=='all'" data-ng-bind="report.classInfo.name"></b>
+                        <b data-ng-show="selected.pageId!='all'" data-ng-bind="selected.page.name"></b>
+                    </div>
+                    <div>Click on a bar to see the students' names</div>
+                    <canvas id="bar" class="chart chart-bar"
+                            chart-data="config.data"
+                            chart-labels="config.labels"
+                            chart-click="onClick"
+                            >
+                    </canvas>
+                    <div class="col-xs-12" ng-show="report.gradebook">
+                        <b>Avg. completion time:</b>
+                        <span ng-bind="report.gradebook.avg_progress + ' days'"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3"  ng-if="selectedGroup.label!==undefined">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span data-ng-bind="selectedGroup.label + ' ('+selectedGroup.students.length+')'"></span>
+                        </div>
+                        <div class="panel-body">
+                            <sortable-table
+                                    header="config.studentTableHeader"
+                                    rows="selectedGroup.students"
+                                    table-height="250px"
+                                    >
+                            </sortable-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

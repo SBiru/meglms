@@ -1,0 +1,110 @@
+<div class="Dialog">
+    <div class="Dialog_left">
+        <div class="Dialog_prompt">
+            {{dialog.data.prompt}}
+        </div>
+
+        <div class="Dialog_middle" ng-switch="dialog.state">
+            <div ng-switch-when="prompt">
+                <audio
+                    ng-if="!dialog.isTimed && dialog.promptAudio"
+                    ng-src="{{dialog.promptAudio}}"
+                    controls
+                    autoplay/>
+                <audio
+                    ng-if="dialog.isTimed && dialog.promptAudio"
+                    ng-src="{{dialog.promptAudio}}"
+                    autoplay/>
+                <div timer-circle
+                    class="Dialog_timer"
+                    time="dialog.data.prompt_duration"
+                    on-done="dialog.onStart"
+                    ng-if="dialog.isTimed">Timer</div>
+            </div>
+            <div ng-switch-when="started">
+                <span class="Dialog_empty">Speak to record your answer</span>
+                <img class="Dialog_loading" src="/public/img/loading.gif"/>
+                <div timer-circle
+                    class="Dialog_timer"
+                    time="dialog.timeLimit"
+                    on-done="dialog.stop"
+                    ng-if="dialog.isTimed">Timer</div>
+            </div>
+
+            <div ng-switch-when="error">
+                Sorry, voice recognition didn't work.
+                <p>{{dialog.error}}</p>
+            </div>
+
+            <div ng-switch-when="processing">
+                Processing...
+            </div>
+
+            <div ng-switch-when="done-valid">
+                <!-- This is the voice recognition stuff
+                div class="Dialog_words">
+                    <strong>Your response: </strong>
+                    <span ng-repeat="snippet in dialog.finalWords" class="final Dialog_word">
+                        {{snippet}}
+                    </span>
+                </div-->
+                <div class="Dialog_example">
+                    <strong>Example: </strong>{{dialog.data.answers[0]}}
+                    <audio
+                        ng-if="dialog.isTimed && dialog.answerAudio"
+                        ng-src="{{dialog.answerAudio}}"
+                        autoplay/>
+                    <audio
+                        ng-if="!dialog.isTimed && dialog.answerAudio"
+                        ng-src="{{dialog.answerAudio}}"
+                        controls
+                        autoplay/>
+                    <div timer-circle
+                        class="Dialog_timer"
+                        time="dialog.data.answer_duration"
+                        ng-if="dialog.isTimed"
+                        on-done="onDone">Timer</div>
+                </div>
+                <div class="Dialog_feedback">
+                    Well done!
+                </div>
+            </div>
+            <!-- Voice recognition stuff
+            div ng-switch-when="done-invalid">
+                <div class="Dialog_words">
+                    <strong>Your response: </strong>
+                    <span ng-repeat="snippet in dialog.finalWords" class="final Dialog_word">
+                        {{snippet}}
+                    </span>
+                </div>
+                Sorry, try again!<br/>
+                The correct answer was: {{dialog.data.answers[0]}}
+            </div-->
+        </div>
+        <div class="Dialog_button" ng-if="!dialog.isTimed" ng-switch="dialog.state">
+            <button ng-switch-when="prompt" ng-click="dialog.start()">
+                Answer
+            </button>
+            <button ng-switch-when="started" ng-click="dialog.stop()">
+                Done
+            </button>
+            <button ng-switch-when="done-valid" ng-click="onDone()">
+                Next
+            </button>
+            <button ng-switch-when="done-invalid" ng-click="onDone()">
+                Next
+            </button>
+        </div>
+    </div>
+    <div class="Dialog_right">
+        <video
+            ng-class="{Dialog_webcam: true, 'Dialog_webcam-recording':
+            dialog.state === 'started'}"
+            ng-src="{{previewUrl}}"
+            muted
+            ng-show="!!previewUrl"
+            ></video>
+        <div ng-show="dialog.state === 'started'" class="Dialog_recording">Recording</div>
+    </div>
+</div>
+

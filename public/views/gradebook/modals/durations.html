@@ -1,0 +1,50 @@
+<div class="gradebook-modal">
+    <div class="modal-header">
+        <!-- close button -->
+        <button type="button" class="close " ng-click="cancel()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+                <span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">Assignment durations</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12 panel-body">
+                Course Length in School Days: <input type="number" data-ng-model="classInfo.courseLength" ng-change="classInfo.editing=true">
+                <async-button color-style="primary" text="Save" flash-text="Saved!" loading="saving" ng-click="save()" disabled="!canSave()"></async-button>
+
+
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-warning units" data-ng-repeat="unit in units | orderBy:orderPages" ng-if="unit.pagegroups">
+                    <div class="panel-heading">{{unit.description}} - Total: <span>{{totalForUnit(unit)}}</span></div>
+                    <div class="panel-body">
+                        <div data-ng-repeat="group in unit.pagegroups">
+                            <div ng-if="group.id">
+                                <div class="panel panel-default pageGroup" >
+                                    <div class="panel-heading page">
+                                        <div class="col-xs-6 pagename portrait-width-100">{{group.name}} - Total: <span>{{totalForGroup(group)}}</span></div>
+                                    </div>
+                                    <div data-ng-repeat="page in group.pages" class="page">
+                                        <div class="col-xs-6 pagename portrait-width-70">{{page.name}}</div>
+                                        <div class="col-xs-6 pagename portrait-width-30"><input class="portrait-width-100" type="number" data-ng-model="page.lesson_duration" ng-change="page.editing=true"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="!group.id" data-ng-repeat="page in group.pages " class="page">
+                                <div class="col-xs-6 pagename portrait-width-70">{{page.name}}</div>
+                                <div class="col-xs-6 pagename portrait-width-30"><input class="portrait-width-100" type="number" data-ng-model="page.lesson_duration" ng-change="page.editing=true"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <async-button color-style="primary" text="Save" flash-text="Saved!" loading="saving" ng-click="save()" disabled="!canSave()"></async-button>
+    </div>
+</div>

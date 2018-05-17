@@ -1,0 +1,120 @@
+
+.TimedEditor {
+  padding: 20px;
+
+  input, textarea {
+    border: 1px solid transparent;
+    cursor: pointer;
+    &:focus {
+      border: 1px solid #ccc;
+      outline: none;
+      cursor: text;
+    }
+
+    &:hover:not(:focus) {
+      background-color: #ddd;
+    }
+
+  }
+
+  &_empty {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-bottom: 8px;
+    color: #777;
+  }
+
+  &_saver {
+    opacity: 0;
+    transition: opacity .3s ease;
+    background-color: #afa;
+    border-radius: 10px;
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin-left: 20px;
+    display: none;
+
+    &.visible {
+      display: inline-block;
+    }
+
+    &.saved {
+      opacity: 1;
+    }
+  }
+
+  &_handle {
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    cursor: move;
+    color: #888;
+    padding-right: 10px;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  &_title {
+    width: 100%;
+
+    input {
+      width: 100%;
+      display: block;
+      box-sizing: border-box;
+      padding: 5px 10px;
+    }
+  }
+
+  &_description {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    min-height: 100px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    padding: 5px 10px;
+  }
+
+  &_dialog {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;;
+
+    li {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      font-size: 20px;
+      display: flex;
+      border-bottom: 1px solid #aaa;
+      background: white;
+
+      input {
+        flex: 1;
+        padding: 5px 10px;
+        margin-right:  5px;
+      }
+    }
+  }
+
+  &_btn {
+    font-size: 20px;
+    padding: 5px 20px;
+
+    &[disabled] {
+      color: #aaa;
+    }
+  }
+
+  &_remove {
+    background: transparent;
+    color: #f88;;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+  }
+}
+

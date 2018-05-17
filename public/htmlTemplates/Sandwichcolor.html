@@ -1,0 +1,105 @@
+
+<style>
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover
+{
+    outline:0px !important;
+    -webkit-appearance:none;
+}
+
+textarea { border: none; 
+background-color:transparent;
+  resize: none;
+}
+
+.HtmlTemplateControl{
+position:relative;
+margin:auto;
+width:95%;
+height:648px;
+}
+
+.TopSentenceDiv,.SupportingDetail1Div,.SupportingDetail2Div,.SupportingDetail3Div,.ConcludingSentenceDiv{
+  position: absolute;
+  width: 90%;
+  left: 4%;
+}
+
+.TopSentenceDiv, .ConcludingSentenceDiv{
+  height: 85px;
+  }
+
+.TopSentenceDiv{
+  top: 74px;
+  }
+
+.SupportingDetail1Div{
+  top: 184px;
+  }
+
+.SupportingDetail2Div{
+  top: 285px;
+  } 
+
+.SupportingDetail3Div{
+  top: 385px;
+  }  
+
+.ConcludingSentenceDiv{
+  top: 483px;
+  }  
+
+.SupportingDetail1Div,.SupportingDetail2Div,.SupportingDetail3Div{
+  height: 65px;
+  }
+
+.TopSentence,.SupportingDetail1,.SupportingDetail2,.SupportingDetail3,.ConcludingSentence,.template_img {
+  width: 100%;
+  height: 100%;
+  }
+
+.colorWhite{
+  color:white;
+}
+</style>
+
+<div class="HtmlTemplateControl">
+  <!--Topic Sentence Start-->
+  <div style="position:absolute" class="TopSentenceDiv">
+	<textarea class="TopSentence" name="TopSentence" placeholder="Topic Sentence" ng-model="templateContent[0]"></textarea>
+	</div>
+  <!--Topic Sentence End-->  
+
+  <!--Supporting Detail #1 Start-->
+  <div style="position:absolute" class="SupportingDetail1Div">
+  <textarea class="SupportingDetail1" name="SupportingDetail1" placeholder="Supporting Detail #1" ng-model="templateContent[1]"></textarea>
+  </div>
+  <!--Supporting Detail #1 End-->
+
+  <!--Supporting Detail #2 Start-->
+  <div style="position:absolute" class="SupportingDetail2Div">
+  <textarea class="SupportingDetail2 colorWhite" name="SupportingDetail2" placeholder="Supporting Detail #2" ng-model="templateContent[2]"></textarea>
+  </div>
+  <!--Supporting Detail #2 End-->  
+    
+  <!--Supporting Detail #3 Start-->
+  <div style="position:absolute" class="SupportingDetail3Div">
+  <textarea class="SupportingDetail3" name="SupportingDetail3" placeholder="Supporting Detail #3" ng-model="templateContent[3]"></textarea>
+  </div>
+  <!--Supporting Detail #3 End-->
+  
+  <!--Concluding Sentence Start-->
+  <div style="position:absolute" class="ConcludingSentenceDiv">
+  <textarea class="ConcludingSentence" name="ConcludingSentence" placeholder="Concluding Sentence" ng-model="templateContent[4]"></textarea>
+  </div>
+  <!--Concluding Sentence End-->    
+  <img class="template_img" src="../public/htmlTemplates/Sandwichcolor.png" border="0" alt="">
+</div>

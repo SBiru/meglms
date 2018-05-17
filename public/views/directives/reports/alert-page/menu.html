@@ -1,0 +1,26 @@
+<div class="menu-loading" ng-if="options.alerts.$loading"></div>
+<ul class="tooltip-relative">
+    <li ng-class="{'active':properties.currentMenu.id==menus.ADD.id}">
+        <alert-page-menu-item menu="menus.ADD"></alert-page-menu-item>
+
+        <ul class="menu-items" ng-show="properties.currentMenu.id==menus.ADD.id">
+            <li ng-repeat="category in options.possibleCategories">
+                <div ng-click="menus.ADD.selected=category.label" ng-class="{'active':menus.ADD.selected==category.label}">{{category.label}}</div>
+                <ul ng-show="menus.ADD.selected==category.label" class="add-alert">
+                    <li data-ng-repeat="alert in category.alerts" ng-click="addAlert(alert)" ng-class="{'disabled':alert.used}">
+                        {{alert.label}} <span ng-hide="alert.available">(Coming soon)</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li ng-class="{'active':properties.currentMenu.id==menus.LAYOUT.id}">
+        <alert-page-menu-item menu="menus.LAYOUT"></alert-page-menu-item>
+        <ul class="menu-items" ng-show="properties.currentMenu.id==menus.LAYOUT.id">
+            <li data-ng-repeat="layout in options.possibleLayouts" ng-click="changeLayout(layout)">
+                <div>{{layout.label}}</div>
+            </li>
+        </ul>
+    </li>
+</ul>
+

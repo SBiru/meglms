@@ -1,0 +1,16 @@
+<h4>
+    Pending
+</h4>
+{{pending}} entrie(s) to be exported
+<span class="btn btn-primary btn-sm" ng-click="exportNow()" data-ng-disabled="exporting">
+    <span class="fa fa-spinner fa-pulse" ng-show="exporting"></span>
+    Export now
+</span>
+<div ng-show="corrupted">
+    <h5>Corrupted entries</h5>
+    <div data-ng-repeat="c in corrupted">
+        <span class="label label-primary pointer" ng-show="c.details" ng-click="openErrorDetails(c.details,c.id)">See
+            details</span>
+        <span class="label label-danger">{{c.entries}} entrie(s) are {{c.reason}}</span>
+    </div>
+</div>

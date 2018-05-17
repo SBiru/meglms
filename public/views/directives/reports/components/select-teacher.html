@@ -1,0 +1,12 @@
+<div class="panel panel-default panel-body">
+    <span class="col-xs-4 width-100">Select a teacher: </span>
+    <div class="col-xs-6 width-100">
+        <select selectize
+                ng-model="selected.teacher"
+                data-ng-options="teacher as teacher.name for teacher in teachers | orderBy:(user.org.sort_users_by=='fname'?'firstName':'lastName')">
+        </select>
+    </div>
+    <div class="col-xs-2">
+        <span class="btn btn-sm btn-primary" data-ng-click="selected.teacher=null">Clear</span>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+#overlay {
+	position:fixed; 
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:#000;
+	opacity:0.5;
+	filter:alpha(opacity=50);
+}
+#modal {
+	position:absolute;
+	background:url(/tint20.png) 0 0 repeat;
+	background:rgba(0,0,0,0.2);
+	border-radius:8px;
+	padding:4px;
+	overflow: visible;
+}
+#content {
+	border-radius:8px;
+	background:#fff;
+	padding:4px;
+}
+#close {
+	position:absolute;
+	background:url(/img/close.png) 0 0 no-repeat;
+	width:23px;
+	height:27px;
+	display:block;
+	text-indent:-9999px;
+	top:-2px;
+	right:-13px;
+}
+
+.meg_capture_tab_active {
+  cursor:pointer;
+  display:inline-block;
+  padding:5px;
+  width:100px;
+  border:1px solid black;
+  border-bottom:none;
+}
+.meg_capture_tab_inactive {
+  cursor:pointer;
+  display:inline-block;
+  padding:5px;
+  width:100px;
+  border:1px solid black;
+}
+.meg_capture_container_active {
+  display:inline-block;
+}
+.meg_capture_container_inactive {
+  display:none;
+}
+
+.table2 { margin-left:5%; margin-right:5%; width:900px; line-height:25px;}
+#level1author { font-family:Georgia,"Times New Roman",Times,serif; }
+#video1 { cursor:pointer; overflow:hidden; position:relative; width: 200px; height: 160px; background-color:white; background-repeat:no-repeat; background-position:center; border:1px solid #000000;   }
+#video2 { cursor:pointer; overflow:hidden; position:relative; margin-bottom:3px; width: 120px; height: 90px; background-color:white; background-repeat:no-repeat; background-position:center;  border:1px solid #000000;  }
+#video3 { cursor:pointer; overflow:hidden; position:relative; margin-bottom:1px; width: 80px; height: 60px; background-color:white; background-repeat:no-repeat; border:1px solid #000000; }
+#videoplay {
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+}
+
+#video4 { width: 41px; height: 31px; background-color:white; background-repeat:no-repeat; border:1px solid rgb(219,205,161); }
+#textresponse { width:41px; height:31px; border:1px solid rgb(219,205,161); background-color:white; }
+
+.scaledimage{ height:100%; width:100%; }
+#greyinstructions { background-color:#717171; font: 18px/20px Georgia,"Times New Roman",Times,serif;  }
+.table1 { border-spacing:0px; background-color:white; vertical-align:top; }
+tbody { vertical-align:top; }
+.div3 { background-color:white; margin-top:30px;}
+.dash { width:100%; border-bottom:1px dashed #000000 }
+.vr { border-right:1px solid #000000; }
+.body { background-color:#FFFFFF }
+.eel { background-color:white }
+.eel2 { background-color:#fff5ed }
+.eel3 { height:20px; background-color:#c8bbaf }
+.eel4 { height:30px; background-color:#d1cdb9; }
+.eel5 { height:5px; background-color:#9b8942 }
+.border { border-right:1px inset #000000; }
+/*.nav { margin-right:15px; margin-left:15px; } */
+.hspacing { width:5px }
+.spacing { height:5px }
+.spacing2 { height:30px }
+.valign { vertical-align:top; }
+.valignm { vertical-align:middle; }
+.tbody { vertical-align:top }
+.reply {  }
+.hr { width:40px; height:1px; border-top:1px solid #000000; border-right:0px; border-left:0px; border-bottom:0px; }
+.hr2 { width:20px; border-top:1px solid #000000; border-right:0px; border-left:0px; border-bottom:0px; }
+
+.speech_icon {
+position:absolute;
+background-image:url("/img/text_icon_small.png");
+height:23px;
+width:23px;
+top:-1px;
+right:-1px;
+}
+
+.rotate_icon {
+position:absolute;
+background-image:url("/img/rotate_icon.png");
+height:23px;
+width:23px;
+bottom:-1px;
+right:-1px;
+}
+
+.table3 {
+    border-top: none;
+    border-bottom: double;
+    border-right: none;
+    border-spacing:10px;
+}
+
+#everything
+{
+ width:80%;
+ max-width: 880px;
+ background-color: White;
+ display:block;
+}
+
+
+#instructions { border:1px solid #d2d2d2; background-color:#eaeaea; font: 18px/20px Georgia,"Times New Roman",Times,serif;  }
+#title {font: 30px/32px Georgia,"Times New Roman",Times,serif;  }
+
+/*li.dropdown a {cursor:pointer;cursor:hand;}
+ul.nav a {cursor:pointer;cursor:hand;}*/
+
+/*Golabs Set Quiz Button Widths*/
+.quizbutton
+{
+	width:100%;
+	min-width :235px;
+}
+

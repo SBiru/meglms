@@ -1,0 +1,32 @@
+<div>
+    <a ng-click="open()" class="pointer">Advanced Settings</a>
+</div>
+
+<script type="text/ng-template" id="quiz-advanced-settings-modal">
+    <div class="modal-header">
+        Advanced Settings
+        <span aria-hidden="true" ng-click="$dismiss()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+    </div>
+    <div class="modal-body">
+        <div>
+            <input type="checkbox" ng-model="settings.show_question_number"> Show question number
+        </div>
+        <div>
+            <input type="checkbox" ng-model="settings.show_question_box"> Show box around question
+        </div>
+        <div style="    margin-top: 5px;">
+            Checkbox style: <select ng-options="style for style in ['circle','box']" ng-model="settings.checkbox_style"></select>
+        </div>
+        <div style="margin:10px 0">
+            <span>
+                Font size: <select placeholder="Font" style="width:auto;display: inline-block;" class="form-control" ng-options="name.size as name.label for name in font_sizes" ng-model="settings.font_size"></select>
+            </span>
+            <span style="margin-left: 20px;">
+                Font family: <select placeholder="Font" style="width:auto;display: inline-block;" class="form-control" ng-options="name.family as name.label for name in font_names" ng-model="settings.font_family"></select>
+            </span>
+        </div>
+
+    </div>
+    <div class="pull-right btn btn-primary" style="margin-right: 20px;" ng-click="close()">Save</div>
+    <div class="clearfix" style="margin-bottom: 20px"></div>
+</script>

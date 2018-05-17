@@ -1,0 +1,17 @@
+<div ng-controller="CloneContentController">
+    <div class="row">
+        <div class="col-sm-6">
+            Select a course:<span class="fa fa-spinner fa-pulse" ng-show="loading_courses"></span>
+            <select selectize ng-model="course"
+                    ng-options="c.id as c.name for c in courses | orderBy:'name'"></select>
+
+        </div>
+        <div class="col-sm-6">
+            Select a page: <span class="fa fa-spinner fa-pulse" ng-show="loading_pages"></span>
+            <select selectize ng-model="page"
+                    ng-options="p.id as p.name for p in pages | orderBy:'name'"></select>
+
+        </div>
+        <button ng-click="finish()">Use this page</button>
+    </div>
+</div>

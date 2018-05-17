@@ -1,0 +1,16 @@
+<div data-ng-repeat="(key,value) in alert.params">
+    <div class="input-group form-group edit-param" >
+            <span class="input-group-addon addon">
+                {{key}}
+            </span>
+        <input ng-if="!alert.paramTypes" class="form-control" ng-model="alert.params[key]">
+        <select ng-if="alert.paramTypes && alert.paramTypes[key] && alert.paramTypes[key].type==='list'"
+                ng-model="alert.params[key]"
+                class="form-control"
+                ng-options="o for o in alert.paramTypes[key].options"
+        ></select>
+    </div>
+</div>
+<div>
+    <alert-ok-button></alert-ok-button>
+</div>

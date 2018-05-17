@@ -1,0 +1,39 @@
+<div class="row content">
+    <div class="col-sm-12">
+        <div class="small-heading">Question config</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="col-sm-12 select-row">
+            <div class="col-sm-6">
+                <div>Question format</div>
+                <select class="form-control" ng-options="value for (key , value) in config.formatType" ng-change="changeQuestionFormat(options.questionFormat)" ng-model="options.questionFormat"></select>
+            </div>
+            <div class="col-sm-6 select-type">
+                <div>Question type</div>
+                <select class="form-control" ng-options="value for (key , value) in config.optionType" data-ng-change="update()" ng-model="options.questionType" data-ng-disabled="options.questionFormat==config.formatType.definition"></select>
+            </div>
+        </div>
+        <div class="col-sm-12 select-row">
+            <div class="col-sm-6">
+                <div>Options format</div>
+                <select class="form-control" ng-options="value for (key , value) in config.formatType" ng-change="changeOptionFormat(options.optionFormat)" ng-model="options.optionFormat"></select>
+            </div>
+            <div class="col-sm-6">
+                <div>Options type</div>
+                <select class="form-control" ng-options="value for (key , value) in config.optionType" data-ng-change="update()" ng-model="options.optionType" data-ng-disabled="options.optionFormat==config.formatType.definition"></select>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Example</div>
+            <div class="panel-body">
+                <div>Select the best match for: <span data-ng-bind-html="trustAsHtml(previewQuestion())"></span></div>
+                <div ng-repeat="option in preview.options track by $index" class="vocab-option">
+                    <span class="glyphicon glyphicon-unchecked"></span><span data-ng-bind-html="trustAsHtml(previewOption(option))" class="option" style="display: inline-block;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

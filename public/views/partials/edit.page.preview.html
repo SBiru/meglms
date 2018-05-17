@@ -1,0 +1,36 @@
+<style>
+.preview-modal,.modal-content{
+	height: 100%;
+	min-height: 650px;
+	max-height: 650px;
+}
+
+.modal-content{
+  max-width: 1024px;
+  margin: auto;
+}
+
+#iframeeleement,.preview-modal{
+min-height: 580px;
+max-height: 580px;
+}
+
+.modal-dialog{
+	width:98%;	
+}
+
+.modal-body{
+	width:100%;
+}
+</style>
+
+<div class="modal-header preview-modal">
+            <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Preview</h4>
+        <div class="modal-body">
+			<iframe ng-src="{{previewurl}}" id="iframeeleement" style="width:100%">
+			  <p>Your browser does not support iframes.</p>
+			</iframe>
+      </div>
+</div>

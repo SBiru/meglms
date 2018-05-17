@@ -1,0 +1,16 @@
+<ul class="nav navbar-nav">
+    <li class="tool-name">
+        <b>Brush Size</b>
+    </li>
+    <li>
+        <input type="number" class="pixels-input" ng-model="width" data-ng-change="changeBrushSize(width)"> px
+    </li>
+    <li class="tool-name">
+        <b>|</b><b>Brush Color</b>
+    </li>
+    <li class="tool-option">
+        <div class="colorpicker-wrapper">
+            <input minicolors="{position: 'bottom left'}" ng-model="color" data-ng-change="changeBrushColor(color)">
+        </div>
+    </li>
+</ul>

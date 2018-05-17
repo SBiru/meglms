@@ -1,0 +1,6 @@
+<select selectize
+     ng-options="date.period as date.label for date in dates"
+     ng-change="setDate(datePeriod)"
+        placeholder="Select an date range"
+     ng-model="datePeriod"
+></select>

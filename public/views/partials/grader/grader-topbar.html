@@ -1,0 +1,101 @@
+<div class="topbar col-sm-12" ng-controller="GraderTopNavController">
+    <div ng-show="loading" class="loading_content">
+        <div class="text"><span class="fa fa-pulse fa-spinner"></span> Loading</div>
+    </div>
+    <table class="menu-table display-none" style="margin:auto">
+        <tr>
+            <td style="min-width: 300px;" ng-hide="courses.length<=1" ng-controller="CourseController">
+                <div class="dropdown" >
+                    <select selectize ng-model="currentCourseID"
+                            style="width:100%"
+                            ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                            ng-change="changeCourse(currentCourseID)">
+                    </select>
+                </div>
+            </td>
+            <td style="min-width: 180px" >
+                <select selectize2 ng-model="graderData.needingGradeStateSelector"
+                        config="modeSelectizeConfig"
+                        options="graderModes"></select>
+            </td>
+            <td style="min-width: 300px;"
+                ng-hide='(graderData.needingGradeStateSelector == "needing" && pages && pages.length<=2) || graderData.needingGradeStateSelector != "needing" && pages && pages.length<=1'>
+                <div class="dropdown" style="min-width: 300px">
+                    <select selectize2 ng-model="selectedPageId"
+                            ng-change="goToPage(selectedPageId)"
+                            config="pageSelectizeConfig"
+                            options="pages"
+                            >
+                    </select>
+                </div>
+            </td>
+            <td style=" width: 180px;">
+                <select id="studentSelect" name="studentSelect" ng-model="graderData.currentSelectedStudentId"
+                        selectize2
+                        config="studentSelectConfig"
+                        options="graderData.students"
+                        update-fn="studentsSelectUpdateCallback"
+                        ng-change="applyStudentFilter(graderData.currentSelectedStudentId)" required>
+                    <option value="" selected>All students</option>
+                </select>
+            </td>
+            <td id="dateRangeForm" style="top: -2px;position: relative;">
+                <input grader-date-range ng-model="graderData.dateRange" data-ng-change="startDateChanged()"
+                       opens="left" />
+            </td>
+            <td style="">
+                <div style="display:flex">
+                    <b>Posts Shown</b>
+                    <select id="numPosts" name="numPosts" ng-model="graderData.pagination.itemsPerPage"
+                            class="form-control ng-pristine ng-valid ng-valid-required"required>
+                        <option value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="break">
+        <div class="dropdown" ng-controller="CourseController">
+            <select selectize ng-model="currentCourseID"
+                    style="width:100%"
+                    ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                    ng-change="changeCourse(currentCourseID)">
+            </select>
+        </div>
+        <select selectize ng-model="graderData.needingGradeStateSelector"
+
+                options="mode.id as mode.label for mode in graderModes"></select>
+        <div class="dropdown" style="min-width: 300px">
+            <select selectize2 ng-model="selectedPageId"
+                    ng-change="goToPage(selectedPageId)"
+                    config="pageSelectizeConfig"
+                    options="pages"
+            >
+            </select>
+        </div>
+        <select id="studentSelect" name="studentSelect" ng-model="graderData.currentSelectedStudentId"
+                selectize2
+                config="studentSelectConfig"
+                options="graderData.students"
+                update-fn="studentsSelectUpdateCallback"
+                ng-change="applyStudentFilter(graderData.currentSelectedStudentId)" required>
+            <option value="" selected>All students</option>
+        </select>
+        <div style="display:flex">
+            <b>Posts showed</b>
+            <select id="numPosts" name="numPosts" ng-model="graderData.pagination.itemsPerPage"
+                    class="form-control ng-pristine ng-valid ng-valid-required" required>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+            </select>
+        </div>
+
+    </div>
+</div>

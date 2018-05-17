@@ -1,0 +1,27 @@
+<div style="margin: 10px 0;" class="profile-settings-wrapper">
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_j1_submitted_email">
+        <input type="checkbox" ng-model="user.data.disable_j1_submitted_email.meta_value">
+        Disable automatic email after applicants complete an interview.
+    </div>
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_j1_graded_email">
+        <input type="checkbox" ng-model="user.data.disable_j1_graded_email.meta_value">
+        Disable automatic email after applicants receive the <b>j1 interview</b> score.
+    </div>
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_e3pt_graded_email">
+        <input type="checkbox" ng-model="user.data.disable_e3pt_graded_email.meta_value">
+        Disable automatic email after applicants receive the <b>e3pt</b> score.
+    </div>
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_student_post_notifications_email">
+        <input type="checkbox" ng-model="user.data.disable_student_post_notifications_email.meta_value">
+        Disable automatic email after a student posts.
+    </div>
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_teacher_notifications_email">
+        <input type="checkbox" ng-model="user.data.disable_teacher_notifications_email.meta_value">
+        Disable automatic email after a student sends you a message.
+    </div>
+    <div class="col-xs-12" ng-if="me.availableProfileSettings.disable_student_notifications_email">
+        <input type="checkbox" ng-model="user.data.disable_student_notifications_email.meta_value">
+        Disable automatic email after a teacher sends you a message.
+    </div>
+    <div class="clearfix"></div>
+</div>

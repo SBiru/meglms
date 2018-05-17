@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head>
+        <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+        <script src="/public/js-util/ckeditor/ckeditor.js"></script>
+        <!-- inject:css -->
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+<!-- endinject -->
+        <!-- inject:js -->
+        <script src="/public/build/meglms.2018.04.05.min.js"></script>
+        <!-- endinject-->
+        <script src="/public/lib/bootstrap-datepicker.min.js"></script>
+        <?php echo $customStyles->createStyleSheet(); ?>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/public/css/bootstrap-datepicker.standalone.css">
+
+    </head>
+    <body ng-controller='PreferenceController'>
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+        <div ng-include="'/public/views/timeout/index.html'"></div>
+
+        <?php include(__DIR__ . "/chat-modal.html") ?>
+        <?php include(__DIR__ . "/header.html") ?>
+
+        <div class="grades" ng-controller="GradesController">
+
+            <?php include(__DIR__ . "/sidebar.html") ?>
+            <?php include(__DIR__ . "/content.html") ?>
+
+        </div>
+
+        <script>
+            angular.module('app').requires.push('chart.js');
+            angular.module('app').requires.push('ngCkeditor');
+        </script>
+
+
+    </div></div>
+<div class="datepicker-container"></div></body>
+</html>

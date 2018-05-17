@@ -1,0 +1,16 @@
+
+<div >
+    <div class="tag-item">
+        <input type="checkbox" ng-model="tag.selected" data-ng-change="select(tag)">
+        <span ng-hide="tag.isEditing">
+            <span ng-cloak=""  style="max-width: calc(100% - 40px)">{{tag.name}} ({{tag
+            .count}})</span>
+        <span class="fa fa-trash pointer pull-right" ng-click="delete(tag)" style="color:#428bca"></span>
+        <span class="fa fa-pencil-square-o pointer pull-right" style="color:#428bca" ng-click="tag.isEditing=true"></span>
+        </span>
+
+        <input-edit-tag tag="tag" ng-show="tag.isEditing"></input-edit-tag>
+
+    </div>
+
+</div>

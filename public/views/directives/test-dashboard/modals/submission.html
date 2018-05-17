@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <span class="submission-header">
+        <span ng-bind="studentName + ' - '"></span> <span class="activity-name" ng-bind="pageName">Activity 1</span>
+    </span>
+    <span aria-hidden="true" ng-click="cancel()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+
+</div>
+<div class="submission-prompt" ng-show="type=='essay'">
+    <span class="submission-prompt-question">Question</span>
+    <p data-ng-bind-html="prompt"></p>
+</div>
+<div class="student-submission" >
+    <div ng-if="type=='video' && videoUrl">
+        <video id="student-video" class="video-js vjs-default-skin" controls width="320"
+               poster="{{posterUrl}}" src="{{videoUrl}}">
+            <source src="{{videoUrl}}" type='video/mp4'>
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
+    </div>
+    <div ng-show="type=='essay'">
+        <span class="submission-prompt-question">Student Response</span>
+        <p data-ng-bind-html="message"></p>
+    </div>
+</div>
+
+<div class="page-content"></div>

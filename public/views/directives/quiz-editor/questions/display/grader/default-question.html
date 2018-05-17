@@ -1,0 +1,54 @@
+<div ng-if="!question.contentPlusMathjac && question.type!='dragintotext'" class="prompt" style="margin-top: 10px;" ng-bind-html="$root.safeHtml(question.prompt)"></div>
+<div  ng-if="question.contentPlusMathjac">
+                            <span ng-repeat="obj in question.contentPlusMathjac">
+                            <span ng-if="obj.html"dynamic="obj.html"></span>
+                            <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+                            </span>
+</div>
+<div ng-if="question.type == 'studentvideoresponse'" style="  border: 1px solid #a1a1a1;padding: 10px 40px;background: #cccccc;border-radius: 5px;margin:auto;width:420px">
+    <video id="{{getUserid(quiz)}}" width="320" height="255" controls="">
+        <source id="{{getQuestionId(quiz)}}" ng-src="{{getQuestionSrc(question)}}" type="video/mp4">Your browser does not support the video tag!
+    </video>
+    <div  ng-bind-html="$root.safeHtml(question.video_comment)"> </div>
+</div>
+<div class="panel panel-default" ng-if="question.type != 'studentvideoresponse' && question.type != 'information'">
+    <div class="options" style="margin:10px">
+
+        <!--Single or TrueFalse Display Start-->
+        <div ng-if="question.type==='single' || question.type === 'truefalse'" ng-repeat="option in question.options track by $index">
+            <label aria-disabled="true" disabled>
+                <img ng-src="{{radioIcon(question,option)}}">
+                <span ng-class="multipleChoiceIsCorrectClass(question,option,graderView)" ng-bind-html="$root.safeHtml(option.text)" style ="display: inline-block;"></span>
+            </label>
+        </div>
+
+        <!--Matching Display Start-->
+        <div ng-if="question.type==='matching'" style="position: relative;width:100%;height:{{question.imgdata.matching.matchedImage.height}}px">
+            <img ng-src="{{question.imgdata.matching.matchedImage.baselocation}}" alt="" class="pull-left">
+            <img ng-repeat="c in question.Studentresponse" ng-if="c.matchedImagewidth" style="position:absolute;top:{{c.y1}}px;left:{{c.x1}}px" name="{{c.name}}" src="../quiz/crop?img={{c.img}}&width={{c.matchedImagewidth}}&height={{c.matchedImageheight}}&x={{c.x1}}&y={{c.y1}}&show={{c.show}}&text={{c.answerStudent}}&imgtext={{question.imgdata.matching.matchedImage.imgtext}}&selectcolortext={{question.imgdata.matching.matchedImage.selectcolortext}}&longest={{question.longest}}">
+        </div>
+        <!--Matching Display Start-->
+
+        <!--Essay Display Start-->
+        <div ng-if="question.type==='essay' || question.type==='blank'" ng-class="{'correct': question.type==='blank' && graderView && question.is_correct>=1, 'incorrect': graderView && question.is_correct<=0}" ng-bind-html="$root.safeHtml(question.response)" >
+        </div>
+
+        <!--Multiple Display Start-->
+        <div ng-repeat="option in question.options track by $index" class="radio" ng-if="question.type === 'multiple'">
+            <img ng-src="{{isSelected(question,$index)}}">
+            <span ng-class="{'correct': graderView && isCorrectAnswer(question,$index)}" ng-bind-html="$root.safeHtml(option.text)" style ="display: inline-block;"></span>
+        </div>
+
+        <!--oneword Display Start-->
+        <div ng-if="question.type === 'oneword'">
+            <div ng-hide="graderView">Your Answer : {{question.response}}</div>
+            <div ng-show="graderView" style="font-weight:bold">Student Answer : <span ng-class="{'correct':graderView && question.is_correct>=1, 'incorrect': graderView && question.is_correct<=0}">{{question.response}}</span></div>
+            <div ng-show="graderView">Correct Answer : <span style="color:green">{{ getSolution(question)}}</span></div>
+        </div>
+
+        <div ng-if="question.type === 'multipart'" >
+            <span class="text" ng-bind-html="$root.safeHtml(question.studentResponses)"></span>
+        </div>
+
+    </div>
+</div>

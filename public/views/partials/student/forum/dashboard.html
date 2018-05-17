@@ -1,0 +1,29 @@
+<table class="table forum-table">
+    <tr class="forum-table-header">
+        <td>
+            FORUM
+        </td>
+        <td>
+            TOPICS
+        </td>
+        <td>
+            POSTS
+        </td>
+        <td>
+            LAST POST
+        </td>
+    </tr>
+    <tr data-ng-repeat="forum in dashVC.forums" class="forum-table-item"
+        ui-sref="forum.topics({pageId:forum.pageid,contentId:forum.pageid})">
+        <td>
+            <div ng-bind="forum.name" class="forum-table-item-title"></div>
+            <div ng-bind-html="trustAsHtml(forum.content)" class="forum-table-item-description"></div>
+        </td>
+        <td ng-bind="forum.topics" class="forum-table-item-bold"></td>
+        <td ng-bind="forum.posts"  class="forum-table-item-bold"></td>
+        <td>
+            <div ng-bind="forum.lastPostUser"></div>
+            <div ng-bind="forum.lastActivityTime"></div>
+        </td>
+    </tr>
+</table>

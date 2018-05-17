@@ -1,0 +1,41 @@
+<div class="panel panel-default class tooltip-relative">
+    <div class="panel-heading row-fluid">
+        <div class="class-name truncate" ng-class="{teacher:class.isTeacher}" ng-hide="class.isAllowed || class.isTeacher"> <a tooltip="{{class.name}}" tooltip-placement="bottom" ng-show="class.is_active === false" style="padding:0px;color:red" ng-click="goToCourse(class)" href="/editor/" target="_blank" tooltip="Not visible by student. Go to course admin"><i class="fa fa-eye-slash"></i></a> {{class.name}}</div>
+        <div class="class-name truncate" ng-class="{teacher:class.isTeacher}" ng-show="class.isAllowed || class.isTeacher">
+            <a ng-show="class.is_active === false" style="padding:0px;color:red" ng-click="goToCourse(class)" href="/editor/" target="_blank" tooltip="Not visible by student. Go to course admin"><i class="fa fa-eye-slash"></i></a>
+            <a  tooltip="{{class.name}}" tooltip-placement="bottom" href="/" data-ng-click="goToCourse(class)">{{class.name}}</a>
+        </div>
+
+        <div ng-hide="class.isTeacher" class="progress-wrapper tooltip-relative" data-ng-include="'/public/views/splash/progressbar.html'" data-ng-controller="SplashProgressBarController"></div>
+        <div class="tooltip-relative">
+            <a class="btn btn-sm btn-default btn-gradebook"
+               href="/gradebook/#/gradebook/{{class.id}}"
+               target="_blank"
+               ng-show="class.hasTeacherAbilities || class.isTeacher"
+               tooltip="Gradebook">
+                A+
+            </a>
+        </div>
+
+    </div>
+
+    <div class="panel-body">
+
+        <div class="panel panel-warning units" data-ng-repeat="unit in class.units | orderBy:orderPages">
+            <div class="panel-heading">{{unit.description}}</div>
+            <div class="panel-body">
+                <div data-ng-repeat="page in unit.pages | orderBy:orderPages">
+                    <div ng-if="page.pages">
+                        <div class="panel panel-default pageGroup" >
+                            <div class="panel-heading">{{page.label}}</div>
+                            <splash-page-class-page data-ng-repeat="page in page.pages | orderBy:orderPages"  class="page"></splash-page-class-page>
+                        </div>
+                    </div>
+
+                    <splash-page-class-page ng-if="!page.pages" class="page"></splash-page-class-page>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

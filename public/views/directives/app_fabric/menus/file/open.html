@@ -1,0 +1,23 @@
+<div class="modal-header">
+    Open
+    <span aria-hidden="true" ng-click="$dismiss()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+<div class="modal-body canvas-size ">
+    <div class="row">
+        <div class="col-sm-12" style="max-width: 360px">
+            <testbank-filters ng-model="filter" hide-view-btn="true" on-change="onChangeFilter" ng-if="!useStudentFilter"></testbank-filters>
+            <student-classes-filter ng-model="filter" hide-view-btn="true" on-change="onChangeFilter" ng-if="useStudentFilter"></student-classes-filter>
+        </div>
+        <div class="col-sm-12" style="max-width: 360px">
+            <div class="search-for-template">
+                <input placeholder="Search for a template" ng-model="selected.filter" class="form-control">
+            </div>
+        </div>
+
+    </div>
+    <div data-ng-include="'/public/views/directives/app_fabric/menus/file/select-template-table.html'"></div>
+    <div style="text-align: right">
+        <button ng-click="open()">Open</button>
+    </div>
+
+</div>

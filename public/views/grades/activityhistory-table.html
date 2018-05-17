@@ -1,0 +1,79 @@
+<div class="task-progress" data-ng-if="contentMode=='class_activity'">
+
+    <label for="timeFilter"> Show history from</label>
+    <div ng-model="range.start" e3-datepicker2="" style="width: 150px;display: inline-block;top:12px"></div>
+    <b>to</b>
+    <div ng-model="range.end" e3-datepicker2="" style="width: 150px;display: inline-block;top:12px"></div>
+
+    <button class="btn btn-primary" style="position: relative;top: -2px;margin-left: 15px" ng-click="getClassHistory(menu.selected)">Get Report</button><div ng-show="loadingHistory" class="loading-history">
+        Loading <i class="fa fa-spinner fa-spin"></i>
+    </div>
+    <!--<div ng-hide="classHistory!='loading'"> Loading..</div>-->
+    <div ng-repeat="classHistory in allClassesHistory" ng-hide="loadingHistory">
+        <h2 ng-show="timeFilter.code!='all'" data-ng-bind="'Total time: '+getTotalTimeV2(menu.selected)"> </h2>
+        <h3> Total time for selected period -  {{moment.duration(getTotalTime(classHistory.history,'class_activity')).format("h [hrs] m [min] s [sec]")}}</h3>
+        <div class="panel-group" id="grades-activity-table" role="tablist" aria-multiselectable="true" >
+            <div class="panel panel-default" ng-repeat="unit in classHistory.history track by $index">
+                <div class="panel-heading" role="tab" id="activity-heading-{{$index}}" ng-init="unit.index = $index">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#grades-activity-table" data-target="#collapse-activity-assignment-{{$index}}" aria-expanded="true" aria-controls="collapse-activity-assignment-{{$index}}">
+                            {{unit.name}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse-activity-assignment-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="activity-heading-{{$index}}">
+                    <div class="panel-body">
+                        <div class="list-group">
+                            <div class="assignment list-group-item" ng-repeat="assignment in unit.assignments track by $index" ng-class="{'subgroup':assignment.children.length>0}">
+                                <div class="panel-group" id="grades-details-parent-table" role="tablist" aria-multiselectable="true" ng-if="assignment.children.length>0">
+                                    <div class="panel panel-default" >
+                                        <div class="panel-heading" role="tab" id="details-parent-heading-{{$index}}" ng-init="parent.index = $index">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#grades-details-parent-table" data-target="#collapse-details-parent-assignment-{{$index}}" aria-expanded="true" aria-controls="collapse-details-parent-assignment-{{$index}}">
+                                                    {{assignment.pages[0].name}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapse-details-parent-assignment-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{$index}}">
+                                            <div class="panel-body">
+                                                <div class=list-group-item ng-repeat="child in assignment.children track by $index">
+                                                    <h4 class="list-group-item-heading">{{child[0].name}} - <span ng-if="getTotalTime(child)>0">Total Time: {{moment.duration(getTotalTime(child)).format("h [hrs] m [min] s [sec]")}}</span></h4>
+                                                    <p class="list-group-item-text" ng-repeat="page in child  | orderBy:'time_in' track by $index" ng-if="page.time_in != null">
+                                                        <b>{{types[page.type]}}:</b>{{moment(page.time_in).format('lll')}}
+                                                        <span ng-if="page.type=='history'">
+                                                            <b>Duration: </b>
+                                                            <span ng-show="page.time_out">{{moment.duration(getDuration(page)).format("h [hrs] m [min] s [sec]")}}</span>
+                                                            <span ng-hide="page.time_out">{{moment.duration(60000).format("h [hrs] m [min] s [sec]")}}</span>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="assignment.children.length==0">
+                                    <h4 class="list-group-item-heading">{{assignment.pages[0].name}} - <span ng-if="getTotalTime(assignment.pages)>0">Total Time: {{moment.duration(getTotalTime(assignment.pages)).format("h [hrs] m [min] s [sec]")}}</span>  </h4>
+                                    <div ng-repeat="page in assignment.pages  | orderBy:'time_in'" ng-if="page.time_in != null">
+                                        <p class="list-group-item-text">
+                                            <b>{{types[page.type]}}:</b>{{moment(page.time_in).format('lll')}}
+                <span ng-if="page.type=='history'">
+                    <b>Duration: </b>
+                    <span ng-show="page.time_out">{{moment.duration(getDuration(page)).format("h [hrs] m [min] s [sec]")}}</span>
+                    <span ng-hide="page.time_out">{{moment.duration(60000).format("h [hrs] m [min] s [sec]")}}</span>
+                </span>
+
+                                        </p>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

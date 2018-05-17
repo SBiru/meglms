@@ -1,0 +1,13 @@
+<div class="panel panel-default">
+    <div style="margin:10px">
+        <div ng-bind-html="$root.safeHtml(question.prompt)"></div>
+        <p>
+            <b ng-bind="graderView?'Student answer:':'Your answer:'"></b>
+            <span ng-bind="question.response" ng-class="question.isCorrect?'correct':'incorrect'"></span>
+        </p>
+        <p ng-if="question.correctAnswer">
+            <b>Correct answer:</b>
+            <span ng-bind="question.correctAnswer"></span>
+        </p>
+    </div>
+</div>

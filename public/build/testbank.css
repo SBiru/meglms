@@ -1,0 +1,115 @@
+.TimedEditor {
+  padding: 20px;
+}
+.TimedEditor input,
+.TimedEditor textarea {
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.TimedEditor input:focus,
+.TimedEditor textarea:focus {
+  border: 1px solid #ccc;
+  outline: none;
+  cursor: text;
+}
+.TimedEditor input:hover:not(:focus),
+.TimedEditor textarea:hover:not(:focus) {
+  background-color: #ddd;
+}
+.TimedEditor_empty {
+  font-size: 20px;
+  padding: 10px 20px;
+  margin-bottom: 8px;
+  color: #777;
+}
+.TimedEditor_saver {
+  opacity: 0;
+  transition: opacity .3s ease;
+  background-color: #afa;
+  border-radius: 10px;
+  color: green;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-left: 20px;
+  display: none;
+}
+.TimedEditor_saver.visible {
+  display: inline-block;
+}
+.TimedEditor_saver.saved {
+  opacity: 1;
+}
+.TimedEditor_handle {
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  cursor: move;
+  color: #888;
+  padding-right: 10px;
+}
+.TimedEditor_handle:hover {
+  color: black;
+}
+.TimedEditor_title {
+  width: 100%;
+}
+.TimedEditor_title input {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  padding: 5px 10px;
+}
+.TimedEditor_description {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  min-height: 100px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  padding: 5px 10px;
+}
+.TimedEditor_dialog {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+.TimedEditor_dialog li {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  display: flex;
+  border-bottom: 1px solid #aaa;
+  background: white;
+}
+.TimedEditor_dialog li input {
+  flex: 1;
+  padding: 5px 10px;
+  margin-right: 5px;
+}
+.TimedEditor_btn {
+  font-size: 20px;
+  padding: 5px 20px;
+}
+.TimedEditor_btn[disabled] {
+  color: #aaa;
+}
+.TimedEditor_remove {
+  background: transparent;
+  color: #f88;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+}
+.question_max_points{
+  display:flex;
+  padding-left: 15px;
+}
+.question_max_points label{
+  line-height: 2;
+}
+.question_max_points input{
+  width:50px;
+  margin-left: 10px;
+}
+

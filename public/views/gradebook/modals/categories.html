@@ -1,0 +1,80 @@
+<div class="gradebook-modal">
+    <div class="modal-header">
+        <button type="button" class="close " ng-click="$dismiss()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">Create/Assign Categories</h4>
+    </div>
+    <div class="modal-body gradebook-categories">
+        <div class="loading-categories" ng-show="loading">
+            <div class="loading-text">
+                <span class="fa fa-spinner fa-pulse"></span>
+                Loading
+            </div>
+        </div>
+        <div style="padding: 0px 0px 10px 0px;">Points for each category represent the portion (out of 100) that each category contributes to the overall course grade.</div>
+        <div>
+            <div class="btn btn-primary" ng-click="createNew()">Create New Category</div>
+        </div>
+        <div class="width50perc">
+            <div class="sub-title">
+                Uncategorized Items
+            </div>
+            <ul class="assignment-list" dnd-list="uncategorized.assignments" dnd-drop="onDrop(uncategorized, item, index)">
+                <li data-ng-repeat="aIndex in uncategorized.assignments track by $index"
+                    dnd-draggable="getSelectedItemsIncluding(uncategorized,aIndex)"
+                    dnd-dragstart="onDragstart(uncategorized, event)"
+                    dnd-moved="onMoved(uncategorized)"
+                    dnd-dragend="uncategorized.dragging = false"
+                    dnd-selected="assignments[aIndex].selected = !assignments[aIndex].selected"
+                    ng-class="{'selected': assignments[aIndex].selected}"
+                    ng-hide="uncategorized.dragging && assignments[aIndex].selected"
+                    >
+                    <span ng-bind="assignments[aIndex].name"></span>
+                </li>
+            </ul>
+        </div>
+        <div class="width50perc">
+            <div class="sub-title">
+                Categories
+            </div>
+            <ul class="category-list" ui-sortable="sortableOptions" ng-model="categories">
+                <li data-ng-repeat="category in categories track by $index">
+                    <div class="category-info">
+                        <span class="ui-sortable-handle pointer">|||</span>
+                        <input type="text" class="category-name" ng-model="category.name">
+                        <span>
+                            <input type="text" class="category-points" ng-model="category.points"> points
+                        </span>
+                        <span class="pull-right">
+                            <span class="fa fa-trash pointer" ng-click="removeCategory($index)"></span>
+                            <span class="fa pointer" ng-class="category.hidden?'fa-plus':'fa-minus'" ng-click="category.hidden=!category.hidden"></span>
+                        </span>
+                    </div>
+                    <ul class="assignment-list" dnd-list="category.assignments" dnd-drop="onDrop(category, item, index)" ng-hide="category.hidden">
+                        <li data-ng-repeat="aIndex in category.assignments track by $index"
+                            dnd-draggable="getSelectedItemsIncluding(category,aIndex)"
+                            dnd-dragstart="onDragstart(category, event)"
+                            dnd-moved="onMoved(category)"
+                            dnd-dragend="category.dragging = false"
+                            dnd-selected="assignments[aIndex].selected = !assignments[aIndex].selected"
+                            ng-class="{'selected': assignments[aIndex].selected}"
+                            ng-hide="category.dragging && assignments[aIndex].selected">
+                            <span ng-bind="assignments[aIndex].name"></span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn btn-primary" ng-click="save()" data-ng-disabled="saving">
+            Save
+            <span class="fa fa-spinner fa-pulse" ng-show="saving"></span>
+        </div>
+    </div>
+</div>

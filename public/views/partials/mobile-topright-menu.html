@@ -1,0 +1,54 @@
+<div class="mobile-menu-icons">
+    <button id="menu-btn" class="dropdown-toggle user-icon" type="button" data-toggle="dropdown">
+        <i class="fa fa-circle " ></i>
+        <i class="fa fa-circle " ></i>
+        <i class="fa fa-circle " ></i>
+    </button>
+    <ul class="dropdown-menu user-preferences" style="top: 50PX;right: 0;left: auto;min-width: auto;padding: 3px;">
+        <table align="center" ng-if="$root.windowWidth<768" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+    </ul>
+</div>
+<div>
+    <button id="user-btn" class="dropdown-toggle"
+            type="button" data-toggle="dropdown" ng-style="$root.user.profileImageSrc != undefined?{'padding':'0px','width':'38px'}:{'padding':'6px'}">
+        <img ng-show="$root.user.profileImageSrc != undefined" ng-src={{$root.user.profileImageSrc}} style="width: 36px;border-radius: 50%" >
+        <i ng-show="$root.user.profileImageSrc == undefined" class="fa fa-user fa-2x user-icon" style="width: 24px"></i>
+    </button>
+    <ul class="dropdown-menu user-preferences" style="top: 50PX;right: 0;left: auto;">
+        <li disabled><a ng-show="language_direction == 'ltr'">
+        <span class="welcome-text"
+              ng-bind="preference.navs.welcome.translation + ' ' + user.fname + ' ' + user.lname"></span>
+
+        </a>
+            <a ng-hide="language_direction == 'ltr'">
+            <span class="welcome-text"
+                  ng-bind="user.fname + ' ' + user.lname + ' ' + preference.navs.welcome.translation"></span>
+
+            </a></li>
+        <li>
+            <a ng-click="openAccount()" ng-bind="preference.navs.account.translation"></a>
+        </li>
+        <li>
+            <a href="/signout/" ng-bind="preference.navs.sign_out.translation"></a>
+        </li>
+        <li ng-show="user.is_super_admin || user.teacher_supervisor || user.is_teacher  || user.is_organization_admin">
+            <a>
+                <span>Grader Menu</span>
+                <span class="btn-group">
+                                <label class="btn btn-default btn-xs" ng-model="selected.gradermenu" btn-radio="'left'"
+                                       ng-click="setGraderMenuPreference('left')">Left</label>
+                                <label class="btn btn-default btn-xs" ng-model="selected.gradermenu" btn-radio="'top'"
+                                       ng-click="setGraderMenuPreference('top')">Top</label>
+                            </span>
+            </a>
+
+        </li>
+        <li>
+            <div style="padding: 3px 8px;">
+                <span class="english-toggle-label">ENG&nbsp;&nbsp;</span>
+                <input id="english-language-selector" type="checkbox" checked ng-click="isEnglishSelected()"/>
+            </div>
+        </li>
+
+    </ul>
+</div>

@@ -1,0 +1,29 @@
+<div style="display:block" class="tooltip-relative">
+    <div class="btn btn-primary" data-ng-click="data.showVideoRecorder=!data.showVideoRecorder" style="margin:10px 0">Record video</div>
+    <record-video class="record-video-wrapper" ng-model="data.videoData" ng-if="data.showVideoRecorder" close-action="data.showVideoRecorder"></record-video>
+    <div class="playvideowrapper" ng-show="videoThumbnailFileName || params.playVideoFile">
+        <img ng-if="videoThumbnailFileName && !params.playVideoFile" style="width:120px; height:120px " src="{{videoThumbnailFileName}}" tooltip="Click to play" ng-click="params.playVideoFile=videoFileName">
+        <video autoplay ng-if= "params.playVideoFile" style="width:120px; height:120px "  class="prompt_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+            <source ng-src="{{params.playVideoFile}}" type="video/mp4" >
+            Your browser does not support the HTML5 video tag.
+        </video>
+        <div style="font-size: 10px">
+            <div>{{userName}}</div>
+            <div>{{now}}</div>
+        </div>
+    </div>
+
+    <rubric-grader ng-if="page.rubricId!=0"
+                   rubric-id="page.rubricId"
+                   user-id="params.student.id"
+                   post-id="teacherPostId"
+                   score="score.initial"
+                   non-submittable="true"
+                   style="padding: 5px;overflow-x:scroll">
+    </rubric-grader>
+    <div>
+        <div>Feedback:</div>
+        <textarea ckeditor=""class="form-control" custom-options="ckeditorOptions" data-ng-model="score.comments"></textarea>
+    </div>
+
+</div>

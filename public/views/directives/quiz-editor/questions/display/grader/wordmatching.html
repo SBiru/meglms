@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+    <div ng-hide="getQuestion(quiz).studentResponses">
+        The student didn't answer this question
+    </div>
+    <div ng-repeat="response in getQuestion(quiz).studentResponses track by $index" class="wordmatch-row row">
+    <span data-ng-class="{'correct':graderView && response.isCorrect===true,'incorrect':graderView && response.isCorrect===false,'blank':!graderView}" class="word-wrapper">
+        <span class="left-side btn">
+            <span class="text" ng-hide="response.name2"></span>
+            <span class="text" ng-show="response.name2" ng-bind-html="$root.safeHtml(response.name1)"></span>
+        </span>
+        <span class="right-side btn">
+            <span class="text" ng-hide="response.name2" ng-bind-html="$root.safeHtml(response.name1)"></span>
+            <span class="text" ng-show="response.name2" ng-bind-html="$root.safeHtml(response.name2)"></span>
+        </span>
+    </span>
+    </div>
+</div>

@@ -1,0 +1,167 @@
+<div>
+    <div class="display-grid" style="padding-bottom: 20px;display: flex;">
+        <div class="min-width-100" style="min-width: 300px;float: left;">
+            <select selectize ng-model="alert"
+                    data-ng-options="alert as alert.description for alert in availableAlerts | orderBy:'description'"></select>
+        </div>
+        <div class="add-btn padding-left-0" style="float:left;padding-left: 10px">
+            <async-button color-style="success" text="Add Alert" flash-text="Saved!" loading="adding"
+                          ng-click="addAlert(alert)"></async-button>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="loading">
+        <i class="fa fa-spinner fa-pulse"></i> Loading...
+    </div>
+    <ul class="alerts_ul">
+        <li data-ng-repeat="alert in alerts" class="automated-alert" ng-controller="AutomatedAlertController">
+            <table class="display-none">
+                <tr>
+                    <td class="alert-checkbox">
+                        <switch data-ng-model="alert.enabled" class="green xs"></switch>
+                    </td>
+                    <td class="alert-name">
+                        <span ng-bind="alert.description"></span>
+
+                    </td>
+                    <td class="alert-frequency">
+                        <alert-frequency automated-alert="alert"></alert-frequency>
+                    </td>
+                    <td class="alert-addressees">
+                        <alert-addressees automated-alert="alert"></alert-addressees>
+                    </td>
+                    <td class="alert-options" ng-hide="askingEmail">
+                        <div data-ng-repeat="(id,option) in alert.options" ng-if="id!='descriptions'">
+                            <label for="percBehind" ng-bind="option.label"></label>
+                            <input id="percBehind" ng-model="option.value" ng-if="!option.options">
+                            <select ng-if="option.options" ng-model="option.value"
+                                    ng-options="option for option in option.options"></select>
+                            <span ng-if="option.unit">
+                                <span ng-bind="option.unit" ng-if="!option.unit.options"></span>
+                                <select ng-if="option.unit.options" ng-model="option.unit.value"
+                                        ng-options="option for option in option.unit.options"></select>
+                            </span>
+
+                        </div>
+                    </td>
+                    <td class="alert-test-email" ng-hide="askingEmail">
+                        <div style="text-align: center;padding-bottom: 5px;" class="tooltip-relative">
+                            <span class="btn btn-sm btn-primary" ng-click="editTemplate(alert)" tooltip="Edit template">
+                                <span class="fa fa-edit"></span>
+
+                            </span>
+                            <span class="btn btn-sm btn-success" ng-click="preview(alert)" tooltip="Preview">
+                                <span class="fa fa-eye"></span>
+                                <span class="fa fa-pulse fa-spinner" ng-show="loadingPreview"></span>
+                            </span>
+                            <span class="btn btn-sm btn-danger" ng-click="deleteAlert(alert.id,$index)"
+                                  tooltip="Delete alert">
+                                <span class="fa fa-trash"></span>
+                            </span>
+                        </div>
+                        <div style="text-align: center;">
+                            <span class="btn btn-sm btn-info" tooltip-html-unsafe="{{testingMessage}}"
+                                  tooltip-placement="bottom" ng-click="askingEmail=true" data-ng-disabled="running"><i
+                                    ng-show="running" class="fa fa-spinner fa-pulse"></i> Send test email</span>
+                        </div>
+
+
+                    </td>
+                    <td ng-show="askingEmail" class="ask-for-test-email">
+                        <form name="testEmail" ng-submit="askingEmail=false;run()">
+                            <div class="input-group">
+                                <input class="form-control" name="input" placeholder="Your Email" ng-model="testEmail"
+                                       type="email" required>
+                                <span class="input-group-btn">
+                                <div class="btn btn-default" ng-click="askingEmail=false"><span
+                                        class="fa fa-close text-danger"></span></div>
+                            </span>
+                                <span class="input-group-btn">
+                                <button class="btn btn-info" type="button"
+                                        ng-click="askingEmail=false;run()">Send</button>
+                            </span>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <!--mobile view start-->
+            <div class="display-grid" style="display: none">
+                <div style="margin-top: 15px;width: 100%">
+                    <div class="alert-checkbox display-inline-block float-right">
+                        <switch data-ng-model="alert.enabled" class="green xs"></switch>
+                    </div>
+                    <div class="alert-name  display-inline-block width-80 float-left"
+                         style="border-right: none;margin-top: -4px;">
+                        <span ng-bind="alert.description"></span>
+
+                    </div>
+                </div>
+                <div class="alert-frequency"
+                     style="padding-left: 0px !important;min-width: 100% !important;border-right: none;">
+                    <alert-frequency automated-alert="alert"></alert-frequency>
+                </div>
+                <div class="alert-addressees" style="margin-top: 15px;border-right: none;">
+                    <alert-addressees automated-alert="alert"></alert-addressees>
+                </div>
+                <div class="alert-options" ng-hide="askingEmail" style="margin-top: 15px">
+                    <div data-ng-repeat="(id,option) in alert.options" ng-if="id!='descriptions'">
+                        <label for="percBehind" ng-bind="option.label"></label>
+                        <input id="percBehind" ng-model="option.value" ng-if="!option.options">
+                        <select ng-if="option.options" ng-model="option.value"
+                                ng-options="option for option in option.options"></select>
+                        <span ng-if="option.unit">
+                                <span ng-bind="option.unit" ng-if="!option.unit.options"></span>
+                                <select ng-if="option.unit.options" ng-model="option.unit.value"
+                                        ng-options="option for option in option.unit.options"></select>
+                            </span>
+                    </div>
+                </div>
+                <div class="alert-test-email" ng-hide="askingEmail"
+                     style="margin-top: 15px;width: auto !important;display: grid;">
+                    <div style="padding-bottom: 5px;" class="tooltip-relative">
+                            <span class="btn btn-sm btn-primary" ng-click="editTemplate(alert)" tooltip="Edit template">
+                                <span class="fa fa-edit"></span>
+
+                            </span>
+                        <span class="btn btn-sm btn-success" ng-click="preview(alert)" tooltip="Preview">
+                                <span class="fa fa-eye"></span>
+                                <span class="fa fa-pulse fa-spinner" ng-show="loadingPreview"></span>
+                            </span>
+                        <span class="btn btn-sm btn-danger" ng-click="deleteAlert(alert.id,$index)"
+                              tooltip="Delete alert">
+                                <span class="fa fa-trash"></span>
+                            </span>
+                    </div>
+                    <div>
+                        <span class="btn btn-sm btn-info" tooltip-html-unsafe="{{testingMessage}}"
+                              tooltip-placement="bottom" ng-click="askingEmail=true" data-ng-disabled="running"><i
+                                ng-show="running" class="fa fa-spinner fa-pulse"></i> Send test email</span>
+                    </div>
+                </div>
+                <div ng-show="askingEmail" class="ask-for-test-email" style="margin-top: 15px;width: 100%">
+                    <form name="testEmail" ng-submit="askingEmail=false;run()">
+                        <div class="input-group">
+                            <input class="form-control" name="input" placeholder="Your Email" ng-model="testEmail"
+                                   type="email" required>
+                            <span class="input-group-btn">
+                                <div class="btn btn-default" ng-click="askingEmail=false"><span
+                                        class="fa fa-close text-danger"></span></div>
+                            </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button"
+                                        ng-click="askingEmail=false;run()">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--mobile view end-->
+            <span class="testing-badge label label-info" tooltip-html-unsafe="{{testingMessage}}"
+                  tooltip-placement="bottom">
+                Testing
+            </span>
+
+        </li>
+    </ul>
+</div>

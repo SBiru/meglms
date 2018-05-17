@@ -1,0 +1,27 @@
+<style>
+    announcement-datepicker{
+        display: block;
+    }
+    announcement-datepicker.enabled{
+        margin-top: -33px;
+    }
+</style>
+<p class="input-group pull-left" style="width:50%;" ng-style="{'margin-top':ngDisabled?0:'33px'}" >
+    <input class="form-control"
+           data-ng-disabled="ngDisabled"
+           datepicker-popup="{{format}}" is-open="datepickerOpened" ng-model="value" min-date="minDate"
+           ng-required="true" close-text="Close" datepicker-options="dateOptions" data-ng-change="changed()">
+    <span class="input-group-btn">
+            <button type="button" data-ng-disabled="ngDisabled" class="btn btn-default"
+                    ng-click="openDatePicker($event)"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+    <div>
+    <div class="col-xs-6">
+        <timepicker data-ng-disabled="ngDisabled" ng-model="mytime" ng-hide="ngDisabled" data-ng-change="changed()"></timepicker>
+
+    </div>
+
+</div>
+
+</p>

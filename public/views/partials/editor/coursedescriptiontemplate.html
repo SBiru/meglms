@@ -1,0 +1,62 @@
+<div class="course_description_wrapper" data-ng-style="{'background-image':pageData.backgroundUrl?backgroundImage():''}">
+    <div class="clearfix">
+        <div class="course_description_image" ng-click="selectFile($event)">
+            <div ng-hide="pageData.imageData || pageData.imageUrl" class="upload-image" >
+                <div class="text">Upload image</div>
+                <input ng-hide="true" id="imageinput" accept="image/*" type="file"  ng-model='pageData.imageData' base-sixty-four-input>
+            </div>
+            <img ng-if="pageData.imageData" src="data:{{pageData.imageData.filetype}};base64,{{pageData.imageData.base64}}">
+            <img ng-if="pageData.imageUrl" src="{{pageData.imageUrl}}">
+        </div>
+        <div class="course_description_title editor">
+            <input ng-model="pageData.welcome">
+        </div>
+        <div class="course_description_body editor" ng-style="{display:pageData.editingDescription?'flex':'block'}" >
+            <div ng-hide="pageData.editingDescription" ng-bind="pageData.description" ng-click="startEditingDescription()"></div>
+            <textarea textarea-focusable ng-show="pageData.editingDescription" id="description" ng-model="pageData.description"></textarea>
+        </div>
+    </div>
+    <table style="width: 100%;margin-top: 30px" class="course_description_table editor">
+        <tr>
+            <td class="has-dropdown">
+                <div >
+                    <b>Satisfies:</b>
+                <span class="dropdown">
+                    <select selectize ng-options="satisfy for satisfy in satisfies " ng-model="pageData.satisfies"></select>
+                </span>
+                </div>
+
+            </td>
+            <td>
+                <b>Credit:</b>
+                <input class="credit" ng-model="pageData.credit">
+                <!--<span>1/2</span>-->
+            </td>
+            <td class="has-dropdown">
+                <div >
+                    <b>Prerequisite:
+                        <i class="fa fa-spinner fa-pulse" ng-show="loading.classes"></i>
+                    </b>
+            <span class="dropdown">
+                <select selectize ng-options="class.id as class.name for class in classes " ng-model="pageData.prerequisite"></select>
+            </span>
+                    <!--<span>None</span>-->
+                </div>
+            </td>
+            <td class="has-dropdown">
+                <div >
+                    <b>Designer:</b>
+            <span class="dropdown">
+                <select selectize ng-options="teacher.id as teacher.firstName + ' ' + teacher.lastName for teacher in teachers | orderBy:'firstName' " ng-model="pageData.designer"></select>
+            </span>
+                    <!--<span>Angel Avis</span>-->
+                </div>
+            </td>
+
+            <td>
+                <b>Badges:</b>
+                <span></span>
+            </td>
+        </tr>
+    </table>
+</div>

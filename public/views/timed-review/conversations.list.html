@@ -1,0 +1,6 @@
+<h2>Select a conversation to get started</h2>
+<ul class="ConversationsList">
+    <li class="ConversationsList_item" ng-repeat="conversation in conversations">
+        <a ui-sref="conversations.play({id: $index})">{{conversation.title}}</a>
+    </li>
+</ul>

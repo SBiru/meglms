@@ -1,0 +1,39 @@
+<h2>Glossary</h2>
+<div>
+    <glossary-link-options ng-if="pageId" page-id="pageId" link-options="linkOptions"></glossary-link-options>
+</div>
+<div style="margin-top:2em">
+    <div class="row editor-buttons-row">
+        <div class="nopadding nomargin">
+            <div class="search-word">
+                <div class="form-group">
+                    <input class="form-control" ng-model="selected.searchTerm">
+                    <button ng-click="search()" class="btn btn-primary">Search</button>
+                    <input type="checkbox" ng-model="full_text"> Search full text
+                </div>
+
+            </div>
+        </div>
+        <div class="nopadding nomargin">
+            <div style="margin:.5em 0"><a class="btn btn-primary quizbutton" ng-click="openModal('manager',{orgId:orgId})">
+                </span> Manage Words </a>
+            </div>
+        </div>
+        <div class="nopadding nomargin">
+            <div style="margin:.5em 0"><a class="btn btn-success quizbutton"
+                                          ng-click="openModal('manager',{onlySelect:true,pageId:pageId,orgId:orgId})"><span
+                    class="glyphicon glyphicon-plus "></span> Add Words to Glossary </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-show="loading">Loading words <span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-show="pagination.words.length==0" style="    margin-bottom: 30px;">
+   <h3><small>Your glossary is empty.</small></h3>
+</div>
+<div ng-if="pagination.words.length">
+    <glossary-word-list words="pagination.words" callbacks="callbacks"
+                        show-delete="true"
+                        show-tags="true"
+                        pagination-config="pagination.paginationConfig"></glossary-word-list>
+</div>

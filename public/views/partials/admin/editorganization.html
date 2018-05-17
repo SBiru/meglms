@@ -1,0 +1,86 @@
+<div class="container-fluid">
+		<div class="row editorg-buttons" >
+			<div class="pull-left btn btn-info btn-sm">
+				<div  data-ng-controller="OrganizationDetailsButtonController" ng-click="open()"
+					  id="details">Details</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm">
+				<div  data-ng-controller="OrganizationPreferencesButtonController" ng-click="open()"
+					  id="preferences">Page Preferences</div>
+			</div>
+
+			<div class="pull-left btn btn-info btn-sm" ng-if="user.is_super_admin || user.is_organization_admin">
+				<div class=" " >
+					<a style="color:white" href="#/licenses/{{organizationid}}">Licenses</a>
+				</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm">
+				<div  class="" >
+					<a style="color:white" data-toggle="modal" data-target="#pageTypePermissionsModal">Page type permissions</a>
+				</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm">
+				<div class="">
+					<a style="color:white" target="_blank" href="/standard/#/{{organizationid}}/">Standards</a>
+				</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm">
+				<div class=" " ng-controller="TeacherResponsesIconController" ng-click="open()">
+					Teacher Responses
+				</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm" >
+				<div  ng-controller="PostsSummaryIconController" ng-click="open()">
+					Waiting for grade
+				</div>
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-click="editSites()">
+				Edit Sites
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-click="powerschoolImport()">
+				Powerschool Import
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-click="openProgressReport()">
+				Progress Report
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-click="openAutomatedAlerts()">
+				Automated alerts
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-if="organizationid==1 && user.is_super_admin" ng-click="openEditTestClasses()">
+				Proficiency tests
+			</div>
+			<div class="pull-left btn btn-info btn-sm" ng-if="organizationid==1 && user.is_super_admin" ng-click="openEditTestSchools()">
+				Proficiency test schools
+			</div>
+			<a class="pull-left btn btn-info btn-sm" ng-if="user.is_super_admin" href="#/exports/{{organizationid}}">
+				Exports
+			</a>
+		</div>
+
+
+	<div ng-include="'/public/views/partials/admin/organizationusers.html'" ng-controller="OrganizationUsersController"></div>
+	<div class="modal fade" id="pageTypePermissionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="PageTypePermissionController">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Page type permissions</h4>
+				</div>
+				<div class="modal-body">
+					<div class="page_type_permissions">
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="page in pageTypes">
+								<input type="checkbox" ng-click="togglePageType(page)" ng-model="page.checked">
+								<label>{{page.name}}</label>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ok()">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

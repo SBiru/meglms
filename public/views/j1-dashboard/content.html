@@ -1,0 +1,75 @@
+<div class="content">
+    <div class="section header">
+        <div class="student-name j1-text-right" ng-bind="vc_content.testDetails.name"></div>
+        <div class="student-email" ng-bind="vc_content.testDetails.email"></div>
+
+
+    </div>
+    <div class="section body">
+        <div class="section-heading">
+            Interview
+        </div>
+        <div data-ng-if="!vc_content.testDetails.hasFinishedSubmitting && !vc_content.testDetails.finishedGradeClass">
+            Applicant has not finished the interview
+        </div>
+        <div data-ng-if="vc_content.testDetails.hasFinishedSubmitting || vc_content.testDetails.finishedGradeClass">
+            <div class="interview-summary">
+                <div>
+                    <div class="th">Date</div>
+                    <div class="info j1-text-right" ng-bind="vc_content.testDetails.submittedOn"></div>
+                </div>
+                <div>
+                    <div class="th">Score</div>
+                    <div class="info j1-text-right"
+                         ng-bind="vc_content.testDetails.finishedGradeClass?vc_content.testDetails.actualTotalScore:'-'"></div>
+                </div>
+                <div class="btn-container">
+                    <div >
+                        <div>
+                            <a class="btn btn-flat btn-flat-primary" target="_blank" href="{{vc_content.idHref}}">
+                                <span class="fa fa-info-circle"></span>
+                                <span class="display-titles">View ID</span>
+                            </a>
+                        </div>
+                        <div >
+                            <a class="btn btn-flat btn-flat-primary" ng-href="{{vc_content.video_url}}" download>
+                                <span class="fa fa-arrow-circle-o-down"></span>
+                                <span class="display-titles">Download Video</span></a>
+                        </div>
+                        <div ng-if="vc_content.testDetails.finishedGradeClass">
+                            <div class="btn btn-flat btn-flat-primary" ng-click="vc_content.shareResults()">
+                                <span class="fa fa-share"></span>
+                                <span class="display-titles">Forward Results</span></div>
+                        </div>
+                        <div ng-if="vc_content.testDetails.enableCertificate">
+                            <a class="btn btn-flat btn-flat-primary" ng-href="/j1-certificate?userid={{$state.params.studentId}}&classid={{$state.params.classId}}" download="">
+                                <span class="fa fa-certificate"></span>
+                                <span class="display-titles">Certificate</span></a>
+                        </div>
+                        <span class="clearfix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="student-video">
+                <video id="my-video" class="video-js vjs-default-skin"  controls preload="auto" width="320" height="240"
+                       poster="{{vc_content.video_thumbnail_url}}" data-setup='{}'>
+                    <source src="{{vc_content.video_url}}" type='video/mp4'>
+
+                    <p class="vjs-no-js">
+                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                    </p>
+                </video>
+            </div>
+        </div>
+
+    </div>
+    <div class="section footer" ng-if="vc_content.hasAdditionalComments()">
+        <div class="section-heading">
+            Comments
+        </div>
+        <div>
+            <p ng-bind="vc_content.testDetails.comments" style="margin-top:10px;padding-left:10px"> </p>
+        </div>
+    </div>
+</div>

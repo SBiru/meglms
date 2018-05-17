@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<form class="form-signin" role="form" >
+    <h2 class="form-signin-heading">Please, insert a new license</h2>
+    <input type="text" id="password" name="password"  class="form-control" placeholder="License" ng-model="user.license" style="margin-bottom: 10px;">
+    <button class="btn btn-primary" ng-click="validate()">Submit</button>
+    <a class="btn btn-primary " href="/signout/">Back to signin</a>
+    <p class="msgError">{{msgError}}</p>
+</form>

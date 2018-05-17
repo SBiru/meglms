@@ -1,0 +1,35 @@
+<!-- Password locked -->
+<div ng-show="page.locked">
+	<h2>Page is locked</h2>
+	<h2><small>Please enter password to continue to page</small></h2>
+	<div>
+		<label>Password:</label>
+		<input ng-model="password" ng-enter="tryPassword()" autofocus />
+		<div type="button" class="btn btn-info btn-sm" ng-click="tryPassword()">Continue</div>
+	</div>
+	<div class="alert alert-danger" ng-show="incorrectPassword">Wrong password. Please try again or contact your teacher.</div>
+</div>
+<!-- Unlocked and ready -->
+<div ng-show="!page.locked" ng-switch on="page.layout">
+	<div ng-switch-when="content">
+		<render-page-content page="page" options="options"></render-page-content>
+	</div>
+	<div ng-switch-when="quiz">
+		<render-page-quiz page="page" options="options"></render-page-quiz>
+	</div>
+	<div ng-switch-when="external_link">
+		<render-page-external page="page" options="options"></render-page-external>
+	</div>
+	<div ng-switch-when="vocab">
+		<render-page-vocab page="page" options="options"></render-page-vocab>
+	</div>
+	<div ng-switch-when="vocab_quiz">
+		<render-page-vocab-quiz page="page" options="options"></render-page-vocab-quiz>
+	</div>
+	<div ng-switch-when="listening">
+		<render-page-listening page="page" options="options"></render-page-listening>
+	</div>
+	<div ng-switch-default>Page layout not compatible</div>
+</div>
+<!-- Error -->
+<small class="alert alert-danger" ng-show="error" ng-bind="error"></small>

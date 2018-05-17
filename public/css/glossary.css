@@ -1,0 +1,174 @@
+
+.search-word .form-group{
+    display: inline-block;
+}
+.search-word .form-control{
+    width: 250px;
+    float: left;
+    margin-right: 11px;
+}
+
+a.alphabet-list:not(.active){
+    text-decoration: none;
+    cursor: pointer;
+    color:black
+}
+
+
+
+alphabet-filter{
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+    font-size: 20px;
+
+}
+select-glossary-tags,glossary-author-filter,glossary-tags-author-filter,glossary-tags-date-filter{
+    margin-top:10px;
+    display: block;
+}
+
+[e3-pagination-async].show-select .pagination-wrapper{
+    float:left
+}
+glossary-word-manager .btn-select-all{
+    float:right;
+    margin-top:20px;
+    margin-right:18px;
+}
+
+[glossary-word]{
+    color: #0000a0;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+glossary-link-options {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    display: block;
+    padding: 10px;
+}
+.glossary-concept {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.glossary-tags .label.label-primary:nth-child(2){
+    margin-left: 0;
+}
+.glossary-tags .label.label-primary{
+    background-color: #eee;
+    display: inline-block;
+    color: #777;
+    padding: 4px 6px;
+    font-weight: normal;
+    font-size: inherit;
+    margin-top: -1px;
+}
+glossary-word-list-item .panel-heading{
+    padding: 2px 10px;
+}
+.definition-list.editing .edit-buttons{
+    float: left;
+    top: -3px;
+    position: relative;
+}
+.definition-list.editing .fa{
+    color:#428bca;
+    cursor:pointer;
+}
+.definition-list.editing .fa.disabled{
+    color: grey;
+    cursor: not-allowed;
+}
+.definition-list .fa-trash{
+    top: -1px;
+    position: relative;
+}
+.definition-list input{
+    top: 1px;
+    position: relative;
+}
+.definition-list .number{
+    float: left;
+    margin-right: 5px;
+    font-weight: bold;
+}
+.definition-list.editing .definition-wrapper{
+    width: calc(100% - 60px);
+    float: right;
+}
+
+glossary-word-list-item .panel-heading .left-side{
+    top: 7px;
+    position: relative;
+}
+.tag-item{
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+.tag-item .fa{
+    position: relative;
+    top: 6px;
+}
+.modal_95 .modal-dialog{
+    width:95% !important;
+}
+.add-tags-modal.modal_95 .modal-dialog{
+    /*max-width: 900px;*/
+    /*width: 900px;*/
+    /*transition: width 0.5s ease;*/
+}
+
+.add-tags-modal .modal-body{
+    padding-bottom: 0;
+}
+glossary-tags-filter{
+    padding: 0 20px;
+    display: block;
+}
+input-edit{
+    width: 100%;
+    display: inline-block;
+}
+input-edit .fa{
+    top: 0 !important;
+}
+input-edit input{
+    width: calc(100% - 90px);
+}
+input-edit .btn{
+    top: -1px;
+    position: relative;
+    height: 23px;
+    margin: 0 2px;
+}
+input-edit-tag{
+    width: calc(100% - 18px);
+    display: inline-block;
+}
+
+
+@media screen and (max-width: 500px) {
+    .search-word .right{
+        margin-top: 10px;
+        display: inline-block;
+        position: relative;
+    }
+    glossary-word-list .pagination-wrapper ul{
+        width: 100%;
+        margin-top:0;
+    }
+    glossary-word-list .pagination-wrapper .total{
+        clear: both;
+        width: 80px;
+        float: left;
+        list-style: none;
+    }
+    glossary-word-list .pagination-wrapper .per-page{
+        float: left;
+        list-style: none;
+        margin-left: 0 !important;
+    }
+}

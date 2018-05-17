@@ -1,0 +1,85 @@
+<!--!!!!!!!!!!!!!!!!!!!!!-->
+<!--this file is temporary. should move the questions to its own directives-->
+<!--!!!!!!!!!!!!!!!!!!!!!-->
+
+
+
+
+
+
+    <!--If we have Mathjax in content-->
+    <div  ng-if="question.contentPlusMathjac">
+        <span ng-repeat="obj in question.contentPlusMathjac">
+        <span ng-if="obj.html"dynamic="obj.html"></span>
+        <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+        </span>
+    </div>
+    <div ng-if="!question.contentPlusMathjac" style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+    <div ng-repeat="optiontext in question.options track by $index" class="radio" ng-if="question.type === 'single' || question.type === 'truefalse'">
+        <span ng-show="isSelected(optiontext,question)"><label><img src="/public/img/radiobutton_selected.png">&nbsp;&nbsp;<span style="display:inline-block" ng-style="{'font-family':question.extra.font.family,'font-size':question.extra.font.size}" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+        <span ng-show="!isSelected(optiontext,question)"><label><img src="/public/img/radiobutton_unselected.png">&nbsp;&nbsp;<span style="display:inline-block" ng-style="{'font-family':question.extra.font.family,'font-size':question.extra.font.size}" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+    </div>
+    <div ng-if="question.type === 'wordmatching'">
+
+        <div ng-repeat="group in question.answers" >
+
+            <button type="button" class="btn btn-default btn-wordmatch" style="display:flex;cursor: initial; min-width: 50px; text-align: left; margin-left: 0px; width: 100%; visibility: visible; border-color: rgb(204, 204, 204); background-color: rgb(204, 204, 204);" >
+                <div class="btn matched" ng-bind-html="question.wordmatchingall[group.name2]"></div>
+
+                <div class="btn matched" ng-bind-html="question.wordmatchingall[group.name1]"></div>
+            </button>
+        </div>
+    </div>
+
+    <div ng-if="question.type === 'matching'" style="position:relative">
+        <img src="{{question.imgdata.matching.matchedImage.baselocation}}" alt="" class="pull-left">
+        <div  id="{{corods.name}}" ng-repeat="corods in question.responseData" style="cursor:help;top:{{corods.y1}}px;left:{{corods.x1}}px;height:{{corods.matchedImageheight}}px;position:absolute">
+            <img name="{{corods.name}}" src="../quiz/crop?img={{corods.img}}&width={{question.responseData[corods.dropindex].matchedImagewidth}}&height={{question.responseData[corods.dropindex].matchedImageheight}}&x={{question.responseData[corods.dropindex].x1}}&y={{question.responseData[corods.dropindex].y1}}&show={{question.responseData[corods.dropindex].show}}&text={{corods.answerStudent}}&&imgtext={{question.imgdata.matching.matchedImage.imgtext}}&selectcolortext={{question.imgdata.matching.matchedImage.selectcolortext}}&longest={{question.longest}}">
+        </div>
+    </div>
+
+    <!--oneword Display Start-->
+    <div ng-if="question.type === 'oneword'">
+        Your Answer : {{question.text}} <!--<span>{{ question.displayoneword}}</span>-->
+    </div>
+    <div ng-if="question.type === 'essay'">
+        <div ng-if="question.is_correct=='-1'"><p><em style="color:red">Waiting to be graded </em></p></div>
+        <div ng-if="question.is_correct!='-1'"><p><em style="color:green">Essay Grade </em>: {{question.is_correct}}</p></div>
+        <em  style="color:green">Your Answer </em>:<span ng-bind-html="question.htmlSafeoption"></span>
+        <div ng-show="question.extra.uploadedFile">
+            File: {{question.extra.uploadedFile.realfilename}}
+        </div>
+        <span>{{ question.displayoneword}}</span>
+    </div>
+    <!--oneword Display End-->
+
+    <!--studentvideoresponse Display Start-->
+    <div ng-if="question.type === 'studentvideoresponse'">
+        <div ng-if="question.is_correct=='-1'"><p><em style="color:red">Waiting to be graded </em></p></div>
+        <div ng-if="question.is_correct!='-1'"><p><em style="color:green">Grade </em>: {{question.is_correct}}</p></div>
+        <em  style="color:green">Your Answer </em>:
+        <div style="  border: 1px solid #a1a1a1;padding: 10px 40px;background: #cccccc;border-radius: 5px;margin:auto;width:420px">
+            <video width="320" height="255" controls="">
+                <source ng-src="{{question.videofilename}}" type="video/mp4">Your browser does not support the video tag!
+            </video>
+            <div ng-bind-html="question.videoCommentSafe"> </div>
+        </div>
+    </div>
+    <!--studentvideoresponse Display END-->
+
+    <!--multiple Display Start-->
+    <div ng-repeat="optiontext in question.options" class="radio" ng-if="question.type === 'multiple'">
+        <span ng-show="isSelected(optiontext,question)"><label><input type="checkbox"  disabled readonly checked>&nbsp;&nbsp;<span style="display:inline-block" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+        <span ng-show="!isSelected(optiontext,question)"><label><input type="checkbox"  disabled readonly>&nbsp;&nbsp;<span style="display:inline-block" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+    </div>
+    <!--multiple Display End-->
+
+    <section ng-if="question.type === 'wordmatching'" >
+
+    </section>
+    <div ng-if="question.multipartquestion"  ng-bind-html="question.multipartquestion" compile-template>  </div>
+    <div ng-if="question.type === 'klosequestions'"  ng-bind-html="question.klosequestion">
+    </div>
+
+
+

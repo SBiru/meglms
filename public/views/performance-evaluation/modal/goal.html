@@ -1,0 +1,64 @@
+<div class="pe-modal">
+    <div class="modal-header">
+        <!-- close button -->
+        <button type="button" class="close " ng-click="cancel()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+                <span class="sr-only">Close</span>
+            </div>
+        </button>
+        <!-- units and pagegroups (won't open separate tab) -->
+        <h4 class="modal-title" data-ng-bind="params.student.fname + ' ' + params.student.lname + ' Goals' "></h4>
+    </div>
+    <div class="modal-body">
+       <div class="btn btn-sm btn-primary btn-create" ng-click="createNew()">Create new</div>
+        <div class="panel panel-default panel-body" data-ng-show="editing">
+            <div class="row">
+                <div class="col-sm-9">
+                    Description:
+                    <textarea data-ng-model="editing.description" class="form-control"></textarea>
+                </div>
+                <div class="col-sm-3">
+                    Expected date (optional):
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="shortDate" ng-model="editing.expected_date" is-open="datePicker.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="datePicker.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </p>
+                </div>
+            </div>
+            <div class="row edit-goal-buttons">
+                <async-button class="pull-right" color-style="primary" text="Save" flash-text="Saved!" loading="loading.save" ng-click="save()"></async-button>
+                <div class="btn btn-default btn-sm pull-right" ng-click="cancelEdit()">Cancel</div>
+                <async-button ng-show="editing.id" class="pull-right" color-style="danger" text="Delete" flash-text="Done!" loading="loading.delete" ng-click="deleteGoal()"></async-button>
+            </div>
+        </div>
+       <tabset>
+           <tab heading="Uncompleted" select="selected.tab=1">
+               <sortable-table
+                       ng-if="selected.tab==1 && filteredGoals"
+                       header="tableHeader"
+                       rows="filteredGoals"
+                       table-height="250px">
+               </sortable-table>
+           </tab>
+           <tab heading="Completed" select="selected.tab=2">
+               <sortable-table
+                       ng-if="selected.tab==2 && filteredGoals"
+                       header="tableHeader"
+                       rows="filteredGoals"
+                       table-height="250px">
+               </sortable-table>
+           </tab>
+           <tab heading="All" select="selected.tab=3">
+               <sortable-table
+                       ng-if="selected.tab==3 && filteredGoals"
+                       header="tableHeader"
+                       rows="filteredGoals"
+                       table-height="250px">
+               </sortable-table>
+           </tab>
+       </tabset>
+    </div>
+</div>

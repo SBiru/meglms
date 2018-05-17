@@ -1,0 +1,250 @@
+<div class="gradebook-wrapper">
+	<!-- SPINNER -->
+	<div class="loading" ng-show="loading||loadingCell.loading">
+		<div>
+			<i class="fa fa-cog fa-3x fa-spin" ng-hide="error"></i>
+			<div class="text" ng-bind="loadingText" ng-hide="error"></div>
+			<div class="text error" ng-bind="error"></div>
+		</div>
+	</div>
+
+	<!-- MAIN TOP BUTTONS -->
+
+	<div class="gradebook-menu text-align-left">
+		<div class="table-gradebook-static-left student float-none">
+			<select selectize class="course-name" ng-model="data.classId" ng-options="class.id as class.name for class in data.classes"></select>
+		</div>
+		<span class="display-none">
+			<select ng-model="data.showUsersType" ng-options="type.id as type.label for type in data.showUsersTypes"></select>
+		</span>
+		<span class="btn btn-primary tooltip-relative margin-top-5" ng-click="recalculateGrades()">
+			Recalculate All
+			<span class="fa fa-question-circle"
+			   tooltip-placement="bottom"
+				tooltip-append-to-body="true"
+			   tooltip='If you want to recalculate the numbers for one specific user, please click on the user name and select the "Recalculate" tab.'></span>
+		</span>
+		<span class="btn btn-primary margin-top-5" ng-click="openModal('durations',{units:units})">Set durations</span>
+		<span ng-show="useCategories" class="btn btn-primary margin-top-5" ng-click="openModal('categories',{units:units,classId:classId,recalculateFunction:recalculateGrades,uncategorized:uncategorized})">Create/Assign Categories <span class="badge" ng-show="uncategorized.count>0">{{uncategorized.count}}</span></span>
+		<span id="totalsBtn" class="btn btn-primary margin-top-5" ng-click="toogleCollapse()" ng-bind="collapaseTotals.collapsed?'Show totals':'Hide totals'"></span>
+		<a class="btn btn-info margin-top-5"  ng-click="downloadCsv()" data-ng-disabled="gradebook.downloading"><i ng-show="gradebook.downloading" class="fa fa-spinner fa-pulse"></i> <i class="fa fa-cloud-download"></i> .CSV</a>
+	</div>
+
+
+	<div class="gradebook-header" ng-show="units">
+		<!-- STATIC LIST OF STUDENTS (No need for that now that we store the pre-calculated data)-->
+
+		<div class="table-gradebook-static-left header">
+			<div
+					ng-show="!loading && totalPages && totalPages > 1"
+					ng-cloak=""
+					style="    margin-left: 5px;margin-top: 15px;"
+			>
+				{{(page-1)*limit+1}}-{{maxShown}} of {{total}}
+				<span class="btn-group">
+                <label class="btn btn-default btn-sm" data-ng-disabled="page==1"
+					   ng-click="prevPage()"><span class="fa fa-angle-left"></span></label>
+                <label class="btn btn-default btn-sm" data-ng-disabled="page==totalPages"
+					   ng-click="nextPage()"><span class="fa fa-angle-right"></span></label>
+            </span>
+			</div>
+
+			<div class="filter-student">Filter student:
+				<input class="width-100" ng-change="onSearchKeyUp()" ng-model="filters.student"></div>
+			<!--<div>Filter page: <input ng-model="filters.student"></div>-->
+
+		</div>
+
+		<!-- STATIC LIST OF TOTALS AND GRADES -->
+		<div scrolling-table sibling="table-gradebook-static-right-2" id="table-gradebook-static-right-1" class="table-gradebook-static-right totals totals-headers" style="max-width: {{(getRightColumnWidth(true)-15)}}px; margin-right: 16px;">
+
+			<div class="wrapper" ng-hide="collapaseTotals.collapsed">
+				<span class="total">Completed Tasks(%)</span>
+				<span class="total" ng-show="showScoreGrades()">Current Total</span>
+				<span class="total" ng-show="showPercentageGrades()">Current Total (%)</span>
+				<span class="total" ng-show="showScoreGrades()">Overall Total</span>
+				<span class="total" ng-show="showPercentageGrades()">Overall Total (%)</span>
+				<span class="grade" ng-show="showLetterGrades()">Grade</span>
+				<span class="final-grade" ng-show="showFinalGrade()">Final Grade</span>
+			</div>
+		</div>
+
+		<!-- GRADEBOOK TABLE -->
+		<div scrolling-table sibling="gradebook-grades-body|gradebook-grades-footer" data-ng-mouseover="showScrollBar=true" data-ng-mouseleave="showScrollBar=false" ng-class="{'show-scrollbar':showScrollBar}" class="table-gradebook-container" id="gradebook-grades-header" style="right: {{getRightColumnWidth()}}">
+			<table class="table-gradebook">
+				<thead >
+					<tr>
+						<th ng-repeat="unit in units" ng-if="showUnit(unit)">
+							<div class="headers">
+								<div class="unit-name" ng-bind="unit.description"></div>
+								<table class="pagegroup-table">
+									<thead>
+										<th ng-repeat="pagegroup in unit.pagegroups" ng-if="showPG(pagegroup)">
+											<div class="pagegroup-title" ng-show="pagegroup.id" ng-bind="pagegroup.name"></div>
+											<div ng-show="!pagegroup.id">&nbsp;</div>
+											<table class="page-table">
+												<thead>
+													<tr class="tooltip-relative">
+														<th class="inner-cell"
+															tooltip-append-to-body="true"
+															tooltip-placement="right" tooltip="{{page.name}}"
+															ng-repeat="page in pagegroup.pages">
+															<span ng-show="!page.requireSubmission" class="fa fa-table pointer" ng-click="openRubric(page)"></span>
+															<span ng-bind="((page.name.length > 16)? page.name.substring(0,17) + '...' : page.name)" ng-click="openModal('title', {page: page, subtype: 'page',enableCreditedAssignments:enableCreditedAssignments})"></span>
+
+														</th>
+													</tr>
+												</thead>
+											</table>
+										</th>
+									</thead>
+								</table>
+							</div>
+						</th>
+					</tr>
+				</thead>
+			</table>
+			<!--<div class="navigator navigator-left" ng-click="scrollLeft()">-->
+				<!--<i class="fa fa-arrow-left"></i>-->
+			<!--</div>-->
+			<!--<div class="navigator navigator-right" ng-click="scrollRight()">-->
+				<!--<i class="fa fa-arrow-right"></i>-->
+			<!--</div>-->
+		</div>
+	</div>
+
+	<div class="gradebook-body" id="gradebook-body" ng-show="units" ng-class="{'with-history':showAverageHistory()}">
+		<!-- STATIC LIST OF STUDENTS -->
+		<div class="table-gradebook-static-left student" ng-show="units">
+			<table class="table table-striped table-gradebook">
+				<tbody>
+					<tr ng-repeat="student in filteredStudents = (students[showGroup] | filter:{name:filters.student} | orderBy:'lastName')">
+						<td>
+							<div class="student-name" ng-click="openModal('student', {student: student, classInfo: classInfo,enableCreditedAssignments:enableCreditedAssignments})" ng-class="{'text-red':$root.isMissingAttendance(student.id)}" ng-bind="student.lastName + ', ' + student.firstName"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- STATIC LIST OF TOTALS AND GRADES -->
+		<div scrolling-table sibling="table-gradebook-static-right-1" id="table-gradebook-static-right-2" class="table-gradebook-static-right totals totals-body" ng-show="units" style="max-width: {{($root.windowWidth<768 && !collapaseTotals.collapsed)?'70%':(getRightColumnWidth(true) - 15) + 'px'}}">
+			<table class="table table-gradebook">
+				<tbody>
+					<tr ng-repeat="student in filteredStudents = (students[showGroup] | filter:{name:filters.student} | orderBy:'lastName')">
+						<td class="total" ng-show="student.savingScore" colspan="7" style="text-align: center;width:560px !important">
+							Recalculating totals <span class="fa fa-pulse fa-spinner"></span>
+						</td>
+						<td class="total" ng-bind="student.percCompletedTasks + '%'" ng-hide="student.savingScore"></td>
+						<td class="total" ng-bind="student.completedScore + '/' + student.totalWorkedScore"
+							ng-show="showScoreGrades() && !student.savingScore"></td>
+						<td class="complete" ng-bind="student.percCompletedScore + '%'"
+						ng-show="showPercentageGrades() && !student.savingScore"></td>
+						<td class="total" ng-bind="student.totalScoreIncludingNonDue + '/' + student.totalMaxScore"
+							ng-show="showScoreGrades() && !student.savingScore"></td>
+						<td class="complete" ng-bind="student.percTotalScore + '%'" ng-show="showPercentageGrades() && !student.savingScore"
+						></td>
+						<td class="grade uppercase"
+							ng-bind="getLetterScore(student.totalScore, student.totalMaxScore)"
+							ng-show="showLetterGrades() && !student.savingScore"></td>
+						<td class="final-grade" ng-bind="getFinalGrade(student.finalGrade)" ng-show="showFinalGrade()
+						&& !student.savingScore"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- GRADEBOOK TABLE -->
+
+		<div scrolling-table sibling="gradebook-grades-header|gradebook-grades-footer" data-ng-mouseover="showScrollBar=true" data-ng-mouseleave="showScrollBar=false" class="table-gradebook-container" id="gradebook-grades-body" style="overflow-x:auto; right: {{($root.windowWidth<768 && !collapaseTotals.collapsed)?'70%':(getRightColumnWidth(true) - 15) + 'px'}}">
+			<table class="table table-striped table-gradebook">
+				<tbody>
+					<tr ng-repeat="student in filteredStudents = (students[showGroup] | filter:{name:filters.student} | orderBy:'lastName')">
+						<td ng-if="!student.show">...</td>
+						<td ng-repeat="unit in student.units" class="score-units" ng-if="showUnit(unit) && student.show">
+							<table>
+								<tbody>
+									<td ng-repeat="pagegroup in unit.pagegroups" ng-if="showPG(pagegroup)">
+										<table>
+											<tbody>
+												<tr>
+													<td is-visible class="inner-cell" ng-repeat="page in pagegroup.pages" ng-init="page.oldScore=page.score;">
+
+
+														<span ng-class="{'greyed': hasScore(page)===false}" ng-hide="page.isExempt"  tooltip-append-to-body="true" tooltip="{{$parent.student.lastName}}, {{$parent.student.firstName}} - {{page.name}} - click to enter or change the score">
+															<input focus-me ng-if="page.show" ng-model="page.score" data-ng-change="saveScore(page,student)">
+															<span ng-click="page.show=true" class="pointer" >
+																<span ng-if="!page.show"  ng-bind="page.score||'--'"></span>
+																<span class="max-score" ng-bind="'/' + page.maxScore"></span>
+															</span>
+															<span class="fa fa-cog pointer" ng-click="openModal('grade', {student: student, unit: unit, pagegroup: pagegroup, page: page,enableCreditedAssignments:enableCreditedAssignments})"></span>
+														</span>
+
+														<!--<span ng-class="{'greyed': hasScore(page)===false}" ng-hide="page.isExempt" ng-bind="getScore(page) + '/' + page.maxScore"></span>-->
+														<i class="fa fa-flag" ng-show="page.isExempt" ng-click="openModal('grade', {student: student, unit: unit, pagegroup: pagegroup, page: page,enableCreditedAssignments:enableCreditedAssignments})"></i>
+
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+		<div class="average-static-bottom table-gradebook-static-left score-to-perc-tip" ng-class="{'with-history':showAverageHistory()}">
+			<span id="score-to-perc" ng-click="showPercentage = !showPercentage" tooltip="click to choose score format (percentage/points)"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+			<table style="margin: auto;margin-left: 50px">
+				<tr>
+					<th>Average</th>
+				</tr>
+				<tr ng-show="showAverageHistory()">
+					<th>Historical average</th>
+				</tr>
+			</table>
+
+		</div>
+		<div class="average-static-bottom table-gradebook-container" id="gradebook-grades-footer" style="right: {{getRightColumnWidth()}}" ng-class="{'with-history':showAverageHistory()}">
+			<table class="">
+				<tbody>
+				<tr>
+					<th ng-repeat="unit in units" ng-if="showUnit(unit)">
+						<div class="headers">
+							<table>
+								<thead>
+								<th ng-repeat="pagegroup in unit.pagegroups" ng-if="showPG(pagegroup)">
+									<table>
+										<thead>
+										<tr class="tooltip-relative">
+											<th class="inner-cell"
+												ng-repeat="page in pagegroup.pages">
+												<span ng-show="!showPercentage" ng-bind="page.averagePoints||'--'"></span>
+												<span ng-show="!showPercentage" ng-bind="'/' + page.maxScore"></span>
+												<span ng-show="showPercentage">{{((page.averagePoints/page.maxScore)*100 | number : 2)||"--"}}%</span>
+											</th>
+										</tr>
+										<tr class="tooltip-relative" ng-show="showAverageHistory()">
+											<th class="inner-cell"
+												ng-repeat="page in pagegroup.pages">
+												<span ng-show="!showPercentage"ng-bind="page.historical_avg_score||'--'"></span>
+												<span ng-show="!showPercentage" ng-bind="'/' + page.maxScore"></span>
+												<span ng-show="showPercentage">{{((page.historical_avg_score/page.maxScore)*100 | number : 2)||"--"}}%</span>
+											</th>
+										</tr>
+										</thead>
+									</table>
+								</th>
+								</thead>
+							</table>
+						</div>
+					</th>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
+

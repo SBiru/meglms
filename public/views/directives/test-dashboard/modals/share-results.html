@@ -1,0 +1,68 @@
+
+<div>
+    <div class="share-results-body">
+        <div class="input-wrapper ">
+            <input class="form-control input-to " ng-model="email.to">
+            <span>To:</span>
+        </div>
+        <div class="input-wrapper ">
+            <input class="form-control input-subject" ng-model="email.subject">
+            <span>Subject:</span>
+        </div>
+
+        <textarea id="emailBody"></textarea>
+    </div>
+    <div class="share-results-footer">
+        <div class="checkboxes">
+            <div class="checkbox-item">
+                <input type="checkbox" ng-model="email.includeID">
+                Include ID
+            </div>
+            <div class="checkbox-item" ng-show="testDetails.enableCertificate">
+                <input type="checkbox" ng-model="email.includeCertificate">
+                Include Certificate
+            </div>
+            <div class="checkbox-item" ng-if="testDetails.isJ1">
+                <input type="checkbox" ng-model="email.includeVideo">
+                Include video
+            </div>
+            <div class="checkbox-item" ng-if="!testDetails.isJ1">
+                <input type="checkbox" ng-model="email.includeReport">
+                Include report
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" ng-model="email.includeComments">
+                Include comments
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="btn btn-default" ng-click="$dismiss()">Cancel</div>
+            <div class="btn btn-primary" ng-click="send()" data-ng-disabled="sending || !email.to">
+                <span class="fa fa-spinner fa-pulse" ng-show="sending"></span>
+                Send
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script>
+    CKEDITOR.config.allowedContent = true;
+    CKEDITOR.config.disableNativeSpellChecker = false;
+    var ck = CKEDITOR.replace( 'emailBody', {
+        toolbar : [
+            { name: 'document',items: [ 'Source']},
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',  'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            { name: 'tools', items : [ 'Maximize'] },
+            { name: 'insert', items: [ 'Image', 'Table',  'SpecialChar' ] },
+            { name: 'links', items: [ 'Link', 'Unlink']}
+
+        ],
+        filebrowserUploadUrl: '/uploadckeditormedia/',
+        extraPlugins: 'mathjax',
+        height:500
+    } );
+</script>
+

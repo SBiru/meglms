@@ -1,0 +1,81 @@
+<div class="content content-e3pt">
+
+    <div class="section body">
+        <div class="section-heading j1-text-right" ng-bind="vc_content.testDetails.name">
+
+        </div>
+        <div data-ng-if="!vc_content.testDetails.hasFinishedSubmitting && !vc_content.testDetails.finishedGradeClass">
+            Applicant has not finished the interview
+        </div>
+        <div data-ng-if="vc_content.testDetails.hasFinishedSubmitting || vc_content.testDetails.finishedGradeClass">
+            <div class="interview-summary" style="display: table">
+                <div>
+                    <div class="th">Date</div>
+                    <div class="info j1-text-right" ng-bind="vc_content.testDetails.submittedOn"></div>
+                </div>
+                <div style="    border-right: 0;">
+                    <div class="th">Email</div>
+                    <div class="info j1-text-right"
+                         ng-bind="vc_content.testDetails.email"></div>
+                </div>
+                <div class="btn-container" style="    border-left: 0;">
+                    <div >
+                        <div>
+                            <a class="btn btn-flat btn-flat-primary" target="_blank" href="{{vc_content.idHref}}">
+                                <span class="fa fa-info-circle"></span>
+                                <span class="display-titles">View</span>
+                                <span>ID</span>
+                            </a>
+                        </div>
+                        <div >
+                            <a class="btn btn-flat btn-flat-primary" ng-href="/e3pt-report?userid={{$state.params.studentId}}&classid={{$state.params.classId}}&redirect=1" target="_blank">
+                                <span class="fa fa-arrow-circle-o-down"></span>
+                                <span class="display-titles">View</span>
+                                <span>Report</span>
+                            </a>
+                        </div>
+                        <div ng-if="vc_content.testDetails.finishedGradeClass">
+                            <div class="btn btn-flat btn-flat-primary" ng-click="vc_content.shareResults()">
+                                <span class="fa fa-share"></span>
+                                <span >Forward <span class="display-titles">Results</span></span></div>
+                        </div>
+                        <span class="clearfix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="score-table-wrapper">
+                <table class="score-table">
+                    <tr>
+                        <td>
+                            <div class="score-title">
+                                Overall Score
+                            </div>
+                            <div ng-bind="vc_content.testDetails.actualTotalScore" class="pg-score"></div>
+                        </td>
+                        <td ng-repeat="pg in vc_content.testDetails.pageGroups ">
+                            <div ng-bind="pg.name" class="score-title"></div>
+                            <div ng-bind="pg.actualScore"  class="pg-score"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="section body" data-ng-if="vc_content.testDetails.hasFinishedSubmitting || vc_content.testDetails.finishedGradeClass">
+        <div class="section-heading j1-text-right">
+            Applicant Submissions
+        </div>
+        <div class="submissions-wrapper">
+            <div class="col-sm-3 col-xs-12 submission-group" ng-repeat="pg in vc_content.testDetails.pageGroups ">
+                <div ng-bind="pg.name"></div>
+                <div>
+                    <div ng-repeat="sub in pg.submissions" ng-bind="sub.name" ng-click="vc_content.openSubmission(sub)"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+
+    </div>
+</div>

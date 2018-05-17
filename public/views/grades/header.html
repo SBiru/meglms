@@ -1,0 +1,19 @@
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header margin-left-40">
+            <a data-ng-show="user.org.white_label" class="navbar-brand" href="/" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+        <div class="navbar-collapse collapse">
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+

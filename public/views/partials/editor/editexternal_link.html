@@ -1,0 +1,48 @@
+<div>
+	<h2>Edit Page</h2>
+	<table style="width:100%">
+		<tr>
+			<td style="padding-bottom:15px;width:120px;"><label class="control-label" style="font-size:1.2em">Objective</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<input class="form-control" type="text" ng-model="objective" placeholder="Objective">
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageTitle" class="control-label" style="font-size:1.4em">Page Title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageTitle" name="pageTitle" ng-model="page_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Title" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageSubTitle" class="control-label" style="font-size:1.4em">Translation</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageSubTitle" name="pageSubTitle" ng-model="page_sub_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Translation" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+                <input type="checkbox" id="is_gradeable_post" name="is_gradeable_post" ng-model="is_gradeable_post">&nbsp;<label for="is_gradeable_post" class="control-label display-inline" style="font-size:1.1em">Make Posts Gradeable</label><br class="display-block" style="display: none">
+                <input type="checkbox" class="margin-left-0" id="allow_video_post" name="allow_video_post" ng-model="allow_video_post" style="margin-left: 20px">&nbsp;<label for="allow_video_post" class="control-label  display-inline" style="font-size:1.1em">Allow Video Post</label><br class="display-block" style="display: none">
+                <input type="checkbox" class="margin-left-0" id="allow_text_post" name="allow_text_post" ng-model="allow_text_post" style="margin-left: 20px">&nbsp;<label for="allow_text_post" class="control-label  display-inline" style="font-size:1.1em">Allow Text Post</label><br class="display-block" style="display: none">
+                <input type="checkbox" class="margin-left-0" id="allow_upload_post" name="allow_upload_post" ng-model="allow_upload_post" style="margin-left: 20px">&nbsp;<label for="allow_upload_post" class="control-label  display-inline" style="font-size:1.1em">Allow Upload Post</label><br class="display-block" style="display: none">
+                <input type="checkbox" class="margin-left-0" id="is_private_post" name="is_private_post" ng-model="is_private_post" style="margin-left: 20px">&nbsp;<label for="is_private_post" class="control-label  display-inline" style="font-size:1.1em">Make Posts Private</label></td>
+		</tr>
+              <tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageGrouping" class="control-label" style="font-size:1.4em">Group</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><select id="pageGrouping" name="pageGrouping" ng-model="page_group" ng-options="subunit.name for subunit in subunits" class="form-control ng-pristine ng-valid ng-valid-required" required><option value="">--Optional Grouping--</option></select></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="externalLink" class="control-label" style="font-size:1.4em">Link URL</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="externalLink" name="externalLink" ng-model="external_link" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="http://" required></td>
+		</tr>
+              <tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="editPage()">Edit Page</button></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">--Or--</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="deletePage()">Delete Page</button></td>
+		</tr>
+	</table>
+</div>

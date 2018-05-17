@@ -1,0 +1,51 @@
+<div class="gradebook-modal">
+	<div class="modal-header">
+		<!-- close button -->
+		<button type="button" class="close " ng-click="cancel()">
+			<div class="btn btn-danger btn-sm">
+				<span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+				<span class="sr-only">Close</span>
+			</div>
+		</button>
+		<!-- units and pagegroups (won't open separate tab) -->
+		<h4 class="modal-title" ng-if="params.subtype != 'page'" ng-bind="title"></h4>
+		<!-- pages open in separate tab -->
+		<a class="modal-title" ng-if="params.subtype === 'page'" target="_blank" ng-href="{{href}}">
+			<i class="fa fa-external-link-square"></i>
+			<h4 ng-bind="title"></h4>
+		</a>
+	</div>
+	<div class="modal-body" ng-if="params.subtype === 'page'">
+
+		<tabset>
+			<!-- TAB: Preview Page -->
+			<tab heading="Preview">
+				<render-page page-id="pageId" options="pageOptions"></render-page>
+			</tab>
+			<!-- TAB: Exempt Students -->
+			<tab heading="Exempt" ng-if="pageId && !hideExempt">
+				<exempt-students class-id="classId" page-id="pageId" options="exemptOptions" on-save="onExemptSave"></exempt-students>
+				<h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+			</tab>
+			<tab heading="Credit" ng-if="pageId && !hideExempt && enableCreditedAssignments">
+				<exempt-students credit="true" class-id="classId" page-id="pageId" options="exemptOptions" on-save="onExemptSave"></exempt-students>
+				<h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+			</tab>
+			<tab heading="Quiz Summary" ng-if="params.page.layout=='quiz'">
+				<quiz-summary page-info="params.page"></quiz-summary>
+			</tab>
+			<tab heading="Convert student scores">
+				Old max score:
+				<input class="edit-score" ng-model="page.oldMaxScore" />
+				New max score:
+				<input class="edit-score" ng-model="page.newMaxScore" />
+				<button class="btn btn-sm btn-info" data-ng-disabled="!canSave()" ng-click="changeMaxPoints()">Save</button>
+				<div class="alert alert-warning" ng-show="convert.saving">
+					<span class="fa fa-spinner fa-spin"></span>
+					Please wait while we calcualte and adjust the students' scores..
+				</div>
+				<h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+			</tab>
+		</tabset>
+	</div>
+</div>

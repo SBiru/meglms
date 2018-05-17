@@ -1,0 +1,45 @@
+<div >
+	<h2 ng-bind="editor_title"></h2>
+	<table style="width:100%">
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageTitle" class="control-label" style="font-size:1.4em">Page Title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageTitle" name="pageTitle" ng-model="pageData.page_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Title" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageSubTitle" class="control-label" style="font-size:1.4em">Translation</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageSubTitle" name="pageSubTitle" ng-model="pageData.page_sub_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Translation" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<input type="checkbox" id="hide_activity" name="hide_activity" ng-model="hide_activity">&nbsp;<label for="hide_activity" class="control-label" style="font-size:1.1em">Hide Activity</label>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageSubTitle" class="control-label" style="font-size:1.4em">Background</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<div style="width: 80px">
+					<div selectize2 options="Pagebackground.backgroundOptions" ng-model="pageData.backgroundUrl	" config="Pagebackground.backgroundConfig"></div>
+				</div>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="padding-bottom: 10px" data-ng-include="'/public/views/partials/editor/coursedescriptiontemplate.html'">
+
+			</td>
+		</tr>
+
+
+		<tr>
+			<td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<async-button color-style="primary" text="Save Changes" flash-text="Saved!" loading="loading.editPage" ng-click="saveChanges()"></async-button>
+				<async-button ng-if="showPreviewButton()" color-style="success" text="Preview" flash-text="Saved!" loading="loading.preview" ng-click="openPreview()"></async-button>
+				<async-button color-style="danger" text="Delete Page" flash-text="Deleted!" loading="loading.deletePage" ng-click="deletePage()"></async-button>
+			</td>
+
+		</tr>
+
+	</table>
+</div>

@@ -1,0 +1,74 @@
+<table class="table table-striped table-hover mb0 table-files">
+    <thead>
+        <tr>
+            <th>{{"name" | translate}}</th>
+            <th class="hidden-xs">{{"size" | translate}}</th>
+            <th class="hidden-sm hidden-xs">{{"date" | translate}}</th>
+            <th ng-if="!fileNavigator.noShow" class="hidden-sm hidden-xs">{{"Copy Location" | translate}}</th>
+            <th  ng-if="!fileNavigator.noShow" class="text-right">{{"actions" | translate}}</th>
+        </tr>
+    </thead>
+    <tbody class="file-item">
+        <tr data-ng-show="fileNavigator.requesting">
+            <td colspan="5">
+                {{"loading" | translate}}...
+            </td>
+        </tr>
+        <tr data-ng-show="!fileNavigator.requesting && fileNavigator.fileList.length < 1 && !fileNavigator.error">
+            <td colspan="5">
+                {{"no_files_in_folder" | translate}}...
+            </td>
+        </tr>
+        <tr data-ng-show="!fileNavigator.requesting && fileNavigator.error">
+            <td colspan="5">
+                {{ fileNavigator.error }}
+            </td>
+        </tr>
+        <tr data-ng-repeat="item in fileNavigator.fileList | filter: query | orderBy: orderProp" data-ng-show="!fileNavigator.requesting">
+            <td>
+                <a  ng-class="{'colorstyle': item.model.colorstyle}" ng-class="'opened'|if:isOpen(item)" ng-if="item.model.type != 'file'" href="" data-ng-click="smartClick(item)" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+                    <i class="glyphicon glyphicon-folder-close" data-ng-show="item.model.type === 'dir'"></i>
+                    <i class="glyphicon glyphicon-file" data-ng-show="item.model.type === 'file'"></i>
+                    {{item.model.name | strLimit : 64}}
+                </a>
+
+                <a  ng-class="{'colorstyle': item.model.colorstyle}" ng-if="item.model.type == 'file'" href="../../public/useruploads/{{item.model.urlpath}}" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)" target="_blank">
+                    <i class="glyphicon glyphicon-folder-close" data-ng-show="item.model.type === 'dir'"></i>
+                    <i class="glyphicon glyphicon-file" data-ng-show="item.model.type === 'file'"></i>
+                    {{item.model.name | strLimit : 64}}
+                </a>
+
+            </td>
+            <td class="hidden-xs">
+
+            <a ng-class="{'colorstyle': item.model.colorstyle}" ng-if="item.model.type != 'file'" href="" data-ng-click="smartClick(item)" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+              {{item.model.size}}kb
+              </a>
+
+            <a ng-class="{'colorstyle': item.model.colorstyle}" ng-if="item.model.type == 'file'" href="../../public/useruploads/{{item.model.urlpath}}" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)" target="_blank">
+              {{item.model.size}}kb
+              </a>
+            
+            </td>
+            <td class="hidden-sm hidden-xs">
+            <a  ng-class="{'colorstyle': item.model.colorstyle}" ng-if="item.model.type != 'file'" href="" data-ng-click="smartClick(item)" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+            {{item.model.date.toString()}}
+            </a>
+            
+            <a ng-class="{'colorstyle': item.model.colorstyle}"  ng-if="item.model.type == 'file'" href="../../public/useruploads/{{item.model.urlpath}}" ng-right-click="smartRightClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)" target="_blank">
+            {{item.model.date.toString()}}
+            </a>
+               
+            </td>
+            <td class="hidden-sm hidden-xs">
+            <button style="  margin-left: 30px;" ng-if="item.model.type == 'file'" class="btn btn-sm btn-default">
+            <a class="glyphicon glyphicon-link" href="" data-ng-click="smartClick(item)" ng-right-click="smartRightClick(item)" title="Copy {{item.model.name}} url Location">
+            </a>
+            </button>
+            </td>
+            <td class="text-right">
+                <div ng-include="'/public/js-util/file_manager/assets/templates/item-toolbar.html'"></div>
+            </td>
+        </tr>
+    </tbody>
+</table>

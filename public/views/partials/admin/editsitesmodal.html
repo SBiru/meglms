@@ -1,0 +1,263 @@
+<div class="edit-sites-modal">
+	<div class="modal-header">
+		<!-- close button -->
+		<button type="button" class="close " ng-click="cancel()">
+			<div class="btn btn-danger btn-sm">
+				<span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+				<span class="sr-only">Close</span>
+			</div>
+		</button>
+		<!-- set default calendar btn -->
+		<button class="btn btn-sm btn-warning pull-right" style="margin:-2px 10px" ng-click="calendarSection.open()" ng-show="!calendarSection.busy">Set Default Calendar</button>
+		<button class="btn btn-sm btn-default pull-right" style="margin:-2px 10px" ng-click="calendarSection.cancel()" ng-show="calendarSection.busy">Back</button>
+
+		<h4 class="modal-title">Edit Organization Sites</h4>
+	</div>
+	<div class="modal-body">
+		<!-- LOADING -->
+		<div class="loading" ng-show="loading">LOADING...</div>
+		<!-- ACTUAL BODY -->
+		<div ng-show="!loading">
+			<!-- NO DEFAULT CALENDAR -->
+			<div ng-if="!organization.blackouts && !calendarSection.busy">
+				<br />
+				<div class="alert alert-info">Before creating sites, the organization must have a default calendar. Click on Set Default Calendar to begin</div>
+			</div>
+
+			<!-- DEFAULT CALENDAR CREATE/EDIT -->
+			<div class="calendar">
+				<div ng-if="calendarSection.busy">
+					<!-- WEEK DAYS -->
+
+					<div>
+						<div class="small-heading">Weekdays</div>
+						<div>Days to be non-working dates for this site</div>
+						<br />
+						<div>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.mon" btn-checkbox-true="1">Monday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.tue" btn-checkbox-true="2">Tuesday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.wed" btn-checkbox-true="3">Wednesday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.thu" btn-checkbox-true="4">Thursday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.fri" btn-checkbox-true="5">Friday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.sat" btn-checkbox-true="6">Saturday</button>
+							<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.sun" btn-checkbox-true="0">Sunday</button>
+						</div>
+					</div>
+					<!-- BLACKOUT DAYS -->
+					<div>
+						<hr />
+						<div class="small-heading">Blackout days</div>
+						<div>You can blackout any date manually</div>
+						<br />
+						<div>
+							<div jqdatepicker data-ng-model="calendarSection.othersCalendar" options="calendarSection.datePickerOptions"></div>
+						</div>
+					</div>
+					<!-- BUTTONS -->
+					<div>
+						<hr />
+						<async-button color-style="info" text="Save" flash-text="Saved!" loading="calendarSection.saving" ng-click="calendarSection.save()"></async-button>
+						<button class="btn btn-sm btn-default" ng-click="calendarSection.cancel()">Cancel</button>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- DEFAULT CALENDAR EXISTS AND IS READY -->
+			<tabset ng-if="organization.blackouts" ng-hide="calendarSection.busy">
+				<!-- SITES -->
+				<tab heading="Sites">
+					<!-- EMPTY -->
+					<div ng-show="!sites.length">
+						<br />
+						<div class="alert alert-info">There are no sites in this Organization. Click on New Site to begin adding sites.</div>
+					</div>
+					<!-- CREATE -->
+					<div class="creating">
+						<div ng-show="sitesSection.creating">
+							<hr />
+							<div class="small-heading">new site</div>
+							<div>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<span class="input-group-addon">Name:</span>
+										<input type="text" class="form-control" ng-model="sitesSection.new.name" placeholder="New site's name" />
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="input-group">
+										<span class="input-group-addon">ExtID:</span>
+										<input type="text" class="form-control" ng-model="sitesSection.new.externalId" placeholder="(optional)" />
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="btn btn-sm btn-info" ng-disabled="!sitesSection.new.name" ng-click="sitesSection.saveNew()">
+										<span ng-disabled="sitesSection.saving">
+											<span ng-hide="sitesSection.saving">Save</span>
+											<span ng-show="sitesSection.saving">Saving <i class="fa fa-spin fa-spinner"></i></span>
+										</span>
+									</div>
+								</div>
+								<br />
+							</div>
+						</div>
+					</div>
+					<!-- BUTTONS -->
+					<hr />
+					<div class="btn btn-sm btn-success" ng-click="sitesSection.create()">New Site</div>
+					<!-- HAS SITES -->
+					<div ng-show="sites.length">
+						<div class="small-heading">Current Sites</div>
+						<div>Click on a site to edit its Name and ExternalID, or click on New Site to create and add a new site</div>
+						<br />
+						<div class="panel panel-default">
+							<!-- Default panel contents -->
+							<div class="panel-heading">
+								<b>
+									<small>Name</small>
+									<small class="pull-right">External Id</small>
+								</b>
+							</div>
+						  <ul class="list-group">
+								<li class="list-group-item" ng-repeat="site in sites | orderBy:'name'" ng-click="sitesSection.edit(site)">
+									<span ng-bind="site.name"></span>
+									<span class="pull-right" ng-show="site.externalId">
+										<i ng-bind="site.externalId"></i>
+									</span>
+								</li>
+							</ul>
+						</div>
+						<!-- EDIT -->
+						<div class="editing">
+							<div ng-show="sitesSection.editing">
+								<hr />
+								<div class="small-heading">edit site</div>
+								<div>
+									<div class="col-sm-6">
+										<div class="input-group">
+											<span class="input-group-addon">Name:</span>
+											<input type="text" class="form-control" ng-model="sitesSection.edited.name" />
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="input-group">
+											<span class="input-group-addon">ExtID:</span>
+											<input type="text" class="form-control" ng-model="sitesSection.edited.externalId" placeholder="(optional)" />
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="btn btn-sm btn-info" ng-disabled="!sitesSection.edited.name" ng-click="sitesSection.saveEdited()">
+											<span ng-disabled="sitesSection.saving">
+												<span ng-hide="sitesSection.saving">Update</span>
+												<span ng-show="sitesSection.saving">Updating <i class="fa fa-spin fa-spinner"></i></span>
+											</span>
+										</div>
+									</div>
+									<br />
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</tab>
+				<!-- USERS -->
+				<tab heading="Users" ng-show="sites.length && (users.length || usersSection.hasUserInSite())">
+					<!-- SITES - SELECTION -->
+					<div>
+						<br />
+						<strong>Select Site:</strong>
+						<select ng-model="usersSection.site" ng-options="site as site.name for site in sites" style="min-width: 200px;"></select>
+					</div>
+					<!-- USER LISTS -->
+					<div class="row action-lists" ng-show="usersSection.site">
+						<div class="col-sm-6">
+							<div class="small-heading">Users in organization</div>
+							<div class="filter-box">
+								<input ng-model="usersSection.userFilter" placeholder="Filter by ..." />
+								<i class="fa fa-search"></i>
+							</div>
+							<div class="students-list">
+								<div ng-repeat="user in users | orderBy:'lastName' | filter:usersSection.userFilter" ng-click="usersSection.addToSite(user)" ng-hide="usersSection.isInSite(user)">
+									<span ng-bind="user.lastName + ', ' + user.firstName"></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="small-heading">Users in site</div>
+							<div class="filter-box">
+								<input ng-model="usersSection.addedFilter" placeholder="Filter by ..." />
+								<i class="fa fa-search"></i>
+							</div>
+							<div class="students-list">
+								<div ng-repeat="user in usersSection.site.users | orderBy:'lastName' | filter:usersSection.addedFilter" ng-click="usersSection.removeFromSite(user)">
+									<span ng-bind="user.lastName + ', ' + user.firstName"></span>
+								</div>
+							</div>
+						</div>
+						<!-- BUTTONS -->
+						<div class="col-sm-12">
+							<hr />
+							<button class="btn btn-sm btn-info" style="float: right;" ng-click="usersSection.save()">Save</button>
+						</div>
+					</div>
+				</tab>
+				<!-- CALENDARS -->
+				<tab heading="Calendars" ng-show="sites.length" >
+					<!-- SITES - SELECTION -->
+					<div>
+						<br />
+						<strong>Select Site:</strong>
+						<select ng-model="calendarSection.site" ng-options="site as site.name for site in sites" style="min-width: 200px;"></select>
+					</div>
+					<!-- CALENDAR -->
+
+					<div class="row action-lists" ng-show="calendarSection.site" ng-if="!calendarSection.busy" style="position: relative">
+						<div class="grey-out" ng-show="calendarSection.site.use_default_calendar"></div>
+						<async-button style="position: absolute;top: -20px;right: 15px;" color-style="info" text="Save" flash-text="Saved!" loading="calendarSection.saving" ng-click="calendarSection.save('site')"></async-button>
+						<div class="col-sm-12">
+							<input type="checkbox" ng-model="calendarSection.site.use_default_calendar"> Use default calendar
+						</div>
+						<!-- WEEK DAYS -->
+						<div class="col-sm-12">
+							<div class="small-heading">Weekdays</div>
+							<div>Days to be non-working dates for this site</div>
+							<br />
+							<div>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.mon" btn-checkbox-true="1">Monday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.tue" btn-checkbox-true="2">Tuesday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.wed" btn-checkbox-true="3">Wednesday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.thu" btn-checkbox-true="4">Thursday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.fri" btn-checkbox-true="5">Friday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.sat" btn-checkbox-true="6">Saturday</button>
+								<button class="btn btn-sm btn-default" btn-checkbox data-ng-model="calendarSection.checkModel.sun" btn-checkbox-true="0">Sunday</button>
+							</div>
+						</div>
+						<!-- BLACKOUT DAYS -->
+						<div class="col-sm-12">
+							<hr />
+							<div class="small-heading">Blackout days</div>
+							<div>You can blackout any date manually</div>
+							<br />
+							<div>
+								<div jqdatepicker data-ng-model="calendarSection.othersCalendar" options="calendarSection.datePickerOptions"></div>
+							</div>
+						</div>
+						<!-- BUTTONS -->
+
+
+						<!-- BUTTONS -->
+						<div class="col-sm-12">
+							<hr />
+							<async-button style="float:right" color-style="info" text="Save" flash-text="Saved!" loading="calendarSection.saving" ng-click="calendarSection.save('site')"></async-button>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Admins" ng-show="sites.length">
+					<admin-users-for-site sites="sites" org-id="organization.id"></admin-users-for-site>
+				</tab>
+			</tabset>
+
+
+		</div>
+	</div>
+</div>

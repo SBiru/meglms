@@ -1,0 +1,24 @@
+<div ng-show="$state.includes('vocabs')" style="margin-top:.6em">
+    <ul class="nav nav-pills nav-stacked" role="tablist">
+        <li role="presentation"><a ui-sref ="vocabs.detail({vocabId:0})"><span class="glyphicon glyphicon-plus"></span> Add New Vocabulary Group</a></li>
+        <li role="presentation" class="nav-divider"></li>
+        <li role="presentation">
+            <testbank-filters ng-model="filter"></testbank-filters>
+        </li>
+        <li role="presentation" class="nav-divider"></li>
+        <li role="presentation" ><div style="width:60%;margin: auto"><input style="width: 100%" type="text" ng-model="inputFilter" placeholder="Search for a vocab group"></div></li>
+        <li role="presentation" >
+            Select a language:
+        <select
+        style = "  width: 100%;padding: 5px;"
+        selectize
+        ng-model="data.language"
+        ng-options="lang.language_id as lang.language for lang in data.languages"
+        >
+        </select>
+        </li>
+        <li ng-repeat="item in vocabs | filter:inputFilter">
+            <a ui-sref ="vocabs.detail({vocabId:item.module_id})">{{item.name}} <span class="badge">{{item.count}}</span></a>
+        </li>
+    </ul>
+</div>

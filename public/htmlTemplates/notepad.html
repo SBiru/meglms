@@ -1,0 +1,109 @@
+
+<style>
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover
+{
+    outline:0px !important;
+    -webkit-appearance:none;
+}
+
+textarea { border: none; 
+  background-color:transparent;
+  resize: none;
+}
+
+.HtmlTemplateControl{
+position:relative;
+margin:auto;
+width:95%;
+height:648px;
+}
+
+.NP_OneDiv,.NP_TwoDiv,.NP_ThreeDiv,.NP_FourDiv,.FiveDiv,.SixDiv,.SevenDiv{
+  position: absolute;
+  width: 35%;
+  
+}
+
+.NP_OneDiv{
+  top: 48px;
+  left: 9%;
+  }
+
+.NP_TwoDiv{
+  top: 71px;
+  left: 54%;
+  }
+
+.NP_ThreeDiv{
+  top: 348px;
+  left: 11%;
+  } 
+
+.NP_FourDiv{
+    top: 408px;
+  left: 52%;
+  }  
+
+.FiveDiv{
+ top: 515px;
+ left: 21%;
+}
+
+.SixDiv{
+  left: 4%;
+  top: 282px;
+}
+
+.SevenDiv{
+  left: 37%;
+  top: 249px;
+  height: 138px;
+  width: 25%;
+}
+.NP_OneDiv,.NP_TwoDiv,.NP_ThreeDiv,.NP_FourDiv,.FiveDiv,.SixDiv{
+  height: 222px;
+  }
+
+.NP_One,.NP_Two,.NP_Three,.NP_Four,.Five,.Six,.Seven,.template_img {
+  width: 100%;
+  height: 100%;
+  }
+</style>
+
+<div class="HtmlTemplateControl">
+  <!--Topic Sentence Start-->
+  <div style="position:absolute" class="NP_OneDiv">
+  <textarea class="NP_One" name="NP_One" ng-model="templateContent[0]" placeholder="Details"></textarea>
+  </div>
+  <!--Topic Sentence End-->  
+
+  <!--Supporting Detail #1 Start-->
+  <div style="position:absolute" class="NP_TwoDiv">
+  <textarea class="NP_Two" name="NP_Two" ng-model="templateContent[1]" placeholder="Important Words to know"></textarea>
+  </div>
+  <!--Supporting Detail #1 End-->
+
+  <!--Supporting Detail #2 Start-->
+  <div style="position:absolute" class="NP_ThreeDiv">
+  <textarea class="NP_Three" name="NP_Three" ng-model="templateContent[2]" placeholder="Facts I learned"></textarea>
+  </div>
+  <!--Supporting Detail #2 End-->  
+    
+  <!--Supporting Detail #3 Start-->
+  <div style="position:absolute" class="NP_FourDiv">
+  <textarea class="NP_Four" name="NP_Four" ng-model="templateContent[3]" placeholder="Questions I still Have"></textarea>
+  </div>
+  <!--Supporting Detail #3 End-->
+  
+
+<img class="template_img" src="../public/htmlTemplates/notepad.png" border="0" alt="">
+</div>

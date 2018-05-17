@@ -1,0 +1,15 @@
+<table class="table table-bordered attendance-preview" style="margin-bottom: 0" ng-show="studentReport">
+    <tr>
+        <td  data-ng-repeat="weekDay in ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']">
+            <b ng-bind="weekDay"></b>
+        </td>
+    </tr>
+</table>
+<table class="table table-bordered attendance-preview" data-ng-repeat="week in studentReport.attendance">
+    <tr>
+        <td data-ng-repeat="dateInfo in week" ng-bind="dateInfo.date" style="background-color: #F0F0F0;"></td>
+    </tr>
+    <tr>
+        <td data-ng-repeat="dateInfo in week" ng-bind="dateInfo.time"></td>
+    </tr>
+</table>

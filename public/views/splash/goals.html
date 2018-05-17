@@ -1,0 +1,100 @@
+<div data-ng-controller="StudentGoalsController as sg" class="student-goals">
+    <div class="row">
+        <h3 class="goals-title">
+            Goals
+        </h3>
+        <span class="btn btn-primary btn-sm" style="margin-top: 10px;"
+                ng-click="openModal('goal',{isStudent:true,student:{id:user.id}})">Add new goal</span>
+    </div>
+    <div class="list-group goals-list">
+        <h3 ng-show="loading.goals">Loading...</h3>
+        <h3 ng-show="goals && !goals.length">No goals</h3>
+        <div  class="list-group-item" ng-class="{'created-by-teacher':!isOwner(goal),'created-by-student':isOwner(goal)}"
+           data-ng-repeat="goal in goals  | orderBy: '-created'">
+            <div class="expected_date" ng-show="goal.expected_date && !goal.completed">
+                <div><b>Expected date:</b> {{goal.expected_date}}</div>
+            </div>
+            <div class="row" style="padding-left: 10px;">
+                <div class="btn btn-sm btn-success checked-goal"
+                     style="width:30px;border-radius:0"
+                     ng-class="{'completed':goal.completed}">
+                    <span class="fa fa-check"></span>
+                </div>
+                <div class="chat-name ">{{getCreatedBy(goal)}} <span class="chat-time">{{formatDate(goal.created)}}</span></div>
+                <div class="col-xs-10 description">
+                    {{goal.description}}
+                </div>
+
+                <div class="menu tooltip-relative">
+                    <ul>
+                        <li class="btn btn-sm btn-success " ng-if="!goal.completed"
+                             ng-show="canCheckOff(goal)"
+                             tooltip="Set goal as completed" tooltip-append-to-body="true" ng-click="checkOff(goal)">
+                            <span class="fa fa-check"></span>
+                        </li>
+                        <li class="btn btn-sm btn-success" style="background-color: #fff" ng-if="!goal.completed"
+                            ng-show="!canCheckOff(goal)"
+                            tooltip="When you complete this goal, your teacher will check this off" tooltip-append-to-body="true" ng-click="checkOff(goal)">
+                            <span class="fa fa-check"></span>
+                        </li>
+                        <li class="btn btn-sm btn-success " ng-if="goal.completed"
+                            ng-show="canCheckOff(goal)"
+                            tooltip="Unset goal as completed" tooltip-append-to-body="true" ng-click="checkOff(goal,true)">
+                            <span class="fa fa-close"></span>
+                        </li>
+                        <li class="btn btn-sm btn-success "
+                            ng-hide="hideAddCommentBtn(goal) || !canAddComment(goal)"
+                            tooltip="{{goal.comment?'Edit comment':'Add comment'}}" tooltip-append-to-body="true" ng-click="startEditingComment(goal)">
+                            <span class="fa fa-comment"></span>
+                        </li>
+                        <li class="btn btn-sm btn-danger "
+                            ng-hide="!isOwner(goal)"
+                            tooltip="Delete goal" tooltip-append-to-body="true" ng-click="delete(goal)">
+                            <span class="fa fa-trash"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="row" ng-hide="goal.editingComment!==undefined || !goal.comment">
+                <div class="col-xs-10 pull-right">
+                    <div class="chat-name chat-name-right">Me:</div>
+                    <div class="comment">
+                        {{goal.comment}}
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="goal.editingComment!==undefined">
+                <div class="col-xs-12 comment-box-wrapper">
+                    <div class="comment-box">
+
+
+                        <textarea class="form-control" data-ng-model="goal.editingComment" placeholder="Type your message"></textarea>
+                        <div class="btn btn-success btn-sm pull-right" data-ng-click="saveComment(goal)">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <div class="btn btn-danger btn-sm pull-right" ng-click="goal.editingComment=undefined">
+                            <span class="fa fa-close"></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--<div class="goal-table row">-->
+                <!--<div class="col-xs-4">-->
+                    <!--<div><b>Created by:</b></div>-->
+                    <!--<div>{{goal.teacher}}</div>-->
+                <!--</div>-->
+                <!--<div class="col-xs-4" ng-show="goal.expected_date">-->
+                    <!--<div><b>Expected date:</b></div>-->
+                    <!--<div>{{goal.expected_date}}</div>-->
+                <!--</div>-->
+                <!--<div class="col-xs-4">Report as done: <input type="checkbox"></div>-->
+            <!--</div>-->
+
+        </div>
+    </div>
+</div>

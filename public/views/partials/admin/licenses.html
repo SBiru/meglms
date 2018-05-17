@@ -1,0 +1,129 @@
+
+<div ng-if="!(userInfo.data.is_super_admin || userInfo.data.is_organization_admin)">
+    Sorry, you are not allowed to use this page
+</div>
+<div ng-if="(userInfo.data.is_super_admin || userInfo.data.is_organization_admin)">
+    <div ng-init="creating=false">
+        <a ng-click="creating=!creating">Create a new batch of licenses</a>
+        <div class="panel panel-default" ng-show="creating">
+            <div class="panel-heading">New Batch</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6"><input class="form-control" ng-model="new.batch_id" placeholder="Batch id"></div>
+                    <div class="col-md-2 col-sm-6"><input class="form-control" ng-model="new.duration" placeholder="Duration"></div>
+                    <div class="col-md-2 col-sm-6" style="display: flex">
+                        <div style="width:90%">
+                            <select class="form-control" ng-init="new.type = types[0].name" ng-model="new.type" ng-options="type.name as type.name for type in types"></select>
+                        </div>
+                        <i class="fa fa-question" tooltip="Duration type"
+                           style="line-height: 2"></i>
+                    </div>
+                    <div class="col-md-2 col-sm-6"><input class="form-control" ng-model="new.how_many" placeholder="How Many"></div>
+
+                </div>
+                <div class="row">
+                    <div class="panel">
+                        <div class="panel-heading license-classes">
+                            Classes
+                            <i class="fa fa-question" tooltip="Leave it blank if you want to use the default organization's placement class"
+                               style="line-height: 2"></i>
+                        </div>
+
+
+                        <div class="panel-body">
+                            <div class="col-sm-5">
+                                <div style="width:90%">
+                                    <select selectize ng-options="class.id as class.name for class in classes" ng-model="new.classid" placeholder="Placement class"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-5" ng-show="groups.length>0" style="display: flex">
+                                <div style="width:90%">
+                                    <select selectize ng-options="group.id as group.name for group in groups" ng-model="new.groupid" placeholder="Group"></select>
+                                </div>
+                                <i class="fa fa-question" tooltip="You must select a group"
+                                   style="line-height: 2"></i>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="btn btn-sm btn-default" ng-click="addClass()">Add class</div>
+                            </div>
+                        </div>
+
+                        <ul class="list-group">
+                            <li class="list-group-item" data-ng-repeat="class in licenseClasses">
+                                <b>{{class.name}}</b>
+                                <span ng-show="class.group">
+                                    Group: {{class.group.name}}
+                                </span>
+                                <span class="pull-left" >
+                                    <span class="fa fa-remove btn btn-sm"
+                                          ng-click="removeClass($index)"
+                                          style="padding: 0 5px;color: rgb(255, 126, 126);"></span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <button ng-click="createNewBatch()">Create</button>
+                <p ng-bind="createNewError"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Existing batches
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12" ng-repeat="batch in batches">
+                    <div class="panel panel-info" ng-init="batch.display=false">
+                        <div class="panel-heading batch-header">
+
+                            <a ng-click="batch.display=!batch.display" >
+                                <div class="col-md-3">
+                                    <div><b>Id:</b> {{batch.id}}</div>
+                                    <div><b>Total:</b> {{batch.licenses.length}}</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div><b>Duration:</b> {{batch.duration}}</div>
+                                    <div><b>Type:</b> {{batch.type}}</div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div>
+                                        <b>Classes:</b>
+                                        <span data-ng-repeat="class in batch.classes">
+                                            <span style="font-weight: 600;">{{class.className}}</span><span ng-show="class.groupId"> - Group: {{class.groupName}}</span>
+                                            ,
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </a>
+                        </div>
+                        <div class="panel-body" ng-show="batch.display">
+                            <table class="table license-table">
+                                <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>First name</th>
+                                        <th>Last name</th>
+                                        <th>Expiration date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="license in batch.licenses">
+                                        <td>{{license.key}}</td>
+                                        <td ng-bind="license.user.fname"></td>
+                                        <td ng-bind="license.user.lname"></td>
+                                        <td>{{license.expiry_date}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

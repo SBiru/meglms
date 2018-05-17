@@ -1,0 +1,249 @@
+{
+  "Anderson": {
+    "id": "475",
+    "email": "janderson@edkey.org",
+    "firstname": "Jared",
+    "lastname": "Anderson"
+  },
+  "Bawiec": {
+    "id": "4451",
+    "email": "rbawiec@edkey.org",
+    "firstname": "Richard",
+    "lastname": "Bawiec"
+  },
+  "Benally": {
+    "id": "1004",
+    "email": "dorenbenally@yahoo.com",
+    "firstname": "Doren",
+    "lastname": "Benally"
+  },
+  "Callender": {
+    "id": "128",
+    "email": "jcallender@edkey.org",
+    "firstname": "Jennifer",
+    "lastname": "Callender"
+  },
+  "CCJC": {
+    "id": "0101",
+    "email": "coach.ccjc@gmail.com",
+    "firstname": "Coconino County Juv.",
+    "lastname": "CCJC"
+  },
+  "CHS": {
+    "id": "0303",
+    "email": "chs@email.org",
+    "firstname": "Compass",
+    "lastname": "High School"
+  },
+  "Clark": {
+    "id": "1353",
+    "email": "aclark@edkey.org",
+    "firstname": "Anthony",
+    "lastname": "Clark"
+  },
+  "Cook": {
+    "id": "439",
+    "email": "bcook@edkey.org",
+    "firstname": "Brian",
+    "lastname": "Cook"
+  },
+  "Cruz": {
+    "id": "133",
+    "email": "kcruz@edkey.org",
+    "firstname": "Kim",
+    "lastname": "Cruz"
+  },
+  "Flohr": {
+    "id": "129",
+    "email": "jflohr@edkey.org",
+    "firstname": "Janet",
+    "lastname": "Flohr"
+  },
+  "Fudge": {
+    "id": "335",
+    "email": "rfudge@edkey.org",
+    "firstname": "Robert",
+    "lastname": "Fudge"
+  },
+  "Garcia": {
+    "id": "2864",
+    "email": "lgarcia@edkey.org",
+    "firstname": "Lorena",
+    "lastname": "Garcia"
+  },
+  "Garwood": {
+    "id": "450",
+    "email": "jgarwood@edkey.org",
+    "firstname": "Jennifer",
+    "lastname": "Garwood"
+  },
+  "Gibson": {
+    "id": "786",
+    "email": "labadvisor@arivacaboysranch.com",
+    "firstname": "Justin",
+    "lastname": "Gibson"
+  },
+  "Gilgen": {
+    "id": "310",
+    "email": "jgilgen@edkey.org",
+    "firstname": "Joseph",
+    "lastname": "Gilgen"
+  },
+  "Hauchrog": {
+    "id": "137",
+    "email": "phauchrog@edkey.org",
+    "firstname": "Patty",
+    "lastname": "Hauchrog"
+  },
+  "Heather Laine": {
+    "id": "727",
+    "email": "hlaine@edkey.org",
+    "firstname": "Heather",
+    "lastname": "Laine"
+  },
+  "Hill": {
+    "id": "0202",
+    "email": "mrs.dconnolly3@gmail.com",
+    "firstname": "Danielle",
+    "lastname": "Connolly"
+  },
+  "Hullenaar": {
+    "id": "130",
+    "email": "jhullenaar@edkey.org",
+    "firstname": "Jennifer",
+    "lastname": "Hullenaar"
+  },
+  "eJones": {
+    "id": "127",
+    "email": "ejones@edkey.org",
+    "firstname": "Erica",
+    "lastname": "Jones"
+  },
+  "Lee": {
+    "id": "128",
+    "email": "flee@edkey.org",
+    "firstname": "Fayette",
+    "lastname": "Lee"
+  },
+  "Mannis": {
+    "id": "359",
+    "email": "kmannis@edkey.org",
+    "firstname": "Kalman",
+    "lastname": "Mannis"
+  },
+  "majones": {
+    "id": "359",
+    "email": "majones@edkey.org",
+    "firstname": "Mathew",
+    "lastname": "Jones"
+  },
+  "MGaralczyk": {
+    "id": "6105",
+    "email": "mgaraczyk@edkey.org",
+    "firstname": "Mark",
+    "lastname": "Garalczyk"
+  },
+  "Mims": {
+    "id": "3301",
+    "email": "kmims@edkey.org",
+    "firstname": "Killy",
+    "lastname": "Mims"
+  },
+  "Pettit": {
+    "id": "3066",
+    "email": "mpettit@edkey.org",
+    "firstname": "Michael",
+    "lastname": "Pettit"
+  },
+  "Phan": {
+    "id":"2895",
+    "email":"wphan@edkey.org",
+    "firstname":"Wendy",
+    "lastname":"Phan"
+  },
+  "Priego": {
+    "id": "138",
+    "email": "rpriego@edkey.org",
+    "firstname": "Ronnette",
+    "lastname": "Priego"
+  },
+  "Radigan": {
+    "id": "131",
+    "email": "jradigan@edkey.org",
+    "firstname": "Jenny",
+    "lastname": "Radigan"
+  },
+  "Ramos": {
+    "id": "1203",
+    "email": "mramos@edkey.org",
+    "firstname": "Marla",
+    "lastname": "Ramos"
+  },
+  "Richardson": {
+    "id": "617",
+    "email": "trichardson@edkey.org",
+    "firstname": "Tammy",
+    "lastname": "Richardson"
+  },
+  "Riley": {
+    "id": "638",
+    "email": "kriley@edkey.org",
+    "firstname": "Kimberly",
+    "lastname": "Riley"
+  },
+  "Santiago": {
+    "id": "2754",
+    "email": "esantiago@edkey.org",
+    "firstname": "Elizabeth",
+    "lastname": "Santiago"
+  },
+  "SColeman": {
+    "id": "3112",
+    "email": "scoleman@edkey.org",
+    "firstname": "Shawn",
+    "lastname": "Coleman"
+  },
+  "SSLCJones": {
+    "id": "2707",
+    "email": "bjones@edkey.org",
+    "firstname": "Bob",
+    "lastname": "Jones"
+  },
+  "Taylor": {
+    "id": "2903",
+    "email": "rtaylor@edkey.org",
+    "firstname": "Ryan",
+    "lastname": "Taylor"
+  },
+  "VanGorp": {
+    "id": "3068",
+    "email": "svangorp@edkey.org",
+    "firstname": "Stephanie",
+    "lastname": "Van Gorp"
+  },
+  "White": {
+    "id": "299",
+    "email": "dawhite@edkey.org",
+    "firstname": "Darrell",
+    "lastname": "White"
+  },
+  "Wisniewski": {
+    "id": "320",
+    "email": "jwisniewski@edkey.org",
+    "firstname": "Jeff",
+    "lastname": "Wisniewski"
+  },
+  "Youngkin": {
+    "id": "2996",
+    "email": "jyoungkin@edkey.org",
+    "firstname": "John",
+    "lastname": "Youngkin"
+  },
+  "Zmyslinski": {
+    "id": "2505",
+    "email": "ezmyslinski@edkey.org",
+    "firstname": "Erica",
+    "lastname": "Zmyslinski"
+  }
+}
+

@@ -1,0 +1,21 @@
+<div class="view-response">
+    <div class="btn btn-default" ng-hide="opened"  ng-click="opened=true"><i class="fa fa-eye"></i> View response</div>
+    <div class="btn btn-default" ng-show="opened"  ng-click="opened=false"><i class="fa fa-eye-slash"></i> Hide response</div>
+    <div class="btn btn-default" ng-show="!loadingResponse" ng-click="openModal()">Expand</div>
+</div>
+
+<div ng-if="opened" style="width:98%;min-height:450px;margin-top:10px;overflow:auto;background-color:white;padding-left:15px;padding-bottom:15px;padding-right:15px;padding-top:15px;border:1px solid #ccc;border-radius:5px;">
+    <fabric-previewer preview-id="templateId" loaded-callback="loaded"></fabric-previewer>
+</div>
+    <script type="text/ng-template" id="template-response-modal.html">
+    <button type="button" class="close " ng-click="$dismiss()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h3 ng-bind="pageName" style="text-align: center;    margin: 0;"></h3>
+    <fabric-previewer style="margin-top: 20px;" id="canvas_{{templateId}}" ng-if="templateId"
+                      preview-id="templateId"
+                      loaded-callback="loaded"></fabric-previewer>
+</script>
+

@@ -1,0 +1,74 @@
+<script type="text/ng-template" id="templateId">
+
+    <div class="triangle"></div>
+
+    <div class="ns-popover-tooltip">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="fa fa-close text-danger pull-right" data-ng-click="hidePopover()"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div data-ng-repeat="page in $parent.category.pages | orderBy:orderPages" class="page">
+                    <a  ng-if="getHref(page)!=''" class="pull-left col-xs-8 pagename" ng-href="{{getHref(page)}}" ng-click="goToCourse(class,unit)">{{page.name}}</a>
+                    <div class="pull-right icons" style="font-size: 10px;">
+                            <span ng-bind="gradeText(class,page)" class="grade" data-ng-class="gradeOverall(page)"
+                                  ng-hide="page.is_exempt"></span>
+                        <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox">
+                            <i ng-show="(page.score && !page.minimumNotAchieved) || page.is_exempt==1" data-ng-class="{'gray':page.is_exempt==1}" class="fa fa-check sidebar-checkbox-icon" style="top:0px"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</script>
+<div class="panel panel-default class">
+    <div class="panel-heading row-fluid">
+
+        <div class="class-name truncate tooltip-relative" ng-class="{teacher:class.isTeacher}" ng-show="class.isActive || class.isTeacher">
+            <a ng-show="class.is_active === false" style="padding:0px;color:red" ng-click="goToCourse(class)" href="/editor/" target="_blank" tooltip="Not visible by student. Go to course admin"><i class="fa fa-eye-slash"></i></a>
+            <a tooltip="{{class.name}}" tooltip-placement="bottom" href="/" data-ng-click="goToCourse(class)">{{class.name}}</a>
+        </div>
+        <div ng-hide="class.isTeacher" class="progress-wrapper tooltip-relative" data-ng-include="'/public/views/splash/progressbar.html'" data-ng-controller="SplashCategoriesProgressBarController"></div>
+        <div class="tooltip-relative">
+            <a class="btn btn-sm btn-default btn-gradebook"
+               href="/gradebook/#/gradebook/{{class.id}}"
+               target="_blank"
+               ng-show="class.hasTeacherAbilities || class.isTeacher"
+               tooltip="Gradebook">
+                A+
+            </a>
+        </div>
+
+    </div>
+
+    <div class="panel-body">
+
+        <div class="panel panel-warning units row" data-ng-repeat="category in class.categories | orderBy:'position'" ng-if="category.name" ng-init="isPopoverOpen = true">
+            <div class="panel-heading  category-header pointer" style="position: relative;display: flex;"
+                 ng-click="category.show=!category.show"
+                 ns-popover
+                 ns-popover-template="templateId"
+                 ns-popover-trigger="click"
+                 ns-popover-placement="bottom"
+                 ns-popover-hide-on-click="false"
+                 ns-popover-theme="ns-popover-tooltip-theme">
+                <div class="category-name">{{category.name}}</div>
+                <div class="icons">
+                        <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox" style="display: block;">
+                            <i ng-show="(category.completed)" class="fa fa-check sidebar-checkbox-icon"></i>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

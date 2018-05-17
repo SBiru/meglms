@@ -1,0 +1,42 @@
+<div class="sidebar">
+
+
+    <div class="search-container tooltip-relative">
+        <input class="form-control search-applicant" placeholder="{{vc_sidebar.placeholder}}"
+               ng-model="vc_sidebar.searchText" ng-change="vc_sidebar.textChanged()">
+
+        <div class="clearfix"></div>
+    </div>
+    <div ng-show="vc_sidebar.loading" style="text-align: center;font-size: 20px;">Loading <span class="fa fa-pulse fa-spinner"></span></div>
+    <div class="applicants-container" e3-pagination-async update="vc_sidebar.getData" config="vc_sidebar.paginationConfig" ng-if="vc_sidebar.paginationConfig" ng-hide="vc_sidebar.loading">
+        <ul class="rows">
+            <li class="header j1-text-left">
+                <a class="tooltip-relative">
+                    <div data-ng-repeat="col in vc_sidebar.columns" ng-click="vc_sidebar.sortBy(col)"  tooltip-append-to-body="true" tooltip="{{col.label=='Progress'?vc_sidebar.badgeTooltip:''}}">
+                        <span ng-bind="col.label"></span>
+                        <span ng-show="col.label=='Applicant' && vc_sidebar.uniqueStudentCount"
+                              ng-bind="'('+vc_sidebar.uniqueStudentCount+')'"></span>
+                        <span ng-class="col.symbol"></span>
+                    </div>
+                </a>
+
+            </li>
+        </ul>
+        <ul class="rows">
+
+            <li
+                    data-ng-repeat="row in vc_sidebar.navData.data | orderBy:vc_sidebar.activeColumn.orderBy"
+                ng-class="{active:$stateParams.studentId==row.id}">
+                <a
+                        ng-click="$state.go(vc_sidebar.navState + '.' + vc_sidebar.nextState,{id:row.id});vc_sidebar.checkSidebar()">
+                    <div >
+                        <span class="student-img" ng-bind="vc_sidebar.rowInitials(row)"></span>
+                        <span class="student-name" ng-bind="row.name"></span>
+                    </div>
+                    <div style="text-align: center" ><span class="badge " ng-bind="row.inProgress"></span></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div ui-view="content"/>

@@ -1,0 +1,173 @@
+<script type="text/ng-template" id="child-text-content.html">
+    <a ng-click=openProfile(child.user_id)> {{ child.fname }} {{ child.lname }}</a>&nbsp;{{ child.created }}
+    <p ng-show="child.grade">
+        Grade: {{formatGrade(child.grade)}}
+        <span class="fa fa-table" ng-show="child.rubricid" style="margin-left:5px;cursor:pointer" ng-click="openRubric(child.id)"></span>
+    </p>
+    <p ng-if="child.fileuploadid.id">File Attached : <a target="_blank" href="/public/useruploads/{{child.fileuploadid.id}}{{child.fileuploadid.ext}}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{child.fileuploadid.filename}}</a>
+    </p>
+    <div ng-if="child.fileuploadid.length>=1">File<span ng-show="child.fileuploadid.length>1">s</span> Attached :
+        <div ng-repeat="file in child.fileuploadid" ng-if="child.fileuploadid.length>=1">
+            <a style="margin-bottom : 1px" target="_blank" href="/public/useruploads/{{file.id}}{{file.ext}}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{file.filename}}</a>
+        </div>
+    </div>
+    <p ng-bind-html="trustAsHtml(child.message)"  style="margin-top: 5px; "></p>
+    <div ng-show="child.upload_url.length">
+        <div ng-repeat="file in child.upload_url track by $index">
+            File: <a ng-href="{{ file }}" target='_blank'>{{ child.upload_file_name[$index] }}</a>
+        </div>
+        <br />
+        <br />
+    </div>
+</script>
+<div e3-pagination config="pagConfig" ng-if="messages" items="messages" ng-model="pagedItems">
+    <div ng-repeat="message in pagedItems" class="tooltip-relative" >
+    <div style='margin-bottom:30px; margin-right: 0px; margin-left: 0px; margin-top: 10px; background-color: #f3f4f4; padding-left: 25px; padding-bottom: 25px; padding-right: 25px; padding-top: 25px; border: 1px solid #e0e0e0; border-radius: 10px;' >
+        <div ng-class="indentClass(message.indent_count)">
+            <div style="float:left;cursor:pointer" ng-show="showVideo( message)" class="video_post_box float-none" ng-class="{playing:message.playVideo}">
+                <img class="videoimage" ng-hide="message.playVideo || message.video_thumbnail_url=='audioOnly'" ng-src="{{ message.video_thumbnail_url }}" width='150px' height='150px' ng-click="videoClicked(message)" tooltip="Click to Play Video" />
+                <span class="btn btn-sm btn-default"  ng-click="message.playVideo=true" ng-hide="message.playVideo || message.video_thumbnail_url!='audioOnly'"><span  class="fa fa-2x fa-play fa-fw"></span></span>
+                <video autoplay ng-if="message.playVideo" style="width:240px; height:240px "  class="prompt_video float-none" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+                    <source ng-src="{{trustAsResourceUrl(message.video_url)}}" type="video/mp4" >
+                    Your browser does not support the HTML5 video tag.
+                </video>
+                <div ng-hide="(is_archive && allow_video_post != 1) || allow_video_text_post == 1" class="video_post_right posts float-none display-block margin-top-15">
+                    <a ng-click=openProfile(message.user_id) > {{ message.fname }} {{
+                        message.lname }}</a>&nbsp;{{
+                    message.created }}
+
+                        <p ng-if="message.htmlSafeprompt && !message.isTemplate" ng-bind-html="message.htmlSafeprompt"  ng-class="{template100: message.shotemplate}"></p>
+                        <html-template-response ng-if="message.isTemplate" user-id="message.user_id" post-id="message.id"></html-template-response>
+                        <div >
+                            <div style="margin-top: 5px;" ng-hide="is_archive">
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="deletePost(message.id)"><i class="fa fa-trash-o" style='line-height:1em; font-size:1.4em;'></i>
+                                </button>&nbsp;
+                                <span ng-show="allow_upload_only_post!=1 && !isVideoPostInMobile">
+                            <button type="button" class="btn btn-primary btn-sm" ng-show="allow_video_post==1 && showResubmit" tooltip="Click this button to submit your assignment again" ng-click="newPost();togglePostBox(message)">Resubmit</button>
+                            <button type="button" class="btn btn-info btn-sm" ng-show="allow_video_post!=1 && !hideReplies" data-toggle="modal" data-backdrop="static" data-target="#basicModal" ng-click="replyTo(message.id)" tooltip="Click this button to comment on a post">{{ preference.navs.reply.translation }}</button>
+                            <button type="button" class="btn btn-info btn-sm" ng-show="allow_video_post==1 && !hideReplies" ng-click="replyTo(message.id);togglePostBox(message)" tooltip="Click this button to comment on a post">{{ preference.navs.reply.translation }}</button>
+                        </span>
+                                <span ng-show="allow_upload_only_post!=1 && isVideoPostInMobile">
+                            <button type="button" class="btn btn-primary btn-sm" ng-show="allow_video_post==1 && showResubmit"  ng-click="getFile($event)">Resubmit</button>
+                            <input  type="file" accept="video/*" ng-file-select="newPost();togglePostBox(message);mobileOnFileSelect($files,$event)" ng-show="false" >
+                            <button type="button" class="btn btn-info btn-sm" ng-show="allow_video_post==1 && !hideReplies" ng-click="getFile($event)" >{{ preference.navs.reply.translation }}</button>
+                            <input  type="file" accept="video/*" ng-file-select="replyTo(message.id);togglePostBox(message);mobileOnFileSelect($files,$event)" ng-show="false" >
+                        </span>
+                                <span ng-show="allow_upload_only_post==1">
+                            <span ng-show="showResubmit" upload-only-post btn-class="btn btn-primary btn-sm" btn-text="Resubmit" tooltip="Click this button to submit your assignment again"></span>
+                            <span ng-show="!hideReplies" upload-only-post reply-to="{{message.id}}" btn-class="btn btn-info btn-sm" btn-text="{{ preference.navs.reply.translation }}" tooltip="Click this button to comment on a post"></span>
+                        </span>
+                                <button type="button" class="btn btn-gray btn-sm" ng-show="canViewMessageButton && message.user_id != $root.user.id" ng-click="openChat(message)" tooltip="Click to open chat with user">Message</button>
+
+                        </div>
+                        <seen-by ng-show="allow_video_post==1" message="message"></seen-by>
+                        <div  ng-show="message.showTextBox && isVideoPostInMobile" ng-include="'video-post-mobile-UI.html'"></div>
+                        <div ng-if="message.showTextBox && !isVideoPostInMobile&& !allowVideoTextPost()" ng-include="'new-post-box.html'"></div>
+                    </div>
+                </div>
+
+                </div>
+                <div style="float:left; margin-left: 10px;" ng-class="{template100: allow_template_post}">
+                    <div ng-hide="allow_video_post==1 || is_archive">
+                        <a ng-click=openProfile(message.user_id)> {{ message.fname }} {{ message.lname }}</a>&nbsp;{{ message.created }}
+
+                        <p ng-if="message.htmlSafeprompt && !message.isTemplate" ng-bind-html="message.htmlSafeprompt"  ng-class="{template100: message.shotemplate}"></p>
+                        <html-template-response ng-if="message.isTemplate" user-id="message.user_id" post-id="message.id"></html-template-response>
+                    </div>
+
+                    <div ng-show="message.upload_url.length" >
+                        <div ng-repeat="file in message.upload_url track by $index">
+                            File: <a href="{{decodeURIComponent(file)}}" target='_blank'>{{ message.upload_file_name[$index] }}</a>
+                        </div>
+
+                        <br />
+                        <br />
+                    </div>
+                    <div ng-hide="allow_video_post==1 || is_archive">
+                        <button type="button" class="btn btn-danger btn-sm" ng-click="deletePost(message.id)"><i class="fa fa-trash-o" style='line-height:1em; font-size:1.4em;'></i>
+                        </button>&nbsp;
+                        <span ng-show="allow_upload_only_post!=1">
+                        <button type="button" class="btn btn-primary btn-sm" ng-show="showResubmit" tooltip="Click this button to submit your assignment again" ng-click="newPost();togglePostBox(message)">Resubmit</button>
+                    <button type="button" ng-show="!hideReplies" tooltip="Click this button to comment on a post" class="btn btn-info btn-sm"  ng-click="replyTo(message.id);togglePostBox(message)" tooltip="Click this button to comment on a post">{{ preference.navs.reply.translation }}</button>
+                    </span>
+                        <span ng-show="allow_upload_only_post==1">
+                        <span ng-show="showResubmit" upload-only-post btn-class="btn btn-primary btn-sm" btn-text="Resubmit" tooltip="Click this button to submit your assignment again"></span>
+                        <span ng-show="!hideReplies" upload-only-post reply-to="{{message.id}}" btn-class="btn btn-info btn-sm" btn-text="{{ preference.navs.reply.translation }}" tooltip="Click this button to comment on a post"></span>
+                    </span>
+                    <button type="button" class="btn btn-gray btn-sm" ng-show="canViewMessageButton && message.user_id != $root.user.id" ng-click="openChat(message)" tooltip="Click to open chat with user">Message</button>
+                    <div ng-if="message.showTextBox" ng-include="'new-post-box.html'"></div>
+                    <!--<button type="button" ng-show="allow_upload_post" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#basicFileUploadModal" ng-click="replyTo(message.id)">{{ preference.navs.reply.translation }}</button>-->
+                </div>
+            </div>
+        </div>
+        <div style='clear:both'></div>
+        <div ng-show="message.children.length" class="margin-left-0 margin-right-0" style='margin-bottom:20px; margin-right: 10px; margin-left: 55px; margin-top: 10px; background-color: #d9d9d9; padding-left: 15px; padding-bottom: 15px; padding-right: 15px; padding-top: 15px; border: 1px solid #e4e4e4; border-radius: 10px;'>
+            <div ng-repeat="child in message.children">
+                <div style="margin-top:25px;">
+                    <div ng-class="indentClass(child.indent_count)">
+                        <div>
+                        <div  ng-if="(child.is_teacher=='1' && child.video_thumbnail_url) || allow_video_post "
+                              class="video_post_box" ng-class="{playing:child.playVideo}">
+                            <img class="videoimage" ng-hide="child.playVideo || child.video_thumbnail_url=='audioOnly'" ng-src="{{ child.video_thumbnail_url }}" width='120px' height='120px' ng-click="videoClicked(child)" tooltip="Click to Play Video" />
+                            <span class="btn btn-sm btn-default"  ng-click="child.playVideo=true" ng-hide="child.playVideo || child.video_thumbnail_url!='audioOnly'"><span  class="fa fa-2x fa-play fa-fw"></span></span>
+                            <video autoplay ng-if="child.playVideo" style="width:240px; height:240px "  class="prompt_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+                                <source ng-src="{{trustAsResourceUrl(child.video_url)}}" type="video/mp4" >
+                                Your browser does not support the HTML5 video tag.
+                            </video>
+                            <div ng-hide="is_archive" class="video_post_right posts float-none display-block margin-top-15">
+                                <div data-ng-include="'child-text-content.html'"></div>
+                                <div>
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                            ng-click="deletePost(child.id)" ><i class="fa fa-trash-o" style='line-height:1em; font-size:1.4em;'></i>
+                                    </button>&nbsp;
+                                <span ng-show="allow_upload_only_post!=1 && !isVideoPostInMobile">
+                                    <button type="button" class="btn btn-primary btn-sm" ng-show="showResubmit" tooltip="Click this button to submit your assignment again" ng-click="newPost();togglePostBox(child)">Resubmit</button>
+                                    <button type="button" class="btn btn-info btn-sm" ng-show="!hideReplies" ng-click="replyTo(child.id);togglePostBox(child)" tooltip="Click this button to comment on a post">{{ preference.navs.reply.translation }}</button>
+                                </span>
+                                            <span ng-show="allow_upload_only_post!=1 && isVideoPostInMobile">
+                                    <button type="button" class="btn btn-primary btn-sm" ng-show="showResubmit" ng-click="getFile($event)">Resubmit</button>
+                                    <input  type="file" accept="video/*" ng-file-select="newPost();togglePostBox(child);mobileOnFileSelect($files,$event)" ng-show="false" >
+                                    <button type="button" class="btn btn-info btn-sm" ng-show="!hideReplies" ng-click="getFile($event)" >{{ preference.navs.reply.translation }}</button>
+                                    <input  type="file" accept="video/*" ng-file-select="replyTo(child.id);togglePostBox(child);mobileOnFileSelect($files,$event)" ng-show="false" >
+                                </span>
+                                            <span ng-show="allow_upload_only_post==1">
+                                    <span ng-show="showResubmit" upload-only-post btn-class="btn btn-primary btn-sm" btn-text="Resubmit" tooltip="Click this button to submit your assignment again"></span>
+                                    <span ng-show="!hideReplies" upload-only-post reply-to="{{child.id}}" btn-class="btn btn-info btn-sm" btn-text="{{ preference.navs.reply.translation }}" tooltip="Click this button to comment on a post"></span>
+                                </span>
+                                            <button type="button" class="btn btn-gray btn-sm" ng-show="canViewMessageButton && child.user_id != $root.user.id" ng-click="openChat(child)" tooltip="Click to open chat with user">Message</button>
+                                        </div>
+                                        <seen-by ng-show="allow_video_post==1" message="child"></seen-by>
+                                        <div  ng-show="child.showTextBox && isVideoPostInMobile" ng-include="'video-post-mobile-UI.html'"></div>
+                                        <div style="width:320px" class="posts" ng-if="child.showTextBox && !isVideoPostInMobile" ng-include="'new-post-box.html'"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="float:left; margin-left: 10px;width:100%">
+                                <div data-ng-include="'child-text-content.html'" ng-if="allow_video_post!=1"></div>
+                                <div ng-hide="(child.is_teacher=='1' && child.video_thumbnail_url) || allow_video_post || is_archive">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="deletePost(child.id)"><i class="fa fa-trash-o" style='line-height:1em; font-size:1.4em;'></i>
+                                    </button>&nbsp;
+                                    <span ng-show="allow_upload_only_post!=1">
+                                    <button type="button" class="btn btn-primary btn-sm" ng-show="showResubmit" tooltip="Click this button to submit your assignment again" ng-click="newPost();togglePostBox(child)">Resubmit</button>
+                                <button type="button" class="btn btn-info btn-sm" ng-show="!hideReplies" ng-click="replyTo(child.id);togglePostBox(child)" tooltip="Click this button to comment on a post">{{ preference.navs.reply.translation }}</button>
+                                </span>
+                                    <span ng-show="allow_upload_only_post==1">
+                                    <span ng-show="showResubmit" upload-only-post btn-class="btn btn-primary btn-sm" btn-text="Resubmit" tooltip="Click this button to submit your assignment again"></span>
+                                    <span ng-show="!hideReplies" upload-only-post reply-to="{{child.id}}" btn-class="btn btn-info btn-sm" btn-text="{{ preference.navs.reply.translation }}" tooltip="Click this button to comment on a post"></span>
+                                </span>
+                                    <button type="button" class="btn btn-gray btn-sm" ng-show="canViewMessageButton && child.user_id != $root.user.id" ng-click="openChat(child)" tooltip="Click to open chat with user">Message</button>
+
+                                    <div ng-if="child.showTextBox" ng-include="'new-post-box.html'"></div>
+                                    <!--<button type="button" ng-show="allow_upload_post" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#basicFileUploadModal" ng-click="replyTo(message.id)">{{ preference.navs.reply.translation }}</button>-->
+                                </div>
+                            </div>
+                            <div style='clear:both'></div>
+                        </div>
+                    </div>
+                    <div style='clear:both'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

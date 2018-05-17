@@ -1,0 +1,46 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="left-side">
+            <span ng-bind="word.word" class="glossary-concept"></span>
+        </span>
+        <span class="pull-right btn btn-danger" ng-click="delete(word)"
+              style="margin-left: 10px"
+              ng-show="showDelete"><span class="fa fa-trash"></span></span>
+        <span class="pull-right btn btn-default" ng-click="edit(word)" ng-show="showEdit" style="margin-left: 10px">Edit</span>
+        <span class="pull-right btn btn-primary" ng-click="createDefinition(word)" ng-show="showEdit">Add
+            Definition</span>
+        <span class="pull-right btn" ng-class="word.selected?'btn-success':'btn-default'"
+              ng-show="showSelect" ng-click="toggleSelect()">
+            <span class="glyphicon" ng-class="word.selected?'glyphicon-ok':'glyphicon-off'" ng-cloak></span>
+            {{word.selected?'Selected':'Select'}}</span>
+
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+        <div class="definition-list" ng-class="{editing:!readOnly}">
+            <div ng-repeat="def in word.definitions track by $index">
+                <div class="edit-buttons" ng-show="!readOnly">
+                    <span class="fa fa-edit" ng-class="{disabled:!def.canEdit}"
+                          ng-click="def.canEdit && editDefinition(def,word.word)"></span>
+                    <span class="fa fa-trash" ng-class="{disabled:!def.canEdit}"
+                          ng-click="def.canEdit && deleteDefinition(def)"></span>
+                    <input type="checkbox" ng-model="def.isSelected" ng-show="canSelectDefinition"
+                           data-ng-change="toggleDefinition(def.id,def.isSelected)">
+                </div>
+                <div class="definition-wrapper">
+                    <div class="number">
+                        {{$index+1}}.
+                    </div>
+                    <div class="definition">
+                        <div glossary-word-tags word="def" read-only="true" ng-show="showTags"
+                             class="glossary-tags"></div>
+                        <div ng-bind-html="trustAsHtml(def.definition)"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

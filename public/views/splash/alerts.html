@@ -1,0 +1,36 @@
+<div class="panel panel-info no-bottom-margin" ng-init="selectAlerts()">
+	<div class="panel-body">
+		<div>
+			<div class="panel" data-ng-class="alert.class"  data-ng-repeat="(key,alert) in alerts">
+				<div class="panel-heading pointer" data-ng-click="alert.show=!alert.show">
+					<span class="fa" data-ng-class="alert.show?'fa-minus-square':'fa-plus-square'"></span>
+					<span data-ng-bind="alert.title"></span>
+					<span class="fa fa-spinner fa-pulse" data-ng-show="reportService.loadingReport[alert.id]"></span>
+					<span data-ng-show="alert.rows"  data-ng-bind="'('+alert.rows.length+')'"></span>
+				</div>
+				<div class="panel-body" data-ng-if="alert.show">
+					<div class="row">
+						<div class="col-sm-4 col-sm-offset-4">
+							<canvas ng-if="key==1 && alert.graph"
+									id="line" class="chart chart-line " chart-data="alert.graph.data"
+									chart-labels="alert.graph.labels"
+									chart-click="onClick" >
+							</canvas>
+
+						</div>
+
+					</div>
+
+					<sortable-table
+							ng-if="alert.header"
+							header="alert.header"
+							rows="alert.rows"
+							table-height="250px"
+							ng-hide="reportService.loadingReport[alert.id]"></sortable-table>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>

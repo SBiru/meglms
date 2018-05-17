@@ -1,0 +1,67 @@
+<pre ng-hide=true>{{pageinfo}}</pre>
+<pre ng-hide=true>{{standardData}}</pre>
+<pre ng-hide=true>{{(pageinfo.show_objectives==1) ||  (pageinfo.rubricid>0)}}</pre>
+
+<div class="panel panel-body panel-default objectives" ng-show="(pageinfo.show_objectives==1) ||  (pageinfo.rubricid>0)"  ng-style="{'border-color':pageinfo.meta.page_border_color,'background-color':pageinfo.meta.page_border_color}">
+    <div ng-if="pageinfo.show_created_date==1">Creation Date: {{formatDate(pageinfo.created)}}</div>
+    <div ng-if="pageinfo.show_objectives!=1 && pageinfo.rubricid>0 && (pageinfo.layout!='JOURNAL' || pageinfo.journal_grading_type==1)" class="row">
+        <div class="col-sm-1 ">
+            <div class="btn btn-default rubric-btn" ng-click="openRubric()" ng-show="pageinfo.rubricid>0 && (pageinfo.layout!='JOURNAL' || pageinfo.journal_grading_type==1)">Rubric</div>
+        </div>
+    </div>
+    <div ng-if="pageinfo.show_objectives==1">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="objective row">
+                    <div class="col-sm-12 panel panel-default">
+                        Objectives: {{pageinfo.objective}}
+                    </div>
+
+                </div>
+
+                <div class="col-sm-2 panel panel-default">
+                    Duration: {{pageinfo.task_duration}} min.
+                </div>
+                <div class="col-sm-2 panel panel-default">
+                    Format: {{pageinfo.task_type}}
+                </div>
+                <div class="col-sm-2 panel panel-default">
+                    Points: {{pageinfo.max_points}}
+                </div>
+                <div class="col-sm-6 panel panel-default">
+                    Standards:
+                <span ng-repeat="standard in standardData.standards" class="standard">
+                {{standard.standard_name}}
+                </span>
+                </div>
+                <div class="col-sm-1 ">
+                    <div class="btn btn-default rubric-btn" ng-click="openRubric()" ng-show="pageinfo.rubricid>0 && (pageinfo.layout!='JOURNAL' || pageinfo.journal_grading_type==1)">Rubric</div>
+                </div>
+            </div>
+            <!--<div ng-if="pageinfo.rubricid>0" class="col-sm-4 panel panel-default" ng-controller="RubricStudentController">-->
+            <!--<div ng-hide="rubricData">Loading rubric..</div>-->
+            <!--<div ng-if="rubricData" ng-include="'/public/views/rubrics/rubric-grader.html'" class="feedback_rubric"></div>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+    <!--<table class="objectives">-->
+        <!--<thead>-->
+            <!--<th>Objective</th>-->
+            <!--<th ng-show="standardData.standards">Standards</th>-->
+            <!--<th>Duration</th>-->
+            <!--<th>Type</th>-->
+            <!--<th ng-show="pageinfo.max_points>0">Points</th>-->
+        <!--</thead>-->
+        <!--<td ng-bind="pageinfo.objective"></td>-->
+        <!--<td ng-show="standardData.standards">-->
+            <!--<div ng-repeat="standard in standardData.standards">-->
+                <!--{{standard.standard_name}}-->
+            <!--</div>-->
+        <!--</td>-->
+        <!--<td ng-bind="pageinfo.task_duration"></td>-->
+        <!--<td ng-bind="pageinfo.task_type"></td>-->
+        <!--<td ng-bind="pageinfo.max_points" ng-show="pageinfo.max_points>0"></td>-->
+        <!--<td><div class="btn btn-primary btn-small" ng-click="openRubric()" ng-show="pageinfo.rubricid>0">Rubric</div></td>-->
+    <!--</table>-->
+</div>

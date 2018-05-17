@@ -1,0 +1,15 @@
+<div class="modal-header" ng-hide="hideHeader">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Rubric</h4>
+</div>
+
+<div class="modal-body">
+    <h5 ng-show="total">Your grade: {{total}}</h5>
+    <h5 ng-show="maxTotal">Max grade: {{maxTotal}}</h5>
+    <div ng-include="'/public/views/rubrics/rubric-grader.html'" class="feedback_rubric"></div>
+</div>
+

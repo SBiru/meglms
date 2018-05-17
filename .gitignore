@@ -1,0 +1,45 @@
+######################## standard ignore files
+*.log
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.phpproj
+*phpproj.user
+*.sln
+*.v12.suo
+/.idea
+######################## config file
+/config.php
+######################## shared directory (in the future should contain all uploaded content)
+/shared
+######################## specific live files in the public folder (phase this out)
+/public/audio
+/public/coursecontent
+/public/data
+/public/english3
+/public/iframe
+/public/sandbox
+/public/user*
+/vendor/
+*.swp
+vendor/phpmailer/composer.lock
+#### Phinx Migration tool configuration file
+/phinx.yml
+Makefile
+phinx.yml
+public/lib/angular.js
+node_modules
+*.swo
+migrations/20150319012736_question_add_essay.php
+######################## imports
+imported/*
+
+meglms.iml
+.htaccess
+desktop.ini
+######################## powerschool files
+/powerschool/logs

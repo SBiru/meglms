@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <span class="header-text">Add test admin</span>
+    <span aria-hidden="true" ng-click="cancel()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+<div class="loading-users" ng-show="loading">
+    <span class="fa fa-spinner fa-pulse"></span>
+</div>
+<div class="available-classes-wrapper" ng-show="users">
+    <div class="available-classes">
+        <select selectize ng-model="user" data-ng-options="user as user.firstName + ' ' + user.lastName + ' ('+user.email+')'  for user in users | orderBy:'firstName'"></select>
+    </div>
+    <div class="add-btn">
+        <div class="btn btn-sm btn-success" ng-click="add()">Add test admin</div>
+    </div>
+</div>

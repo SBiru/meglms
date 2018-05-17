@@ -1,0 +1,247 @@
+.languages td{
+    width:150px;
+    padding: 5px 10px;
+}
+.languages th{
+    line-height: 3;
+}
+.editor {
+    padding: 5px;
+}
+.editor input,
+.editor textarea {
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+.editor input:focus,
+.editor textarea:focus {
+    border: 1px solid #ccc;
+    outline: none;
+    cursor: text;
+}
+.editor input:hover:not(:focus),
+.editor textarea:hover:not(:focus) {
+    background-color: #ddd;
+}
+.editor_empty {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-bottom: 8px;
+    color: #777;
+}
+.editor .vocab_phrase{
+    flex: 1;
+    padding: 5px 10px;
+    margin-right: 5px;
+    text-align: center;
+}
+.editor .vocab_audio{
+    padding: 0 5px;
+    width:7%;
+    display: flex;
+}
+.editor .vocab_audio .text{
+    font-size:10px;
+    width: 90%;
+    word-wrap: break-word;
+}
+.editor_saver {
+    opacity: 0;
+    transition: opacity .3s ease;
+    background-color: #afa;
+    border-radius: 10px;
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin-left: 20px;
+    display: none;
+}
+.editor_saver.visible {
+    display: inline-block;
+}
+.editor_saver.saved {
+    opacity: 1;
+}
+.editor_handle {
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    cursor: move;
+    color: #888;
+    padding-right: 10px;
+}
+.editor_handle:hover {
+    color: black;
+}
+.editor_title {
+    width: 100%;
+}
+.editor_title input {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+.editor_description {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    min-height: 100px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+.editor_dialog {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+.editor_dialog li {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    font-size: 20px;
+    display: flex;
+    border-bottom: 1px solid #aaa;
+    background: white;
+}
+.editor_dialog li input {
+    flex: 1;
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+.editor_btn {
+    font-size: 20px;
+    padding: 5px 20px;
+}
+.editor_btn[disabled] {
+    color: #aaa;
+}
+.editor_remove {
+    background: transparent;
+    color: #f88;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+}
+.form-group .tooltip-inner{
+    width:auto !important;
+    left:auto !important;
+    position:relative !important;
+    margin-top:0 !important;
+}
+.testbank-filters{
+    padding: 0px 10px;
+}
+.testbank-filters>.list-inline>li{
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 5px;
+}
+.testbank-filters .dropdowns .filter .filterlabel{
+    line-height: 3;
+}
+.testbank-filters .dropdowns .filter .filterlabel,
+.testbank-filters .dropdowns .filter .select{
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.question-display.selected .panel-heading{
+    background-color: #C3C3C3;
+
+}
+.question-display .panel-body, .move-to-top{
+    position:relative;
+}
+.question-display .move-here{
+    bottom: -30px;
+}
+.question-display .move-here .btn, .move-to-top .move-here .btn{
+    padding:5px;
+}
+.objectives{
+
+}
+.objectives .panel-body{
+    padding: 5px;
+    overflow: auto;
+    max-height: 150px;
+
+}
+.objectives .list{
+    font-weight: normal;
+}
+.objectives .list > div {
+    background: #f2f8fa;
+    margin: 1px 0px;
+    padding: 5px;
+}
+.wordmatch-area{
+    margin-top: 15px;
+}
+.wordmatch-row{
+    margin-left: 20px;
+}
+.wordmatch-row .new-word-set{
+    margin: 5px 0;
+    float:left
+}
+.default-tags{
+    background-color:#9e9e9e;
+}
+.custom-tags{
+    cursor: pointer;
+}
+.custom-tags .fa-remove{
+    display: none;
+}
+.custom-tags:hover .fa-remove{
+    display: inline-block;
+
+}
+.custom-tags, .default-tags{
+    margin-left: 3px;
+}
+
+
+.question-tags-filter .tag-search-wrapper{
+    display: inline-block;
+    width: calc(100% - 100px);
+    float: left;
+}
+.question-tags-filter .select-all-btn{
+    margin-left: 10px;
+}
+.select-random-questions .number-of-questions{
+    width: 40px;
+}
+.random-questions-info{
+    margin-top: 20px;
+    font-size: 12px;
+}
+.question-tags-wrapper{
+    padding:10px 0;
+}
+.modal-manage-questions .modal-dialog, .modal-create-question .modal-dialog {
+    width: 98%;
+    height: 100%;
+    margin-top: 1%;
+}
+.modal-create-question .modal-content {
+    height: 97%;
+}
+.modal-create-question .modal-body {
+    height: calc(100% - 75px)!important;
+}
+.modal-create-question .cke_contents {
+    height: 100px!important;
+}
+.modal-create-question .btn-group {
+    display: inline-block!important;
+}
+.editor-buttons-row{
+    padding: 0 15px;
+}
+.editor-buttons-row > div{
+    display: inline-block;
+}

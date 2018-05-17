@@ -1,0 +1,79 @@
+<div class="edit-course-class-user">
+	<div>
+		<h2>Edit Class User</h2>
+	</div>
+	<h4 ng-bind="user.lname + ', ' + user.fname"></h4>
+	<div>
+		<span data-ng-show="user.gender">
+			<b>Gender:</b> <span ng-bind="user.gender"></span>
+		</span>
+		<span data-ng-show="user.site" >
+			<b>Site:</b> <span ng-bind="user.site.name"></span>
+		</span>
+	</div>
+	<div>
+		<span data-ng-show="user.advisors">
+			<b>Advisors:</b>
+			<span data-ng-repeat="advisor in user.advisors">
+				<span>{{advisor.fname}} {{advisor.lname}}</span>,
+			</span>
+		</span>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			User Privileges
+		</div>
+		<div class="panel-body">
+			<span class="option" ng-class="{'active': user.is_student}">
+				<input class="hidden" type="checkbox" id="is_student" ng-model="user.is_student" checked="user.is_student=='1'" ng-change="checkboxStudentChange()">
+				<label for="is_student"><i class="fa fa-check"></i> Is Student</label>
+			</span>
+			<span class="option" ng-class="{'active': user.is_teacher}">
+				<input class="hidden" type="checkbox" id="is_teacher" ng-model="user.is_teacher" checked="user.is_teacher=='1'" ng-change="checkboxTeacherChange()">
+				<label for="is_teacher"><i class="fa fa-check"></i> Is Teacher</label>
+			</span>
+			<span class="option" ng-class="{'active': user.is_edit_teacher}">
+				<input class="hidden" type="checkbox" id="is_edit_teacher" ng-model="user.is_edit_teacher" checked="user.is_edit_teacher=='1'" ng-change="checkboxTeacherChange()">
+				<label for="is_edit_teacher"><i class="fa fa-check"></i> Is Content Editor</label>
+			</span>
+			<span class="option" ng-class="{'active': user.is_observer}">
+				<input class="hidden" type="checkbox" id="is_observer" ng-model="user.is_observer" checked="user.is_observer=='1'" ng-change="checkboxObserverChange()">
+				<label for="is_observer"><i class="fa fa-check"></i> Is Observer</label>
+			</span>
+			<div edit-start-end-dates options="user" ng-if="user.ready"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default" ng-if="user.is_finished">
+		<div class="panel-heading">
+			Finished Class
+		</div>
+		<div class="panel-body">
+			<h3><small>This student has already been marked as finished in this class or has received the final score. You can unset this status here. The student will have access to the class, and will also need to be marked as finished again.</small></h3>
+			<div class="text-center">
+				<button class="btn btn-sm btn-default" btn-checkbox ng-model="user.finished_class">
+					Finished
+				</button>
+				<button class="btn btn-sm btn-default" btn-checkbox ng-model="user.unset_final_score" ng-if="user.final_score">
+					Unset final score
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default" ng-if="showDeleteUserData()">
+		<div class="panel-heading">
+			Delete user data
+		</div>
+		<div class="panel-body">
+			<async-button color-style="danger" text="Delete" flash-text="Deleted!" loading="deleting" ng-click="deleteUserData()"></async-button>
+			<span class="alert alert-danger" data-ng-bind="error" ng-show="error"></span>
+		</div>
+	</div>
+	<button class="btn btn-default btn-sm" ng-click="goBack()">
+		<i class="fa fa-arrow-left"></i>
+		Go Back
+	</button>
+	<button type="button" class="btn btn-primary btn-sm" ng-click="updateUser()">Update user</button>
+	<button class="btn btn-warning btn-sm ng-scope" ng-click="loginAs()" ng-if="canShowLoginAsBtn()">Login as this user</button>
+</div>

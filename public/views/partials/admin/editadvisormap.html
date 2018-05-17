@@ -1,0 +1,58 @@
+<div class="edit-sites-modal">
+    <div class="modal-header">
+        <!-- close button -->
+        <button type="button" class="close " ng-click="cancel();">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+                <span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">Link Advisors to Users</h4>
+    </div>
+    <div class="modal-body">
+        <!-- LOADING -->
+        <div class="loading" ng-show="loading">LOADING...</div>
+        <!-- ACTUAL BODY -->
+        <div ng-show="!loading">
+            <!-- USER LISTS -->
+            <div class="row action-lists">
+                <div class="col-sm-6">
+                    <div class="small-heading">
+                        Powerschool Advisors
+                        <!--<a style="color:grey !important;" href="#" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<div style='text-transform:none; color:black; font-weight:normal'>(<span style='color:red'>*</span>) indicates the advisor is new or does not have a match.</div>"><i class="fa fa-question-circle"></i></a>-->
+                    </div>
+                    <script>
+                        $('[data-toggle="popover"]').popover();
+                    </script>
+                    <div class="filter-box">
+                        <input ng-model="advisorsSection.advisorFilter" placeholder="Filter by ..." />
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="advisor-map-list">
+                        <div style="background-color:white; cursor:default;"><span class="advisor-isnew">*</span> means new or unmatched</div>
+                        <div ng-repeat="name in advisorNames | orderBy:customsort | filter:advisorsSection.advisorFilter" ng-class="{'advisor-map-selected-advisor': selectedAdvisor == name }" ng-click="selectAdvisor(name)">
+                            <div><span class="advisor-name">{{name}}</span><span class="advisor-isnew" ng-if="!(advisors[name].length > 0)"> *</span></div>
+                            <div class="advisor-associated-users" ng-show="selectedAdvisor == name">
+                                <div ng-repeat="x in advisors[name]" class="advisor-associated-user">
+                                    <div class="associated-user-name">- {{x.last_name ? x.last_name + ", " : ""}}{{x.first_name}}</div><div class="advisor-map-unlink-icon"><i class="fa fa-close" ng-click="unlinkAdvisorAndUser(x)"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small-heading">Users in organization</div>
+                    <div class="filter-box">
+                        <input ng-model="usersSection.userFilter" placeholder="Filter by ..." />
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="advisor-map-list">
+                        <div ng-repeat="user in users | orderBy:'lastName' | filter:usersSection.userFilter" ng-click="linkToUser(user)">
+                            <span ng-bind="user.lastName + ', ' + user.firstName"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

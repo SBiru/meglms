@@ -1,0 +1,98 @@
+<div ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-hide="loading">
+    <div data-ng-show="amIAdmin()" class="row">
+        <div class="col-xs-6 width-100">
+            <div data-ng-include="'public/views/directives/reports/components/select-teacher.html'"></div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    Select a class
+                    <select
+                            selectize
+                            data-ng-model="class.selected"
+                            data-ng-options="c.id as c.name for c in classes | filter:isTeacher| orderBy:'name'">
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div ng-show="report.classInfo" data-ng-bind="'Active students:'+ report.classInfo.studentCount"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 graph-container">
+                    <div>
+                        <b data-ng-show="selected.pageId=='all'" data-ng-bind="report.classInfo.name"></b>
+                        <b data-ng-show="selected.pageId!='all'" data-ng-bind="selected.page.name"></b>
+                    </div>
+                    <div>Click on a bar to see the students' names</div>
+                    <canvas id="bar" class="chart chart-bar"
+                            chart-data="config.data"
+                            chart-labels="config.labels"
+                            chart-click="onClick"
+                            >
+                    </canvas>
+                    <div class="col-xs-12" ng-show="report.gradebook">
+                        <b>Avg. Grade:</b>
+                        <span ng-bind="(selected.pageId=='all'?report.gradebook.avg_grade:selected.page.avg_grade) + '%'"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3"  ng-if="selectedGroup.label!==undefined">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span data-ng-bind="selectedGroup.label + ' ('+selectedGroup.students.length+')'"></span>
+                        </div>
+                        <div class="panel-body">
+                            <sortable-table
+                                    header="config.studentTableHeader"
+                                    rows="selectedGroup.students"
+                                    table-height="250px"
+                                    >
+                            </sortable-table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" ng-show="report.gradebook">
+                    <div class="panel panel-default assignment-tab">
+                        <div class="panel-heading tooltip-relative">
+                            Assignments
+                            <span class="fa fa-question-circle"
+                                    tooltip="Click on the assignment to load the grade distribution"></span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a href="#"
+                                   class="list-group-item"
+                                   data-ng-click="selectAssignment('all')"
+                                   data-ng-class="{active:selected.pageId=='all'}">
+                                    <b>All</b>
+                                </a>
+
+                                <div data-ng-repeat="page in report.gradebook.allAssignments track by $index">
+                                    <a href="#"
+                                        class="list-group-item"
+                                        data-ng-click="selectAssignment(page)"
+                                        data-ng-class="{active:selected.pageId==page.id}"
+                                        >
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td data-ng-bind="page.name" style="width: 75%"></td>
+                                                <td data-ng-bind="'Avg: '+page.avg_grade + '%'" style="width: 25%"></td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

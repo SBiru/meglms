@@ -1,0 +1,5 @@
+<div ng-if="!question.contentPlusMathjac" style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<div ng-repeat="optiontext in question.options track by $index" class="radio">
+    <span ng-show="question.attemptedanswers==$index"><label><img src="/public/img/radiobutton_selected.png">&nbsp;&nbsp;<span style="display:inline-block" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+    <span ng-show="question.attemptedanswers!=$index"><label><img src="/public/img/radiobutton_unselected.png">&nbsp;&nbsp;<span style="display:inline-block" ng-bind-html="trustAsHtml(optiontext)"></span></label></span>
+</div>

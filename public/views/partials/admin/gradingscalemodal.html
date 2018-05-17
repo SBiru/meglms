@@ -1,0 +1,48 @@
+<!-- bootstrap modal -->
+
+<style>
+    #gradingScaleModal{overflow: hidden;}
+</style>
+<div ng-show="isGradeScaleBusy">
+    <div class="modal-dialog" style="width: 90%; height: 80%; overflow: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="gradingScaleModalLabel">Grading Scale</h4>
+            </div>
+            <div class="modal-body" >
+                <table style="width: 100%;">
+                    <tr><td colspan="2">Letter grades will be assigned according to the following grading scale. Toggle use of a certain grade mark by clicking on the blue label for that grade row.</td></tr>
+                    <tr><td width="30px;"><button class="btn btn-primary" ng-model="gradeScale.use_grade_a_plus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_a_plus, 'use_grade_a_plus')">A+</button></td>
+                        <td><div ng-show="gradeScale.use_grade_a_plus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.a_plus.min" model-max="gradeScale.a_plus.max" attach-handle-values="true" filter="percentage:0" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_a" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_a, 'use_grade_a')">A &nbsp;</button></td>
+                        <td><div ng-show="gradeScale.use_grade_a" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.a.min" model-max="gradeScale.a.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_a_minus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_a_minus, 'use_grade_a_minus')">A-</button></td>
+                        <td><div ng-show="gradeScale.use_grade_a_minus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.a_minus.min" model-max="gradeScale.a_minus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_b_plus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_b_plus, 'use_grade_b_plus')">B+</button></td>
+                        <td><div ng-show="gradeScale.use_grade_b_plus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.b_plus.min" model-max="gradeScale.b_plus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_b" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_b, 'use_grade_b')">B &nbsp;</button></td>
+                        <td><div ng-show="gradeScale.use_grade_b" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.b.min" model-max="gradeScale.b.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_b_minus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_b_minus, 'use_grade_b_minus')">B-</button></td>
+                        <td><div ng-show="gradeScale.use_grade_b_minus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.b_minus.min" model-max="gradeScale.b_minus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_c_plus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_c_plus, 'use_grade_c_plus')">C+</button></td>
+                        <td><div ng-show="gradeScale.use_grade_c_plus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.c_plus.min" model-max="gradeScale.c_plus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_c" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_c, 'use_grade_c')">C &nbsp;</button></td>
+                        <td><div ng-show="gradeScale.use_grade_c" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.c.min" model-max="gradeScale.c.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_c_minus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(use_grade_c_minus, 'use_grade_c_minus')">C-</button></td>
+                        <td><div ng-show="gradeScale.use_grade_c_minus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.c_minus.min" model-max="gradeScale.c_minus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_d_plus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(gradeScale.use_grade_d_plus, 'use_grade_d_plus')">D+</button></td>
+                        <td><div ng-show="gradeScale.use_grade_d_plus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.d_plus.min" model-max="gradeScale.d_plus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_d" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(gradeScale.use_grade_d, 'use_grade_d')">D &nbsp;</button></td>
+                        <td><div ng-show="gradeScale.use_grade_d" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.d.min" model-max="gradeScale.d.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td><button class="btn btn-primary" ng-model="gradeScale.use_grade_d_minus" btn-checkbox  btn-checkbox-true="true" btn-checkbox-false="false" ng-click="setGradeLetterUse(gradeScale.use_grade_d_minus, 'use_grade_d_minus')">D-</button></td>
+                        <td><div ng-show="gradeScale.use_grade_d_minus" ng-click="refreshLowestGrade()" range-slider min="40" max="100" model-min="gradeScale.d_minus.min" model-max="gradeScale.d_minus.max" attach-handle-values="true" filter="percentage:0"></div></td></tr>
+                    <tr><td colspan="2"><b>(F range will cover all values lower than {{lowestGrade}}%)</b></td></tr></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="doneGradingScale()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->

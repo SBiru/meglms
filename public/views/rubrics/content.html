@@ -1,0 +1,87 @@
+
+<div ng-controller="RubricsController">
+    <div ng-if="invalid_rubric">
+        Sorry, no rubric was found with id {{rubric_id}}
+    </div>
+    <div  ng-if="!invalid_rubric">
+        <div class="loading" ng-show="loading">
+            <span class="fa fa-spinner fa-pulse"></span>
+        </div>
+        <div ng-if="!isCourseBuilderView() && isCreateState()" ng-init="reloadClasses()">
+            Select a class:
+            <select selectize data-ng-options="class.id as class.name for class in classes | orderBy:'name'"
+                    ng-model="service.class_id"></select>
+        </div>
+        <div ng-show="!isCourseBuilderView()" style="text-align: center;margin-bottom: 20px;">
+            <async-button color-style="primary" text="Save" flash-text="Saved!" loading="saving" ng-click="save()"></async-button>
+            <button  class="btn btn-danger btn-sm" ng-click="delete()">Delete</button>
+        </div>
+
+        <table class="rubric-grid" ng-hide="!service.class_id && !isCourseBuilderView() && isCreateState()">
+            <thead>
+            <tr>
+                <th style="background: #a9a9a9" colspan="2">
+                    <input ng-model="data.name" placeholder="TITLE" ng-keyup="hasChanges($event)">
+                    <span ng-show="!isCourseBuilderView()">
+                        Total: {{getMaxPoints()}}
+                    </span>
+                </th>
+                <th ng-repeat="col in header track by $index">
+                    <div>
+                        Remove column
+                <span class="btn btn-sm btn-danger" ng-click="remove_col($index)">
+                    <span class="fa fa-remove"></span>
+                </span>
+                    </div>
+                    <textarea ng-model="col.text" placeholder="Optional Title" ng-keyup="hasChanges($event)"></textarea>
+                </th>
+                <th>
+                    <button ng-click="add_col()">Add new column</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in rubric_grid track by $index">
+                <td>
+                    <div style="height: 100%;width:100%;display: inline-block;">
+                        <div class="tools">
+                            <div class="tool">
+                                <div class="btn btn-sm btn-default" tooltip="Copy down" tooltip-placement="right" ng-click="copy_row_down($index)">
+                                    <span class="fa fa-copy"></span>
+                                </div>
+                            </div>
+                            <div class="tool">
+                                <div class="btn btn-sm btn-danger" tooltip="Remove" tooltip-placement="right" ng-click="remove_row($index)">
+                                    <span class="fa fa-remove"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <textarea  ng-model="rubric_descriptions[$index].text" placeholder="Rubric description" ng-keyup="hasChanges($event)"></textarea>
+                    <div class="score">
+                        Total Score: <input type="text" ng-model="rubric_descriptions[$index].score" ng-keyup="hasChanges($event)">
+                    </div>
+                </td>
+                <td ng-repeat="col in row track by $index">
+                    <div dynamic="col.text" ng-show="col.ck === 0" ng-init="col.ck = 0" style="cursor: text;padding: 10px;border: 1px solid #ccc;" ng-click="resetckshow(row);col.ck = 1">{{col.text}}</div>
+                    <div  ng-if="col.ck === 1" class="cell-description">
+                        <textarea ckeditor custom-options="ckeditorOptions" ng-model="col.text" placeholder="Score Description" ng-keyup="hasChanges($event)"></textarea>
+                    </div>
+                    <div class="score">
+                        Score: <input type="text" ng-model="col.score" ng-keyup="hasChanges($event)"> %
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button ng-click="add_row()">Add new row</button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

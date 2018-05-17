@@ -1,0 +1,113 @@
+      <!-- bootstrap modal -->
+
+  <style>
+  #basicModal{overflow: hidden;}
+  </style>
+    <div id="basicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog" style="width: 380px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation}}</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist" data-ng-init="currentTab='video'" >
+              <li ><a role="tab" data-toggle="tab" ng-click="currentTab='video'">{{ preference.navs.webcam.translation}}</a></li>
+              <li><a role="tab" data-toggle="tab" ng-click="currentTab='upload'">{{ preference.navs.uploadvideo.translation}}</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div  ng-show="currentTab=='video'" id="video_reply_tab">
+
+                <!-- Beginning Of Flash Video Recorder -->
+                <div style="margin-top: 10px;">
+                  <div align="center">
+                    <div ng-bind-html="videoWidget" style="width: 272px; height:224px;"></div>
+
+                    <br />
+                    <div id="buttonsarea" align="center">
+                      <span ng-bind-html="videoRecordButton"></span> &nbsp;&nbsp;
+                      <button ng-click="submitGradePost();
+                                submitVideoPost(0)">
+                        <span class="fa fa-check" style="color:green"></span>
+                        {{preference.navs.submit.translation}}
+                      </button>
+                      <!--<img id="submitted" src="/public/img/submitbttn.png" ng-click="submitGradePost();-->
+                                <!--submitVideoPost(0)">-->
+                    </div>
+                    <div id="bottompart">
+                      <!--<div align="center">
+                          <input id="private_video" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video">Make Private</label>
+                      </div>-->
+                    </div>
+                  </div>
+                </div>
+                <!-- End Of Flash Video Recorder -->
+              </div>
+              <div  ng-show="currentTab=='upload'" id="upload_reply_tab">
+                <div style="margin-top: 10px;">
+                  <input type="file" ng-file-select="onFileSelect($files)">
+                  <br />
+                  <div ng-show="is_uploading">
+                    <span>Uploaded {{ progress_upload}}%</span>
+                    <div class="file-upload-progress-container" style="width:300px;">
+                      <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 0%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Tab panes -->
+          </div>
+          <!--<div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>-->
+        </div>
+      </div>
+    </div>
+    <!--End Basic Boot Strap Modal-->
+
+    <!-- bootstrap File UPload modal -->
+    <div id="basicFileUploadModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog" style="width: 380px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation}}</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li class='active'><a href="#file_upload_reply_tab" role="tab" data-toggle="tab">Upload File</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="file_upload_reply_tab">
+                <div style="margin-top: 10px;">
+                  <input type="file" ng-file-select="onFileUploadGenericSelect($files)">
+                  <br />
+                  <div ng-show="is_uploading">
+                    <span>Uploaded {{ progress_upload}}%</span>
+                    <div class="file-upload-progress-container" style="width:300px;">
+                      <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 0%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Tab panes -->
+          </div>
+          <!--<div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>-->
+        </div>
+      </div>
+    </div>
+    <!--End Basic Boot Strap File UPload Modal-->

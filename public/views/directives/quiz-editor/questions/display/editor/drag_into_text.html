@@ -1,0 +1,7 @@
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<ul class="list-inline">
+    <li ng-repeat="option in question.options track by $index"
+        class="btn btn-default btn-xs option"
+        ng-style="{'min-width':getHighestWidth()}"
+        ng-bind="option"></li>
+</ul>

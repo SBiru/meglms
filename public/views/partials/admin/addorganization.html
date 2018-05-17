@@ -1,0 +1,25 @@
+<div>
+	<h2>Add Organization</h2>
+	<table>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="organizationName" class="control-label" style="font-size:1.4em">Name</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="organizationName" name="organizationName" ng-model="organizationName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Organization Name" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="organizationDomain" class="control-label" style="font-size:1.4em">Domain</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="organizationDomain" name="organizationDomain" ng-model="organizationDomain" class="form-control ng-pristine ng-valid ng-valid-required" placeholder='organization.meglms.com' required></td>
+		</tr>
+              <tr>
+			<td style="padding-bottom:15px;"><label for="organizationEmail" class="control-label" style="font-size:1.4em">Email Contact</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="organizationEmail" name="organizationEmail" ng-model="organizationEmail" class="form-control ng-pristine ng-valid ng-valid-required" placeholder='contact@organization.com' required></td>
+		</tr>
+              <tr>
+			<td style="padding-bottom:15px;"><label for="organizationPhone" class="control-label" style="font-size:1.4em">Phone Contact</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="organizationPhone" name="organizationPhone" ng-model="organizationPhone" class="form-control ng-pristine ng-valid" placeholder='1-888-555-1111'></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="addOrganization()">Add Organization</button></td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,22 @@
+<div>
+    <h3 style="margin-left: 20px;">{{ courseName }} Classes</h3>
+    <div style="margin-top: 15px; margin-bottom: 15px; margin-left: 20px;"><a href="#/addcourseclass/">+Add Class</a></div>
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+        <thead>
+            <tr>
+                <th data-halign="left" style="width:15px;"></th>
+                <th data-halign="left">Class Name</th>
+                <th data-halign="left" style="width:85px;"></th>
+                <th data-halign="left" style="width:85px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat='class in classes'>
+                <td data-halign="left" style="width:15px;"><a href="#/editcourseclass/{{ class.id }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td data-halign="left">{{ class.name }}</td>
+                <td data-halign="left" style="width:85px;"><a href="#/viewcourseclassusers/{{ class.id }}">view users</a></td>
+                <td data-halign="left" style="width:85px;"><a href="#/addcourseclassuser/{{ class.id }}">+add user</a></td>
+            </tr>
+        </tbody> 
+    </table>
+</div>

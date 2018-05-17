@@ -1,0 +1,129 @@
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+    <!--<h4 class="modal-title" id="myModalLabel">{{ preference.navs.reply.translation }}</h4>-->
+</div>
+<div class="modal-body" ng-init="currentTab='video'">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist" >
+        <li class="active" ng-show="page.allowVideo">
+            <a href="" role="tab" data-toggle="tab" ng-click="currentTab='video'">{{ preference.navs.webcam.translation }}</a>
+        </li>
+        <li ng-show="page.allowVideo">
+            <a href="" role="tab" data-toggle="tab" ng-click="currentTab='upload_video'">{{ preference.navs.uploadvideo.translation }}</a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div  ng-show="currentTab=='video'" id="video_reply_tab">
+            <!-- Beginning Of Flash Video Recorder -->
+            <div style="margin-top: 10px;">
+                <div ng-show="page.allowVideo" align="center">
+                    <div ng-bind-html="videoWidget" style="width: 272px; height:224px;"></div>
+                    <br />
+                    <div id="buttonsarea" align="center">
+                        <span ng-bind-html="videoRecordButton" class="videoRecordButton"></span> &nbsp;&nbsp;
+                        <button ng-click="submit()" id="submitted">
+                            <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                        </button>
+                        <!--<img id="submitted" src="/public/img/submitbttn.png" ng-click="submitPost(0)">-->
+                    </div>
+                    <div id="bottompart">
+                        <!--<div align="center">
+                            <input id="private_video" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video">Make Private</label>
+                        </div>-->
+                        <p align="center">If necessary, add a text comment below.
+                            <br>Click submit when you are finished.</p>
+                    </div>
+                </div>
+                <div id="commentsarea" align="center">
+                    <textarea ng-show="page.allowVideo" id="commentsVideo" class="form-control" rows="3" placeholder="" ng-model="video_comment"></textarea>
+                    <div ng-show="!page.allowVideo" style="padding-bottom:10px">
+                        <div style="margin-bottom: 10px;">
+                            Type or paste your text below, or upload your document
+                        </div> 
+                        <div style="margin-bottom: 5px;">
+                            <input type="file" ng-file-select="onFileSelect($files)">
+                            <br />
+                            <div ng-show="is_uploading">
+                                <span>Uploaded {{ progress_upload }}%</span>
+                                <div class="file-upload-progress-container" style="width:300px;">
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-hide="page.allowVideo">
+                        <!--<div>
+                            <input id="private_text" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_text">Make Private</label>
+                        </div>-->
+                        <button ng-click="submit(0)">
+                            <span class="fa fa-check" style="color:green"></span> {{preference.navs.submit.translation}}
+                        </button>
+                        <!--<img src="/public/img/submitbttn.png" ng-click="submitPost(0)">-->
+                    </div>
+                </div>
+            </div>
+            <!-- End Of Flash Video Recorder -->
+        </div>
+        <div  id="upload_reply_tab" ng-show="currentTab=='upload_video'">
+            <div style="margin-top: 10px;">
+                <input type="file" ng-file-select="onFileSelect($files)">
+                <br />
+                <div ng-show="is_uploading">
+                    <span>Uploaded {{ progress_upload }}%</span>
+                    <div class="file-upload-progress-container" style="width:300px;">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="bottompart">
+                    <!--<div align="center">
+                        <input id="private_video_file" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video_file">Make Private</label>
+                    </div>-->
+                    <p align="center">If necessary, add a text comment below.
+                        <br>Click submit when you are finished.</p>
+                </div>
+                <div align="center">
+                    <textarea ng-disabled="is_uploading" id="upload_comments" name="upload_comments" ng-model="video_upload_comment" cols="35" rows="6" placeholder="Type Message Here"></textarea>
+                    <button ng-disabled="is_uploading" ng-click="uploadPost()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        CKEDITOR.config.allowedContent = true;
+        CKEDITOR.config.disableNativeSpellChecker = false;
+        var ck = CKEDITOR.replace('commentsVideo', {
+            toolbar: [{
+                name: 'basicstyles',
+                groups: ['basicstyles', 'cleanup'],
+                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat', 'Smiley']
+            }, {
+                name: 'paragraph',
+                groups: ['list', 'indent', 'blocks', 'align', 'bidi'],
+                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+            }, {
+                name: 'colors',
+                items: ['TextColor', 'BGColor']
+            }, {
+                name: 'tools',
+                items: ['Maximize']
+            },
+            ],
+            filebrowserUploadUrl: '/uploadckeditormedia/'
+        });
+        ck.on( 'paste', function( evt ) {
+            var data = evt.data;
+            data.dataValue = E3replaceUrl(data.dataValue);
+            // Text could be pasted, but you transformed it into HTML so update that.
+            data.type = 'html';
+        });
+
+    </script>
+    <!-- End Tab panes -->
+</div>
+

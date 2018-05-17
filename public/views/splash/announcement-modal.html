@@ -1,0 +1,195 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" data-ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><span>{{action}}</span> Announcement</h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-6">
+            <input type="checkbox" data-ng-model="announcement.addStartDate"> This announcement begins on:
+            <announcement-datepicker ng-class="{enabled:announcement.addExpirationDate}" ng-disabled="!announcement.addStartDate" ng-model="announcement.start_date"  start-time="startTime"/>
+        </div>
+        <div class="col-sm-6">
+            <input type="checkbox" data-ng-model="announcement.addExpirationDate"> This announcement expires on:
+            <announcement-datepicker ng-disabled="!announcement.addExpirationDate"
+                                     ng-class="{enabled:announcement.addExpirationDate}"
+                                     min-date="minDate"
+                                     start-time="endTime"
+                                     start-date="announcement.start_date"
+                                     ng-model="announcement.expiration_date"/>
+        </div>
+
+    </div>
+
+
+
+    <div class="btn btn-primary btn-sm btn-record-video" ng-click="openModal('record-video')">
+        <span class="fa fa-video-camera"></span> Record
+    </div>
+    <textarea ckeditor="" custom-options="ckeditorOptions" class="form-control" data-ng-model="announcement.text" placeholder="Text"></textarea>
+    <div ng-if="!announcement.id">
+        <div ng-show="user.is_super_admin || user.is_organization_admin" style="margin-top: 10px;">
+            <input type="checkbox" data-ng-model="announcement.makeOrgLevel"> This is a school announcement
+        </div>
+    </div>
+    <div ng-if="!announcement.id && !announcement.makeOrgLevel" style="margin-top: 10px;" >
+        <div ng-show="!classes.length">LOADING <span class="fa fa-pulse fa-spinner"></span></div>
+        <announcements-student-class-selector classes="classes"
+                                              ng-if="classes.length"/>
+    </div>
+    <div ng-if="announcement.id && announcement.classid">
+        <div ng-show="announcement.loadingStudents">Loading students...</div>
+        <announcements-student-selector students="announcement.students"
+                                              ng-if="announcement.students"/>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <p class="alert alert-danger error-msg" ng-show="msgError">{{msgError}}</p>
+    <div class="btn btn-primary" data-ng-click="ok()">Save</div>
+</div>
+<script type="text/ng-template" id="announcement-student-selector.html">
+    <div class="announcement-student-list col-xs-12">
+        <div class="col-sm-12">
+            <button class="btn btn-sm btn-default" btn-checkbox
+                    ng-model="students.selectAllStudents"
+                    data-ng-change="selectAllChanged(students.selectAllStudents)"
+                    style="margin-top: 10px"
+            >{{students.selectAllStudents?'Unselect':'Select'}} all</button>
+
+        </div>
+        <div class="clearfix"></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <td>Viewed</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="student in students | orderBy:'lname'">
+                <td>
+                    <input ng-model="student.selected" data-ng-change="students.haveChanges=true" type="checkbox">
+                </td>
+                <td ng-bind="student.lname"></td>
+                <td ng-bind="student.fname"></td>
+                <td ng-bind="student.email"></td>
+                <td class="tooltip-relative">
+                    <span ng-show="student.viewed" class="fa fa-check" style="color:deepskyblue"
+                          tooltip="{{student.read_on}}">
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+</script>
+<script type="text/ng-template" id="announcement-student-class-selector.html">
+    <div class="panel panel-default announcement-student-class-selector ">
+        <div class="panel-body">
+            <input ng-model="searchClass" class="announcement-search" placeholder="Search for a class">
+            <div>
+                <button class="btn btn-sm btn-default" btn-checkbox ng-model="selectAll"
+                        data-ng-change="selectAllChanged(selectAll)">Select
+                all</button>
+                <button class="btn btn-sm btn-default" btn-checkbox ng-model="onlySelected">Show only
+                    selected</button>
+            </div>
+            <div class="classes-list-wrapper">
+                <div data-ng-repeat="class in classes | filter:searchClass" ng-if="class.name" class=""
+                     ng-hide="onlySelected && !class.selected">
+                    <div class="announcement-class-row">
+                        <input type="checkbox" ng-model="class.selected">
+                        <span ng-bind="class.name"></span>
+                        <span ng-show="class.selected"
+                              class="label label-info"
+                              ng-bind="class.selectedCount?(class.selectedCount + ' students'):'All students'"></span>
+                        <span class="btn-sm btn-default btn pull-right btn-select-students"
+                              ng-show="class.selected"
+                              ng-click="startEditing(class)"
+                              ng-bind="class.editStudents?'Collapse':'Select Students'"></span>
+                        <div ng-if="class.editStudents && class.selected">
+                            <div ng-show="!class.students.length">This class has no active students</div>
+                            <div ng-show="class.students.length">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-sm btn-default" btn-checkbox
+                                            ng-model="class.selectAllStudents"
+                                            data-ng-change="selectAllStudentsChanged(class,class.selectAllStudents)"
+                                            style="margin-top: 10px"
+                                    >{{class.selectAllStudents?'Unselect':'Select'}} all</button>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="announcement-student-list col-xs-12">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Last Name</th>
+                                                <th>First Name</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-ng-repeat="student in class.students | orderBy:'lname'">
+                                                <td>
+                                                    <input ng-model="student.selected" type="checkbox">
+                                                </td>
+                                                <td ng-bind="student.lname"></td>
+                                                <td ng-bind="student.fname"></td>
+                                                <td ng-bind="student.email"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <style>
+        .announcement-student-class-selector{
+
+            border: none;
+            margin-top: 10px;
+        }
+        .announcement-student-class-selector .panel-body{
+            padding: 0;
+        }
+        .announcement-class-row{
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .announcement-student-list{
+            max-height: 200px;
+            overflow-y:auto;
+        }
+        .announcement-search{
+            margin-bottom: 10px;
+        }
+        .classes-list-wrapper{
+            max-height: 300px;
+            overflow-y:auto;
+            overflow-x: hidden;
+        }
+        .btn-select-students{
+            background: #f5f5f5;
+            top: -4px;
+            position: relative;
+        }
+    </style>
+</script>

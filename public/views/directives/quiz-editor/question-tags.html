@@ -1,0 +1,9 @@
+Tags:
+<span class="label label-info pointer" ng-click="addTag()">+ Add</span>
+<span class="label label-primary default-tags" data-ng-repeat="tag in question.fixed_tags">
+    {{tag}}
+</span>
+<span class="label label-primary custom-tags" data-ng-repeat="tag in question.custom_tags">
+    {{tag.name}}
+    <i class="fa fa-remove" ng-click="removeTag($index)"></i>
+</span>

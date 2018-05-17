@@ -1,0 +1,14 @@
+<div >
+    <div ng-if="proficiencyTestStatus.proficiency.used">
+        <div ui-view></div>
+    </div>
+    <div data-ng-include="'/public/views/splash/announcements.html?v=2'"
+         ng-if="!user.hasOnlyProficiencyClasses"></div>
+    <div ng-if="!user.org.category_dashboard && !user.hasOnlyProficiencyClasses" class="classes-container"
+         data-ng-include="'/public/views/splash/classes.html'"
+         data-ng-controller="SplashClassesController"></div>
+    <div ng-if="user.org.category_dashboard && !user.hasOnlyProficiencyClasses"
+         class="classes-container categories-container"
+         data-ng-include="'/public/views/splash/categories.html'"
+         data-ng-controller="SplashCategoriesController"></div>
+</div>

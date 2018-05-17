@@ -1,0 +1,65 @@
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+
+<div class="form-group" >
+    <label>Equation Response Items:</label>
+    <div class="response-items-container">
+        <div class="row eq-navigation-buttons" style="margin-bottom: 2px; margin-left: 5px; margin-top: 5px">
+            <button class="eq-nav-button">
+                <i class="fa fa-arrow-left" aria-hidden="true" ></i>
+            </button>
+            <button class="eq-nav-button">
+                <i class="fa fa-arrow-right" aria-hidden="true" ></i>
+            </button>
+
+            <button class="eq-nav-button"  type="button">
+                <i class="fa fa-undo" aria-hidden="true" ></i>
+            </button>
+            <button class="eq-nav-button" type="button">
+                <i class="fa fa-repeat" aria-hidden="true" ></i>
+            </button>
+            <button class="eq-nav-button" type="button">
+                <span><img style="width:18px; margin-bottom:3px; " src="/public/img/eq-nav-backspace.png"></span>
+            </button>
+        </div>
+        <div class="row" style=" margin-left: 5px; margin-bottom: 5px">
+            <div class="col-sm-3" style="width: auto; padding: inherit; margin-right: 2px">
+                <div >
+                    <span><img src="/public/img/eq.numbers.PNG" /></span>
+                </div>
+            </div>
+            <div class="col-sm-9" style="margin-top: 2px; width: auto; padding: inherit;">
+                <div class="row" ng-show="issetResponseItem('variables')">
+                        <button class="eq-button" ng-repeat="variable in question.extra.variables" style=" pointer-events: none;">{{variable}}</button>
+                </div>
+                <div class="row" ng-show="issetResponseItem('operators')">
+                        <button class="eq-button" ng-repeat="operator in question.extra.operators" style=" pointer-events: none;">
+                            <span ng-if="operator !='.'">{{operator}}</span>
+                            <i ng-if="operator =='.'" style="font-size: 10px;" aria-hidden="true" class="fa fa-circle"></i>
+                        </button>
+                </div>
+                <div class="row" ng-show="issetResponseItem('logicals')">
+                        <button class="eq-button" ng-repeat="logical in question.extra.logicals" style=" pointer-events: none;">{{logical}}</button>
+                </div>
+                <div class="row "  ng-show="issetResponseItem('specials')">
+                    <button  class="eq-button" ng-repeat="special in question.extra.specials" style=" pointer-events: none;">
+                        <span ng-if="special =='||'">{{special}}</span>
+                        <span ng-if="!(special =='||')"><img ng-src="{{'/public/img/'+special+'.png'}}" /></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group" >
+    <label>Grading Type: </label>{{' '+question.extra.gradeType}}
+</div>
+<div ng-if="question.extra.gradeType == 'automatic'" class="form-group" >
+    <label>Possible Solutions:</label>
+    <div class="eq-solutions" ng-repeat="solution in question.extra.solutions track by $index">
+        Solution <span ng-bind="($index+1)+':'">:</span>
+
+        <!--<span id="static-math-{{$index}}" ng-bind-html="safeHtml(staticEls[$index])">{{solution}}</span>-->
+        <span  id="eqEditor-static-math-{{dirCount}}-{{$index}}" ng-bind-html="getMathEl($index)"></span>
+    </div>
+</div>
+<span id="eqEditor-static-hidden-{{dirCount}}"></span>

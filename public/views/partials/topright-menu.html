@@ -1,0 +1,106 @@
+<tr ng-show="user">
+    <td>
+        <ul class="nav navbar-nav navbar-right display-block margin-0"  style="display: inline-flex;">
+            <li ng-if="user.license.type=='hours'" class="list-group-item timeleft">
+                <div class='time'>
+                    <timer finish-callback="logout()" countdown="user.license.timeleft" interval="1000">{{hours}} hours {{minutes}} minutes, {{seconds}} seconds left</timer>
+                </div>
+            </li>
+            <li ng-if="user.license.type=='days'" class="list-group-item timeleft">
+                <div class='time'>
+                    <timer finish-callback="logout()" countdown="user.license.timeleft" interval="1000">{{days}} day(s) left</timer>
+                </div>
+            </li>
+            <li ng-repeat="option in menuOptions" ng-show="option.show" class="menu-icon" title="{{option.text}}">
+                <span class="badge new-emails-badge" ng-if="option.type=='grader' && grader.counter  " ng-bind="grader.counter"></span>
+                <span class="badge new-emails-badge" ng-if="option.type=='nomenu_grader' && option.counter" ng-bind="option.counter"></span>
+                <a href="{{option.href}}" class="fa" ng-class="option.faicon" ng-if="!option.modal">
+                    <span  style="line-height: 26px"></span>
+                    <span class="optionText">{{option.text}}</span>
+                </a>
+
+              <a ng-controller="modalFileFolder" href="javascript:return false" ng-click="open()" class="fa" ng-class="option.faicon" ng-if="option.type==='folder'">
+                    <span  style="line-height: 26px"></span>
+                  <span class="optionText">{{option.text}}</span>
+                </a>
+
+
+            </li>
+            <!-- TODO: incorporate use_powerschool flag -->
+            <li class="menu-icon" ng-if="false && user.org.id == 10 && user.is_organization_admin" ng-controller="powerschoolController"><span ng-if="teacherCourseStats" class="badge unmatched-courses-badge">{{teacherCourseStats}}</span><a
+                    href="/PScontrols/">PS<span class="optionText">PScontrols</span></a>
+            </li>
+            <li class="menu-icon"
+                ng-if="false &&  user.org.id == 10 && user.is_teacher && !user.is_organization_admin" ng-controller="powerschoolController"><span ng-if="teacherCourseStats" class="badge unmatched-courses-badge">{{teacherCourseStats}}</span><a
+                    href="/PSmatch/">PS<span class="optionText">PSmatch</span></a>
+            </li>
+            <li class="menu-icon" ng-show="showAnnouncementsButton()" title="Announcements">
+                <a ng-click="openAnnouncements()">
+                    <span class="fa fa-bullhorn" style="color: #62c354;font-weight: 900;"></span>
+                    <span class="optionText">Announcements</span>
+                </a>
+            </li>
+            <li class="menu-icon" ng-show="showGradesPage()" title="Grades">
+                <a href="/grades/">
+                    <span style="color: #62c354;font-weight: 900;">A<sup>+</sup></span>
+                    <span class="optionText" style="margin-left: -5px">Grades</span>
+                </a>
+            </li>
+            <!-- email/feedback button (envelop) -->
+            <li class="btn-email menu-icon"  title="Messages" ng-hide="user.is_only_test_admin || user.school_admin || user.hasOnlyProficiencyClasses " ng-controller="EmailController" style="margin-left: 0">
+                <span class="fa fa-envelope padding-0-5" style="line-height: 26px" ng-click="open()"></span>
+                <span class="badge new-emails-badge" ng-show="new_emails_count" ng-bind="new_emails_count"></span>
+                <span class="optionText">Messages</span>
+            </li>
+            <li class="help-icon btn-email menu-icon"  title="Help" ng-controller="HelpController" style="margin-left: 0">
+                <span ng-if="user.org.id!=10" class="fa fa-question-circle" ng-click="open()"><span class="optionText" style="display: none">Help</span></span>
+                <span ng-if="user.org.id==10" class="fa fa-info-circle" ng-click="open()"><span class="optionText" style="display: none">Help</span></span>
+            </li>
+            <li class="btn-email menu-icon"  title="chat" e3-chat-icon style="margin-left: 5px" ng-if="user.org.enable_chat_app">
+                <span class="fa fa-comment " ng-click="open()"></span>
+                <span class="badge new-emails-badge" ng-show="unreadBagde" ng-bind="unreadBagde"></span>
+                <span class="optionText">chat</span>
+            </li>
+             <!--grades button (A+)-->
+
+            <!-- "welcome [user]" or icon(responsive) -->
+            <li id="user-nav-dropdown" class="dropdown" >
+                <a ng-show="language_direction == 'ltr'" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="welcome-text" ng-bind="preference.navs.welcome.translation + ' ' + user.fname + ' ' + user.lname"></span>
+                    <i class="fa fa-user fa-2x"></i>
+                    <span class="caret"></span>
+                </a>
+                <a ng-hide="language_direction == 'ltr'" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="welcome-text" ng-bind="user.fname + ' ' + user.lname + ' ' + preference.navs.welcome.translation"></span>
+                    <i class="fa fa-user fa-2x"></i>
+                    <span class="caret"></span>
+                </a>
+                <!-- username dropdown -->
+                <ul class="dropdown-menu user-preferences" >
+                    <li>
+                        <a ng-click="openAccount()" ng-bind="preference.navs.account.translation"></a>
+                    </li>
+                    <li>
+                        <a href="/signout/" ng-bind="preference.navs.sign_out.translation"></a>
+                    </li>
+                    <li ng-show="user.is_super_admin || user.teacher_supervisor || user.is_teacher  || user.is_organization_admin">
+                        <a>
+                            <span>Grader Menu</span>
+                            <span class="btn-group">
+                                <label class="btn btn-default btn-xs" ng-model="selected.gradermenu" btn-radio="'left'" ng-click="setGraderMenuPreference('left')">Left</label>
+                                <label class="btn btn-default btn-xs" ng-model="selected.gradermenu" btn-radio="'top'" ng-click="setGraderMenuPreference('top')">Top</label>
+                            </span>
+                        </a>
+
+                    </li>
+                    <li ng-hide="user.org.hide_eng_menu">
+                        <div style="padding: 3px 8px;">
+                            <span class="english-toggle-label" >ENG&nbsp;&nbsp;</span>
+                            <input id="english-language-selector" type="checkbox" checked ng-click="isEnglishSelected()"/>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </td>
+</tr>

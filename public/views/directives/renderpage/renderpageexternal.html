@@ -1,0 +1,14 @@
+<!-- heading -->
+<div>
+	<h3 ng-bind="page.name"></h3>
+</div>
+<!-- link -->
+<div class="panel panel-default">
+	<div class="panel-body">
+		<h2><small>Click on the following link to access the external site. The page will open in a new window or tab.</small></h2>
+		<a ng-href="{{page.content}}" target="_blank">
+			<i class="fa fa-external-link-square"></i>
+			<span ng-bind="page.content"></span>
+		</a>
+	</div>
+</div>

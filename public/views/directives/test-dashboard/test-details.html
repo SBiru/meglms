@@ -1,0 +1,109 @@
+
+<div class="loading-test" ng-show="loading">
+    <span class="fa fa-spinner fa-pulse"></span>
+</div>
+<div class="test-details-container" ng-hide="loading">
+    <a class="go-back"
+       ng-click="goBack()"
+       ng-hide="hideBack">
+        <span class="fa fa-long-arrow-left"></span>
+        <span ng-bind="testDetails.isJ1?' Back to interviews':' Back to tests'"></span>
+    </a>
+    <div class="test-summary-container" ng-style="{'margin-top':hideBack?'20px':0}">
+        <table class="test-summary-top">
+            <tr class="display-grid">
+                <td class="student-info min-width-100 margin-top-10">
+                    <div class="student-name" ng-bind="testDetails.name"></div>
+                    <div class="student-data">
+                        <div><span class="fa fa-envelope-o"></span> <span ng-bind="testDetails.email"></span></div>
+                        <div>
+                            <a style="text-decoration: none;color:inherit" target="_blank" href="{{idHref}}">
+                                <span class="fa fa-info-circle"></span> View student id
+                            </a>
+
+                        </div>
+                    </div>
+                </td>
+                <td class="score-summary margin-top-15" ng-class="testDetails.isJ1?'j1_class':''">
+                    <div class="test-name test_dashboard_font_color"> {{testDetails.testName}} - {{testDetails.submittedOn}}</div>
+                    <table class="table">
+                        <tr class="display-grid">
+                            <td class="vr-middle width-100" ng-if="testDetails.pageGroups.length>1" data-ng-repeat="pg in testDetails.pageGroups| orderBy:'name'" ng-style="{width:scoreColumnWidth}">
+                                <div ng-bind="pg.name"></div>
+                                <div ng-bind="pg.finishedGrade?pg.actualScore + '/' + pg.maxScore:'-'"></div>
+                            </td>
+                            <td class="total vr-middle ">
+                                <div ng-bind="testDetails.isJ1 && testDetails.classId==1093?'Level':'Total'"></div>
+                                <div ng-bind="testDetails.finishedGradeClass?testDetails.actualTotalScore + '/' + testDetails.maxTotalScore:'-'"></div>
+                            </td>
+                            <td class="vr-middle">
+                                <div class="btn-flat-full btn-flat-full-success view-report-btn" ng-click="viewReport()" ng-hide="testDetails.isJ1">View Report</div>
+                            </td>
+                            <td class="vr-middle">
+                                <div class="btn-default btn"
+                                     ng-click="shareResults()" ng-show="testDetails.isJ1">
+                                    <span class="fa fa-share"></span> Forward results
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table class="table table-bordered"  data-ng-if="testDetails.isJ1 && hasAdditionalComments()" style="margin-top:
+    15px;border: 3px solid #E7E7E7;">
+        <tr >
+            <th class="test_dashboard_font_color"> Additional comments</th>
+        </tr>
+        <tr>
+            <td>
+                <p data-ng-repeat="pg in testDetails.additionalComments">
+                    <span ng-bind="pg.name + ':'"></span>
+
+                    <span ng-bind="pg.comments"></span>
+                </p>
+
+            </td>
+        </tr>
+    </table>
+
+    <div class="test-details">
+
+        <div class="row grid">
+            <div class="col-sm-6 col-xs-12" data-ng-repeat="pg in testDetails.pageGroups">
+                <div class="submissions-panel">
+                    <div class="submissions-panel-heading test_dashboard_font_color" ng-bind="pg.name"></div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item  in pg.submissions">
+                            <td ng-bind="item.name"></td>
+                            <td ng-bind="item.submittedOn?item.submittedOn:'-'"></td>
+                            <td class="open-submission" ng-click="openSubmission(item)"><i ng-show="item.submittedOn" class="fa" ng-class="item.type=='video'?'fa-play-circle-o':'fa-search'"></i></td>
+                            <td class="open-submission"
+                                ng-show="testDetails.isJ1 && item.type=='video' && item.video_url">
+                                <a a ng-href="{{item.video_url}}" download class="fa fa-download pointer"
+                                   tooltip="Download video">
+
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>

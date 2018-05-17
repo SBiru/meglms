@@ -1,0 +1,92 @@
+<div>
+	<h2>Edit Page</h2>
+	<table style="width:100%">
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageTitle" class="control-label" style="font-size:1.4em">Page Title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageTitle" name="pageTitle" ng-model="page_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Title" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;width:100px;"><label for="pageSubTitle" class="control-label" style="font-size:1.4em">Translation</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="pageSubTitle" name="pageSubTitle" ng-model="page_sub_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Page Translation" required></td>
+		</tr>
+		<tr ng-show="noMenu()">
+			<td style="padding-bottom:15px;width:100px;"><label>Next button text</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<input style="padding: 0 2px;height: 26px;display: inline-block; " class="form-control" type="text" ng-model="meta.next_text" placeholder='NEXT <span class="fa fa-chevron-right"></span>'>
+			</td>
+		</tr>
+		<tr ng-show="noMenu()">
+			<td style="padding-bottom:15px;width:100px;"><label>Hide page title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<input type="checkbox"  ng-model="meta.hide_title">
+			</td>
+
+		</tr>
+		<tr ng-show="noMenu()">
+			<td style="padding-bottom:15px;width:100px;"><label>Next button color</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<new-post-color ng-model="meta.next_class_name"></new-post-color>
+			</td>
+		</tr>
+
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<!--<textarea ng-model="page_content" style="width:100%;height: 350px;"></textarea>-->
+				<style>
+					.cke_button__meglmstemplates .cke_button_label {
+						display: block;
+						cursor: pointer;
+					}
+
+					.cke_dialog_background_cover {
+						background-color: black !important;
+					}
+
+					table .cke_tpl_preview {
+						width: 100% !important;
+					}
+				</style>
+				<textarea name="editor1" id="editor1" rows="15" cols="80"></textarea>
+				<script>
+					// Replace the <textarea id="editor1"> with a CKEditor
+					// instance, using default configuration.
+					CKEDITOR.config.allowedContent = true;
+					CKEDITOR.config.disableNativeSpellChecker = false;
+					var ck = CKEDITOR.replace( 'editor1', {
+						toolbar : [
+							{ name: 'Meglmstemplates', items: ['Meglmstemplates'] },
+							{ name: 'Maths', items: ['Mathjax'] },
+							{ name: 'document',items: [ 'Source']},
+							{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat','Smiley' ] },
+							{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',  'JustifyLeft', 'JustifyCenter', 'JustifyRight','CreateDiv', 'JustifyBlock'] },
+							{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+							{ name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+							{ name: 'tools', items : [ 'Maximize'] },
+							{ name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak', 'Iframe','Video','audio' ] },
+							{ name: 'links', items: [ 'Link', 'Unlink']}
+
+						],
+						filebrowserUploadUrl: '/uploadckeditormedia/',
+						extraPlugins: 'mathjax',
+					} );
+					ck.on( 'paste', function( evt ) {
+						var data = evt.data;
+						data.dataValue = E3replaceUrl(data.dataValue);
+
+						// Text could be pasted, but you transformed it into HTML so update that.
+						data.type = 'html';
+					});
+				</script>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<async-button color-style="primary" text="Save Changes" flash-text="Saved!" loading="loading.editPage" ng-click="editPage('save')"></async-button>
+			</td>
+			<td style="padding-bottom:15px; padding-left:20px;"><async-button color-style="danger" text="Delete Page" flash-text="Deleted!" loading="loading.deletePage" ng-click="deletePage()"></async-button></td>
+
+		</tr>
+
+	</table>
+</div>

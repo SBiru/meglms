@@ -1,0 +1,12 @@
+<div class="body">
+    <div class="org-name test_dashboard_font_color">
+        <div ng-bind="selectedClass.name" ng-hide="showSelectize"></div>
+        <div ng-show="showSelectize">
+            <select  selectize class="selectize-flat" ng-model="selectedClass" data-ng-options="class as class.name for class in classes"></select>
+        </div>
+
+    </div>
+    <div test-dashboard-summary class-id="selectedClass.id" school-id="schoolId"></div>
+
+
+</div>

@@ -1,0 +1,18 @@
+<form class="form-signin" role="form" >
+    <h2 class="form-signin-heading">Welcome to English3</h2>
+    <div class="license">
+        <input type="text" class="form-control" ng-model="license" placeholder="Please, insert your license"  autofocus ng-keyup="validate()">
+        <span class="fa fa-spinner fa-spin" ng-show="validating"></span>
+        <span class="fa fa-check" ng-if="is_valid"></span>
+    </div>
+
+    <div ng-if="is_valid" class="form-signup">
+        <input type="email" id="username" name="username"  ng-model="user.email" class="form-control" placeholder="Email address">
+        <input type="text" id="fname" name="fname"  ng-model="user.fname" class="form-control" placeholder="First Name">
+        <input type="text" id="lname" name="fname"  ng-model="user.lname" class="form-control" placeholder="Last Name">
+        <input type="password" id="password" name="password"  ng-model="user.password" class="form-control" placeholder="Password">
+        <input type="password" id="cpassword" name="cpassword"  ng-model="user.cpassword" class="form-control" placeholder="Confirm Password">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Validate and sign up</button>
+    </div>
+
+</form>

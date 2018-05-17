@@ -1,0 +1,132 @@
+
+<style>
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover
+{
+    outline:0px !important;
+    -webkit-appearance:none;
+}
+
+textarea { border: none; 
+background-color:transparent;
+  resize: none;
+}
+
+.HtmlTemplateControl{
+position:relative;
+margin:auto;
+width:95%;
+height:648px;
+}
+
+.OneDiv,.TwoDiv,.ThreeDiv,.FourDiv,.FiveDiv,.SixDiv,.SevenDiv{
+  position: absolute;
+  width: 19%;
+  
+}
+
+.OneDiv{
+  top: 41px;
+  left: 21%;
+  }
+
+.OneDiv{
+  top: 41px;
+  left: 21%;
+  }
+
+.TwoDiv{
+  top: 41px;
+  left: 58%;
+  }
+
+.ThreeDiv{
+  top: 285px;
+  left: 77%;
+  } 
+
+.FourDiv{
+  top: 515px;
+  left: 59%; 
+  }  
+
+.FiveDiv{
+ top: 515px;
+ left: 21%;
+}
+
+.SixDiv{
+  left: 4%;
+  top: 282px;
+}
+
+.SevenDiv{
+  left: 37%;
+  top: 249px;
+  height: 138px;
+  width: 25%;
+}
+.OneDiv,.TwoDiv,.ThreeDiv,.FourDiv,.FiveDiv,.SixDiv{
+  height: 85px;
+  }
+
+.One,.Two,.Three,.Four,.Five,.Six,.Seven,.template_img {
+  width: 100%;
+  height: 100%;
+  }
+</style>
+
+<div class="HtmlTemplateControl">
+  <!--Topic Sentence Start-->
+  <div style="position:absolute" class="OneDiv">
+	<textarea class="One" name="One" ng-model="templateContent[0]"></textarea>
+	</div>
+  <!--Topic Sentence End-->  
+
+  <!--Supporting Detail #1 Start-->
+  <div style="position:absolute" class="TwoDiv">
+  <textarea class="Two" name="Two" ng-model="templateContent[1]"></textarea>
+  </div>
+  <!--Supporting Detail #1 End-->
+
+  <!--Supporting Detail #2 Start-->
+  <div style="position:absolute" class="ThreeDiv">
+  <textarea class="Three" name="Three" ng-model="templateContent[2]"></textarea>
+  </div>
+  <!--Supporting Detail #2 End-->  
+    
+  <!--Supporting Detail #3 Start-->
+  <div style="position:absolute" class="FourDiv">
+  <textarea class="Four" name="Four" ng-model="templateContent[3]"></textarea>
+  </div>
+  <!--Supporting Detail #3 End-->
+  
+  <!--Five Start-->
+  <div style="position:absolute" class="FiveDiv">
+  <textarea class="Five" name="Five" ng-model="templateContent[4]"></textarea>
+  </div>
+  <!--Five End-->    
+
+  <!--Six Start-->
+  <div style="position:absolute" class="SixDiv">
+  <textarea class="Six" name="Six" ng-model="templateContent[5]"></textarea>
+  </div>
+  <!--Six End-->  
+
+  <!--Seven Start-->
+  <div style="position:absolute" class="SevenDiv">
+  <textarea class="Seven" name="Seven" ng-model="templateContent[6]"></textarea>
+  </div>
+  <!--Seven End-->  
+
+  <img class="template_img" src="../public/htmlTemplates/spokecolor.png" border="0" alt="">
+  
+</div>

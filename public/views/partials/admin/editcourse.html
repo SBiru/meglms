@@ -1,0 +1,26 @@
+<div>
+	<h2>Edit Course</h2>
+	<table>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="courseName" class="control-label" style="font-size:1.4em">Name</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="courseName" name="courseName" ng-model="courseName" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="courseDescription" class="control-label" style="font-size:1.4em">Description</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="courseDescription" name="courseDescription" ng-model="courseDescription" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="nativeLanguage" class="control-label" style="font-size:1.4em">Native Language</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<select id="nativeLanguage" name="nativeLanguage" ng-model="nativeLanguage" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="language.language_name for language in languages" required></select>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="updateCourse()">Update Course</button></td>
+		</tr>
+	</table>
+	
+	<h2>Delete Course</h2>
+	<button type="button" class="btn btn-primary btn-sm" ng-click="deleteCourse()">Delete Course</button>
+</div>

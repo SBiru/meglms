@@ -1,0 +1,137 @@
+<div>
+    <ng-include src=" '/public/views/partials/admin/gradingscalemodal.html' "></ng-include>
+	<ul id="courseTab" class="nav nav-tabs" ng-init="isAddView=true">
+		<li class="active">
+			<a data-toggle="tab" ng-click="isAddView=true">Add class</a>
+		</li>
+		<li >
+			<a data-toggle="tab" ng-click="isAddView=false">Clone class</a>
+		</li>
+
+	</ul>
+	<div ng-show="isAddView">
+		<div class="row">
+			<h2 class="col-sm-12">Add Class </h2>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.external_id.$invalid && !ediClassForm.external_id.$pristine }">
+						<label for="externalId" class="control-label"> External Id</label>
+						<input id="externalId" type="text" name="externalId" class="form-control" ng-model="externalId" >
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.name.$invalid && !ediClassForm.name.$pristine }">
+						<label for="className" class="control-label"> Name</label>
+						<input id="className" type="text" name="name" class="form-control" ng-model="className" required>
+						<p ng-show="ediClassForm.name.$invalid && !ediClassForm.name.$pristine" class="help-block">Name is required.</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.description.$invalid && !ediClassForm.description.$pristine }">
+						<label for="courseDescription" class="control-label"> Description</label>
+						<input id="courseDescription" type="text" name="description" class="form-control" ng-model="courseDescription" required>
+						<p ng-show="ediClassForm.description.$invalid && !ediClassForm.description.$pristine" class="help-block">Name is required.</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12 col-xs-12">
+						<label for="nativeLanguage" class="control-label"> Native Language</label>
+						<select id="nativeLanguage" name="nativeLanguage" ng-model="nativeLanguage" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="language.language_name for language in languages" required></select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-12 col-xs-12">
+						<label for="chatPreference" class="control-label">Classmate Chat Setting</label>
+						<select id="chatPreference" name="chatPreference" ng-model="chatPreferenceSelection" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="chatPreference.label for chatPreference in chatPreferences" required></select>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" ng-model="is_active" id="is_active" ng-init="is_active = true">
+					<label for="is_active">Show Class</label>
+				</div>				
+				<div>
+					<input type="checkbox" ng-model="no_menu" id="no_menu">
+					<label for="no_menu">No Menu</label>
+				</div>
+				<div>
+					<input type="checkbox" data-ng-model="is_j1_class" id="is_j1_class" ng-click=fixbadmodel(is_j1_class,'is_j1_class')>
+					<label for="is_j1_class">Is J1 class</label>
+				</div>
+				<div>
+					<input type="checkbox" ng-model="exclude_from_alerts">
+					<label>Exclude from alerts</label>
+				</div>
+				<div>
+					<input type="checkbox" ng-model="show_table_of_contents">
+					<label>Show table of contents</label>
+				</div>
+                <div>
+                    <input type="checkbox" ng-model="show_dates" id="show_dates" ng-init="show_dates = true">
+                    <label for="show_dates">Show dates</label>
+                </div>
+                <div>
+                    <input type="checkbox" ng-model="show_grades" id="show_grades" ng-init="show_grades = true">
+                    <label for="show_grades">Show grades</label>
+                </div>
+                <label ng-show="show_grades">Grade Display Format &nbsp;&nbsp;&nbsp;</label>
+                <div ng-show="show_grades">
+                    <input type="checkbox" ng-model="show_grades_as_score" btn-checkbox ng-init="show_grades_as_score = true">Score</input>
+                    <input type="checkbox" ng-model="show_grades_as_percentage" btn-checkbox>Percentage</input>
+                    <input type="checkbox" ng-model="show_grades_as_letter">Letter</input>
+                </div>
+                <button style="margin-left: 270px; margin-bottom: 20px;" ng-show="show_grades_as_letter" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#gradingScaleModal" ng-click="setGradingScale()">Set Grading Scale</button>
+			    <br>
+            </div>
+		</div>
+		<button type="button" class="btn btn-primary btn-sm" ng-click="addClass()">Add Class</button>
+
+	</div>
+
+	<div ng-hide="isAddView" style="margin-top: 30px">
+
+		<div class="input-group" style="width: 300px; margin-bottom:20px">
+			<input type="text" placeholder="Search for a class" ng-model="inputFilter" class="form-control">
+			<span class="input-group-addon"><i class=" fa fa-search"></i></span>
+		</div>
+
+		<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+			<thead>
+			<tr>
+				<th data-halign="left">
+					<input type="checkbox" ng-click="checkAll()">
+					<span>Select All</span>
+				</th>
+				<th data-halign="left">Class Name</th>
+				<th data-halign="left">New Name</th>
+				<th data-halign="left">Term</th>
+				<th data-halign="left" ng-init="cloningStatus='Clone Selected'">
+					<div class="btn btn-primary" ng-click="clone()"
+							ng-class="{disabled:cloningStatus=='Cloning..'}">
+						{{cloningStatus}}
+					</div>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="course in courses | filter:inputFilter | orderBy:'name'" ng-init="course.new_name=course.name + ' CLONED';course.term=terms[0]">
+				<td><input type="checkbox" ng-model="course.cloning"></td>
+				<td>{{course.name}}</td>
+				<td><input type="text" ng-model="course.new_name"> </td>
+
+				<td>
+					<select id="courseTerm" name="courseTerm" ng-model="course.term" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="term.name for term in terms" required></select>
+				</td>
+
+				<td ng-show="course.cloning">
+					<div class="btn btn-primary" ng-click="clone(course)">
+						Clone
+					</div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+

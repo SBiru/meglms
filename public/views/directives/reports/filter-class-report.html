@@ -1,0 +1,7 @@
+Select a class
+<span class="fa fa-spinner fa-pulse" ng-show="loading"></span>
+<select
+        selectize
+        data-ng-model="class.selected"
+        data-ng-options="c.id as c.name for c in classes | filter:isTeacher| orderBy:'name'">
+</select>

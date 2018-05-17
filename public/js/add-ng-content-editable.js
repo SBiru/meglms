@@ -1,0 +1,1 @@
+appControllers.requires.push('content-editable');

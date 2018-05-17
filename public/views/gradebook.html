@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" ng-app="app">
+	<head>
+		<?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta charset="utf-8">
+		<?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+		<script src="/public/js-util/ckeditor/ckeditor.js"></script>
+		<!-- inject:css -->
+
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+
+<!-- endinject -->
+		<!-- inject:js -->
+		<script src="/public/build/meglms.2018.04.05.min.js"></script>
+		<!-- endinject -->
+		<?php echo $customStyles->createStyleSheet(); ?>
+	</head>
+
+	<body class="gradebook_body" ng-controller="PreferenceController">
+	<?php include(__DIR__ . '/timeout/index.html')?>
+	<div ng-controller="UtilityController">
+		<div ng-controller="UserController">
+		<!-- top navbar -->
+		<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top padding-bottom-10" role="navigation">
+				<div class="container-fluid" style="padding-top: 0;padding-bottom: 0;">
+						<div class="navbar-header">
+							<a data-ng-show="user.org.white_label" class="navbar-brand" href="{{user.org.use_splash?'/home':'/'}}" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+							<a data-ng-show="user.org.white_label==false" class="navbar-brand" href="{{user.org.use_splash?'/home':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+							<a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo" href="{{user.org.use_splash?'/home':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+							<div class="dropdown" id="mobileMenu" style="display: none"
+								 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+							</div>
+		</div>
+		<div class="navbar-collapse collapse" id="main-navbar">
+			<!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+			<table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+		</div>
+	</div>
+</nav>
+
+		<!-- main body wrapper -->
+		<div id="main-content-wrapper" class="container-fluid">
+				<div class="row">
+						<div class="sidebar-view" ui-view="sidebar"></div>
+						<div class="content-view" ui-view="content"></div>
+				</div>
+		</div>
+	<script>
+		angular.module('app').requires.push('ngCkeditor');
+		angular.module('app').requires.push('dndLists');
+	</script>
+	</div></div></body>
+</html>

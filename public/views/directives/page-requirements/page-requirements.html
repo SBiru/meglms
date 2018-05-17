@@ -1,0 +1,27 @@
+<div>
+    <table class="table"  style="width: inherit">
+        <tr>
+            <th ng-show="allowSuperUnits">Super unit name</th>
+            <th>Page name</th>
+            <th>Minimum completion score (% , optional)</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="page in selectedPages">
+            <td ng-show="allowSuperUnits">
+                <span ng-bind="page.superUnitName"  class="page-name"></span>
+            </td>
+            <td>
+                <span ng-bind="page.label" class="page-name"></span>
+            </td>
+            <td>
+                <div class="input-group">
+                    <input class="form-control" data-ng-model="page.minimumCompletion" ><span class="input-group-addon">%</span>
+                </div>
+            </td>
+            <td>
+                <span class="fa fa-trash text-danger btn" data-ng-click="removePage(page.id)"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<button class="btn btn-primary btn-sm btn-add-pages" data-ng-click="openPageSelector()">Add pages</button>

@@ -1,0 +1,101 @@
+<script type="text/ng-template" id="page.html">
+    <div ng-if="getHref(page)==''" class="pull-left col-xs-8 pagename inactive">{{page.label}} <span style="font-weight:bold" ng-show="page.isExempt==1"> (Exempt)</span></div>
+
+    <a  ng-if="getHref(page)!=''"class="pull-left col-xs-8 pagename" ng-href="{{getHref(page)}}" ng-click="goToCourse(class,unit)">{{page.label}}</a>
+    <div class="pull-right icons">
+        <span ng-bind="gradeText(class,page)" ng-hide="page.waitingForGrade" class="grade" data-ng-class="gradeOverall(page)"
+              ng-if="class.showGrades==1" ng-hide="page.isExempt"></span>
+
+        <span ng-bind="formatDate(page)" class="grade"
+              ng-if="showDueDate(class,page)"></span>
+
+        <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox"
+              ng-if="showBox(class,page)">
+            <i ng-show="!page.waitingForGrade && (page.isGraded && !page.mastery && !page.minimumNotAchieved) || (!requires_submission(page) && page.isViewed) || page.isExempt==1" data-ng-class="{'gray':page.isExempt==1}" class="fa fa-check sidebar-checkbox-icon"></i>
+            <i ng-show="(page.mastery && page.isExempt!=1)" class="fa fa-star sidebar-checkbox-icon" style="color:gold"></i>
+            <i ng-show="(page.isSubmitted && !page.isGraded) || page.waitingForGrade" class="fa sidebar-checkbox-icon" style="left: -2px;" tooltip-append-to-body="true" tooltip="Waiting to be graded" >--</i>
+        </span>
+    </div>
+</script>
+<script type="text/ng-template" id="class.html">
+    <div class="panel panel-default class tooltip-relative">
+        <div class="panel-heading row-fluid">
+        <div class="class-name truncate" ng-class="{teacher:class.isTeacher}" ng-hide="class.isAllowed || class.isTeacher"> <a tooltip="{{class.name}}" tooltip-placement="bottom" ng-show="class.is_active === false" style="padding:0px;color:red" ng-click="goToCourse(class)" href="/editor/" target="_blank" tooltip="Not visible by student. Go to course admin"><i class="fa fa-eye-slash"></i></a> {{class.name}}</div>
+    <div class="class-name truncate" ng-class="{teacher:class.isTeacher}" ng-show="class.isAllowed || class.isTeacher">
+        <a ng-show="class.is_active === false" style="padding:0px;color:red" ng-click="goToCourse(class)" href="/editor/" target="_blank" tooltip="Not visible by student. Go to course admin"><i class="fa fa-eye-slash"></i></a>
+        <a  tooltip="{{class.name}}" tooltip-placement="bottom" href="/" data-ng-click="goToCourse(class)">{{class.name}}</a>
+    </div>
+
+    <div ng-hide="class.isTeacher" class="progress-wrapper tooltip-relative" data-ng-include="'/public/views/splash/progressbar.html'" data-ng-controller="SplashProgressBarController"></div>
+            <div class="tooltip-relative">
+            <a class="btn btn-sm btn-default btn-gradebook"
+    href="/gradebook/#/gradebook/{{class.id}}"
+    target="_blank"
+    ng-show="class.hasTeacherAbilities || class.isTeacher"
+    tooltip="Gradebook">
+            A+
+            </a>
+            <a class="btn btn-sm btn-default btn-tableOfContents" ng-style="{right :(class.hasTeacherAbilities || class.isTeacher)?'41px':'8px' }" tooltip="table of contents" ng-if="class.show_table_of_contents" ng-click="openActivitiesModal(class)">
+                <i class="fa fa-arrows-alt"></i>
+            </a>
+
+            </div>
+
+            </div>
+
+            <div class="panel-body">
+                <div data-ng-include="'unit.html'"  class="panel panel-warning units" data-ng-repeat="unit in class.units " ng-if="!class.superUnits.length"></div>
+                <div class="panel panel-warning units" data-ng-repeat="superUnit in class.superUnits " ng-if="class.superUnits.length">
+                    <div class="panel-heading" ng-click="superUnit.opened=!superUnit.opened">
+                        <span class="fa" ng-class="superUnit.opened?'fa-minus-square':'fa-plus-square'"></span>
+                        {{superUnit.name}}
+                    </div>
+                    <div class="panel-body superunit-body" ng-if="superUnit.opened">
+                        <div data-ng-repeat="unitPosition in superUnit.units" class="panel panel-warning" style="margin-bottom:0" ng-init="unit=class.units[unitPosition]" data-ng-include="'unit.html'"></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+</script>
+<script type="text/ng-template" id="unit.html">
+    <div class="panel-heading unit-header" ng-click="unit.opened=!unit.opened">
+        <span class="fa" ng-class="unit.opened?'fa-minus-square':'fa-plus-square'"></span>
+        {{unit.description}}
+    </div>
+    <div class="panel-body unit-body" ng-if="unit.opened">
+        <div data-ng-repeat="page in unit.pages | orderBy:orderPages">
+            <div ng-if="page.layout=='header'">
+                <div class="panel panel-default pageGroup" >
+                    <div class="panel-heading" data-ng-style="{'color':page.isExempt==1?'gray':''}">{{page.label}}<span style="font-weight:bold" ng-show="page.isExempt==1"> (Exempt)</span></div>
+                    <div data-ng-repeat="page in page.pages | orderBy:orderPages" data-ng-include="'page.html'" class="page"></div>
+                </div>
+            </div>
+            <div data-ng-include="'page.html'" ng-if="!page.pages" class="page"></div>
+        </div>
+    </div>
+</script>
+<div data-ng-show="loading" class="loader">
+    <span class="fa fa-circle-o-notch fa-spin"></span>
+</div>
+<div data-ng-show="error" class="error">
+    Sorry, something went wrong. Try to reload the page.
+</div>
+<div ng-show="!loading && showTeacherWarning()">
+    <div class="alert alert-warning">
+        The courses' activities are not automatically loaded for classes you teach.
+    </div>
+</div>
+
+<div class="row" style="padding: 0 10px;">
+    <div ng-hide="loading" ng-repeat="class in classes | orderBy:'name'" ng-if="class.isTeacher" class="teacher-class classes col-md-4 col-lg-3 col-sm-6 col-xs-12">
+        <div ng-include="'class.html'"></div>
+    </div>
+</div>
+<div class="start-learning-text" ng-show="showStartLearningText()">
+    Click on the name of a course to start learning.
+</div>
+<div class="row" style="padding: 0 10px;">
+    <div ng-hide="loading" ng-repeat="class in classes | orderBy:'name'" ng-if="!class.isTeacher && !class.isProficiencyTest" class="student-class classes col-md-4 col-lg-3 col-sm-6 col-xs-12">
+        <div ng-include="'class.html'"></div>
+    </div>
+</div>

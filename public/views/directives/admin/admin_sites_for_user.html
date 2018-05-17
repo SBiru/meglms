@@ -1,0 +1,18 @@
+<div class="available-sites-wrapper">
+    <div class="available-sites">
+        <select selectize ng-model="site" data-ng-options="site as site.name for site in availableSites | orderBy:'name'"></select>
+    </div>
+    <div class="add-btn">
+        <div class="btn btn-sm btn-success" ng-click="addSite()">+ Add site</div>
+    </div>
+
+</div>
+
+    <div class="current-sites">
+    <table class="table">
+        <tr data-ng-repeat="site in sites | orderBy:'name'">
+            <td ng-bind="site.name" class="site-name"></td>
+            <td class="remove-btn"><span class="btn btn-sm btn-danger" ng-click="removeSite(site)"><i class="fa fa-trash"></i></span></td>
+        </tr>
+    </table>
+</div>

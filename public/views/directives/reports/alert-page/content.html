@@ -1,0 +1,31 @@
+<alert-page-menu></alert-page-menu>
+<div class="content" ui-sortable="sortableOptions" ng-model="options.alerts">
+    <div data-ng-repeat="alert in options.alerts track by $index" class="alert-box-container" ng-class="options.layout.class" alert-box>
+        <div class="alert-box panel" ng-class="alert.panel_color">
+            <div class="panel-heading">
+                <div class="alert-title">{{alert.labelReplaced||alert.label}}</div>
+                <div class="pull-right menu-items">
+                    <span class="fa fa-refresh pointer" ng-click="options.validateAndLoad(alert)"></span>
+                    <span class="fa fa-cog pointer" ng-click="alert.openConfig=!alert.openConfig" ng-show="alert.params"></span>
+                    <span class="fa fa-download pointer" ng-click="download(alert)"></span>
+                    <span class="fa fa-trash pointer" ng-click="removeAlert($index)"></span>
+                </div>
+            </div>
+            <div class="panel-body content-body" style="">
+                <div ng-if="!alert.available">This alert is under development. Coming soon!</div>
+                <div ng-if="alert.available">
+                    <div alert-config ng-if="alert.openConfig"></div>
+                    <div ng-hide="alert.openConfig">
+                        <div ng-hide="alert.$loading" alert-content content="alert"></div>
+                        <div class="fa fa-pulse fa-spinner" ng-show="alert.$loading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="working-status">
+        <div ng-show="options.alerts.$loading"> Loading alerts ...</div>
+        <div ng-show="options.alerts.$saving"> Saving ...</div>
+    </div>
+
+</div>

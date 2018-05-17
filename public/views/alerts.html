@@ -1,0 +1,15 @@
+<div class="modal-header {{cssClass}}" >
+	<button type="button" class="close " ng-click="$dismiss()" ng-show="closeButtonOnTop">
+		<div class="btn btn-danger btn-sm">
+			<span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+		</div>
+	</button>
+	<h4 ng-bind="title" style="margin:0"></h4>
+
+</div>
+<div class="modal-body" ng-bind="content" ng-hide="contentHtml"></div>
+<div class="modal-body" bind-html-compile="contentHtml" ng-show="contentHtml"></div>
+<div class="modal-footer">
+	<button class="btn btn-sm btn-default" ng-hide="noCancel" ng-bind="textCancel" ng-click="cancel()"></button>
+	<button class="btn btn-sm {{cssClass}}" ng-hide="noOk" ng-bind="textOk" ng-click="ok()"></button>
+</div>

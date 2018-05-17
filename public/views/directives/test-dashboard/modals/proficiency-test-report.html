@@ -1,0 +1,59 @@
+<table class="top-content margin-top-15">
+    <tr>
+        <td class="test-summary width-100">
+                <div class="student-info margin-top-15 min-width-100">
+                    <div class="student-name" ng-bind="test.name"></div>
+                     <div class="student-data font-size-15">
+                        <div><span class="fa fa-envelope-o"></span> <span ng-bind="test.email"></span></div>
+                    </div>
+                </div>
+                <div class="score-summary">
+                    <div class="test-name"> {{test.testName}} - {{test.submittedOn}}</div>
+                    <table class="table">
+                        <tr class="display-grid">
+                            <td class="vr-middle"data-ng-repeat="pg in test.pageGroups" ng-style="{width:scoreColumnWidth}">
+                                <div ng-bind="pg.name"></div>
+                                <div ng-bind="pg.finishedGrade?pg.actualScore :'N/A'"></div>
+                            </td>
+                            <td class="total vr-middle">
+                                <div>Total</div>
+                                <div ng-bind="test.finishedGradeClass?test.actualTotalScore :'N/A'"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </td>
+
+    </tr>
+</table>
+
+
+<div class="report-details">
+    <table class="table table-bordered" data-ng-repeat="pg in test.pageGroups" ng-if="pg.area">
+        <tr >
+            <th ng-bind="pg.name + ' Skills'" class="area width-30"></th>
+            <th class="level width-30">Level</th>
+            <th class="width-40">Comments</th>
+        </tr>
+        <tr>
+            <td ng-bind="pg.area"></td>
+            <td ng-bind="pg.level"></td>
+            <td ng-bind="pg.details"></td>
+        </tr>
+    </table>
+    <table class="table table-bordered"  data-ng-if="hasAdditionalComments()" style="margin-top: 15px">
+        <tr >
+            <th> Additional comments</th>
+        </tr>
+        <tr>
+            <td>
+                <p data-ng-repeat="pg in test.additionalComments">
+                    <span ng-bind="pg.name + ':'"></span>
+
+                    <span ng-bind="pg.comments"></span>
+                </p>
+
+            </td>
+        </tr>
+    </table>
+</div>

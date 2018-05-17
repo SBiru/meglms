@@ -1,0 +1,23 @@
+<style>
+    .modal-dialog{
+        width:95% !important;
+
+    }
+
+</style>
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Teacher Responses</h4>
+</div>
+
+<div class="modal-body">
+    <div ng-include="'/public/views/teacher-responses/content.html'"></div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()" ng-show="currentMode=='new'">Send</button>
+</div>

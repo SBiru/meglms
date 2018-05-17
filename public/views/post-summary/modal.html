@@ -1,0 +1,20 @@
+<style>
+    .modal-dialog{
+        width:95% !important;
+
+    }
+
+</style>
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Assignments waiting to be graded</h4>
+</div>
+
+<div class="modal-body">
+    <div ng-include="'/public/views/post-summary/content.html'"></div>
+</div>
+

@@ -1,0 +1,113 @@
+
+<style>
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover
+{
+    outline:0px !important;
+    -webkit-appearance:none;
+}
+
+textarea { border: none; 
+background-color:transparent;
+  resize: none;
+}
+
+.HtmlTemplateControl{
+position:relative;
+margin:auto;
+width:95%;
+height:648px;
+}
+
+.Timeline_OneDiv,.Timeline_TwoDiv,.Timeline_ThreeDiv,.Timeline_FourDiv,.Timeline_FiveDiv,.SixDiv,.SevenDiv{
+  position: absolute;
+  width: 24%;
+  
+}
+
+.Timeline_OneDiv{
+  top: 45px;
+  left: 3%;
+  }
+
+.Timeline_TwoDiv{
+  top: 408px;
+  left: 20%;
+  }
+
+.Timeline_ThreeDiv{
+  top: 45px;
+  left: 37.5%;
+  } 
+
+.Timeline_FourDiv{
+  top: 45px;
+  left: 72%;
+  }  
+
+.Timeline_FiveDiv{
+top: 409px;
+  left: 54.5%;
+}
+
+.SixDiv{
+  left: 4%;
+  top: 282px;
+}
+
+.SevenDiv{
+  left: 37%;
+  top: 249px;
+  height: 138px;
+  width: 25%;
+}
+.Timeline_OneDiv,.Timeline_TwoDiv,.Timeline_ThreeDiv,.Timeline_FourDiv,.Timeline_FiveDiv,.SixDiv{
+  height: 168px;
+  }
+
+.Timeline_One,.Timeline_Two,.Timeline_Three,.Timeline_Four,.Timeline_Five,.Six,.Seven,.template_img {
+  width: 100%;
+  height: 100%;
+  }
+</style>
+
+<div class="HtmlTemplateControl">
+  <!--Topic Sentence Start-->
+  <div style="position:absolute" class="Timeline_OneDiv">
+	<textarea class="Timeline_One" name="Timeline_One" ng-model="templateContent[0]"></textarea>
+	</div>
+  <!--Topic Sentence End-->  
+
+  <!--Supporting Detail #1 Start-->
+  <div style="position:absolute" class="Timeline_TwoDiv">
+  <textarea class="Timeline_Two" name="Timeline_Two" ng-model="templateContent[1]"></textarea>
+  </div>
+  <!--Supporting Detail #1 End-->
+
+  <!--Supporting Detail #2 Start-->
+  <div style="position:absolute" class="Timeline_ThreeDiv">
+  <textarea class="Timeline_Three" name="Timeline_Three" ng-model="templateContent[2]"></textarea>
+  </div>
+  <!--Supporting Detail #2 End-->  
+    
+  <!--Supporting Detail #3 Start-->
+  <div style="position:absolute" class="Timeline_FourDiv">
+  <textarea class="Timeline_Four" name="Timeline_Four" ng-model="templateContent[3]"></textarea>
+  </div>
+  <!--Supporting Detail #3 End-->
+  
+  <!--Timeline_Five Start-->
+  <div style="position:absolute" class="Timeline_FiveDiv">
+  <textarea class="Timeline_Five" name="Timeline_Five" ng-model="templateContent[4]"></textarea>
+  </div>
+  <!--Timeline_Five End-->    
+  <img class="template_img" src="../public/htmlTemplates/timeline.png" border="0" alt="">
+</div>

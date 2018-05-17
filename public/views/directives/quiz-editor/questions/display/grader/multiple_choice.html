@@ -1,0 +1,11 @@
+<div class="panel panel-default">
+    <div style="margin:10px">
+        <div ng-bind-html="$root.safeHtml(question.prompt)"></div>
+        <div ng-repeat="option in question.options track by $index">
+            <label aria-disabled="true" disabled>
+                <input type="radio" name="{{question.id}}" ng-model="question.response" value="{{$index}}" data-ng-disabled="true">
+                <span ng-class="selectOptionDisplayClass(option)" ng-bind-html="$root.safeHtml(option.text)" style ="display: inline-block;"></span>
+            </label>
+        </div>
+    </div>
+</div>

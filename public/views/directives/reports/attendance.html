@@ -1,0 +1,640 @@
+<tabset>
+    <tab heading="Report" select="selected.tab='input'">
+        <div class="row-fluid">
+            <div class="panel panel-default panel-body padding-10-0">
+                <div class="col-sm-4 vr">
+                    <div ng-if="isAdmin()" class="panel panel-body">
+                        <span>Filter by:</span>
+                        <span class="btn-group">
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'site'">Site</label>
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'advisor'">Coach</label>
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'course'">Class</label>
+                        </span>
+                    </div>
+                    <div ng-if="(selected.filter=='site' && !(isGuardian && !isAdvisor)) || (selected.filter=='site' && isAdmin()) ">
+                        <div class="col-xs-4 width-100">
+                            Select a site: <span class="fa fa-spinner fa-pulse" ng-show="loading.sites"></span>
+                        </div>
+                        <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                            <select data-ng-model="selected.site"
+                                    placeholder="-- Select a site --"
+                                    selectize
+                                    data-ng-options="site.text for site in select.sites | orderBy:'name'">
+                            </select>
+
+                        </div>
+                    </div>
+                    <div ng-if="isAdmin() && selected.filter=='advisor'">
+                        <div class="col-xs-4 width-100">
+                            Select a coach: <span class="fa fa-spinner fa-pulse" ng-show="loading.advisors"></span>
+                        </div>
+                        <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                            <select selectize data-ng-model="selected.advisor"
+                                    placeholder="-- Select a coach --"
+                                    data-ng-options="advisor.name for advisor in select.advisors | orderBy:'name'">
+                            </select>
+                        </div>
+                    </div>
+                    <div ng-if="isAdmin() && selected.filter=='course'">
+                        <div class="col-xs-4 width-100">
+                            Select a class: <span class="fa fa-spinner fa-pulse" ng-show="loading.classes"></span>
+                        </div>
+                        <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                            <select selectize data-ng-model="selected.class"
+                                    placeholder="-- Select a class --"
+                                    data-ng-options="class.id as class.name group by class.type for class in select.classes | orderBy:'name'">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="col-sm-4">
+                        <div>
+                            <span class="btn-group">
+                                <label class="btn btn-default" ng-model="selected.type" btn-radio="'day'">Day</label>
+                                <label class="btn btn-default" ng-model="selected.type" btn-radio="'week'">Week</label>
+                            </span>
+                        </div>
+
+                        <div class="get-report-button">
+                            <!--<input type="checkbox" ng-model="selected.onlyMissing"> Only missing attendance-->
+                            <span class="btn btn-primary btn-sm" data-ng-click="reloadAdvisees()"> Input attendance</span>
+                        </div>
+                        <div ng-show="isGuardian && !isAdvisor">
+
+                            <a data-file-download=""
+                               data-options="download.options"
+                               href="/api/attendance/export"
+                               ng-show="advisees.length">
+                            </a>
+                            <div class="btn btn-info btn-sm" ng-hide="advisees.length" data-ng-disabled="true">Download <span class="fa fa-download"></span></div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-8" ng-if="datePicker.ready">
+                        <div jqdatepicker data-ng-model="selected.date" data-options="datePicker.options"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div id="attendancePanel-2"class="panel panel-body">
+            <div class="report" ng-show="showReport">
+                <div ng-show="showReport && numberOfPages>1" class="pagination" style="margin: 0;margin-right: 10px;margin-bottom: 10px">
+                    <button ng-disabled="config.currentPage == 0" ng-click="config.currentPage=config.currentPage-1;getAndPrepareReport(true)" class="btn btn-sm btn-default">
+                        Previous
+                    </button>
+                    {{config.currentPage+1}}/{{numberOfPages}}
+                    <button ng-disabled="config.currentPage >= numberOfPages - 1" ng-click="config.currentPage=config.currentPage+1;getAndPrepareReport(true)" class="btn btn-sm btn-default">
+                        Next
+                    </button>
+                </div>
+                <span><input placeholder="Filter" data-ng-model="filterStudent" data-ng-change="getAndPrepareReport(true)"></span>
+                <br>
+                <span>
+                    <span>
+                        <input type="checkbox" ng-model="expandAll" data-ng-change="toggleAll(expandAll)">
+                        <span>Expand all</span>
+                    </span>
+                    <span ng-hide="true">
+                        <input type="checkbox" ng-model="onlyMissing" data-ng-change="toggleOnlyMissing(onlyMissing)">
+                        <span>Show only missing attendance</span>
+                    </span>
+                </span>
+                <br class="break">
+                <span>
+                        <input type="checkbox" ng-model="config.onlyActive">
+                        <span>Hide students with no active classes</span>
+                    </span>
+                <br class="break">
+                <span ng-if="!isGuardian" class="margin-left-0" style="margin-left: 10px;">
+                    <input ng-model="config.show_withdrawn" type="checkbox"> Show withdrawn students
+                </span>
+                <span class="pull-right save-all">
+                    <!--<async-button color-style="info" text="Save all" flash-text="Saved!" loading="config.saving" ng-click="saveAll($event)" disabled="config.saving==1"></async-button>-->
+                    <async-button color-style="primary" text="Submit all" flash-text="Saved!" loading="config.approving" ng-click="saveAll($event,true)" disabled="config.approving==1"></async-button>
+                </span>
+            </div>
+
+            <div class="alert alert-warning" ng-show="showWarning">At least one of the students is not enrolled to any classes</div>
+            <div class="student-list-box">
+                <input-attendance-panel ng-show="!config.onlyActive || student.classes.length" data-ng-repeat="(key,student) in config.filteredStudents = (config.searchStudents = (report |filterByName:filterStudent | orderObjectBy:'lastName') | startFrom:config.currentPage*pageSize | limitTo:pageSize)"></input-attendance-panel>
+            </div>
+
+        </div>
+    </tab>
+    <tab heading="Missing attendance" select="selected.tab='missing'">
+        <div class="row-fluid">
+            <div class="panel panel-default panel-body padding-10-0">
+                <div class="col-sm-4 col-sm-offset-3">
+                    <div ng-if="isAdmin()" class="panel panel-body">
+                        <span>Filter by:</span>
+                        <span class="btn-group">
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'site'">Site</label>
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'advisor'">Coach</label>
+                            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'course'">Class</label>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div ng-if="(selected.filter=='site' &&  !(isGuardian && !isAdvisor)) || (selected.filter=='site' && isAdmin())" >
+                                <div class="col-xs-4 width-100">
+                                    Select a site: <span class="fa fa-spinner fa-pulse" ng-show="loading.sites"></span>
+                                </div>
+                                <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                                    <select data-ng-model="selected.site"
+                                            placeholder="-- Select a site --"
+                                            selectize
+                                            data-ng-options="site.text for site in select.sites | orderBy:'name'">
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div ng-if="isAdmin() && selected.filter=='advisor'">
+                                <div class="col-xs-4 width-100">
+                                    Select a coach: <span class="fa fa-spinner fa-pulse" ng-show="loading.advisors"></span>
+                                </div>
+                                <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                                    <select selectize data-ng-model="selected.advisor"
+                                            placeholder="-- Select a coach --"
+                                            data-ng-options="advisor.name for advisor in select.advisors | orderBy:'name'">
+                                    </select>
+                                </div>
+                            </div>
+                            <div ng-if="isAdmin() && selected.filter=='course'">
+                                <div class="col-xs-4 width-100">
+                                    Select a class: <span class="fa fa-spinner fa-pulse" ng-show="loading.classes"></span>
+                                </div>
+                                <div class="col-xs-6 selectbox width-100">
+                                    <select selectize data-ng-model="selected.class"
+                                            placeholder="-- Select a class --"
+                                            data-ng-options="class.id as class.name group by class.type for class in select.classes | orderBy:'name'">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'date-range.html'"></div>
+                    <div class="col-xs-12">
+                        <div class="col-sm-6 pull-right" style="margin-right: 20px;">
+                            <div class="btn btn-primary btn-sm" data-ng-disabled="!advisees.length" ng-click="getMissing()">Get missing attendance <span class="fa fa-pulse fa-spinner" ng-show="loadingMissing"></span></span></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xs-4 missing-report-flags width-auto margin-top-15" data-ng-style="{'margin-top': isAdmin()?'84px':''}">
+                    <div >
+                        <div>
+                            <input type="checkbox" ng-model="config.missingReport.includeDates" >
+                            Show list of dates
+                            <span class="fa fa-question-circle" tooltip="Show a list of missing dates for each student"></span>
+                        </div>
+                        <div>
+                            <input type="checkbox" ng-model="config.missingReport.showPhone">
+                            Show student phone
+                        </div>
+                        <div>
+                            <input type="checkbox" ng-model="config.missingReport.showHours">
+                            Show hours
+                            <span class="fa fa-question-circle" tooltip="Include hours entered for the selected date range"></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div ng-show="showMissingWarning" style="margin-top:10px" class="col-sm-12 alert alert-warning">No missing attendance was found</div>
+                <div class="col-sm-12 padding-0" ng-show="missingAttendance">
+                    <div class="panel panel-body padding-5 margin-top-150">
+                        <div style="margin-left: 15px;    margin-bottom: 15px;" class="margin-left-0">
+                            <span style="margin-right: 10px;" class="margin-top-10">
+                                <input type="checkbox" ng-model="selectAllMissing" data-ng-change="selectAll(userPendingDays,selectAllMissing)"> Select all
+                            </span>
+                            <input class="margin-top-10" type="text" placeholder="Search student" ng-model="config.filterMissing">
+                            <span class="btn btn-info btn-sm margin-top-10" style="    padding: 2px 5px;margin-top: -3px;" ng-disabled="isEmptySelectedList(userPendingDays)" ng-click="downloadMissingAttendance()">Download <span class="fa fa-download"></span></span>
+                            <div class="margin-top-10">
+                                <input type="checkbox" ng-model="config.missingReport.onlyNotReportedAtAll" ng-change="mapPendingDays()">
+                                Show only students who are not reporting hours at all
+                            </div>
+                        </div>
+
+                        <div class=row>
+                            <div class="col-xs-12">
+                                <div ng-show="missingAttendancePag.numberOfPages>1" style="margin-bottom:10px">
+                                    <button ng-disabled="missingAttendancePag.currentPage == 0" ng-click="missingAttendancePag.currentPage=missingAttendancePag.currentPage-1;" class="btn btn-sm btn-default">
+                                        Previous
+                                    </button>
+                                    {{missingAttendancePag.currentPage+1}}/{{missingAttendancePag.numberOfPages}}
+                                    <button ng-disabled="missingAttendancePag.currentPage >= missingAttendancePag.numberOfPages - 1" ng-click="missingAttendancePag.currentPage=missingAttendancePag.currentPage+1" class="btn btn-sm btn-default">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default" data-ng-repeat="student in config.filteredPending  | orderBy:'totalAttendance' |  startFrom:missingAttendancePag.currentPage*missingAttendancePag.pageSize | limitTo:missingAttendancePag.pageSize">
+                            <div class="panel-heading pointer" ng-click="toggleMissingAttendanceStudentPanel(student)">
+                                <input type="checkbox" ng-model="student.selected" ng-click="$event.stopPropagation()">
+                                <span class="fa" data-ng-class="student.opened?'fa-minus-square':'fa-plus-square'" ng-show="student.dates.length && config.missingReport.includeDates"></span>
+                                <span ng-bind="student.name"></span>
+                                <span ng-bind="student.dates.length " ng-show="config.missingReport.includeDates" class="badge"></span>
+                                <span ng-bind="'Hours reported: ' + (student.totalAttendance/3600)" ng-show="config.missingReport.showHours" class="missing-report-extra-info"></span>
+                                <span ng-show="config.missingReport.showPhone && student.phone" class="missing-report-extra-info">
+                                    <span class="fa fa-phone-square"></span>
+                                    <span ng-bind="student.phone"></span>
+                                </span>
+
+                            </div>
+                            <div class="panel-body" ng-show="student.opened">
+                                <table class="table table-striped">
+                                    <tr data-ng-repeat="date in student.dates">
+                                        <td class="missing-attendance-column">
+                                            <a ng-bind="Datepicker.formatMissingDate(date)" class="pointer" tooltip="Click a date to enter hours or a withdrawal date" ng-click="openEnterMissingAttendanceModal(student,date)"></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class=row>
+                            <div class="col-xs-12">
+                                <div ng-show="missingAttendancePag.numberOfPages>1" style="margin-bottom:10px">
+                                    <button ng-disabled="missingAttendancePag.currentPage == 0" ng-click="missingAttendancePag.currentPage=missingAttendancePag.currentPage-1;" class="btn btn-sm btn-default">
+                                        Previous
+                                    </button>
+                                    {{missingAttendancePag.currentPage+1}}/{{missingAttendancePag.numberOfPages}}
+                                    <button ng-disabled="missingAttendancePag.currentPage >= missingAttendancePag.numberOfPages - 1" ng-click="missingAttendancePag.currentPage=missingAttendancePag.currentPage+1" class="btn btn-sm btn-default">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab ng-if="isAdmin() || !(isGuardian && !isAdvisor)" select="selected.tab='export';Sync.refreshQueue()">
+        <tab-heading>
+            Export <span class="fa fa-download"></span>
+        </tab-heading>
+        <div class="row-fluid">
+            <div class="panel panel-default panel-body padding-10-0">
+                <div class="col-sm-5" data-ng-class="config.showLayoutCreator?'':'col-sm-offset-3'">
+                    <div data-ng-include="'filter.html'"></div>
+                    <div class="row" ng-if="isAdmin()">
+                        <div class="col-xs-12">
+                            <div class="col-xs-12" style="margin-bottom: 8px;">
+                                <input type="checkbox" ng-model="download.options.data.fromPreviousSync"> Get attendances since previous sync
+                            </div>
+                            <div class="panel panel-default panel-body col-xs-10" ng-if="download.options.data.fromPreviousSync" style="    width: calc(83.3333% + 25px);margin-left: 15px;">
+
+                                <div><input type="radio" name="fromPreviousSync" ng-model="download.options.data.fromPreviousSyncType" value="last"> All since last sync</div>
+                                <div><input type="radio" name="fromPreviousSync" ng-model="download.options.data.fromPreviousSyncType" value="history"> From sync history</div>
+                                <div ng-if="download.options.data.fromPreviousSyncType == 'history'" class="list-group">
+                                    <div class="list-group-item text-danger" ng-show="!Sync.syncHistory.length"> No sync history was found</div>
+                                    <a class="list-group-item"
+                                       data-ng-repeat="date in Sync.syncHistory"
+                                       ng-bind="Sync.formatDate(date.synced_on)"
+                                       ng-click="download.options.data.selectedSyncDate = date"
+                                       ng-class="{active:download.options.data.selectedSyncDate == date}" >
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-hide="download.options.data.fromPreviousSync">
+                        <div class="col-xs-12">
+                            <div class="col-xs-4">
+                                Start date:
+
+                            </div>
+                            <p class="input-group datepicker col-xs-6">
+                                <input type="text" class="form-control" data-ng-disabled="selected.allSinceLastSync" datepicker-popup="{{datePicker.format}}" ng-model="selected.startDate" max-date="selected.endDate" is-open="datePicker.start.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" data-ng-disabled="selected.allSinceLastSync" ng-click="datePicker.open($event,'start')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="col-xs-4">
+                                End date:
+                            </div>
+
+                            <p class="input-group datepicker col-xs-6">
+                                <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="selected.endDate" is-open="datePicker.end.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'end')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="panel panel-body layout-select">
+                        <div class="col-sm-12 dropdown">
+
+                            <div class="col-xs-10 align-right">
+                                Layout:
+                                <select ng-model="download.options.data.layout" style="margin-bottom: 10px">
+                                    <option data-ng-repeat="layout in download.options.layouts | filter:filterLayouts | orderBy:'name'" value="{{layout.id}}" data-ng-bind="layout.name"></option>
+                                </select >
+                                <div class="btn btn-sm btn-primary" ng-click="newLayout();config.showLayoutCreator=true;config.layoutAction='creating'">New</div>
+                                <div class="btn btn-sm btn-success" ng-click="config.showLayoutCreator=true;config.layoutAction='editing'">Edit</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div ng-show="advisees.length" class="align-right" style="width: 83.33333%;margin-left: 40px;" >
+                        <!--<a class="btn btn-default dropdown-toggle btn-sm " data-toggle="dropdown" >-->
+                            <!--<span ng-bind="download.options.data.exportType.text"></span>-->
+                            <!--<span class="fa fa-caret-down "></span>-->
+                        <!--</a>-->
+                        <!--<ul class="dropdown-menu" style="text-align: left;">-->
+                            <!--<li> <a class="pointer" data-ng-repeat="type in exportTypes" ng-bind="type.text" ng-click="download.options.data.exportType=type"></a> </li>-->
+                        <!--</ul>-->
+                        <div class="btn btn-primary btn-sm" ng-click="attendanceExporter.previewDownload()"><span class="fa fa-spinner fa-pulse" ng-show="loading.preview"></span> Preview</div>
+                        <div class="btn btn-info btn-sm" ng-click="attendanceExporter.download()"><span class="fa fa-spinner fa-pulse" ng-show="loading.download"></span> Download <i class="fa fa-download"></i></div>
+
+                        <div ng-show="download.options.data.exportType.id == 'approved' && isAdmin()" ><input type="checkbox" ng-model="download.options.data.exportType.removeFromSyncQueue"> Remove from sync queue</div>
+                    </div>
+                </div>
+                <div class="col-sm-3" ng-hide="config.showLayoutCreator" ng-show="isAdmin()">
+                    <div class="small-heading">
+                        Sync queue
+                    </div>
+                    <div class="input-group form-group edit-param" >
+                        <span class="input-group-addon addon">
+                            Waiting to be synced
+                        </span>
+                        <span class="input-group-addon addon addon-value" ng-bind="Sync.queue.queue"></span>
+                    </div>
+                </div>
+                <div class="col-sm-7 layout-creator padding-5" ng-if="config.showLayoutCreator" >
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Layout creator - </b>&nbsp;
+                            <span ng-show="config.layoutAction=='editing'"> Edit</span>
+                            <span ng-show="config.layoutAction=='creating'"> New</span>
+                            <span style="position: absolute;right: 25px;" class="pointer fa fa-close text-danger pull-right" ng-click="config.showLayoutCreator=false"></span>
+                        </div>
+                        <div class="panel-body padding-5">
+                            <div class="row" ng-show="config.layoutAction=='editing'">
+                                <div class="col-xs-12 edit-layout-wrapper margin-left-0" ng-show="download.options.layouts.length" style="display:flex">
+                                    <span class="edit-layout-label">Select a layout:</span>
+                                    <span class="edit-layout-select width-60">
+                                        <select selectize ng-model="selected.editLayout"
+                                                ng-options="layout.name for layout in download.options.layouts | filter:{userid:me.id}">
+                                        </select>
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="alert alert-danger" ng-bind="config.export.savingError" ng-show="config.export.savingError"></div>
+
+                            <div class="layout-name display-block padding-bottom-100">
+                                <div class="col-xs-4 width-100">
+                                    <input class="form-control" ng-model="config.export.layoutName" placeholder="Layout Name">
+                                </div>
+                                <div class="col-xs-8 width-100 margin-top-10 ">
+                                    <async-button color-style="primary" disabled="!canSaveLayout()" text="Save" flash-text="Saved!" loading="loading.saveLayout" ng-click="saveLayout()"></async-button>
+                                    <span class="btn btn-sm btn-danger" ng-show="selected.editLayout" ng-click="deleteLayout()"><i class="fa fa-trash"></i></span>
+                                    <input type="checkbox" data-ng-model="config.disableAutoPreview"> Disable auto preview
+                                </div>
+
+                            </div>
+                            <div class="columns">
+                                <div class="col-sm-12 padding-0">
+                                    <div class="panel-body panel panel-default padding-5">
+                                        <div class="small-heading">
+                                            <span class="pointer" ng-click="config.export.showConfig=!config.export.showConfig">
+                                                <span class="fa" data-ng-class="config.export.showConfig?'fa-minus-square':'fa-plus-square'"></span>
+                                                Config
+                                            </span>
+                                        </div>
+                                        <div ng-show="config.export.showConfig">
+                                            <div class="share_layout">
+                                                <input type="checkbox" data-ng-model="config.export.share"> Share this layout with another users in your organization
+                                            </div>
+
+                                            <div>
+                                                <span>Time unit:</span>
+                                                <span class="btn-group">
+                                                    <label class="btn btn-default" ng-model="config.export.timeUnit" btn-radio="'hours'">Hours</label>
+                                                    <label class="btn btn-default" ng-model="config.export.timeUnit" btn-radio="'minutes'">Minutes</label>
+                                                </span>
+                                            </div>
+                                            <div class="date-format col-xs-12" style="padding: 0;">
+                                                <span class="center-vertically">Time separator:</span>
+                                                <span class="btn-group">
+                                                    <label class="btn btn-default" ng-model="config.export.timeSeparator" btn-radio="'-'">-</label>
+                                                    <label class="btn btn-default" ng-model="config.export.timeSeparator" btn-radio="'/'">/</label>
+                                                </span>
+                                            </div>
+                                            <div class="date-format tooltip-relative">
+                                                <span class="center-vertically">Date format:<span class="fa fa-question-circle" tooltip="Drag and drop to change the format"></span></span>
+                                                <ul class="list-inline " ui-sortable ng-model="config.export.dateFormat">
+                                                    <li data-ng-repeat="f in config.export.dateFormat" ng-bind="f"
+                                                        data-ng-class="{'add-slash':config.export.timeSeparator=='/'&&!$last,'add-dash':config.export.timeSeparator=='-'&&!$last}"
+                                                        class="btn btn-sm btn-default"></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 padding-0">
+                                    <div class="panel-body panel panel-default padding-5">
+                                        <div class="column-header">
+                                            <div class="small-heading">Available columns</div>
+                                        </div>
+                                        <div ng-repeat="col in config.export.availableColumns | orderBy:'name'" class="pointer available-column" ng-click="toggleAvailableColumn(col.name)">
+                                            <span data-ng-bind="col.name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 padding-0">
+                                    <div class="panel-body panel panel-default padding-5">
+
+                                        <div class="column-header tooltip-relative">
+                                            <div class="small-heading">
+                                                Selected columns
+                                                <span class="fa fa-question-circle" tooltip="Drag and drop the columns to change their order."></span>
+                                            </div>
+                                            <span class="col-name">Name</span>
+                                            <span class="col-label">Displayed as</span>
+                                            <span class="col-checkbox">As columns</span>
+                                        </div>
+
+                                        <div ui-sortable ng-model="config.export.selectedColumns">
+                                            <div ng-repeat="col in config.export.selectedColumns" class="selected-column" >
+                                                <span class="fa fa-close remove-column pointer" ng-click="toggleAvailableColumn(col.name,true)"></span>
+                                                <span data-ng-bind="col.name" class="col-name"></span>
+                                                <input data-ng-model="col.label" class="col-label">
+                                            <span class="col-checkbox">
+                                                <input type="checkbox" data-ng-model="col.asColumns" data-ng-change="checkAsColumns(col)" data-ng-disabled="col.disableAsColumns">
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 padding-0">
+                                    <div class="panel-body panel panel-default padding-5">
+                                        <div class="small-heading">
+                                            Preview
+                                        </div>
+                                        <div style="overflow-x: scroll">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th data-ng-repeat="header in config.export.preview.header" data-ng-bind="header.label"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr data-ng-repeat="row in config.export.preview.rows">
+                                                <td data-ng-repeat="header in config.export.preview.header" data-ng-bind="row[header.name]"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="attendanceExporter.previewTable" >
+                    <div class="col-sm-12" style="overflow: auto;">
+
+                        <div class="small-heading">Preview</div>
+                        <sortable-table
+                                ng-if="attendanceExporter.previewTable"
+                                header="attendanceExporter.previewTable.header"
+                                rows="attendanceExporter.previewTable.rows"
+                                data="attendanceExporter.previewTable"
+                                perPage="20"
+                                table-height="250px"
+                                >
+                        </sortable-table>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </tab>
+    <tab ng-if="isAdmin() || !(isGuardian && !isAdvisor)" heading="Student Report" select="selected.filter='site';selected.tab='report';selectAllSites()">
+        <div class="row-fluid">
+            <div class="panel panel-default panel-body padding-10-0">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <div data-ng-include="'filter.html'"></div>
+                    <div class="col-xs-4 width-100">
+                        Select a student:
+                    </div>
+                    <div class="col-xs-6 width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+                        <select selectize data-ng-model="selected.advisee"
+                                placeholder="-- Select a student --"
+                                data-ng-options="advisee as advisee.lastName + ', ' + advisee.firstName for advisee in advisees | orderBy:'lastName'">
+                        </select>
+                    </div>
+                    <div ng-include="'date-range.html'"></div>
+                    <div class="col-xs-12 tooltip-relative" style="margin-bottom: 8px;">
+                        <input type="checkbox" ng-model="download.options.data.includeProgress" class="ng-pristine ng-valid"> Include progress report
+                        <span class="fa fa-question-circle" tooltip="If this option is selected, a progress report will be added to the student’s attendance report file when downloaded"></span>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="align-right" style="width: 83.33333%;margin-left: 47px;">
+                            <div class="btn btn-primary btn-sm" data-ng-disabled="!selected.advisee" ng-click="getStudentReport()">Preview <span class="fa fa-pulse fa-spinner" ng-show="loadingMissing"></span></div>
+                            <div class="btn btn-info  btn-sm" data-ng-disabled="!selected.advisee" ng-click="getStudentReport(true)">Download <span class="fa fa-download"></span> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-include="'/public/views/directives/reports/student-report-preview.html'"></div>
+        </div>
+    </tab>
+</tabset>
+
+<script type="text/ng-template" id="filter.html">
+    <div ng-if="isAdmin() && selected.tab!='report'" class="panel panel-body">
+        <span>Filter by:</span>
+        <span class="btn-group">
+            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'site'">Site</label>
+            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'advisor'">Coach</label>
+            <label class="btn btn-default" ng-model="selected.filter" btn-radio="'course'">Class</label>
+        </span>
+    </div>
+    <div ng-if="((selected.filter=='site') ||  !(isGuardian && !user.is_advisor)) && selected.tab!='report'">
+        <div class="col-xs-4 width-100">
+            Select a site: <span class="fa fa-spinner fa-pulse" ng-show="loading.sites"></span>
+        </div>
+        <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+            <select data-ng-model="selected.site"
+                    placeholder="-- Select a site --"
+                    selectize
+                    data-ng-options="site.text for site in select.sites | orderBy:'name'">
+            </select>
+
+        </div>
+    </div>
+    <div ng-if="isAdmin() && selected.filter=='advisor'  && selected.tab!='report'">
+        <div class="col-xs-4 width-100">
+            Select a coach: <span class="fa fa-spinner fa-pulse" ng-show="loading.advisors"></span>
+        </div>
+        <div class="col-xs-6 selectbox width-100" style="padding-right: 0px;width: calc(50% + 40px);">
+            <select selectize data-ng-model="selected.advisor"
+                    placeholder="-- Select a coach --"
+                    data-ng-options="advisor.name for advisor in select.advisors | orderBy:'name'">
+            </select>
+        </div>
+    </div>
+    <div ng-if="isAdmin() && selected.filter=='course'  && selected.tab!='report'">
+        <div class="col-xs-4 width-100">
+            Select a class: <span class="fa fa-spinner fa-pulse" ng-show="loading.classes"></span>
+        </div>
+        <div class="col-xs-6 selectbox width-100">
+            <select selectize data-ng-model="selected.class"
+                    placeholder="-- Select a class --"
+                    data-ng-options="class.id as class.name group by class.type for class in select.classes | orderBy:'name'">
+            </select>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="date-range.html">
+    <div class="row" style="margin-top: 6px">
+        <div class="col-xs-12">
+            <div class="col-xs-4">
+                Start date:
+            </div>
+
+            <p class="input-group datepicker col-xs-6">
+                <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="selected.startDate" max-date="selected.endDate"  is-open="datePicker.start.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'start')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+            </p>
+        </div>
+    </div>
+    <div>
+        <div class="col-xs-4">
+            End date:
+        </div>
+
+        <p class="input-group datepicker col-xs-6">
+            <input type="text" class="form-control" datepicker-popup="{{datePicker.format}}" ng-model="selected.endDate" is-open="datePicker.end.opened" datepicker-options="datePicker.dateOptions" date-disabled="datePicker.disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="datePicker.open($event,'end')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+        </p>
+    </div>
+</script>

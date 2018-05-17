@@ -1,0 +1,138 @@
+.timed-group-editor .modal-dialog{
+    width: 95%;
+    height: 95%;
+    padding-bottom: 30px;
+    margin-bottom: 0;
+}
+.timed-group-editor .modal-dialog .modal-content{
+    height: 100%;
+    overflow: hidden;
+}
+.timed-group-editor .modal-body {
+    position: relative;
+    padding: 0 20px;
+    height: calc(100% - 60px);
+}
+.row.groups-container{
+    height: 100%;
+}
+.timed-group-editor .groups-sidebar{
+
+    background: #FFF;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+    box-shadow: 1px 0 0 #f0f0f2 inset;
+
+}
+.timed-group-editor .groups-sidebar .navbar {
+    margin-bottom: 10px;
+}
+.timed-group-editor .groups-sidebar .navbar-title {
+    margin-left: 0;
+    font-size: 18px;
+}
+.timed-group-editor .groups-sidebar .filter-group{
+    width: 80%;
+    font-size: 14px;
+    margin: auto;
+}
+.timed-group-editor .groups-sidebar .filter-group input{
+    width:100%;
+}
+body.dragging-prompt .group-list,.e3-over{
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+.group-list .group-title .fa-trash:hover{
+    font-size:14px;
+}
+.prompt-heading{
+    cursor:grab;
+    cursor:-webkit-grab;
+    cursor:-moz-grab;
+}
+.add-prompt-btn{
+    background-color: #6CC36C;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.prompt-list .prompt{
+    padding: 2px;
+    padding-top:6px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+.timed-groups-content-wrapper{
+    height: 100%;
+}
+.prompts-container{
+    overflow-y: auto;
+    height: calc(100% - 70px);
+}
+.prompt-filter{
+    margin-bottom: 10px;
+}
+.prompt-filter .filter-date-wrapper {
+    float: left;
+    margin-right: 10px;
+}
+.prompt-filter .filter-date{
+    width: 170px;
+}
+.prompt-filter .filter-date .input-sm{
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+.prompt-modified-on{
+    margin-left:30px;
+    color: rgba(144, 141, 255, 1);
+    font-size: 11px;
+}
+.timed-review-modal_only-video .modal-dialog{
+    max-width: 900px;
+    width: 95%;
+    max-height: 600px;
+}
+#videoWidget{
+    width:300px;
+}
+.mobile #videoWidget{
+    width:79%;
+}
+.mobile .vcenter{
+    padding: 10px !important;
+}
+.mobile .timed-review-col{
+
+    width: 100% !important;
+
+}
+.mobile .timed-review-container:not(.ng-hide),
+.mobile .timed-review-row:not(.ng-hide),
+.mobile .timed-review-col:not(.ng-hide){
+    display: block !important;
+}
+.mobile timed-review-video{
+    display: block;
+    width: 100%;
+}
+.mobile timed-review-video video{
+    width: 100%;
+    max-width: 100% !important;
+}
+.mobile #videoWidgetContainer2{
+    width: 100% !important;
+
+}
+.mobile .next-button{
+    position: relative !important;
+}

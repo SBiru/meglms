@@ -1,0 +1,12 @@
+<span class="forum-notification-btn label label-primary pointer" ng-show="showButton">
+    Forum
+    <span class="badge" ng-bind="count" ng-show="count>0"></span>
+</span>
+
+<script type="text/ng-template" id="forum-notifications-box.html">
+    <div class="list-group forum-notification-box">
+        <a ng-href="#/forum/{{n.pageid}}/topics/{{n.pageid}}" class="list-group-item" data-ng-repeat="n in notifications">
+            {{n.notification}}
+        </a>
+    </div>
+</script>

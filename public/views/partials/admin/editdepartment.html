@@ -1,0 +1,20 @@
+<div>
+	<h2>Edit Department</h2>
+	<table>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="departmentName" class="control-label" style="font-size:1.4em">Name</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="departmentName" name="departmentName" ng-model="departmentName" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="departmentDomain" class="control-label" style="font-size:1.4em">Domain</lable></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="departmentDomain" name="departmentDomain" ng-model="departmentDomain" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+             	<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="updateDepartment()">Save Changes</button></td>
+		</tr>
+	</table>
+	
+	<h2>Delete Department</h2>
+	<button type="button" class="btn btn-danger btn-sm" ng-click="deleteDepartment()">Delete</button>
+</div>

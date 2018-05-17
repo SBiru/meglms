@@ -1,0 +1,27 @@
+<div class="editor">
+    <h1 class="editor_title">
+        <input ng-model="standard.name" placeholder="Name" class="ng-pristine ng-valid ng-touched">
+    </h1>
+    <textarea ng-model="standard.description" class="editor_description ng-pristine ng-valid ng-touched" placeholder="Description"></textarea>
+    <select class="parent"
+            selectize
+            ng-options="standard.id.toString() as standard.fakeName for standard in standardsArray"
+            ng-model="standard.parentid"></select>
+
+</div>
+
+<button ng-if="id==0" ng-click="add()" class="btn btn-primary">Add</button>
+<button ng-if="id>0" ng-click="edit()" class="btn btn-primary">Edit</button>
+<button ng-if="id>0" ng-click="delete()" class="btn btn-danger">Delete</button>
+<div class="alert alert-danger" role="alert" ng-show="msgError">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+    {{msgError}}
+</div>
+<h2>Entities linked to this standard</h2>
+
+<ul ng-controller="LinkedToStandardController">
+    <li ng-repeat="entity in entities">
+        <div>{{entity.name}}</div>
+    </li>
+</ul>

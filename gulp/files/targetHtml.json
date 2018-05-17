@@ -1,0 +1,18 @@
+[
+  "./public/views/index.html",
+  "./public/views/grader.html",
+  "./public/views/superadmin.html",
+  "./public/views/attendance.html",
+  "./public/views/performance-evaluation.html",
+  "./public/views/gradebook.html",
+  "./public/views/editor.html",
+  "./public/views/grades/index.html",
+  "./public/views/splash/index.html",
+  "./public/views/splash/index-test.html",
+  "./public/views/standards/index.html",
+  "./public/views/fabric.html",
+  "./public/views/pscontrols.html",
+  "./public/views/psmatch.html",
+  "./public/views/j1-dashboard/index.html"
+
+]

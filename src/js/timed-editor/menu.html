@@ -1,0 +1,10 @@
+<div ng-show="$state.includes('timedReviews')" style="margin-top:.6em">
+    <ul class="nav nav-pills nav-stacked" role="tablist">
+        <li role="presentation" ng-controller="ModalAddTimedReviewController"><a ng-click="open()"><span class="glyphicon glyphicon-plus"></span> Add New Timed Review</a></li>
+        <li role="presentation" class="nav-divider"></li>
+        <li role="presentation" ><div style="width:60%;margin: auto"><input style="width: 100%" type="text" ng-model="inputFilter" placeholder="Search test"></div></li>
+        <li role="presentation" class="nav-divider"></li>
+        <li role="presentation" ng-repeat="item in data.timedReviews | filter:inputFilter" ui-sref-active="active"><a ui-sref="timedReviews.detail({reviewId:item.id})">{{item.title}} </a></li>
+    </ul>
+</div>
+

@@ -1,0 +1,16 @@
+<ul class="nav navbar-nav">
+    <li class="tool-name">
+        <b>Font</b>
+    </li>
+    <li>
+        <input type="number" class="pixels-input" ng-model="fontSize" data-ng-change="changeFontSize(fontSize)"> px
+    </li>
+    <li class="tool-option">
+        <select style="color:black" data-ng-options="fontFamily for fontFamily in AVAILABLE_FONTS" ng-model="fontFamily" data-ng-change="changeFontFamily(fontFamily)"></select>
+    </li>
+    <li class="tool-option">
+        <div class="colorpicker-wrapper">
+            <input minicolors="{position: 'bottom left'}" ng-model="fontColor" data-ng-change="changeColor(fontColor)">
+        </div>
+    </li>
+</ul>

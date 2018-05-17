@@ -1,0 +1,87 @@
+
+<style>
+
+    textarea:hover,
+    input:hover,
+    textarea:active,
+    input:active,
+    textarea:focus,
+    input:focus,
+    button:focus,
+    button:active,
+    button:hover
+    {
+        outline:0px !important;
+        -webkit-appearance:none;
+    }
+
+    textarea { border: none;
+        background-color:transparent;
+        resize: none;
+    }
+
+    .HtmlTemplateControl{
+        position:relative;
+        margin:auto;
+        width:95%;
+        height:648px;
+    }
+
+    .template_textarea_wrapper{
+        position: absolute;
+        width: 92%;
+        height: 14%;
+
+    }
+
+    #textarea_1{
+        top: 12px;
+        left: 4%;
+    }
+
+    #textarea_2{
+        top: 145px;
+        left: 4%;
+    }
+    #textarea_3{
+        top: 278px;
+        left: 4%;
+    }
+    #textarea_4{
+        top: 411px;
+        left: 4%;
+    }
+    #textarea_5{
+        top: 544px;
+        left: 4%;
+    }
+
+    .template_textarea,.template_img {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div class="HtmlTemplateControl">
+    <div class="template_textarea_wrapper" id="textarea_1">
+        <textarea class="template_textarea"  ng-model="templateContent[0]"></textarea>
+    </div>
+
+    <div class="template_textarea_wrapper" id="textarea_2" >
+        <textarea class="template_textarea" ng-model="templateContent[1]"></textarea>
+    </div>
+
+    <div class="template_textarea_wrapper" id="textarea_3">
+        <textarea class="template_textarea"  ng-model="templateContent[2]"></textarea>
+    </div>
+    <div class="template_textarea_wrapper" id="textarea_4">
+        <textarea class="template_textarea"  ng-model="templateContent[3]"></textarea>
+    </div>
+    <div class="template_textarea_wrapper" id="textarea_5">
+        <textarea class="template_textarea"  ng-model="templateContent[4]"></textarea>
+    </div>
+
+
+    <!--Timeline_Five End-->
+    <img class="template_img" src="../public/htmlTemplates/process_or_cycle_chart.png" border="0" alt="">
+</div>

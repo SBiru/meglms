@@ -1,0 +1,58 @@
+
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<div class="response-items-container">
+    <div class="row equation-holder"></div> <!--we are replacing this div element with mathquill mathfield--><!--Do not change the item position-->
+    <!--<div>{{enteredMath}}</div>-->
+    <div class="row eq-navigation-buttons" style="margin-bottom: 2px; margin-left: 5px; margin-top: 5px">
+        <button class="eq-nav-button" ng-click="buttonOperation('left')">
+            <i class="fa fa-arrow-left" aria-hidden="true" ></i>
+        </button>
+        <button class="eq-nav-button" ng-click="buttonOperation('right')">
+            <i class="fa fa-arrow-right" aria-hidden="true" ></i>
+        </button>
+
+        <button class="eq-nav-button" ng-disabled="undoStack.length == 0" type="button" ng-click="undo()" ng-style="{opacity : undoStack.length == 0? 0.3 : 1}">
+            <i class="fa fa-undo" aria-hidden="true" ></i>
+        </button>
+        <button class="eq-nav-button" ng-disabled="redoStack.length == 0"type="button" ng-click="redo()" ng-style="{opacity : redoStack.length == 0? 0.3 : 1}">
+            <i class="fa fa-repeat" aria-hidden="true" ></i>
+        </button>
+        <button class="eq-nav-button" type="button" ng-click="buttonOperation('backspace')"><span><img style="width:18px; margin-bottom:3px; " src="/public/img/eq-nav-backspace.png"></span></button>
+    </div>
+    <div class="row" style="margin-left: 5px; margin-bottom: 5px; border:1px solid #99ebff; width: 98%;">
+        <div class="col-sm-3 col-xs-3" style="width: auto; padding: inherit; margin-right: 2px; border-right:1px solid #c1c1c1;">
+            <div class="row" style="margin: inherit;">
+                <button class="eq-button" ng-repeat="n in [1,2,3]" type="button" ng-click="buttonOperation(n)">{{n}}</button>
+            </div>
+            <div class="row" style="margin: inherit;">
+                <button class="eq-button" ng-repeat="n in [4,5,6]" type="button" ng-click="buttonOperation(n)">{{n}}</button>
+            </div>
+            <div class="row" style="margin: inherit;">
+                <button class="eq-button" ng-repeat="n in [7,8,9]" type="button" ng-click="buttonOperation(n)">{{n}}</button>
+            </div>
+            <div class="row" style="margin: inherit;">
+                <button class="eq-button" ng-repeat="n in [0,'.','-']" type="button" ng-click="buttonOperation(n)">{{n}}</button>
+            </div>
+        </div>
+        <div class="col-sm-9 col-xs-9" style="width: auto; padding: inherit;">
+            <div class="row" ng-if="issetResponseItem('variables')" style="margin: inherit; margin-left: 2px">
+                <button class="eq-button" ng-repeat="variable in question.extra.variables" ng-click="buttonOperation(variable)">{{variable}}</button>
+            </div>
+            <div class="row" ng-if="issetResponseItem('operators')" style="margin: inherit; margin-left: 2px;">
+                <button class="eq-button" ng-repeat="operator in question.extra.operators" ng-click=buttonOperation(operator)>
+                    <span ng-if="operator !='.'">{{operator}}</span>
+                    <i ng-if="operator =='.'" style="font-size: 10px;" aria-hidden="true" class="fa fa-circle"></i>
+                </button>
+            </div>
+            <div class="row"  ng-if="issetResponseItem('logicals')" style="margin: inherit; margin-left: 2px">
+                <button class="eq-button" ng-repeat="logical in question.extra.logicals" ng-click=buttonOperation(logical)>{{logical}}</button>
+            </div>
+            <div class="row" ng-if="issetResponseItem('specials')" style="margin: inherit; margin-left: 2px">
+                <button  class="eq-button" ng-repeat="special in question.extra.specials" ng-click=buttonOperation(special)>
+                    <span ng-if="special =='||'">{{special}}</span>
+                    <span ng-if="!(special =='||')"><img ng-src="{{'/public/img/'+special+'.png'}}" /></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

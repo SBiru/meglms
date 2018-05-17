@@ -1,0 +1,26 @@
+<div ng-if="!question.contentPlusMathjac " class="prompt" style="margin-top: 10px;" ng-bind-html="safeHtml(question.prompt)"></div>
+<div  ng-if="question.contentPlusMathjac">
+                            <span ng-repeat="obj in question.contentPlusMathjac">
+                            <span ng-if="obj.html"dynamic="obj.html"></span>
+                            <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+                            </span>
+</div>
+<div ng-if="question.type == 'studentvideoresponse'" style="  border: 1px solid #a1a1a1;padding: 10px 40px;background: #cccccc;border-radius: 5px;margin:auto;width:420px">
+    <video id="{{getUserid(quiz)}}" width="320" height="255" controls="">
+        <source id="{{getQuestionId(quiz)}}" ng-src="{{getQuestionSrc(question)}}" type="video/mp4">Your browser does not support the video tag!
+    </video>
+    <div  ng-bind-html="safeHtml(question.video_comment)"> </div>
+</div>
+<div class="panel panel-default" ng-if="question.type != 'studentvideoresponse' && question.type != 'information'">
+    <div class="options" style="margin:10px">
+        <div ng-show="question.uploadedFile">
+            Uploaded file: <a target="_blank" ng-href="{{'/public/useruploads/' + question.uploadedFile.showfilename}}">{{question.uploadedFile.realfilename}}</a>
+        </div>
+<!--Essay Display Start-->
+        <div ng-class="{'correct': question.type==='blank' && graderView && question.is_correct>=1, 'incorrect': graderView && question.is_correct<=0}" ng-bind-html="$root.trustAsHtml(question.response)" >
+        </div>
+    </div>
+
+</div>
+<div ng-if="question.useRubric && (question.editing || question.is_correct > -1)" ng-include="'/public/views/rubrics/rubric-grader.html'" ng-controller="RubricGraderController" class="rubric panel panel-body"
+     style="  padding: 5px;border: 1px solid transparent;border-color: rgb(168, 168, 168);border-radius: 4px;margin-bottom: 5px;overflow-x:scroll"></div>

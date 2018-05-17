@@ -1,0 +1,36 @@
+<div class="search-word">
+    <div class="form-group">
+        <input class="form-control" ng-model="filter.searchTerm">
+        <button ng-click="search()" class="btn btn-primary">Search</button>
+        <input type="checkbox" ng-model="full_text"> Search full text
+    </div>
+
+</div>
+
+<span class="btn-group btn-group-justified">
+    <label class="btn btn-default" ng-model="filter.type" btn-radio="'alphabet'">By Alphabet</label>
+    <label class="btn btn-default" ng-model="filter.type" btn-radio="'author'">By Author</label>
+    <label class="btn btn-default" ng-model="filter.type" btn-radio="'date'">By Date</label>
+
+</span>
+
+<glossary-tags-browse-by ng-if="callbacks && word.org_id " selected="selected"
+                         search-term="filter.searchTerm"
+                         by="filter.type"
+                         callbacks="callbacks"
+                         pagination-config="pagination.paginationConfig"
+                         org-id="word.org_id"
+                         full-text="full_text"
+></glossary-tags-browse-by>
+
+
+
+<glossary-tags-list tags="pagination.tags" callbacks="callbacks"
+                    ng-if="pagination && pagination.paginationConfig && callbacks.changePage"
+                    pagination-config="pagination.paginationConfig"
+                    show-select="true"
+                    show-edit="true"
+                    show-delete="true"
+                    word="word"
+></glossary-tags-list>
+<div class="clearfix"></div>

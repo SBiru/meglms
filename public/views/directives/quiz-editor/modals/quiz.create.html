@@ -1,0 +1,24 @@
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">Add New Test</h4>
+</div>
+<div class="modal-body">
+    <div ng-show="error" class="alert alert-danger" role="alert">{{ error }}</div>
+    <form role="form" ng-submit="ok()">
+        <div ng-if="values.selection != 'randomGroupQuestions'">
+            <label for="new-test-title" class="control-label">Title</label>
+            <input type="text" class="form-control" id="new-test-title" placeholder="Type in Title" ng-model="data.title" autofocus>
+            <label for="new-test-description" class="control-label">Description</label>
+            <textarea ckeditor="" custom-options="ckeditorOptions" class="form-control" data-ng-model="data.description" placeholder="Provide a test description"></textarea>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="ok()">Save</button>
+</div>
+
+
+

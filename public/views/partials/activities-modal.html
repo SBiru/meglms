@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <button type="button"  class="close " ng-click="cancel()" style="opacity: 0.8">
+        <div class="btn">
+            <span aria-hidden="true" class="fa fa-times" style="font-size: 20px;color:red"></span>
+            <span class="sr-only">Close</span>
+        </div>
+    </button>
+    <button type="button"  class="close " ng-click="printCsv()" style="opacity: 0.8">
+        <div class="btn">
+            <span aria-hidden="true" class="fa fa-print" style="font-size: 20px;color:#428bca"></span>
+            <span class="sr-only">Print</span>
+        </div>
+    </button>
+    <button type="button"  class="close " ng-click="printPdf()" style="opacity: 0.8">
+        <div class="btn">
+            <span aria-hidden="true" class="fa fa-file-pdf-o" style="font-size: 20px;color:#428bca"></span>
+            <span class="sr-only">Print</span>
+        </div>
+    </button>
+    <h3 class="modal-title">{{courseName}}</h3>
+</div>
+<div id="activities-modal-body" class="modal-body">
+    <!--for pdf file only-->
+    <!--start-->
+    <h3 class="modal-title" style="display: none;text-align: center;color: #2252c0;margin-bottom: 20px">{{courseName}}</h3>
+    <!--end-->
+    <div ng-repeat="(mainIndex,unit) in courseData.units track by $index" ng-style="getUnitBodyStyle(unit.id)" style="margin-top: 6.5px">
+        <h4 id="unit-title" ng-style="getUnitTitleStyle(unit.id)"><span ng-show="unit.name > -1">{{unit.name}}. </span>{{unit.description}}</h4>
+        <div id={{"titlePageBreakEle"+mainIndex}}></div>
+        <li ng-repeat="nav in unit.pages track by $index" id="activity-{{nav.id}}" ng-switch="isExternalLinkPage(nav)" ng-hide="canHide(nav,unit.pages)" class="tooltip-relative" ng-style="getActivityStyle(nav)">
+            <span id="arrow" ng-show="isActive(nav.id) == 'active'">
+                <i class="fa fa-arrow-right" aria-hidden="true" tooltip="Current activity"></i>
+            </span>
+            <a ng-href="{{isItemHeader(nav)?'':getHref(nav,$index)}}" ng-switch-when="false" ng-click="isItemHeader(nav)?changeState(nav):goto(unit,nav.id, $event,$index)">
+                <span id="header-span" ng-show="isItemHeader(nav)" ng-switch="nav.isCollapsed" >
+                        <i ng-switch-default class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf147;</i>
+                        <i ng-switch-when="true" class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf196;</i>
+                    </span>
+                <span class="page-name-wrapper">
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="isEnglishSelected()" style="font-size: 14px">{{nav.label}}</span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="nav.isExempt" class="exempt">(Exempt)</span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-hide="isEnglishSelected()">{{nav.subtitle}}</span>
+                        <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox" ng-hide="hideBox(nav) || !courseData.isStudent">
+                            <span ng-show="showCheckMark(nav,unit.pages)"><i class="fa fa-check sidebar-checkbox-icon" ng-class="{'exempt':nav.isExempt}"></i></span>
+                            <span ng-show="showGoldenStar(nav)">
+                                <i class="fa fa-star sidebar-checkbox-icon" style="color:gold"></i>
+                            </span>
+                            <span ng-if="showWaitingGrade(nav)" tooltip="Waiting for feedback" tooltip-append-to-body="true" tooltip-placement="bottom" class="sidebar-checkbox-icon submitted-icon fa fa-hourglass"></span>
+                        </span>
+                        <span ng-hide="isItemHeader(nav)  || !courseData.isStudent" ng-class="taskStatusTextWrapperClass" style="font-size: 14px !important;">
+                            <span class="grade" ng-click="openFeedback(nav)" ng-if="showGrade(nav)" ng-bind="formatGrade(nav)" ng-init="courseData.units[mainIndex].pages[$index]._score = formatGrade(nav)" ng-class="getGradeOverall(nav)" tooltip="{{nav.hasFeedback?'Show feedback':''}}" tooltip-append-to-body="true"></span>
+                            <span ng-if="showDate(nav)" class="page-due-date" ng-bind="formatDate(nav)" ng-init="courseData.units[mainIndex].pages[$index]._dueDate = formatDate(nav)" tooltip="Due Date" tooltip-append-to-body="true" tooltip-placement="bottom"></span>
+                        </span>
+                </span>
+            </a>
+            <a href="{{nav.external_link}}" target="_blank" ng-switch-default>
+                <span style="margin-right: 8px; float: left;">
+                    <img src="/public/img/externalicon.png" height="18px" width="18px"/>
+                </span>
+                <span ng-show="isEnglishSelected()" style="font-size: 14px">{{nav.label}}</span>
+                <span ng-hide="isEnglishSelected()">{{nav.subtitle}}</span>
+            </a>
+            <div id={{"activityPageBreakEle"+mainIndex+"_"+$index}}></div>
+        </li>
+    </div>
+</div>

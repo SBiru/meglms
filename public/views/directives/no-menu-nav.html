@@ -1,0 +1,18 @@
+<table style="margin:auto">
+    <tr>
+        <td data-ng-repeat="unit in units">
+            <table>
+                <tr>
+                    <td data-ng-repeat="pageGroup in unit.pageGroups" ng-if="pageGroup.id==currentPageGroupId" class="pagegroup-box">
+                        <div class="pagegroup-title">{{pageGroup.label}}</div>
+                        <!--<div class="circle-progress">-->
+                            <!--<span data-ng-repeat="page in pageGroup.pages"-->
+                                  <!--class="fa fa-circle page-checkmark" ng-class="{checked:page.checked,active:page.active}">-->
+                            <!--</span>-->
+                        <!--</div>-->
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

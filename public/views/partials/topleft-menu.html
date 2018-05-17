@@ -1,0 +1,18 @@
+<tr>
+    <td ng-controller="UtilityController">
+        <ul id="main-nav-bar" class="nav nav-tabs topleft-menu" style="margin-top: 9px">
+            <li ng-repeat="option in menuOptions" ng-show="option.show" role="presentation" ng-class="{active: option.href==currentPath}" >
+                
+                <a href="{{option.href}}" ng-if="!option.modal">
+                    <span ng-bind="option.text"></span>
+                    <i class="fa fa-2x" ng-class="option.faicon"></i>
+                </a>
+                <a ng-controller="modalFileFolder" href="javascript:return false" ng-click="open()"ng-if="option.modal">
+                    <span ng-bind="option.text"></span>
+                    <i class="fa fa-2x" ng-class="option.faicon"></i>
+                </a>
+
+            </li>
+        </ul>
+    </td>
+</tr>

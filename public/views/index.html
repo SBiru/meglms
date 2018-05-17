@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8">
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <script src="https://cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script>
+        MathJax.Hub.Config({
+            skipStartupTypeset: true,
+            messageStyle: "none",
+            "HTML-CSS": {
+                showMathMenu: false
+            }
+        });
+        MathJax.Hub.Configured();
+    </script>
+
+    <script src="/public/js-util/ckeditor/ckeditor.js"></script>
+
+    <!-- MathQuill start -->
+    <link rel="stylesheet" href="/public/js-util/mathquill-0.10.1/mathquill.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/public/js-util/mathquill-0.10.1/mathquill.js"></script>
+    <script>
+        var MQ = MathQuill.getInterface(2);
+    </script>
+    <!-- MathQuill end -->
+    <!-- inject:css -->
+
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+
+<!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+
+    <?php echo $customStyles->createStyleSheet(); ?>
+
+</head>
+<body ng-controller='PreferenceController' ng-attr-dir="{{ language_direction }}" data-ng-style="{'background-image':backgroundImage()}" style="padding-top:0">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+<!-- bootstrap modal -->
+<div id="basicChatModal" class="chat-window chat-fade" style="right: 10px" aria-labelledby="basicChatModal"
+     aria-hidden="true" ng-controller="ChatBoxController">
+    <div class="chat-window-title" ng-click="collapseToggle()">
+        <div class="close" data-dismiss="modal" aria-hidden="true"></div>
+                <span class="fa fa-comments-o fa-fw chat-window-title-icon">
+                </span>
+        <span class="text">{{ preference.navs.chatting_to_pre_name.translation }} {{ chatter.fname }} {{ chatter.lname }} {{ preference.navs.chatting_to_post_name.translation }}</span>
+    </div>
+    <div id="chatWindowContent" ng-hide="chatCollapsed" class="chat-window-content"
+         style="height: 300px; display: none;">
+        <div class="chat-window-inner-content message-board pm-window">
+            <div class="messages-wrapper" style="height: 240px">
+                <div class="chat-message" ng-repeat="message in messages">
+                    <div class="chat-gravatar-wrapper">
+                        <img class="profile-picture" src="/public/img/chatuserdefault.png">
+                    </div>
+                    <div class="chat-text-wrapper">
+                        <p>{{ message.fname }} {{ message.lname }}<br/>{{ message.created }}</p>
+                        <p>{{ message.message }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window-text-box-wrapper">
+                <textarea ui-keypress="{'enter':'send()'}" class="chat-window-text-box" ng-model="chat_message"
+                          style="overflow: hidden; word-wrap: break-word;height:100%;" rows="3"
+                          placeholder="{{ preference.navs.chat_textbox_placeholder.translation }}"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->
+
+
+
+
+
+
+
+<nav  id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header margin-left-40">
+            <a ng-if="user.org.white_label && user.org.logo" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img ng-if="user.org.logo" style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img ng-src="/public/img/e3-green-logo.png"/> </a>
+            <a ng-if="user.org.white_label==false && user.org.logo" class="navbar-brand org-logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+        <div class="navbar-collapse collapse" id="main-navbar">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+            <!--<form class="navbar-form navbar-left form-inline" style="position: relative;transform: translateX(-50%);left: 25%;">-->
+                <!--<div class="form-group">-->
+                    <!--<label>Show:</label>-->
+                <!--</div>-->
+                <!--<div class="form-group" ng-init="$root.show_teacher_info=true;$root.show_menu=true">-->
+                    <!--<label>Teacher info</label>-->
+                    <!--<input type="checkbox" ng-model="$root.show_teacher_info" >-->
+                <!--</div>-->
+                <!--<div class="form-group" style="margin-left: 10px;">-->
+                    <!--<label>Menu</label>-->
+                    <!--<input type="checkbox" ng-model="$root.show_menu">-->
+                <!--</div>-->
+            <!--</form>-->
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="margin-top:20px;">
+
+    <div class="row" ng-controller="NavController">
+        <div ng-hide="navData" class="loading_content"><div class="text"><span class="fa fa-pulse fa-spinner"></span> Loading course..</div></div>
+        <div ng-show="navData" class="course-view">
+            <!--<div ng-include="'/public/views/partials/nav-sidebar.html'" ng-if="!noMenu()"></div>-->
+            <div ng-include="'/public/views/partials/<?php echo $menu=='top'?'test-sidebar4.html':'nav-sidebar.html?v=1'; ?>'" class="top-nav-menu" ng-if="!noMenu()" style="padding-top: 25px;"></div>
+
+
+
+            <!-- ************************************************************** -->
+            <!-- *********************** MAIN CONTENT ************************* -->
+            <!-- ************************************************************** -->
+            <div class="unitInfo panel panel-default" ng-if="noMenu()">
+                <div class="row">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-8">
+                        <no-menu-nav></no-menu-nav>
+                    </div>
+                </div>
+                <div class="new-progress">
+                    <div class="new-progress-bar" role="progressbar" aria-valuenow="70"
+                         aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                        <span class="sr-only">70% Complete</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="hide-menu-icon">
+                <div class="collapsed btn btn-xs btn-default" ng-show="sidebarCollapsed || $root.windowWidth<768"  ng-click="toggleSidebar()">
+                    <!--<img src="/public/img/expand-menu-icon.png" ng-click="toggleSidebar()" style="cursor:pointer">-->
+                    <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+                </div>
+            </div>
+            <div ng-show="!sidebarCollapsed " ng-click="toggleSidebar()" class="emptydiv"></div>
+            <div id="coursecontentdiv" ng-class="'padding-left-15 main ' + (sidebarCollapsed || noMenu() ? 'col-sm-12' : '<?php echo $menu=='top'?'col-sm-12':'col-sm-9 col-sm-offset-3'; ?>') + (noMenu()?' no-menu':'')" dir="ltr"  ng-style="{'padding-right':noMenu()?'60px':'50px','padding-left':noMenu()?'60px':'50px'}">
+                <div class="page-content-wrapper" ng-class="noMenu()?'center':''">
+                    <div ng-show="noMenu() && !navService.showNoMenuInstructions" class="no-menu-page-title" ng-class="$state.current.name">
+                        <h2 class ="inlineContentHeader" ng-bind="pagename"></h2>
+                    </div>
+                    <nav ng-hide="noMenu()" >
+
+                        <div ng-show="navService.classMeta.show_breadcrumbs?navService.classMeta.show_breadcrumbs.meta_value != 0:organization.show_breadcrumbs" class="display-none">
+                            <ol class="breadcrumb page-breadcrumb">
+                                <li class="breadcrumb-item"
+                                    data-ng-repeat="b in $root.breadcrumbs"
+                                    ><span  ng-bind="b.label" ></span></li>
+
+                            </ol>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-sm-12 course-view">
+                                <ul class="pager main-nav-pager display-flex" ng-class="{'collapsed':sidebarCollapsed}">
+                                    <li class="previous width-50px"><span data-ng-click="prev()"><span class="fa fa-angle-left"></span></span></li>
+                                    <li class="ContentHeader"><h2 class ="inlineContentHeader font-size-25" ng-bind="pagename"></h2></li>
+                                    <li class="next width-50px"><span data-ng-click="next()"><span class="fa fa-angle-right"></span></span></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </nav>
+
+                    <div id="mainContentDiv" ui-view  ng-hide="noMenu() && navService.showNoMenuInstructions" data-ng-style="{}"></div>
+                    <no-menu-splash
+                            user-id="$root.user.id"
+                            ng-show="noMenu() && navService.showNoMenuInstructions && $root.user"></no-menu-splash>
+                    <no-menu-footer ng-if="noMenu() && !navService.showNoMenuInstructions"></no-menu-footer>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="webcamChecker"></div>
+</div>
+
+<!-- TODO: Load Scripts Here -->
+<script>
+    angular.module('app').requires.push('uiSwitch');
+    angular.module('app').requires.push('ngCkeditor');
+    angular.module('app').requires.push('angular-bind-html-compile');
+</script>
+</div></div>
+
+</body>
+</html>
+

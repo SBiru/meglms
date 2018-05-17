@@ -1,0 +1,39 @@
+no-menu-splash{
+    display: inline-block;
+    text-align: center;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+}
+no-menu-splash .completed-message{
+    font-size: 20px;
+}
+no-menu-splash .previous-page-info{}
+no-menu-splash .checkmark-wrapper{
+    font-size: 70px;
+    color: #62c354;
+}
+no-menu-splash .instructions-area{
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+}
+no-menu-splash .previous-btn{
+    margin-left: -115px;
+}
+no-menu-splash .next-btn{
+    right: -115px;
+}
+no-menu-splash .previous-btn,no-menu-splash .next-btn{
+    width: 115px;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+}
+
+no-menu-splash .instruction-box{
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    margin: 0 10px;
+    display: inline-block;
+}

@@ -1,0 +1,39 @@
+<div class="period padding-top-15">
+    <span>Frequency</span><br>
+    <select ng-model="alert.frequency.period">
+        <option value="daily">daily</option>
+        <option value="weekly">weekly</option>
+        <option value="monthly">monthly</option>
+    </select>
+</div>
+<div class="period padding-top-15">
+    <div ng-switch="alert.frequency.period">
+        <div ng-switch-when="weekly">
+            <span>Day of the week</span><br>
+            <select ng-model="alert.frequency.day">
+                <option value="0">Sunday</option>
+                <option value="1">Monday</option>
+                <option value="2">Tuesday</option>
+                <option value="3">Wednesday</option>
+                <option value="4">Thursday</option>
+                <option value="5">Friday</option>
+                <option value="6">Saturday</option>
+            </select>
+        </div>
+        <div ng-switch-when="monthly">
+            <span>Day of the month</span><br>
+            <select ng-model="alert.frequency.day" data-ng-options="day for day in $parent.daysOfMonth"></select>
+        </div>
+    </div>
+</div>
+<br class="display-block"   style="display: none">
+<div class="time margin-top-15" data-ng-controller="alertTimepickerController as tc">
+    <timepicker style="position: relative;top: 7px;" class="timepicker" ng-model="alert.frequency.time" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+</div>
+<div class="timezone margin-top-15">
+    <div style="position: relative;top: 7px;">
+        UTC
+        <select ng-model="alert.frequency.offset" data-ng-options="offset for offset in range(-12,13)"></select>
+    </div>
+
+</div>

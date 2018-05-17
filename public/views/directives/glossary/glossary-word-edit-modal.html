@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="$dismiss()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title" ng-cloak>{{params.word?'Edit Word':'New Word'}}</h4>
+</div>
+
+<div class="modal-body">
+    <glossary-word-edit word="params.word" close="$close" org-id="params.orgId"
+                        edit-definition="params.editDefinition"
+                        edit-word="params.editWord"
+                        new-definition="params.newDefinition"
+    />
+</div>

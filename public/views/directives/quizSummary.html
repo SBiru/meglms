@@ -1,0 +1,60 @@
+<div class="header">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 data-ng-bind="pageInfo.name"></h2>
+            <h4>Number of participants:<span data-ng-bind="quiz.studentCount"></span></h4>
+            <h4>Number of attempts:<span data-ng-bind="quiz.completedAttempts"></span></h4>
+        </div>
+        <div class="col-md-6" style="padding: 50px">
+            <select style="padding: 5px" ng-model="showUsersType" ng-options="type.id as type.label for type in showUsersTypes"></select>
+        </div>
+    </div>
+</div>
+<pagination
+        ng-model="currentPage"
+        total-items="students.length"
+        max-size="maxSize"
+        previous-text="Prev"
+        last-text="Next"
+        boundary-links="false">
+</pagination>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Site</th>
+            <th>Attempts</th>
+            <th>Last Attempt</th>
+            <th data-ng-bind="'Grade \ ' + quiz.maxScore"></th>
+            <th data-ng-repeat="question in quiz.questions track by $index"
+                data-ng-bind="'Q.'+($index+1)+' / '+question.maxPoints"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="student in filteredStudents | orderBy:'fname'">
+            <td data-ng-bind="student.lastName + ', ' + student.firstName"></td>
+            <td data-ng-bind="student.site"></td>
+            <td data-ng-bind="student.completedAttempts"></td>
+            <td data-ng-bind="student.submitDate"></td>
+            <td data-ng-bind="student.score"
+                data-ng-class="{
+                    'text-success':student.score/student.maxScore>0.7,
+                    'text-danger':student.score/student.maxScore<0.5
+                }"></td>
+            <td data-ng-repeat="q in student.questions track by $index"
+                class="score">
+                <a ng-class="{
+                            'greyed':q.id==null,
+                            'text-success':!q.waitingForGrade&&q.id!=null&&q.points/q.maxPoints>0.7,
+                            'text-danger':!q.waitingForGrade&&q.id!=null&&q.points/q.maxPoints<0.5
+                        }"
+                    data-ng-bind="q.waitingForGrade?'--':q.points"
+                    data-ng-click="openQuestionPreview(q,student.id)"></a>
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+

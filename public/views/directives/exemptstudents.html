@@ -1,0 +1,43 @@
+<div class="alert alert-danger" ng-show="error" ng-bind="error"></div>
+<div ng-show="!error">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3><small>Click on the names of the students to exempt or unexempt them from this assignment. Then click Save to commit the changes</small></h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="heading">Students in this class</div>
+			<div class="filter-box">
+				<input ng-model="studentFilter" placeholder="Filter by ..." autofocus />
+				<i class="fa fa-search"></i>
+			</div>
+			<div class="students-list">
+				<div ng-repeat="student in students | orderBy:'lastName' | filter:studentFilter" ng-click="exempt(student)" ng-class="{'disabled':isExempt(student)}">
+					<span ng-bind="student.lastName + ', ' + student.firstName"></span>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="heading">Exempt students</div>
+			<div class="filter-box">
+				<input ng-model="exemptFilter" placeholder="Filter by ..." />
+				<i class="fa fa-search"></i>
+			</div>
+			<div class="students-list">
+				<div ng-repeat="exempt in exemptStudents | orderBy:'lastName' | filter:exemptFilter" ng-click="unexempt(exempt)">
+					<span ng-bind="exempt.lastName + ', ' + exempt.firstName"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<button class="btn btn-warning btn-sm" ng-click="exemptAll()">All</button>
+			<button class="btn btn-warning btn-sm" ng-click="unexemptAll()">None</button>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button class="btn btn-info btn-sm" ng-click="save()" ng-disabled="!canSave"><i class="fa fa-spinner fa-pulse" ng-show="saving"></i> Save</button>
+		</div>
+	</div>
+</div>

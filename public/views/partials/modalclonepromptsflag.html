@@ -1,0 +1,14 @@
+<div class="modal-header btn-warning">Select the desired cloning option</div>
+<div class="modal-body">
+    <div class="alert">
+        By default when you clone a timed review, it only clones the shell (page). If you want to clone both the shell and the prompts you need to select the box for Clone both page and prompts
+    </div>
+
+    <input type="radio" name="clonePrompts" ng-model="clonePrompts" value="0"> Clone page only
+    <input type="radio" name="clonePrompts" ng-model="clonePrompts" value="1"> Clone both page and prompts
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-sm btn-primary" ng-click="ok()">Clone</button>
+</div>

@@ -1,0 +1,440 @@
+﻿<h3>Prompts</h3>
+
+<div class="btn-group" ng-show="!prompts.length">
+	<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+		<span class="glyphicon glyphicon-plus"></span>	Add
+	</button>
+
+	<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+		<span class="fa fa-caret-down "></span>
+	</a>
+	<ul class="dropdown-menu">
+		<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+		<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+		<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+	</ul>
+
+</div>
+<div id="hidden_row_template" ng-repeat="(key, value) in prompts" class="prompt-list">
+
+
+	<form name="edit_form" ng-if="['text','audio','video'].indexOf(value.type)>=0" class="prompt">
+
+		<div class="row" ng-show="value.new">
+			<div class="text-warning col-xs-12">This prompt will be automatically added to the "Default Group" of prompts. If you want to add it to a different group, please use the prompts and groups manager above</div>
+			<div class="col-xs-12">
+				<p>
+					Name: <input ng-model="value.name">
+				</p>
+			</div>
+		</div>
+		<div class="row" style="margin-bottom:10px;">
+			<div class="col-xs-4 width-auto">
+				<ul class="nav nav-tabs">
+					<li role="presentation" ng-class="{active: value.type=='text'}"><a ng-click="setType(key,'text')" showtab="" href="#text_{{key}}" class="textlink">Text</a></li>
+					<li role="presentation" ng-class="{active: value.type=='audio'}"><a ng-click="setType(key,'audio')" showtab="" href="#audio_{{key}}" class="audiolink">Audio</a></li>
+					<li role="presentation" ng-class="{active: value.type=='video'}"><a ng-click="setType(key,'video')" showtab="" href="#video_{{key}}" class="audiolink">Video</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+			<div class="row textTab tab-pane fade" ng-class="{active: value.type=='text',in: value.type=='text'}" style="margin-bottom:10px;" id="text_{{key}}">
+				<div class="col-xs-8 width-auto" style="margin-bottom: 10px" >
+					<div class="row">
+						<div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6  width-auto'" >
+							<div class="input-group" style="margin-top: 10px" >
+								<span class="input-group-addon" ><span class="glyphicon glyphicon-question-sign"></span></span>
+								<input ng-if="!value.isHtml" type="text" name="prompt" ng-model="value.prompt" class="form-control" placeholder="Prompt" value="{{value.prompt}}" required />
+								<textarea ng-if="value.type=='text'&& value.isHtml" ng-model="value.prompt" disable-double-bind="true" ckeditor></textarea>
+								<span class="input-group-btn">
+									<button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+								</span>
+							</div>
+							<small class="text-danger" ng-show="edit_form.prompt.$error.required">Please input a prompt</small>
+						</div>
+						<div class="col-xs-6  width-auto">
+							<div class="input-group" style="margin-top: 10px">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-ok"></span></span>
+
+								<input type="text" name="answer" ng-model="value.answer" class="form-control" placeholder="Answer" value="{{value.answer}}" />
+
+							</div>
+							<!--<small class="text-danger" ng-show="edit_form.answer.$error.required">Please input an answer</small>-->
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-4 width-auto top-130">
+
+					<div class="row margin-left-0" style="margin-top: 10px">
+						<button ng-show="(key!=0)" ng-click="move(key,key-1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-up"></span></button>
+						<button ng-show="(key+1!=prompts.length)" ng-click="move(key,key+1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-down"></span></button>
+						<button ng-click="prompts.splice(key, 1);" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+							<span class="fa fa-trash"></span>
+						</button>
+						<div class="btn-group" ng-show="(key+1==prompts.length)">
+						<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+							<span class="glyphicon glyphicon-plus"></span>	Add Another
+						</button>
+
+						<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+							<span class="fa fa-caret-down "></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+								<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+								<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+				<div class="row"  style=" padding-top: 71px; margin-left: 1px; margin-right: 5px;">
+					 <div class="col-xs-12" style="margin-bottom: 10px">
+						<input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+							<input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+							<input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45" >
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+							<input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row audioTab tab-pane fade " ng-class="{active: value.type=='audio',in: value.type=='audio'}" id="audio_{{key}}" style="margin-bottom:10px;">
+				<div class="col-xs-8 width-auto" style="margin-bottom: 10px">
+					<div class="row">
+						<div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6 width-auto'">
+							<div class="row">
+								<div class="col-xs-12">
+									<h5>Record The Audio</h5>
+                                <span id="">
+                                    <a href="" class="microphone" ng-click="recordAudio(false,key)" ng-class="isRecording(key)"><span class="fa fa-2x fa-microphone fa-fw"></span></a>
+                                    <a href="" ng-click="playRecordedAudio(key)" ng-style="{'color': isRecorded(key) }" style="color: rgb(66, 139, 202);"><span class="fa fa-2x fa-play fa-fw"></span></a>
+                                    <button ng-click="uploadRecording(key)" ng-show="setFinishedRecording&&(keyCurrentRecording==key)&&!uploadingRecording" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Save Recording</button>
+                                    <button  ng-show="(keyCurrentRecording==key)&&uploadingRecording" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">Recording is Saving...</button>
+                                </span>
+								</div>
+							</div>
+							<div class="row" style="  margin-top: 10px;">
+								<div class="col-xs-12">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-question-sign" tooltip="Instructions to the student" tooltip-append-to-body="true"></span></span>
+										<input ng-if="!value.isHtml" type="text" name="instruction" ng-model="value.prompt" class="form-control" placeholder="Instruction" value="{{value.prompt}}"/>
+										<textarea ng-if="value.type=='audio'&& value.isHtml" ng-model="value.prompt" disable-double-bind="true" ckeditor></textarea>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+                                    </span>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-xs-6 width-auto">
+							<h5>Upload The Audio</h5>
+							<input type="file" name="timed_audioFile_{{key}}" file-model="timed_audioFile_{{key}}" accept="file_extension|mp3*|media_type">
+							<br />
+							<button ng-disabled="!timed_audioFile_{{key}}" ng-click="uploadFile(scope,key)" ng-show="!uploadingFileAudio" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Upload File</button>
+							<button  ng-show="uploadingFileAudio&&(key==keyCurrentFileUploading)" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">File is Uploading...</button>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-xs-4 width-auto top-130">
+						<div class="row margin-left-0">
+							<button ng-show="(key!=0)" ng-click="move(key,key-1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-up"></span></button>
+							<button ng-show="(key+1!=prompts.length)" ng-click="move(key,key+1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-down"></span></button>
+							<button ng-click="prompts.splice(key, 1);" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+								<span class="fa fa-trash"></span>
+							</button>
+							<div class="btn-group" ng-show="(key+1==prompts.length)">
+								<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+									<span class="glyphicon glyphicon-plus"></span>	Add Another
+								</button>
+
+								<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+									<span class="fa fa-caret-down "></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+									<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+									<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+								</ul>
+
+							</div>
+						</div>
+				</div>
+				<div class="row" style=" margin-left: 1px; margin-right: 5px;">
+					 <div class="col-xs-12" style="margin-bottom: 10px">
+						<input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+							<input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+
+							<input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45" >
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+							<input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row audioTab tab-pane fade " ng-class="{active: value.type=='video',in: value.type=='video'}" id="video_{{key}}" style="margin-bottom:10px;">
+				<div class="col-xs-8 width-auto" style="margin-bottom: 10px">
+					<div class="row">
+						<div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6 width-auto'">
+							<div class="row">
+								<div class="col-xs-12">
+									<h5>Upload The Video</h5>
+									<input type="file" name="timed_videoFile_{{key}}" file-model="timed_videoFile_{{key}}" accept="file_extension|avi*|media_type">
+									<br />
+									<button ng-disabled="!timed_videoFile_{{key}}" ng-click="uploadFile(scope,key,'video')" ng-show="!uploadingFileVideo" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Upload File</button>
+									<button  ng-show="uploadingFileVideo&&(key==keyCurrentFileUploading)" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">File is Uploading...</button>
+									<button ng-show="value.videoThumbnailFile&&!uploadingFileVideo" ng-click="value.videoThumbnailFile=undefined;value.videoFile=undefined;value.playVideoFile=undefined" class="btn btn-default">Record new video</button>
+								</div>
+							</div>
+							<div class="row" style="margin-top:10px">
+								<div class="col-xs-12">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-question-sign" tooltip="Instructions to the student" tooltip-append-to-body="true"></span></span>
+										<input ng-if="!value.isHtml" type="text" name="instruction" ng-model="value.prompt" class="form-control" placeholder="Instruction" value="{{value.prompt}}" />
+										<textarea ng-if="value.type=='video'&& value.isHtml" ng-model="value.prompt" disable-double-bind="true" ckeditor></textarea>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+                                    </span>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-xs-6 width-auto margin-top-15" ng-if="value.type=='video' && value.videoThumbnailFile" ng-init="value.playVideoFile=undefined">
+							<img ng-show="value.videoThumbnailFile && !value.playVideoFile" class="videoimage" ng-src="{{value.videoThumbnailFile }}" style="width: 272px; height:224px;" ng-click="value.playVideoFile = value.videoFile" tooltip="Click to Play Video" />
+							<video autoplay ng-if= "value.playVideoFile" style="width: 272px; height:224px;"  class="prompt_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+								<source ng-src="{{value.playVideoFile}}" type="video/mp4" >
+								Your browser does not support the HTML5 video tag.
+							</video>
+						</div>
+
+						<div class="col-xs-6 width-auto margin-top-15" ng-if="value.type=='video' && !value.videoThumbnailFile" ng-init="getVideoWidget(key)">
+
+							<h5>Record The Video</h5>
+
+							<div ng-bind-html="value.videoWidget" style="width: 272px; height:224px;"></div>
+							<div id="buttonsarea" align="center">
+								<span ng-bind-html="value.videoRecordButton" class="videoRecordButton"></span> &nbsp;&nbsp;
+								<button ng-click="submitVideo(key)" id="submitted" data-ng-disabled="submitting" ng-show="showSubmit && !showSaving">
+									<span class="fa fa-check" style="color:green">  </span>Submit
+									<span class="fa fa-spinner fa-pulse" ng-show="submitting"></span>
+								</button>
+								<span ng-show="showSaving" style="font-weight:bold; font-size:x-large;">
+									<img src="/public/img/ajax-loader.gif"  /> Please wait... your video is being processed
+								</span>
+							</div>
+
+						</div>
+
+
+					</div>
+
+				</div>
+
+				<div class="col-xs-4 width-auto top-130">
+
+					<div class="row margin-left-0">
+						<button ng-show="(key!=0)" ng-click="move(key,key-1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-up"></span></button>
+						<button ng-show="(key+1!=prompts.length)" ng-click="move(key,key+1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-down"></span></button>
+						<button ng-click="prompts.splice(key, 1);" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+							<span class="fa fa-trash"></span>
+						</button>
+						<div class="btn-group" ng-show="(key+1==prompts.length)">
+							<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+								<span class="glyphicon glyphicon-plus"></span>	Add Another
+							</button>
+
+							<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+								<span class="fa fa-caret-down "></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+								<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+								<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 1px; margin-right: 5px;">
+					 <div class="col-xs-12" style="margin-bottom: 10px">
+						<input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+							<input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45">
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+							<input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+					<div class="col-xs-4 width-auto margin-top-10 -top-45" >
+						<div class="input-group">
+							<span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+							<input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+							<span class="input-group-addon">seconds</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<form name="edit_form" ng-if="value.type=='randomFromGroup'" class="prompt">
+		<div class="row" ng-init="loadGroups()">
+			<div class="col-xs-4 width-auto float-none margin-top-10">
+				<div class="row">
+					<div class="col-xs-4">
+						Select a group:
+					</div>
+					<div class="col-xs-8">
+						<span ng-show="loading.groups==1" class="fa fa-spinner fa-pulse"></span>
+						<select selectize ng-if="loading.groups!=1"
+								data-ng-options="group.id as group.title + '('+group.numPrompts+')' for group in timedGroupEditor.groups"
+								ng-model="value.selected.group">
+						</select>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-4 width-auto float-none margin-top-10">Random prompt from the group</div>
+			<div class="col-xs-4 width-auto float-none margin-top-10">
+
+				<div class="row margin-left-0">
+					<button ng-show="(key!=0)" ng-click="move(key,key-1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-up"></span></button>
+					<button ng-show="(key+1!=prompts.length)" ng-click="move(key,key+1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-down"></span></button>
+					<button ng-click="prompts.splice(key, 1);" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+						<span class="fa fa-trash"></span>
+					</button>
+					<div class="btn-group" ng-show="(key+1==prompts.length)">
+						<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+							<span class="glyphicon glyphicon-plus"></span>	Add Another
+						</button>
+
+						<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+							<span class="fa fa-caret-down "></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+							<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+							<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<form name="edit_form" ng-if="value.type=='promptFromGroup'" class="prompt">
+		<div class="row" ng-init="loadGroups()">
+			<div class="col-xs-4 width-auto float-none margin-top-10">
+				<div class="row">
+					<div class="col-xs-4">
+						Select a group:
+					</div>
+					<div class="col-xs-8">
+						<span ng-show="loading.group==1" class="fa fa-spinner fa-pulse"></span>
+						<select selectize ng-if="loading.groups!=1"
+								data-ng-options="group.id as group.title + '('+group.numPrompts+')' for group in timedGroupEditor.groups"
+								ng-model="value.selected.group"
+								data-ng-change="loadPrompts(value.selected.group,value)">
+						</select>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-4 width-auto float-none margin-top-10">
+				<div class="row" ng-init="loadPrompts(value.selected.group,value)">
+					<div class="col-xs-4">
+						Select a prompt:
+					</div>
+					<div class="col-xs-8">
+						<span ng-show="loading.prompts" class="fa fa-spinner fa-pulse"></span>
+						<select selectize ng-if="!loading.prompts"
+								data-ng-disabled="!value.selected.group"
+								data-ng-options="prompt.id as prompt.name+' - Id: ' + prompt.id + ' - ' + prompt.shortPrompt for prompt in value.selected.groupObject.prompts"
+								data-ng-model="value.selected.prompt">
+						</select>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-4 width-auto float-none margin-top-10">
+
+				<div class="row tooltip-relative margin-left-0">
+					<button ng-show="(key!=0)" ng-click="move(key,key-1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-up"></span></button>
+					<button ng-show="(key+1!=prompts.length)" ng-click="move(key,key+1)" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="glyphicon glyphicon-chevron-down"></span></button>
+					<button ng-click="prompts.splice(key, 1);" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+						<span class="fa fa-trash"></span>
+					</button>
+					<button ng-click="openTimedGroupEditor(value)" type="button" class="btn btn-primary " ng-show="value.selected.prompt" tooltip="Edit prompt">
+						<span class="fa fa-edit"></span>
+					</button>
+					<div class="btn-group" ng-show="(key+1==prompts.length)">
+						<button ng-click="add()"  type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">
+							<span class="glyphicon glyphicon-plus"></span>	Add Another
+						</button>
+
+						<a class="btn btn-success add-prompt-btn dropdown-toggle " data-toggle="dropdown">
+							<span class="fa fa-caret-down "></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li> <a class="pointer" ng-click="add('promptFromGroup')">Specific prompt from a group</a> </li>
+							<li> <a class="pointer" ng-click="add('randomFromGroup')">Random prompt from a group</a> </li>
+							<li> <a class="pointer" ng-click="add()">Create a new prompt</a></li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+		
+</div>
+
+

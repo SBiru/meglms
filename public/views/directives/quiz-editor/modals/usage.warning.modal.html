@@ -1,0 +1,48 @@
+
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+
+</div>
+<div ng-switch on="state">
+    <div ng-switch-when="warning">
+        <div class="modal-body">
+            <p>This quiz is being used in the following activities:</p>
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6"><b>Activity</b></div>
+                        <div class="col-xs-6"><b>Class</b></div>
+                    </div>
+                </li>
+                <li class="list-group-item" data-ng-repeat="page in pages">
+                    <div class="row">
+                        <div class="col-xs-6" data-ng-bind="page.name"></div>
+                        <div class="col-xs-6" data-ng-bind="page.className"></div>
+                    </div>
+                </li>
+            </ul>
+
+            <p>Any changes you make will be active in all the activities using this quiz.</p>
+            <p>If you don't want to change the other activities, you can click on "Clone quiz" and a new quiz will be created with the changes</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()" data-ng-disabled="cloning">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="next()"  data-ng-disabled="cloning">Clone quiz</button>
+            <button type="button" class="btn btn-warning" ng-click="continue()"  data-ng-disabled="cloning">Continue</button>
+        </div>
+    </div>
+    <div ng-switch-when="cloning">
+        <div class="modal-body">
+            <p><b>Title:</b></p>
+            <input ng-model="quiz.title" class="form-control">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="back()" data-ng-disabled="cloning">Back</button>
+            <button type="button" class="btn btn-primary" ng-click="cloneQuiz()"  data-ng-disabled="cloning">Clone <span class="fa fa-spinner fa-pulse" ng-show="cloning"></span></button>
+        </div>
+    </div>
+</div>
+

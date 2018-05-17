@@ -1,0 +1,19 @@
+<!-- heading -->
+<div>
+	<h3 ng-bind="page.name"></h3>
+</div>
+<div class="content" ng-bind-html="page.content"></div>
+<!-- preview mode message -->
+<div ng-show="options.preview && !options.hidePreviewAlert" class="alert alert-info">You are in preview mode. Responses and interaction are disabled.</div>
+<div ng-if="!options.preview">
+	<!-- response button -->
+	<div ng-if="allowsResponses()">
+		<hr />
+		<div class="btn btn-primary btn-sm" ng-click="newPost()">New Post</div>
+		<hr />
+		<!-- responses section -->
+		<div ng-if="hasResponses() && !options.hideResponses">
+			show posts here
+		</div>
+	</div>
+</div>

@@ -1,0 +1,70 @@
+<div style="display: grid;">
+    <div style="line-height: 2">
+        <p for="name" style="font-size: 1.2em; margin-right: 10px; display: inline-block;">Name: </p>
+        <input id="name" class="form-control" style="width: 20%; height: 30px; display: inline-block;" type="text" ng-model="scormConfig.scormName">
+    </div>
+    <div style="line-height: 2">
+        <p ng-show="scormConfig.scormCourseId != null && scormConfig.attributes != false" style="font-size: 1.2em;">preview the &nbsp<a ng-click="previewScorm()">current course</a></p>
+    </div>
+    <div style="line-height: 2">
+
+        <div >
+            <p  ng-show="scormConfig.scormCourseId != null" style="font-size: 1.2em; display: inline-block;"> Select new package : </p>
+            <p  ng-show="scormConfig.scormCourseId == null" style="font-size: 1.2em; display: inline-block;">Select the SCORM 2004 package: </p>
+            <input  type="file" style=" display: inline-block;" name="filedata" id="scorm_file" ng-file-select="updateScormFile($files,$event)"/>
+            <div>
+                <label style="    padding-left: 100px;">(OR)</label>
+            </div>
+            <div>
+                <p for="name" style="font-size: 1.2em; margin-right: 10px; display: inline-block;">Upload using server URL: </p>
+                <input type="text" readonly class="form-control ng-pristine ng-valid " style="width: 20%; height: 30px; display: inline-block;" id="url-loader" ng-model="scormConfig.download_url" placeholder="Paste file URL" ng-model="scormConfig.download_url" style="width:auto;">
+                <input type="button" class=" btn btn-sm " value="Open" ng-click="openServerFiles()">
+            </div>
+        </div>
+
+    </div>
+</div>
+<br/>
+
+<div class="scorm_settings" ng-show="scormConfig.attributes != false && scormConfig.scormCourseId != null && scormConfig.attributes != null" >
+
+    <p value="registrationInstancingOption" style="font-size: 1.2em; display: inline-block;">Move existing registrations to newest version when :</p>
+    <input type="hidden" name="registrationInstancingOption" id="att1" value="registrationInstancingOption">
+    <select id="attval1" class="form-control">
+        <option value="never" selected="selected">Never</option>
+        <option value="incomplete">When Not Complete</option>
+        <option value="complete">When Completed</option>
+        <option value="failed">When Failed</option>
+        <option value="passed">When Passed</option>
+        <option value="always">Always</option>
+    </select>
+    <input class="btn btn-sm btn-primary" type="button" value="submit" ng-click="editProperty(1)"/>
+
+    <span class="fa fa-question-circle" tooltip="Whenever you update your SCORM activity to fix a typo or add more content, to a “live” SCORM activity that already has students associated with it.
+    Versioning can also be used if you want to be to seamlessly track multiple updates to a single SCORM activity."></span>
+    <br><br>
+
+    <!--<select id="att" class="form-control">-->
+        <!--Attribute:<option ng-repeat="(key, value) in scormConfig.attributes" ng-show="value[0] == 'true' || value[0] == 'false'" value="{{key}}">{{key}}</option>-->
+    <!--</select>-->
+    <!--&nbsp;&nbsp;&nbsp;-->
+    <!--<select id="attval" class="form-control">-->
+        <!--<option value="true">true</option>-->
+        <!--<option value="false">false</option>-->
+    <!--</select>-->
+    <input type="hidden" id="courseid" value="{{scormConfig.scormCourseId}}"/>
+    <!--<input class="btn btn-sm btn-primary" type="button" value="submit" ng-click="editProperty(0)"/>-->
+
+    <br>
+    <span class="fa fa-question-circle" tooltip="in Launch Behaviour, SCO launch type and player launch type should be Frameset to load the SCORM course in model."></span>
+    <br>
+    <iframe width="800" height="400"  src="{{scormConfig.propsEditorUrl}}" ></iframe>
+
+</div>
+<div style="margin-top: 10px;">
+    <label style="font-size: 1.1em; margin-right: 20px">Description: </label>
+    <input type="checkbox" id="display_description" name="display_description"
+           ng-model="scormConfig.display_description" class="ng-pristine ng-valid" ng-checked = "scormConfig.display_description == 1 ? true : false">
+    <label for="display_description" class="control-label" style="font-size:1.1em">Display description to
+        student</label>
+</div>

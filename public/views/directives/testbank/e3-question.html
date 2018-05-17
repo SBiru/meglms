@@ -1,0 +1,31 @@
+
+<div class="panel panel-default" style="margin-bottom:3em">
+
+    <div class="panel-heading">
+        <div class="row" style="padding:0 1em">
+            <div style="float:left">
+                <span style="font-size:1.5em"><!--<span class="label label-default">{{$index + 1}}</span>-->&nbsp;Question&nbsp;{{$index + 1}}</span> &nbsp;&nbsp;<span class="label label-info">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span>
+            </div>
+            <div style="float:right" ng-switch on="question.selected" ng-if="options.buttonStyle=='select'">
+                <a ng-click="question.selected=!question.selected" class="btn btn-sm" data-ng-class="{'btn-default':!question.selected,'btn-success':question.selected}"><span data-ng-class="{'glyphicon-off':!question.selected,'glyphicon-ok':question.selected}" class="glyphicon "></span>&nbsp;Select</a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div ng-show="question.isRandom">
+            <div style="margin-bottom:1em">
+                Random question from bank: {{question.bankId}}
+            </div>
+        </div>
+        <div ng-show="!question.isRandom">
+            <div style="margin-bottom:1em" ng-bind-html="trustAsHtml(question.prompt)"></div>
+            <div ng-repeat="option in question.options track by $index">
+                <span ng-class="($index == question.solution) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span><span class="label label-info">{{ ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'][$index] }}.</span><span ng-bind-html="trustAsHtml(option)" style="display: inline-block;"></span>
+            </div>
+        </div>
+
+    </div>
+</div>
+

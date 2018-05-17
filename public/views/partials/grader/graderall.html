@@ -1,0 +1,11 @@
+<div ng-controller="GraderAllController">
+  <div ng-controller="GraderPostController">
+    <ng-include src=" '/public/views/partials/grader/bootstrapmodal.html' "></ng-include>
+    <!-- GraderPostedMessagesController -->
+    <div ng-controller="GraderPostedMessagesController" ng-style="style()">
+      <ng-include src=" '/public/views/partials/grader/graderpostcontroller.html' "></ng-include>
+    </div>
+  </div>
+</div>
+<!-- GraderPostedMessagesController end -->
+</div>

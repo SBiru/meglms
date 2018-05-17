@@ -1,0 +1,68 @@
+<button class="close-btn" ng-click="ok()">&times;</button>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <div class="modal-header">
+                <a ng-href="#/{{yourSubmission.layout}}/{{yourSubmission.pageid}}"  target='_blank'><h3 class="modal-title">{{yourSubmission.page_name}}</h3></a>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="modal-header">
+                <h4>Your Submission</h4>
+            </div>
+        </td>
+        <td>
+            <div class="modal-header">
+                <h4>Replies</h4>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="section" style = "width: 360px;
+                 word-wrap: break-word;">
+                <div class="well" ng-show="yourSubmission.video_url">
+                    <div data-ng-show="yourSubmission.video_url">
+                        <video ng-src="{{ yourSubmission.video_url }}" width="192" height="144" controls>
+                            Your browser does not support the video tag! Unable the show
+                            video. But right?
+                        </video>
+                    </div>
+                </div>
+                <div data-ng-show="yourSubmission.message" ng-bind-html="trustAsHtml(yourSubmission.message)"> </div>
+                <div ng-show="yourSubmission.upload_url">
+                    File: <a ng-href="{{ yourSubmission.upload_url }}" target='_blank'>{{ yourSubmission.upload_file_name }}</a>
+                    <br/><br/>
+                </div>
+            </div>
+
+        </td>
+        <td>
+            <div class="section">
+                <div ng-repeat="post in replies">
+                    <hr ng-show="$index != 0">
+                    <blockquote>
+                        <div ng-show="post.video_url">
+                            <video ng-src="{{ post.video_url }}" width="192" height="144" controls>
+                                Your browser does not support the video tag! Unable the
+                                show video.
+                            </video>
+                        </div>
+                        <p ng-show="post.message" ng-bind-html="trustAsHtml(post.message)"></p>
+                        <div ng-show="post.upload_url"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            File: <a ng-href="{{ post.upload_url }}" target='_blank'>{{ post.upload_file_name }}</a>
+                            <br/><br/>
+                        </div>
+                        <footer>
+                            <a href=""> {{ post.user_fname }} {{ post.user_fname }}</a>&nbsp;{{ post.feedbackOn }}
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,75 @@
+<div class="modal-header">
+    <span ng-bind="pageName"></span>
+    <span ng-show="versions.length">({{versions.length}}) versions</span>
+    <span aria-hidden="true" ng-click="$dismiss()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+<div class="modal-body template-select page-versions" >
+    <div class="row">
+        <div class="left_side col-md-4">
+            <div class="filters">
+                <e3-datepicker min-date="minDate" max-date="maxDate" ng-model="filters.startDate"></e3-datepicker>
+                <e3-datepicker min-date="minDate" max-date="maxDate" ng-model="filters.endDate"></e3-datepicker>
+                <input class="form-control" placeholder="Search by author" ng-model="filters.author">
+            </div>
+            <div e3-pagination config="pagConfig" ng-if="filteredItems" items="filteredItems" ng-model="pagedItems">
+                <div class="table-wrapper">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-click="setSortBy('modified_on')">
+                                Date modified
+                                <sort-arrow-indicator sort="sort" sort-id="'modified_on'"></sort-arrow-indicator>
+                            </th>
+                            <th ng-click="setSortBy('name')">
+                                Modified by
+                                <sort-arrow-indicator sort="sort" sort-id="'name'"></sort-arrow-indicator>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-ng-repeat="v in pagedItems" ng-click="select(v)"
+                            ng-class="{active:selected.id==v.id}"
+                            class="pointer">
+                            <td ng-bind="v.modified_on"></td>
+                            <td ng-bind="v.name"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="right_side col-md-8">
+            <div data-ng-bind-html="$root.trustAsHtml(selected.content)"></div>
+        </div>
+    </div>
+    <div class="row footer">
+        <div class="col-xs-12">
+            <button class="btn btn-primary pull-right"
+                    ng-click="save()"
+                    data-ng-disabled="!selected.id">Revert to selected
+                version</button>
+        </div>
+
+
+    </div>
+
+</div>
+<style>
+    .page-versions .right_side > div,.page-versions .left_side [e3-pagination] .table-wrapper{
+        overflow: auto;
+    }
+    .page-versions .right_side > div{
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .page-versions .footer{
+        margin-top: 10px;
+    }
+    .page-versions  .table tr.active>td{
+        background-color: rgba(55, 0, 255, 0.21) !important;
+    }
+    .page-versions .filters{
+        max-width: 250px;
+    }
+</style>

@@ -1,0 +1,101 @@
+<div class="alert alert-danger" ng-show="error" ng-bind="error"></div>
+<div class="loading-anim" ng-show="!error && loading">
+    <i class="fa fa-cog fa-4x fa-spin"></i>
+    <div ng-bind="loading"></div>
+</div>
+<!-- BODY -->
+<tabset ng-show="!error && !loading">
+    <!-- <tab heading="Summary"> -->
+    <!-- directive: summary/personal-info/grades/etc of student -->
+    <!-- <student-summary id="student.id" options="options"></student-summary> -->
+    <!-- </tab> -->
+    <tab heading="Final Grade" ng-if="classInfo.showFinalGrade">
+        <h4></h4>
+        <div>
+            <strong>Calculated Score:</strong> <span ng-bind="studentData.letterTotalScore + ' ('+totalScore+'%)'"></span>
+        </div>
+        <hr />
+
+        <!-- if student already has final score -->
+        <div ng-if="currentClass.finalized">
+            <h4>This student has already been given a final score for this class</h4>
+            <div>
+                <div>
+                    <strong>Final Score:</strong> <span ng-bind="currentClass.finalized.score"></span>
+                </div>
+                <div>
+                    <strong>Set By:</strong> <span ng-bind="currentClass.finalized.by.lastName + ', ' + currentClass.finalized.by.firstName"></span>
+                </div>
+                <div>
+                    <strong>On:</strong> <span ng-bind="currentClass.finalized.on | date:medium"></span>
+                </div>
+                <div ng-show="currentClass.finalized.comments">
+                    <strong>Comments:</strong> <span ng-bind="currentClass.finalized.comments"></span>
+                </div>
+            </div>
+            <div class="centered-btn" ng-hide="finalize.override.enabled">
+                <button class="btn btn-warning btn-sm" ng-click="finalize.override.enable()">Override Final Score</button>
+            </div>
+        </div>
+
+        <!-- student does NOT have final score -->
+        <div ng-if="!currentClass.finalized">
+            <!-- selection buttons -->
+            <div ng-hide="finalize.manual.enabled">
+                <button class="btn btn-default btn-sm" ng-class="{'active':finalize.mode==='auto'}" tooltip="Save the calculated grade above as the final score for this student in this class" ng-click="finalize.mode='auto'">
+                    Finalize Calculated Grade
+                </button>
+                <button class="btn btn-default btn-sm" ng-class="{'active':finalize.mode==='manual'}" tooltip="Enter a grade manually and continue to save the final score for this student" ng-click="finalize.mode='manual'">
+                    Finalize Grade Manually
+                </button>
+                <button class="btn btn-primary btn-sm pull-right" ng-disabled="!finalize.mode" ng-click="finalize.continue()">
+                    <span ng-show="!finalize.mode">Select Mode</span>
+                    <span ng-show="finalize.mode==='auto'">Save Grade</span>
+                    <span ng-show="finalize.mode==='manual'">Continue</span>
+                </button>
+            </div>
+            <!-- manual grading -->
+            <div ng-hide="!finalize.manual.enabled">
+                <h4>Set final score manually</h4>
+                <strong>Score:</strong> <input type="text" ng-model="finalize.manual.score" min="0" /> (0 if empty)
+                <div class="centered-btn">
+                    <button class="btn btn-primary btn-sm" ng-disabled="!finalize.manual.canSave()" ng-click="finalize.manual.save()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- final score will be overriden -->
+        <div ng-if="finalize.override.enabled" class="override">
+            <hr />
+            <!-- score -->
+            <h4>Override score</h4>
+            <strong>New final score:</strong> <input type="text" ng-model="finalize.override.score" min="0" /> (0 if empty)
+            <!-- comments -->
+            <div><strong>Comments</strong> (required when overriding score):</div>
+            <textarea ng-model="finalize.override.comments" rows="10"></textarea>
+            <div class="centered-btn">
+                <button class="btn btn-primary btn-sm" ng-disabled="!finalize.override.canSave()" ng-click="finalize.override.save()">Save Changes</button>
+            </div>
+        </div>
+    </tab>
+    <tab heading="Exempt">
+        <exempt-pages class-id="classId" user-id="student.id" options="exemptOptions" on-save="onExemptSave"></exempt-pages>
+        <h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+    </tab>
+    <tab heading="Credit" ng-if="enableCreditedAssignments">
+        <exempt-pages class-id="classId" user-id="student.id" options="exemptOptions" credit="true" on-save="onExemptSave"></exempt-pages>
+        <h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+    </tab>
+    <tab heading="Recalculate">
+        <div class="small-heading">
+            In order to offer you a better experience, the numbers of the gradebook are already calculated. If you want to recalculate it, click on the "recalculate" button
+        </div>
+        <button class="btn btn-sm btn-primary" ng-click="recalculate()">Recalculate</button>
+        <h5><i class="text-info"><strong>Important:</strong> After changes are <strong>saved</strong>, Gradebook will be refreshed to update content</i></h5>
+    </tab>
+    <tab heading="Course duration" select="loadDueDates=true" >
+        <user-due-dates ng-if="loadDueDates" class-id="classId" units="studentData.units"
+                        user-id="studentData.id"></user-due-dates>
+
+    </tab>
+</tabset>

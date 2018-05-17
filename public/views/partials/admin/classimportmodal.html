@@ -1,0 +1,31 @@
+<!-- bootstrap modal -->
+
+<style>
+    #classImportModal{overflow: hidden;}
+</style>
+<div id="classImportModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="classImportModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 90%; height: 80%; overflow: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="classImportModalLabel">Import Classes from CSV File</h4>
+            </div>
+            <div class="modal-body" >
+                Upload a CSV file with class data. The CSV file should have column headers for "Name"*, "Class ID", "Show Dates", "Show Grades",
+                "Show Grades As Score", "Show Grades As Letter", "Show Grades As Percentage", "User IDs"
+                <br><br>
+                Class ID field is optional when adding a new class but is required when editing an existing class.
+                If a class with the given ID does not exist, the class will be added to the system.
+                If a class with the provided ID already exists, that class information will be updated with values from any non-blank columns.
+                Fields marked with * are required.
+                User IDs column is a semicolon separated list of either internal or external user IDs of existing users to enroll in the system.
+                <br><br>
+                Upload Classes: <input type="file" ng-file-select="onCsvFileSelectForClasses($files)">
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->

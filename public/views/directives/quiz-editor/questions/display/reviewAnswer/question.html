@@ -1,0 +1,29 @@
+<table ng-if="question.response!==undefined" ng-style="{'font-size':quiz.advancedSettings.font_size,'font-family':quiz.advancedSettings.font_family}">
+    <tr>
+        <td style="width: 50px" ng-show="!question.isCorrectPartially && !question.isCorrect && question.type !== 'essay' && question.type !== 'information' && question.extra.gradeType !='manual'" ng-if="question.type !== 'studentvideoresponse'">
+            <img src="/public/img/incorrect_icon_64_64.png">
+        </td>
+        <td style="width: 50px" ng-show="question.isCorrectPartially">
+            <img src="/public/img/partially_icon_64_64.png" title="Partially Correct">
+        </td>
+        <td style="width: 50px" ng-show="question.isCorrect">
+            <img src="/public/img/correct_icon_64_64.png">
+        </td>
+        <td ng-class="quiz.advancedSettings.show_question_box?'panel panel-default':''" style="margin-bottom:3em" >
+            <div class="panel-heading" ng-hide="!quiz.advancedSettings.show_question_number" >
+                <div class="row" style="padding:0 1em">
+                    <div style="float:left">
+                        <span style="font-size:1.5em"><!--<span class="label label-default">{{$index + 1}}</span>-->&nbsp;Question {{$index + 1}}</span> &nbsp;&nbsp;<span class="label label-info" title="{{question.id}}">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span>
+                        <span ng-show="question.isCorrectPartially" style="margin-left: 10px;color:red">(</span><span style="font-style: italic;font-weight: bold;color: #62c354;" ng-show="question.isCorrectPartially">Partially Correct</span><span style="color:red" ng-show="question.isCorrectPartially">)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="display-question-answer">
+                    <span class="fa fa-spinner fa-pulse"></span>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+

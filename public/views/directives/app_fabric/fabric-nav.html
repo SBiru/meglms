@@ -1,0 +1,14 @@
+<ul>
+    <li><span class="btn tool-btn" ng-click="addPencil()"><span ng-include="'/public/img/pencil-alt.svg'" style="width: 20px;height: 20px;fill:#d7d7d7;display: inline-block;background-colorcolor:white"></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addRect()"><span class="fa fa-square-o" ></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addCircle()"><span class="fa fa-circle-thin" ></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addTriangle()"><span ng-include="'/public/img/triangle.svg'" style="width: 20px;height: 20px;display: inline-block;"></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addLine()"><span>--</span></span></li>
+
+    <li><span class="btn tool-btn" style="padding: 6px 7px" ng-click="addTextbox()"><span ng-include="'/public/img/textbox.svg'" style="width: 25px;"></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addText()"><span class="fa fa-font" ></span></span></li>
+    <li><span class="btn tool-btn" ng-click="addArrow()"><span class="fa fa-arrow-right" ></span></span></li>
+    <li>
+        <fabric-img-uploader instance-id="instanceId"></fabric-img-uploader>
+    </li>
+</ul>

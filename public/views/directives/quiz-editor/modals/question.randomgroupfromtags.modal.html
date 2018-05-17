@@ -1,0 +1,28 @@
+
+
+<style>
+
+</style>
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" ><em>Random Question Group</em></h4>
+    <!--<div>-->
+        <!--<em><a>Don't like it? Change to the old banks style</a></em>-->
+    <!--</div>-->
+</div>
+<div class="modal-body select-random-questions">
+    <select-tags ng-model="selectedTagIds" question-count="vm.questionCount"></select-tags>
+    <div ng-show="selectedTagIds.length">
+        Number of questions:
+            <input ng-model="numberOfQuestions" type="number" class="number-of-questions">
+        out of {{vm.questionCount}}
+    </div>
+    <div class="random-questions-info">
+        <em>Questions will appear randomly when students take a quiz. Each student will get different random questions from the chosen tags.</em>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="addQuestion()" data-ng-disabled="!canSave()">Add Question</button>
+</div>

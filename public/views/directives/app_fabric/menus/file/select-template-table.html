@@ -1,0 +1,41 @@
+<span ng-show="loading" class="fa fa-spinner fa-pulse"></span>
+<div>
+    <table class="table table-striped select-table" ng-hide="loading">
+        <thead>
+        <tr>
+            <th ng-click="setSortBy('name')" class="pointer">
+                Name
+                <sort-arrow-indicator sort="sort" sort-id="'name'"></sort-arrow-indicator>
+            </th>
+            <th ng-click="setSortBy('created')" class="pointer">
+                Created
+                <sort-arrow-indicator sort="sort" sort-id="'created'"></sort-arrow-indicator>
+            </th>
+            <th ng-click="setSortBy('modified')" class="pointer">
+                Modified
+                <sort-arrow-indicator sort="sort" sort-id="'modified'"></sort-arrow-indicator>
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+    </table>
+    <div class="templates-table-wrapper" ng-if="filteredTemplates" e3-pagination config="pagConfig" items="filteredTemplates"
+         ng-model="pagedTemplates">
+        <table class="table table-striped select-table" ng-hide="loading">
+            <tbody>
+            <tr data-ng-repeat="template in pagedTemplates track by $index" ng-class="{active:selected.row==template.id}" ng-click="selected.row=template.id">
+                <td ng-bind="template.name"></td>
+                <td ng-bind="template.created"></td>
+                <td ng-bind="template.modified"></td>
+                <td>
+                    <div>
+                        <span class="fa fa-edit" ng-click="edit(template.id,$event)"></span>
+                        <span class="fa fa-clone" ng-click="clone(template.id,$event)"></span>
+                        <span class="fa fa-trash" ng-click="remove(template.id,$event)"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

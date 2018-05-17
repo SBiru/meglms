@@ -1,0 +1,160 @@
+<div class="grader_outline" >
+    <div  class = "grader_top_heading" style="font-size: larger;font-weight: bold"
+          data-ng-style="{'margin-left':studentView?'0':'15px'}"
+    >
+        <span style="font-weight:bold" ng-hide="studentView">Student :
+            <em>{{$root.prepareUserName($root.user.org.sort_users_by,data.student
+            .fname,data.student.lname)}}</em></span>
+        <a
+            class="btn btn-sm btn-default preview-button"
+            ng-href="/#/forum/{{data.pageInfo.id}}" target="_blank">
+        View forum page</a>
+        <div style="margin-top:10px;margin-bottom:10px;font-weight: bold" ng-hide="studentView">
+            E3 Student ID: <em>{{ data.student.id}}</em>
+            <span > - {{data.pageInfo.name}}</span>
+        </div>
+    </div>
+    <tabset ng-hide="studentView && data.pageInfo.gradeMode=='wholeForum'">
+        <tab ng-repeat="discussion in data.student.discussions| orderBy:-attempt.lastPostTime"
+             heading="{{discussion.title}}"
+             active="discussion.active"
+             select="loadStudentPosts(discussion)">
+        </tab>
+    </tabset>
+    <div class="quiz-score tooltip-relative" ng-hide="studentView">
+        <span>
+            <span style="font-weight:bold;font-size: larger;margin-left: 15px;">
+                <span ng-show="data.pageInfo.gradeMode=='perPost'">Forum avg. score:</span>
+                <span ng-show="data.pageInfo.gradeMode=='perPostMax'">Forum max. score:</span>
+                <span ng-show="data.pageInfo.gradeMode=='wholeForum'">Current score:</span>
+
+            </span>
+            <span >
+                <span
+                        ng-show="(data.pageInfo.gradeMode=='perPost'||data.pageInfo.gradeMode=='perPostMax')&&!data.forceAvg">
+                    <span ng-bind="data.pageInfo.avgScore"  style="color:green;font-weight:bold;font-size: larger"></span>
+                    <a class="fa fa-edit " ng-show="data.pageInfo.gradeMode=='perPost'" ng-click="data.forceAvg=true"></a>
+                </span>
+
+                <span ng-show="data.pageInfo.gradeMode=='wholeForum'||data.forceAvg">
+                    <input ng-model="data.pageInfo.avgScore" style="width: 50px" />
+                </span>
+
+            </span>
+            <span class="fa fa-question-circle" ng-if="data.pageInfo.gradeMode=='perPost'" tooltip="The grade of this forum is the average grade of all posts. You can manually enter the average grade by clicking on the pencil icon."></span>
+            <span class="fa fa-question-circle" ng-if="data.pageInfo.gradeMode=='wholeForum'"
+                  tooltip="You are entering the grade for the whole forum activity. If you want to enter a grade for each post, please change the grading method in the course editor"></span>
+            <span class="fa fa-question-circle" ng-if="data.pageInfo.gradeMode=='perPostMax'"
+                  tooltip="The grade of this forum is the max grade of all posts."></span>
+
+        </span>
+    </div>
+    <div class="tooltip-relative" ng-show="data.pageInfo.gradeMode=='wholeForum' && !studentView">
+        <span style="font-weight:bold;font-size: larger;margin-left: 15px;">Max score: {{data.pageInfo.maxScore}}</span>
+    </div>
+    <div ng-show="studentView && data.pageInfo.gradeMode=='wholeForum'" style="padding:10px">
+        <b>Feedback:</b>
+        <div data-ng-bind-html="$root.trustAsHtml(data.feedback)"></div>
+    </div>
+    <div class="div-tabs" ng-hide="studentView && data.pageInfo.gradeMode=='wholeForum'" >
+        <div ng-show="data.posts.loading"><span class="fa fa-pulse fa-spinner"></span> Loading</div>
+        <div class="grader_PostedMessage" ng-hide="data.posts.loading" >
+            <!--message by Student start-->
+            <div  class="grader_box"  >
+                <div   class="grader_GraderHelperController">
+                    <!--Posted message by Student-->
+                    <div class="grader_block " ng-class="{true:'grader_only_pre', false:''}[quiz.===false]">
+                        <ul class="pager main-nav-pager" style="margin-top:0">
+                            <li class="previous"><span data-ng-click="addToIndex(-1)" style="margin-left: 0px;"><span class="fa fa-angle-left"></span></span></li>
+                            <li><h2 class="inlineContentHeader ng-binding">Post {{data.forum.current_index +
+                                1}}/{{data.posts.length}}</h2></li>
+                            <li class="next"><span data-ng-click="addToIndex(1)"><span class="fa fa-angle-right"></span></span></li>
+                        </ul>
+                        <!--<span ng-show="errors[quiz.current_index]" class="alert alert-danger" ng-bind="errors[quiz.current_index]"></span>-->
+                        <div class="question" style="margin: 10px">
+                            <div class="btn btn-sm btn-default" style="margin-bottom: 10px;"
+                                 ng-click="data.currentPost.showParent = !data.currentPost.showParent"
+                            >
+                                <span class="fa" ng-class="data.currentPost.showParent?'fa-eye-slash':'fa-eye'"></span>
+                                {{data.currentPost.showParent?'Hide':'View'}} parent post
+                            </div>
+                            <div class="panel panel-default " style="background-color: #e2e2e2;" ng-show="data.currentPost.showParent">
+                                <div style="padding:10px"
+                                     data-ng-bind-html="$root.trustAsHtml(data.currentPost.parentMessage)"></div>
+                            </div>
+                            <div ng-bind="data.currentPost.time" style="margin-left: 5px;color: #428bca;"></div>
+                            <div class="panel panel-default ">
+                                <div style="padding:10px" data-ng-bind-html="$root.trustAsHtml(data.currentPost.message)"></div>
+
+                            </div>
+                            <div ng-show="data.pageInfo.gradeMode!='wholeForum' && !studentView">
+                                <div>
+                                    Current Score:
+
+                                    <input ng-model="data.currentPost.grade" style="width: 50px"
+                                           ng-hide="data.pageInfo.useRubric">
+                                    <span ng-show="data.pageInfo.useRubric" class="tooltip-relative">
+                                        <span ng-show="data.currentPost.grade" ng-bind="data.currentPost.grade"></span>
+                                        <span class="btn btn-sm btn-default" ng-show="data.currentPost.grade"
+                                              tooltip="Open Rubric"
+                                              ng-click="openRubric()">
+                                            <span class="fa fa-table"></span>
+                                        </span>
+                                        <a ng-show="!data.currentPost.grade" ng-click="openRubric()">
+                                            Needing Grade
+                                        </a>
+
+
+                                    </span>
+
+
+                                </div>
+                                <div>
+                                    Max Score: <span ng-bind="data.pageInfo.maxScore"></span>
+                                </div>
+                            </div>
+                            <div class="question-feedback-wrapper" >
+                                <b>Feedback:</b>
+                                <div>
+                                    <textarea ng-if="!studentView" ckeditor="" custom-options="ckeditorOptions"
+                                              class="form-control"
+                                              data-ng-model="data.feedback"
+                                              placeholder="Feedback"></textarea>
+                                    <div ng-show="studentView"
+                                         data-ng-bind-html="$root.trustAsHtml(data.feedback)"></div>
+
+                                </div>
+                            </div>
+                            <div class="btn btn-sm btn-primary"
+                                 ng-hide="studentView"
+                                 ng-click="data.pageInfo.gradeMode=='wholeForum'?saveForumGrade():savePostGrade()">
+                                Save Changes
+                            </div>
+                        </div>
+                    </div>
+                    <!--message by Student end-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="forum-grade-modal">
+    <div class="modal-header">
+        <button type="button" class="close " ng-click="$dismiss()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">{{data.student.lname}}, {{data.student.fname}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <b>Total: <span ng-bind="message.grade"></span></b>
+        <div ng-include="'/public/views/rubrics/rubric-grader.html'" ng-controller="RubricGraderController" class="rubric panel panel-body"
+             style="  padding: 5px;border: 1px solid transparent;border-color: rgb(168, 168, 168);border-radius: 4px;margin-bottom: 5px;overflow-x:scroll"></div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn btn-default" ng-click="$dismiss()">Cancel</div>
+        <div class="btn btn-primary" ng-click="save()">Save</div>
+    </div>
+</script>

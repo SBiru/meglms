@@ -1,0 +1,42 @@
+<div class="addressees-top-button pointer" ng-class="{open:alert.showAddressees}" ng-click="alert.showAddressees=!alert.showAddressees"><i class="fa" ng-class="alert.showAddressees?'fa-minus':'fa-plus'"></i> Recipients</div>
+<div class="addressees-panel" ng-show="alert.showAddressees">
+    <div class="addressees-container padding-10">
+        <div class="text-danger" ng-show="!alert.addressees.length">There are no addresseess</div>
+        <div data-ng-repeat="addr in alert.addressees track by $index" class="addressee">
+            <span class="addressee-name" ng-bind="addr" tooltip="{{addr}}"></span>
+            <span class="remove-addressee fa fa-close pointer" ng-click="removeAddressee(addr,$index)"></span>
+        </div>
+    </div>
+
+    <div>
+
+        <div class="btn-group btn-add-addressee">
+            <button type="button" class="btn btn-info btn-sm  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-top-right-radius: 0;border-bottom-right-radius: 0;">
+                <span ng-bind="currentSelectedAddressee" ng-show="currentDefault.length"></span>
+                <span  ng-hide="currentDefault.length">Custom</span>
+                <span class="caret"></span>
+            </button>
+            <button type="button" class="btn btn-info btn-sm" ng-click="addAddressee()" style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;" >
+                Add
+            </button>
+            <ul class="dropdown-menu">
+                <li data-ng-repeat="addressee in currentDefault" ng-show="currentDefault.length">
+                    <a ng-bind="addressee" ng-click="$parent.currentSelectedAddressee = addressee"></a>
+                </li>
+                <li role="separator" class="divider" ng-show="currentDefault.length"></li>
+                <li>
+                    <form name="newCustomEmail" ng-submit="addCustomEmail(customEmail);customEmail=''">
+                        <div class="input-group">
+                            <input class="form-control" name="input" placeholder="Email" ng-model="customEmail" type="email" ng-click="stopClickPropagation($event)" required>
+                        <span class="input-group-btn">
+                            <button class="btn btn-info" type="button" ng-click="addCustomEmail(customEmail);customEmail=''">Add</button>
+                        </span>
+                        </div>
+                    </form>
+
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

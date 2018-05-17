@@ -1,0 +1,246 @@
+<form name="edit_form">
+    <div class="row" style="margin-bottom:10px;">
+        <div class="col-xs-4 width-auto">
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{active: value.type=='text'}"><a ng-click="setType(key,'text')" showtab="" href="#text_{{key}}" class="textlink">Text</a></li>
+                <li role="presentation" ng-class="{active: value.type=='audio'}"><a ng-click="setType(key,'audio')" showtab="" href="#audio_{{key}}" class="audiolink">Audio</a></li>
+                <li role="presentation" ng-class="{active: value.type=='video'}"><a ng-click="setType(key,'video')" showtab="" href="#video_{{key}}" class="videolink">Video</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="row textTab tab-pane fade" ng-class="{active: value.type=='text',in: value.type=='text'}" style="margin-bottom:10px;" id="text_{{key}}">
+            <div class="col-xs-8 width-auto" style="margin-bottom: 10px">
+                <div class="row">
+                    <div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6 width-auto'">
+                        <div class="input-group" style="margin-top: 10px">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-question-sign"></span></span>
+                            <input ng-if="!value.isHtml" type="text" name="prompt" ng-model="value.prompt" class="form-control" placeholder="Prompt" value="{{value.prompt}}" required />
+                            <textarea ng-if="value.isHtml" ng-model="value.prompt" ckeditor disable-double-bind="true"></textarea>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+                    </span>
+
+                        </div>
+                        <small class="text-danger" ng-show="edit_form.prompt.$error.required">Please input a prompt</small>
+                    </div>
+                    <div class="col-xs-6 width-auto">
+                        <div class="input-group" style="margin-top: 10px">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-ok"></span></span>
+
+                            <input type="text" name="answer" ng-model="value.answer" class="form-control" placeholder="Answer" value="{{value.answer}}" />
+
+                        </div>
+                        <!--<small class="text-danger" ng-show="edit_form.answer.$error.required">Please input an answer</small>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 width-auto margin-left-15 top-150">
+                <div class="row" style="margin-top: 10px">
+                    <button ng-click="savePrompt()" type="button" class="btn btn-primary" data-ng-disabled="edit_form.$invalid || loading.savePrompt==1">
+                        <span class="fa fa-save"></span>
+                    </button>
+                    <button data-ng-show="key!='new'" ng-click="removePrompt()" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+                        <span class="fa fa-trash"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row tooltip-relative" style=" padding-top: 71px; MARGIN-LEFT: 1PX;MARGIN-RIGHT: 1PX;">
+                <div class="col-xs-12" style="margin-bottom: 10px">
+                    <input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+                        <input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45" ng-hide="value.isInformation">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+                        <input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+                        <input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row audioTab tab-pane fade " ng-class="{active: value.type=='audio',in: value.type=='audio'}" id="audio_{{key}}" style="margin-bottom:10px;">
+            <div class="col-xs-8 width-auto" style="margin-bottom: 10px">
+                <div class="row">
+                    <div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6 width-auto'">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h5>Record The Audio</h5>
+                                <span id="">
+                                    <a href="" class="microphone" ng-click="recordAudio(false,key)" ng-class="isRecording(key)"><span class="fa fa-2x fa-microphone fa-fw"></span></a>
+                                    <a href="" ng-click="playRecordedAudio(key)" ng-style="{'color': isRecorded(key) }" style="color: rgb(66, 139, 202);"><span class="fa fa-2x fa-play fa-fw"></span></a>
+                                    <button ng-click="uploadRecording(key)" ng-show="setFinishedRecording&&(keyCurrentRecording==key)&&!uploadingRecording" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Save Recording</button>
+                                    <button  ng-show="(keyCurrentRecording==key)&&uploadingRecording" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">Recording is Saving...</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row" style="  margin-top: 10px;">
+                            <div class="col-xs-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-question-sign" tooltip="Instructions to the student" tooltip-append-to-body="true"></span></span>
+                                    <input ng-if="!value.isHtml" type="text" name="instruction" ng-model="value.prompt" class="form-control" placeholder="Instruction" value="{{value.prompt}}" required />
+                                    <textarea ng-if="value.isHtml" ng-model="value.prompt" ckeditor disable-double-bind="true"></textarea>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-6 width-auto">
+                        <h5>Upload The Audio</h5>
+                        <input type="file" name="timed_audioFile_{{key}}" id="timed_audioFile_{{key}}" file-model="timed_audioFile_{{key}}" accept="file_extension|mp3*|media_type">
+                        <br />
+                        <button ng-disabled="!timed_audioFile_{{key}}" ng-click="uploadFile(scope,key)" ng-show="!uploadingFileAudio" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Upload File</button>
+                        <button  ng-show="uploadingFileAudio&&(key==keyCurrentFileUploading)" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">File is Uploading...</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-4 width-auto margin-left-15 top-150">
+                <div class="row">
+                    <button ng-click="savePrompt()" type="button" class="btn btn-primary" data-ng-disabled="!canSavePrompt()">
+                        <span class="fa fa-save"></span>
+                    </button>
+                    <button data-ng-show="key!='new'" ng-click="removePrompt()" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+                        <span class="fa fa-trash"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row tooltip-relative" style="  MARGIN-LEFT: 1PX;MARGIN-RIGHT: 1PX;">
+                <div class="col-xs-12" style="margin-bottom: 10px">
+                    <input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+                        <input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45" ng-hide="value.isInformation">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+                        <input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+                        <input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row audioTab tab-pane fade " ng-class="{active: value.type=='video',in: value.type=='video'}" id="video_{{key}}" style="margin-bottom:10px;">
+            <div class="col-xs-8 width-auto" style="margin-bottom: 10px">
+                <div class="row">
+                    <div ng-class="value.isHtml?'col-xs-12 width-auto':'col-xs-6 width-auto'">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h5>Upload The Video</h5>
+                                <input type="file" name="timed_videoFile_{{key}}" id="timed_videoFile_{{key}}" file-model="timed_videoFile_{{key}}" accept="file_extension|avi*|media_type">
+                                <br />
+                                <button ng-disabled="!timed_videoFile_{{key}}" ng-click="uploadFile(scope,key,'video')" ng-show="!uploadingFileVideo" type="button" class="btn btn-success" data-toggle="dropdown" aria-expanded="false">Upload File</button>
+                                <button  ng-show="uploadingFileVideo&&(key==keyCurrentFileUploading)" type="button" class="btn btn-warning" data-toggle="dropdown" aria-expanded="false">File is Uploading...</button>
+                                <button ng-show="value.videoThumbnailFile&&!uploadingFileVideo" ng-click="value.videoThumbnailFile=undefined;value.videoFile=undefined;value.playVideoFile=undefined" class="btn btn-default">Record new video</button>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-xs-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-question-sign" tooltip="Instructions to the student" tooltip-append-to-body="true"></span></span>
+                                    <input ng-if="!value.isHtml" type="text" name="instruction" ng-model="value.prompt" class="form-control" placeholder="Instruction" value="{{value.prompt}}" required />
+                                    <textarea ng-if="value.isHtml" ng-model="value.prompt" ckeditor disable-double-bind="true"></textarea>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" data-ng-class="{active:value.isHtml}" type="button" data-ng-click="value.isHtml=!value.isHtml">Html</button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-6 width-auto margin-top-15" ng-if="value.type=='video' && value.videoThumbnailFile" ng-init="value.playVideoFile=undefined">
+                        <img ng-show="value.videoThumbnailFile && !value.playVideoFile" class="videoimage" ng-src="{{value.videoThumbnailFile }}" style="width: 272px; height:224px;" ng-click="value.playVideoFile = value.videoFile" tooltip="Click to Play Video" />
+                        <video autoplay ng-if= "value.playVideoFile" style="width: 272px; height:224px;"  class="prompt_video" onmouseout="this.removeAttribute('controls')"  onmouseover="this.setAttribute('controls', 'controls')">
+                            <source ng-src="{{value.playVideoFile}}" type="video/mp4" >
+                            Your browser does not support the HTML5 video tag.
+                        </video>
+                    </div>
+                    <div class="col-xs-6 width-auto margin-top-15" ng-if="value.type=='video' && !value.videoThumbnailFile" ng-init="getVideoWidget()">
+
+                        <h5>Record The Video</h5>
+
+                        <div ng-bind-html="videoWidget" style="width: 272px; height:224px;"></div>
+                        <div id="buttonsarea" align="center">
+                            <span ng-bind-html="videoRecordButton" class="videoRecordButton"></span> &nbsp;&nbsp;
+                            <button ng-click="submitVideo()" id="submitted" data-ng-disabled="submitting">
+                                <span class="fa fa-check" style="color:green">  </span>Submit
+                                <span class="fa fa-spinner fa-pulse" ng-show="submitting"></span>
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-xs-4 width-auto margin-left-15 top-150">
+                <div class="row">
+                    <button ng-click="savePrompt()" type="button" class="btn btn-primary" data-ng-disabled="!canSavePrompt()">
+                        <span class="fa fa-save"></span>
+                    </button>
+                    <button data-ng-show="key!='new'" ng-click="removePrompt()" type="button" class="btn btn-danger " data-toggle="dropdown" aria-expanded="false">
+                        <span class="fa fa-trash"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row tooltip-relative" style=" MARGIN-LEFT: 1PX;MARGIN-RIGHT: 1PX;">
+                <div class="col-xs-12" style="margin-bottom: 10px">
+                    <input type="checkbox" ng-model="value.isInformation"> Is information prompt <span class="fa fa-question-circle" tooltip="Information prompts are used when no answer is supposed to be recorded."></span>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time to Prepare (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time to prepare</span>
+                        <input type="text" name="answer" ng-model="value.time_prepare" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+
+                <div class="col-xs-4 width-auto margin-top-15 -top-45" ng-hide="value.isInformation">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Time Limit (0 for self-directed). Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Time limit</span>
+                        <input type="text" name="answer" ng-model="value.time_limit" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 width-auto margin-top-15 -top-45">
+                    <div class="input-group">
+                        <span class="input-group-addon" tooltip="Pause between questions (to view example). Ignored if time limit is 0. Leave it empty if you want to use the default time set in each page." tooltip-append-to-body="true">Pause time</span>
+                        <input type="text" name="answer" ng-model="value.time_pause" class="form-control"/>
+                        <span class="input-group-addon">seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

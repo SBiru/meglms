@@ -1,0 +1,54 @@
+<table ng-if="is_gradeable_post" style="margin: 0px 0;">
+    <tbody ng-init="rubricBase.show_rubrics=true" ng-controller="RubricsCourseBuilderController as rubricBase">
+    <tr>
+        <td style="width:20px;padding-bottom: 20px"></td>
+        <td style="padding-bottom: 20px">
+            <a ng-click="rubricBase.show_rubrics=!rubricBase.show_rubrics">
+                <span ng-hide="rubricBase.show_rubrics">Show rubrics</span>
+            </a>
+        </td>
+    </tr>
+    <tr ng-show="rubricBase.show_rubrics">
+        <td style="width:20px"></td>
+        <td>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div ng-controller="RubricsMenuController" ng-init="getOrg()">
+                        <ul class="nav navbar-nav rubric-menu"  >
+                            <li>
+                                <a class="btn btn-sm btn-default" ng-click="rubricBase.show_rubrics=false">Hide</a>
+                            </li>
+                            <li>
+                                <a class="btn btn-sm btn-default" ng-click="create()">Create New</a>
+                            </li>
+                            <li>
+                                <a class="btn btn-sm btn-default" ng-click="save()">Save</a>
+                            </li>
+                            <li>
+                                <a class="btn btn-sm btn-default" ng-click="delete()">Delete</a>
+                            </li>
+                        </ul>
+
+                        <div style="top:7px;width:160px;margin-left: 20px;float:left;position: relative">
+                            <select selectize ng-model="selected_id"
+                                    ng-options="rubric.id as rubric.name for rubric in rubrics | orderBy:'name'">
+                            </select>
+                        </div>
+                        <div class="disclaimer-menu">
+                            The empty cells will be ignored
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+    </tr>
+    <tr>
+        <td style="width:20px"></td>
+        <td  class="panel panel-default">
+            <div ng-show="rubricBase.show_rubrics">
+                <div ng-include="'/public/views/rubrics/content.html'"></div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

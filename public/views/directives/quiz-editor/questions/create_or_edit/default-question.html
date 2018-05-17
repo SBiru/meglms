@@ -1,0 +1,445 @@
+<script type="text/ng-template" id="Instructions_Multipart.html">
+    <div class="panel-heading">
+        <h3 class="panel-title" id="panel-title">Multipart</h3>
+    </div>
+    <div class="panel-body" style="margin: initial;text-align: left;">
+        <ul>
+            <li>Answers are formated between __{ and }__</li>
+            <li>A "Tilda" ~ is used to seperate the various possible answers</li>
+            <li>A "TildaEquals" ~= is used to signify the correct answere for example...</li>
+            <li style="color:green">__{1:MC:~red~=blue~green~purple~orange}__</li>
+            <li>In The above MC stands for Multiple choice and the value of blue is the correct Answer</li>
+            <li>The following question codes and can be</li>
+            <ul>
+                <li>SA = Short Written Answer</li>
+                <li>NM = Numerical Answer</li>
+                <li>MC = Multiple Choice Answer</li>
+                <li>MCV = Multiple Choice Radio</li>
+            </ul>
+        </ul>
+    </div>
+</script>
+<div>
+
+
+    <!--matching Create Start-->
+    <div class="form-group" ng-if="values.type==='matching'">
+
+        <div class="alert alert-danger" role="alert" ng-if="errorsize">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span> Please make sure that the image width and height is less then 1024x768
+        </div>
+
+        <div class="alert alert-danger" role="alert" ng-if="errortype">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span> Please only use images in the following formats jpeg, png and Bitmap.
+        </div>
+
+        <div ng-if="!matchedImage.savedname">
+            <input type="file" ng-file-select="onFileSelect($files)" style="cursor:pointer;margin:auto">
+            <br>
+            <div class="panel panel-info width-auto" style="width: 50%;margin: auto;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="panel-title">Quick Instruction</h3>
+                </div>
+                <div class="panel-body" style="margin: initial;text-align: left;">
+                    <ul>
+                        <li>Choose image for upload Resolution must be lower then 1024pxX768px</li>
+                        <li>Once uploaded you will be taken to the working screen.</li>
+                        <li>Use your mouse to make a rectangle of where you would like to be match</li>
+                        <li>Click on the "Add Cordinates" Button</li>
+                        <li><span style="color:red"><em>Hint "EASY"</em></span>: You can move the created rectangle around the image and click on the "Add Cordinates" button to maintain correct sizing</li>
+                        <li> Once Completed adding image areas click "Save Question" button</li>
+                    </ul>
+
+                </div>
+            </div>
+            <div ng-show="is_uploading">
+                <span class="ng-binding">Uploaded 0%</span>
+                <div class="file-upload-progress-container" style="width:300px;">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div align="center">
+<button ng-disabled="is_uploading" ng-click="uploadPost()">Upload Image</button>
+</div>-->
+        </div>
+
+        <div ng-show="matchedImage.savedname">
+            <div class="alert alert-info" role="alert">
+                <strong style="color: red;font-style: italic;">Hint</strong> : You can move the created rectangle around the image and click on the "Add Cordinates" button to maintain correct sizing
+            </div>
+
+            <div class="alert alert-danger" role="alert" ng-if="matchedImage.error == 1"><strong style="color: red;font-style: italic;">ERROR</strong> : You must provide a question Prompt</div>
+            <div class="alert alert-danger" role="alert" ng-if="matchedImage.error == 2"><strong style="color: red;font-style: italic;">ERROR</strong> : You must fill in all the Text boxes</div>
+            <div id="<main>
+
+          </main>imageleft" style="width:{{matchedImage.size[0]}}px;margin-right:10px;height:{{matchedImage.size[1]}}px" class="pull-left width-auto margin-right-0 height-auto">
+
+                <img class="width-auto height-auto" height="{{matchedImage.size[1]}}" width="{{matchedImage.size[0]}}" ng-src="{{matchedImage.baselocation}}" src="{{matchedImage.baselocation}}" id="matchedImage" style="height:{{matchedImage.size[1]}}px;width:{{matchedImage.size[0]}}px">
+
+            </div>
+
+            <div style="height: {{matchedImage.size[0]}}px;padding-left: 10px;" class="clearfix height-auto">
+                <button type="button" class="btn btn-success margin-5" ng-click="setCordinates()">Add Cordinates</button>
+
+                <div class="btn-group  margin-5">
+                    <button type="button" class="btn btn-default">Display Options </button>
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:34px">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" ng-init="matchedImage.selectedtick='blank'">
+                        <li><a href ng-click="selecttick('blank')"><span ng-if="matchedImage.selectedtick === 'blank'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blank White Solid</a>
+                        </li>
+                        <li><a href ng-click="selecttick('transparentw')"><span ng-if="matchedImage.selectedtick === 'transparentw'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blank White Tranaparent</a>
+                        </li>
+                        <li><a href ng-click="selecttick('transparentb')"><span ng-if="matchedImage.selectedtick === 'transparentb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blank Dark Transparent</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="selecttick('starb')"><span ng-if="matchedImage.selectedtick === 'starb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blue Star <span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: blue;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('starg')"><span ng-if="matchedImage.selectedtick === 'starg'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Green Star <span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: green;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('starr')"><span ng-if="matchedImage.selectedtick === 'starr'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Red Star <span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: red;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="selecttick('dropb')"><span ng-if="matchedImage.selectedtick === 'dropb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blue Drop <span class="glyphicon glyphicon-tint" aria-hidden="true" style="color: blue;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('dropg')"><span ng-if="matchedImage.selectedtick === 'dropg'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Green Drop <span class="glyphicon glyphicon-tint" aria-hidden="true" style="color: green;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('dropr')"><span ng-if="matchedImage.selectedtick === 'dropr'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Red Drop <span class="glyphicon glyphicon-tint" aria-hidden="true" style="color: red;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="selecttick('pushpinb')"><span ng-if="matchedImage.selectedtick === 'pushpinb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blue Pin <span class="glyphicon glyphicon-pushpin" aria-hidden="true" style="color: blue;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('pushping')"><span ng-if="matchedImage.selectedtick === 'pushping'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Green Pin <span class="glyphicon glyphicon-pushpin" aria-hidden="true" style="color: green;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('pushpinr')"><span ng-if="matchedImage.selectedtick === 'pushpinr'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Red Pin <span class="glyphicon glyphicon-pushpin" aria-hidden="true" style="color: red;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="selecttick('targetb')"><span ng-if="matchedImage.selectedtick === 'targetb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Blue Target <span class="glyphicon glyphicon-screenshot" aria-hidden="true" style="color: blue;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('targetg')"><span ng-if="matchedImage.selectedtick === 'targetg'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Green Target <span class="glyphicon glyphicon-screenshot" aria-hidden="true" style="color: green;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li><a href ng-click="selecttick('targetr')"><span ng-if="matchedImage.selectedtick === 'targetr'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Red Target <span class="glyphicon glyphicon-screenshot" aria-hidden="true" style="color: red;font-size: large;margin-left: 10px;"></span></a>
+                        </li>
+                        <li class="divider"></li>
+                    </ul>
+                </div>
+
+                <div class="btn-group  margin-5" ng-show="matchedImage.imgtext == 1">
+                    <button type="button" class="btn btn-default">Color Options </button>
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" ng-init="matchedImage.selectcolortext='matchingblank'">
+                        <li><a href ng-click="selectcolortext('matchingblank')"><span ng-if="matchedImage.selectcolortext === 'matchingblank'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Black text White Background </a>
+                        </li>
+                        <li><a href ng-click="selectcolortext('matchingtrans')"><span ng-if="matchedImage.selectcolortext === 'matchingtrans'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Black text Transparent Background</a>
+                        </li>
+                        <li style="background-color:yellow"><a style="color:black" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='#ffffff'" href ng-click="selectcolortext('matchingyb')"><span ng-if="matchedImage.selectcolortext === 'matchingyb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>Black text Yellow Background</a>
+                        </li>
+                        <li style="background-color:black"><a style="color:white" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='#ffffff'" href ng-click="selectcolortext('matchingwb')"><span ng-if="matchedImage.selectcolortext === 'matchingwb'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>White text Black Background</a>
+                        </li>
+                        <li style="background-color:red"><a style="color:white" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='#ffffff'" href ng-click="selectcolortext('matchingrv')"><span ng-if="matchedImage.selectcolortext === 'matchingrv'" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;margin-right: 10px;"></span>White text Red Background</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--<button type="button" class="btn btn-danger" ng-click="clearlastCordinates()">Clear last</button>-->
+                <!--<button type="button" class="btn btn-danger" ng-click="clearCordinates()">Clear All</button>-->
+                <button type="button" class="btn btn-primary  margin-5" ng-click="matching_Create()">Save Question</button>
+
+                <div style="margin-top:10px" ng-init="matchedImage.imgtext=1">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="imgtext">Use Image</label>
+                            </td>
+                            <td>
+                                <input style="margin-left: 10px;" type="radio" ng-model="matchedImage.imgtext" name="imgtext" value="0" ng-checked="0">
+                            </td>
+                            <td style="padding-left:10px">
+                                <label for="imgtext">Use Text</label>
+                            </td>
+                            <td>
+                                <input style="margin-left: 10px;" type="radio" ng-model="matchedImage.imgtext" name="imgtext1" value="1">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="overflow-y: auto;">
+                    <div ng-repeat="c in recordedEvents">
+                        <div style="margin-top: 10px;outline: 1px solid #737373;width: {{c.matchedImagewidth+100}}px;margin-left: 1px;padding:10px;background-color: #ccc;">
+                            <div class="pull-right" style="height:{{c.matchedImageheight}}px;position:relative;z-index:2">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-danger glyphicon glyphicon-trash" ng-click="clearlastCordinates($index)" style="margin-left:10px;margin-top:7px" title="Remove">
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="overflow: hidden;height:{{c.matchedImageheight}}px;width:{{c.matchedImagewidth}}px">
+                                <div class="pull-left" style="height:{{c.matchedImageheight}}px">
+                                    <div class="pull-left" style="height:100%;width:100%">
+                                        <img ng-class="{opacity100: matchedImage.imgtext == 0, opacity50: matchedImage.imgtext == 1}" src="{{matchedImage.baselocation}}" style="max-width:none;position: relative;clip: rect({{c.y1}}px,{{c.x2}}px,{{c.y2}}px,{{c.x1}}px);top: -{{c.y1}}px; left: -{{c.x1}}px" width="{{matchedImage.size[0]}}px" height="{{matchedImage.size[1]}}px" border="0" alt="" style="height:{{matchedImage.size[0]}}px;width:{{matchedImage.size[1]}}px">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="text" ng-model="c.textvalue" value="" placeholder="Add Text Here" style="margin-top:10px;text-align: center;width:100%" ng-disabled="matchedImage.imgtext == 0" ng-class="{
+                    opacity100: matchedImage.imgtext == 1,
+                    opacity50: matchedImage.imgtext == 0,
+                    'matchingyb':matchedImage.selectcolortext == 'matchingyb',
+                    'matchingwb':matchedImage.selectcolortext == 'matchingwb',
+                    'matchingrv':matchedImage.selectcolortext == 'matchingrv'
+                 }">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info width-auto margin-left-0" style="width: calc(100% - 600px);margin: auto;margin-left: 600px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" id="panel-title">Quick Instruction</h3>
+                    </div>
+                    <div class="panel-body" style="margin: initial;text-align: left;">
+                        <ul>
+                            <li>Use your mouse to make a rectangle of where you would like to be match on the image to the left by mouse clicking and leave your mouse button pressed down</li>
+                            <li>Click on the "Add Cordinates" Button to fix the created cordinated</li>
+                            <li><span style="color:red"><em>Hint "EASY"</em></span>: You can move the created rectangle around the image and click on the "Add Cordinates" button to maintain correct sizing</li>
+                            <li> Once Completed adding image areas click "Save Question" button</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:none">
+                <p>
+                    <label for="x1">x1:</label>
+                    <input type="text" name="x1" id="x1" />
+                </p>
+                <p>
+                    <label for="y1">y1:</label>
+                    <input type="text" name="y1" id="y1" />
+                </p>
+                <p>
+                    <label for="x2">x2:</label>
+                    <input type="text" name="x2" id="x2" />
+                </p>
+                <p>
+                    <label for="y2">y2:</label>
+                    <input type="text" name="y2" id="y2" />
+                </p>
+                <p>
+                    <label for="width">matchedImagewidth:</label>
+                    <input type="text" name="matchedImagewidth" id="matchedImagewidth" />
+                </p>
+                <p>
+                    <label for="height">matchedImageheight</label>
+                    <input type="text" name="matchedImageheight" id="matchedImageheight" />
+                </p>
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--matching Create End-->
+
+    <!-- wordmatching Create Start-->
+    <div class="form-group" ng-if="values.type==='wordmatching'">
+
+        <div class="alert alert-info" role="alert">
+            <strong style="color: red;font-style: italic;">Hint</strong> : Fill in the matching words, these will be randomized and the student will have to drag and drop to match them in the student view.
+        </div>
+        <div class='tooltip_relative'>
+            <input type="checkbox" ng-model="values.enable_distractors"> Enable distractors
+                            <span class="fa fa-question-circle" tooltip-placement="right"
+                                  tooltip="Distractors are possible answers that you could include to challenge your students. If enabled you will be required to enter one distractor for each question."></span>
+        </div>
+        <div style="width:100%;margin-bottom:10;margin-top:10px" class="display-none">
+            <div style="width:30%;float:left;margin-right:10px">
+                Question
+            </div>
+            <div style="width:30%;float:left;margin-right:10px">
+                Correct Answer
+            </div>
+            <div style="width:30%;float:left" ng-show="values.enable_distractors">
+                Possible Answer
+            </div>
+        </div>
+        <div class="alert alert-danger" role="alert" ng-if="wordmatching.error == 1"><strong style="color: red;font-style: italic;">ERROR</strong> : You must provide a question Prompt</div>
+        <div class="alert alert-danger" role="alert" ng-if="wordmatching.error == 2"><strong style="color: red;font-style: italic;">ERROR</strong> : You must fill in all the Word boxes</div>
+        <div class="alert alert-danger" role="alert" ng-if="wordmatching.error == 3"><strong style="color: red;font-style: italic;">ERROR</strong> : There is not words to set</div>
+
+        <div class="margin-top-15" style="height:40px">
+            <button type="button" class="btn btn-success pull-right float-left" style="margin-right:10px" ng-click="addMultipleWordSet(3)">Add 3 more word sets</button>
+        </div>
+        <div class="row wordmatch-area margin-left-0 margin-right-0">
+            <div class="text-center wordmatch-row" id="'+id+'" style="margin-bottom:10px;min-height: 50px;" ng-repeat="option in values.wordmatchingInputs track by $index">
+                <div class="row">
+                    <div class="display-block" style="display: none;">
+                        <label style="float: left;margin-top: 15px">
+                            Question :
+                        </label>
+                    </div>
+                    <div class="width-100" style="width:30%;float:left;margin-right:10px" ng-attr-id="{{option.value1.id}}">
+                        <div ng-if="option.static" class="alert alert-warning static-word" data-ng-bind-html="trustAsHtml(option.value1.value)"></div>
+                        <div  ng-if='!option.static' dynamic="option.value1.value" ng-show="!option.ck" ng-init="option.ck = 0" style="cursor: text;padding: 10px;border: 1px solid #ccc;min-height: 50px" ng-click="resetckshow();option.ck = 1">{{option.value1.value}}</div>
+                        <textarea  ng-if='!option.static && option.ck===1' class="form-control" type="text" ckeditor="" custom-options="ckeditorOptions" ng-model="option.value1.value" ng-id="{{option.value1.id}}">{{option.value1.value}}</textarea>
+                    </div>
+                    <div class="display-block " style="display: none;">
+                        <label style="float: left;margin-top: 15px">
+                            Correct Answer :
+                        </label>
+                    </div>
+                    <div   class="width-100"  style="width:30%;float:left;margin-right:10px" ng-attr-id="{{option.value2.id}}">
+                        <div dynamic="option.value2.value" ng-show="!option.ck" ng-init="option.ck = 0" style="cursor: text;padding: 10px;border: 1px solid #ccc;min-height: 50px" ng-click="resetckshow();option.ck = 1">{{option.value2.value}}</div>
+                        <textarea ng-if="option.ck===1" class="form-control" type="text" ckeditor="" custom-options="ckeditorOptions" ng-model="option.value2.value" ng-id="{{option.value2.id}}">{{option.value2.value}}</textarea>
+                    </div>
+                    <div class="display-block" style="display: none;" >
+                        <label ng-show="values.enable_distractors" style="float: left;margin-top: 15px">
+                            Possible Answer :
+                        </label>
+                    </div>
+                    <div class="width-100"  style="width:30%;float:left" ng-attr-id="{{option.value3.id}}" ng-show="values.enable_distractors">
+                        <div dynamic="option.value3.value" ng-show="!option.ck" ng-init="option.ck = 0" style="cursor: text;padding: 10px;border: 1px solid #ccc;min-height: 50px" ng-click="resetckshow();option.ck = 1">{{option.value3.value}}</div>
+                        <textarea ng-if="option.ck===1" class="form-control" type="text" ckeditor="" custom-options="ckeditorOptions" ng-model="option.value3.value" ng-id="{{option.value3.id}}">{{option.value3.value}}</textarea>
+                    </div>
+
+                    <button type="button" style="margin-left:10px" class="btn btn-danger glyphicon glyphicon-trash margin-top-15 float-left margin-left-0" ng-click="RemoveWordmatching(option.id)" title="Remove"></button>
+                </div>
+                <div class="row" ng-show="option.value1.value && !option.hideButton">
+                    <div class="col-xs-12">
+                        <div class="btn btn-warning new-word-set margin-top-15" ng-click="addWordSet(option,$index)">Add another match for this word</div>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <!--wordmatching Create End-->
+
+    <!--klosequestions Create Start-->
+    <div class="form-group" ng-if="values.type==='klosequestions'">
+        <label ng-if="!xmlquestions">Paste in Close Qustions as xml:</label>
+        <textarea ng-if="!xmlquestions" ng-model="klosequestionsText" ng-change="parsexml(klosequestionsText)" placeholder="Copy and Pastet Klosed Questions" style="width:100%;height:200px;margin-bottom:40px"></textarea>
+        <div style="width:100%;padding-bottom:50px">
+            <button ng-if="xmlquestions" type="button" class="btn btn-primary pull-right" style="margin-right:10px" ng-click="resetxmlquestions()">reset XML</button>
+        </div>
+        <div class="question question-display" ng-repeat="data in xmlquestions">
+            <div class="panel panel-default" style="background-color:#ddd">
+                <div class="pull-right" style="margin-right:20px;margin-top:20px">
+                    <a class="btn btn-sm btn-danger" ng-click="kloseRemove($index)" title="Remove Question" tooltip="Remove Question"><span class="glyphicon glyphicon-trash"></span>&nbsp;</a>
+                </div>
+                <div ng-bind-html="data.htmlSafeprompt" style="margin-left:20px;margin-bottom:20px"></div>
+            </div>
+        </div>
+    </div>
+    <!--klosequestions Create End-->
+
+    <!--multipart Create Start-->
+    <div class="form-group promptsize" ng-if="values.type==='multipart'">
+        <label for="modalAnswer">Question/Answer:</label>
+        <textarea name="modalAnswer" disable-double-bind="true" ckeditor ng-change="modalAnswerChange(Answer)" id="modalAnswer"  class="form-control" type="text" ng-model="values.edit" style="min-height:150px"></textarea>
+        <div class="panel panel-info width-auto" style="width: 50%;margin: auto;margin-top:20px" ng-include="'Instructions_Multipart.html'">
+        </div>
+    </div>
+    <!--multipart Create End-->
+
+    <!--Options X 4 Create Start-->
+    <div class="form-group" ng-if="values.type==='single'"  ng-init="lettersrange=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']">
+        <label>Responses:</label>
+        <div class="pull-middle width-auto" style="width:20%;margin: auto;padding: 10px;">Number of Posibilites : <select ng-init="multiNumber=4" ng-model="multiNumber" ng-options="item.n as item.n for item in [{'n':4},{'n':5},{'n':6},{'n':7},{'n':8},{'n':9},{'n':10},{'n':11},{'n':12},{'n':13},{'n':14},{'n':15}]"></select></div>
+        <div style="margin-left:2em">
+            <div class="row" style="margin-bottom:.2em" ng-repeat="n in [] | range:multiNumber">
+                <div class="col-sm-2 float-left" style="text-align:right">
+                    <input type="radio" value="{{$index}}" ng-model="values.solution" />&nbsp;&nbsp;<span class="label label-info" ng-bind="lettersrange[$index]">.</span>
+                </div>
+                <div class="col-sm-10 float-right">
+                    <textarea class="form-control" type="text" disable-double-bind="true" ckeditor ng-model="values.options[$index]"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Options X 4 Create End-->
+
+    <!--Oneword Answer Create Start-->
+    <div class="form-group" ng-if="values.type==='oneword'">
+        <div>Can add more then one word answer seperate using , ie. one,two,three</div>
+        <label for="onewordanswer">Single Word Answer:</label>
+        <input type="text" id="onewordanswer" ng-model="values.onewordanswer" placeholder="Single word only">
+    </div>
+    <!--Oneword Answer Create End-->
+
+    <!--Essay
+
+
+    <!--multiple Create Start-->
+    <div class="form-group" ng-if="values.type==='multiple'" ng-init="lettersrange=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']">
+        <label>Multiple responses to form Correct Answer:</label>
+        <div class="pull-middle width-auto" style="width:20%;margin: auto;padding: 10px;">Number of Posibilites : <select ng-init="multiAnswer=4" ng-model="multiAnswer" ng-options="item.n as item.n for item in [{'n':4},{'n':5},{'n':6},{'n':7},{'n':8},{'n':9},{'n':10},{'n':11},{'n':12},{'n':13},{'n':14},{'n':15}]"></select></div>
+        <div style="margin-left:2em">
+            <div class="row" style="margin-bottom:.2em"  ng-repeat="n in [] | range:multiAnswer">
+                <div class="col-sm-2 float-left" style="text-align:right">
+                    <input type="checkbox" value="{{$index}}" ng-model="values.resultvalue[$index]" />&nbsp;&nbsp;<span class="label label-info" ng-bind="lettersrange[$index]"></span>
+                </div>
+                <div class="col-sm-10 float-right">
+                    <textarea class="form-control" type="text" disable-double-bind="true" ckeditor ng-model="values.options[$index]"></textarea>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--multiple Create End-->
+
+    <!--truefalse X 2 Create Start-->
+    <div class="form-group" ng-if="values.type==='truefalse'">
+        <div>
+            <label>Responses</label>
+            <span style="margin-left: 10px">
+                <span>Font:</span>
+                <select placeholder="Font" class="form-control" style="    width: auto;display: inline-block;" ng-options="name.family as name.label for name in font_names" ng-model="font.family"></select>
+
+            </span>
+            <span style="margin-left: 10px">
+                <span>Size:</span>
+                <select placeholder="Size" class="form-control" style="    width: auto;display: inline-block;" ng-options="name.size as name.label for name in font_sizes" ng-model="font.size"></select>
+
+            </span>
+           </div>
+
+        <div style="margin-left:2em">
+            <div class="row" style="margin-bottom:.2em">
+                <div >
+                    <input type="radio" value="0" ng-model="values.solution" />&nbsp;&nbsp;<span class="label label-info"> True.</span>
+                </div>
+                <div class="col-sm-10" style="display:none" >
+                    <input style="display:none" class="form-control" ng-value="values.options[0]" type="text" ng-model="values.options[0]" />
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:.2em">
+                <div>
+                    <input type="radio" value="1" ng-model="values.solution" />&nbsp;&nbsp;<span class="label label-info">False.</span>
+                </div>
+                <div class="col-sm-10" style="display:none" >
+                    <input style="display:none" class="form-control" ng-value="values.options[1]" type="text" ng-model="values.options[1]" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--truefalse X 2 Create End-->
+</div>

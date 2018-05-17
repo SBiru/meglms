@@ -1,0 +1,314 @@
+<!-- bootstrap modal -->
+
+<style>
+    #userImportModal{overflow: hidden;}
+</style>
+<div id="userImportModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="userImportModal" aria-hidden="true" data-ng-controller="UserUploadController">
+    <div class="modal-dialog" style="width: 95%; height: 95%; overflow: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="userImportModalLabel">Import Users from CSV File</h4>
+                <span class="buttons">
+                    <span class="btn btn-sm btn-default" data-ng-click="showPreview=false" ng-show="(dataFinished || importFinished) && showPreview">Back</span>
+                    <span class="btn btn-sm btn-default" data-ng-click="showPreview=true" ng-show="(dataFinished || importFinished) && !showPreview">Show preview data</span>
+                </span>
+
+            </div>
+            <div class="modal-body" >
+                <section class="upload-section" data-ng-hide="showPreview">
+                    <div class="col-sm-12">
+                        <h5>Select a file and click on preview</h5>
+                        <span ng-show="filename">file to import : <em>{{filename}} {{filesize}}</em> mbs</span>
+                    </div>
+                    <div class="select-file row">
+                        <div class="col-sm-12">
+                            <div ngf-select="" ngf-drop="" ng-model="files"
+                                 ng-disabled="importing"
+                                 ngf-drag-over-class="{accept:'dragover', reject:'dragover-err'}"
+                                 ngf-validate="validateObj"
+                                 ngf-keep="keepDistinct ? 'distinct' : keep"
+                                 ngf-change="selectFile($files)"
+                                 class="drop-box ng-pristine ng-valid" ngf-drop-available="dropAvailable">Click here to select a file
+                                <span ng-show="dropAvailable" class=""> or drop file here</span>
+                            </div>
+                        </div>
+
+                        <div class="preview-options col-sm-12">
+                            <div class="form-group col-sm-12">
+                                <label for="delimiter" class="col-sm-2 control-label">CSV delimiter</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="delimiter" data-ng-model="options.delimiter">
+                                        <option value=",">,</option>
+                                        <option value=";">;</option>
+                                        <option value="|">|</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="encoding" class="col-sm-2 control-label">Encoding</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="encoding" data-ng-model="options.encoding">
+                                        <option value="UTF-8">UTF-8</option>
+                                        <option value="ISO-8859-1">ISO-8859-1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="limit" class="col-sm-2 control-label">Preview rows</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="limit" data-ng-model="options.limit">
+                                        <option value="10">10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="500">500</option>
+                                        <option value="-1">All</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-12">
+                                <div class="btn btn-primary btn-sm" style="margin-right:5px;" ng-disabled="importing || !ready" ng-click="getPreview()">
+                                    <div ng-hide="importing">Preview</div>
+                                    <div ng-show="importing">Uploading <i class="fa fa-spin fa-spinner"></i></div>
+                                </div>
+                                <a class="btn btn-primary btn-sm" href="/api/users/upload/template"  target="_self" download>Download template</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </section>
+                <section class="preview-section col-sm-12" data-ng-show="showPreview">
+                    <h5>Upload users preview</h5>
+                    <div class="preview-table-container">
+                        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+                            <thead>
+                            <tr>
+                                <th ng-show="preview.hasExistingUser">
+                                    <span class="fa fa-user pointer" data-ng-class="preview.filterExisting?'text-success':''" data-ng-click="preview.filterExisting=!preview.filterExisting" tooltip="Click to see only existing users" tooltip-placement="right" >
+                                    </span>
+                                </th>
+                                <th ng-show="preview.hasErrors">
+                                    <span class="fa fa-exclamation-circle  pointer" data-ng-class="preview.filterErrors?'text-danger':''" data-ng-click="preview.filterErrors=!preview.filterErrors" tooltip="Click to see only rows with errors" tooltip-placement="right">
+                                    </span>
+                                </th>
+                                <th data-ng-repeat="header in preview.header" data-ng-bind="header"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="row in preview.rows | filter:filterPreviewRows">
+                                <td ng-show="preview.hasExistingUser">
+                                    <span class="fa fa-user pointer text-success" ng-show="row.userExists" data-ng-click="preview.filterExisting=!preview.filterExisting" tooltip="{{'User id ' + row.userExists}}" tooltip-placement="right">
+                                    </span>
+                                </td>
+                                <td ng-show="preview.hasErrors">
+                                    <span class="fa fa-exclamation-circle text-danger" ng-show="row.errors"
+                                          tooltip-html-unsafe="{{row.errorTooltip}}" tooltip-placement="right"></span>
+                                </td>
+                                <td data-ng-repeat="header in preview.header" data-ng-bind="row[header]"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel panel-info settings">
+                        <div class="panel-heading">
+                            <b>Settings</b>
+                        </div>
+                        <div class="panel-body">
+                            <form class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="type" class="col-sm-2 control-label">Upload type</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="type" data-ng-model="options.type">
+                                            <option value="1">Add new only, skip existing users</option>
+                                            <option value="2">Add new and update existing users</option>
+                                            <option value="3">Update existing users only</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="existing_details" class="col-sm-2 control-label">Existing user details</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="existing_details" data-ng-model="options.existing_details" data-ng-disabled="options.type==1">
+                                            <option value="1">No changes</option>
+                                            <option value="2">Override with file</option>
+                                            <option value="3">Fill in missing data using file</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="existing_password" class="col-sm-2 control-label">Existing user password</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="existing_password" data-ng-model="options.existing_password" data-ng-disabled="options.type==1">
+                                            <option value="1">No changes</option>
+                                            <option value="2">Update using file</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="">
+
+                        <div class="btn btn-primary btn-sm" style="margin-right:5px;" ng-disabled="importing || !dataFinished" ng-click="runImport()">
+                            <div ng-hide="importing">Import</div>
+                            <div ng-show="importing">Importing <i class="fa fa-spin fa-spinner"></i></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="import-section col-sm-12" ng-show="showPreview && importFinished">
+                    <h5>Import result</h5>
+                    <div class="preview-table-container">
+                        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+                            <thead>
+                                <th data-ng-repeat="header in preview.header" data-ng-bind="header"></th>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="row in importFinished.result">
+                                    <td data-ng-repeat="header in preview.header" data-ng-bind="row[header]"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <a class="pointer show-doc" data-ng-click="expandDoc=!expandDoc">Detailed documentation <i class="fa" data-ng-class="expandDoc?'fa-minus':'fa-plus'"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="documentation" ng-show="expandDoc">
+                    <section id="file_columns">
+                        <div class="page_header">
+                            <h3 class="pointer" ng-click="showFileColumns=!showFileColumns">File columns <i class="fa" data-ng-class="showFileColumns?'fa-angle-down':'fa-angle-right'"></i></h3>
+                        </div>
+                        <div ng-show="showFileColumns">
+                            <div class="e3-callout e3-callout-danger">
+                                <h4>Required fields</h4>
+                                <ul>
+                                    <li><code>firstname</code> -
+                                        User first name.
+                                    </li>
+                                    <li><code>lastname</code> -
+                                        User last name.
+                                    </li>
+                                    <li><code>email</code> -
+                                        User email. Is used as an unique identifier. If the email already exists, you can choose to update the existing user.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="e3-callout e3-callout-info">
+                                <h4>Optional fields</h4>
+                                <ul>
+                                    <li><code>gender</code> -
+                                        User gender. Use <code>m</code> or <code>f</code> in lowercase.
+                                    </li>
+                                    <li><code>phone</code> -
+                                        User phone.
+                                    </li>
+                                    <li><code>password</code> -
+                                        User password. When the user is being created, the system tries to read the password field. If no password is provided, the system
+                                        will create a random password, which will be displayed in the preview section.
+                                        <p>
+                                            The password for existing users can be changed using the <code>Password options</code> in the preview section.
+                                        </p>
+                                    </li>
+                                    <li><code>designator</code> <em>(<code>Required when the action involves courses</code>)</em> -
+                                        Used to identify if the user will be enrolled in a course or in a group. Use <code>course</code> or <code>group</code> in lowercase
+                                    </li>
+                                    <li><code>coursegroup1</code>, <code>coursegroup2</code>.. -
+                                        Courses or groups where the action will be performed. Use the course/group id (integer). If the <code>designator</code> field is <em><code>course</code></em> the user will need to input the course ID. If the <code>designator</code> field is <em><code>group</code></em> then input the group ID.
+                                    </li>
+                                    <li><code>language</code> <em>(Default: <code>en</code>)</em> -
+                                        2 letter identification for the user's preferred language.
+
+                                        <div class="languages">
+                                            <ul >
+                                                <li><code>ar</code> - Arabic</li>
+                                                <li><code>de</code> - German</li>
+                                                <li><code>en</code> - English</li>
+                                                <li><code>fr</code> - French</li>
+                                                <li><code>jp</code> - Japanese</li>
+                                                <li><code>km</code> - Cambodian</li>
+                                                <li><code>ko</code> - Korean</li>
+                                                <li><code>pt</code> - Portuguese</li>
+                                                <li><code>th</code> - Thai</li>
+                                                <li><code>vi</code> - Vietnamese</li>
+                                                <li><code>zh</code> - Chinese</li>
+                                            </ul>
+                                        </div>
+
+                                    </li>
+                                    <li><code>expiration_date</code> -
+                                        User expiration date. Use <code>YYYY-MM-DD</code>. <em>Ex: 2015-12-31</em>
+                                    </li>
+                                    <li><code>role</code> -
+                                        User role identifier.
+                                        <p><code>S</code> Student</p>
+                                        <p><code>T</code> Teacher</p>
+                                        <p><code>E</code> Editor</p>
+                                        <p><code>O</code> Observer</p>
+                                        <p>You can combine Teacher and Editor using a <code>,</code>. <em>Ex: T,E</em></p>
+                                    </li>
+                                    <li><code>action</code> -
+                                        You can leave it empty when creating users or updating user data. If you want to do something else you can use one of the keys shown below.
+                                        <p><code>S</code> Suspend user from courses</p>
+                                        <p><code>L</code> Lock or disable user account</p>
+                                        <p><code>U</code> Unenroll</p>
+                                        <p><code>UN</code> Unsuspend</p>
+                                        <p><code>UL</code> Unlock</p>
+                                        <p><code>D</code> Delete user account</p>
+
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </section>
+                    <section id="settings">
+                        <div class="page_header">
+                            <h3 class="pointer" ng-click="showSettings=!showSettings">Settings <i class="fa" data-ng-class="showSettings?'fa-angle-down':'fa-angle-right'"></i></h3>
+                        </div>
+                        <div ng-show="showSettings">
+                            <div class="e3-callout e3-callout-info">
+                                <h4>Update type</h4>
+                                <ul>
+                                    <li><code>Add new only, skip existing users</code>: If this option is selected, the system will ignore existing users and will only create the new users listed in the .csv file.</li>
+                                    <li><code>Add new and update existing users</code>: If this option is selected the system will update existing users and add new users.</li>
+                                    <li><code>Update existing users only</code>: If this option is selected, the system will ignore new users and only update existing users.</li>
+                                </ul>
+                            </div>
+                            <div class="e3-callout e3-callout-info">
+                                <h4>Existing user details</h4>
+                                This refers to personal info, not enrollment data.
+                                <ul>
+                                    <li><code>No changes</code>: If this option is selected, the system will only update course enrollment and account settings and will ignore any change to personal data.</li>
+                                    <li><code>Override with file</code>: If this option is selected, the system will overwrite the user's information stored in the database with the information provided in the .csv file.</li>
+                                    <li><code>Fill in missing data using file</code>: If this option is selected, the system will use the information contained in the .csv file to fill in any missing data in the database.</li>
+                                </ul>
+                            </div>
+                            <div class="e3-callout e3-callout-info">
+                                <h4>Existing user password</h4>
+                                <ul>
+                                    <li><code>No changes</code></li>
+                                    <li><code>Update using file</code>: If this option is selected and if the user leaves the password field empty in the .csv file, we will generate a random password.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->

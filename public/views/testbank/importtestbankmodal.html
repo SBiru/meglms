@@ -1,0 +1,89 @@
+<div class="testbank-import-modal">
+	<div class="modal-header">
+		<!-- close button -->
+		<button type="button" class="close " ng-click="cancel()">
+			<div class="btn btn-danger btn-sm">
+				<span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+				<span class="sr-only">Close</span>
+			</div>
+		</button>
+		<h4 class="modal-title">Import Testbanks</h4>
+	</div>
+	<div class="modal-body">
+		<small>Select a file to import its content as testbanks. If you select a text file, a single testbank will be created. If a compressed group of files is selected, a testbank will be created for each text file found in it. The system will attempt to read every type of file, but the xml structure must be correct:</small>
+		<h4><small> </small></h4>
+		<div ng-show="courses">
+
+			<!-- FORM (UPLOAD) -->
+			<div ng-show="!complete">
+				<div class="btn btn-default btn-sm" ngf-select ngf-change="check($files)" ng-disabled="importing">Select File</div>
+			</div>
+			<div ng-show="selected && !complete">
+				<div>
+					<strong>File:</strong>
+					<span ng-bind="selected.name"></span>
+				</div>
+				<div>
+					<strong>Select Target Course:</strong>
+					<select ng-model="selected.courseId" ng-options="course.id as course.name for course in courses"></select>
+				</div>
+				<div class="btn btn-primary btn-sm" ng-disabled="!selected.ready || !selected.courseId || importing" ng-click="import()">
+					<div ng-hide="importing">Import</div>
+					<div ng-show="importing">Importing <i class="fa fa-spin fa-spinner"></i></div>
+				</div>
+			</div>
+
+			<!-- UPLOADING -->
+			<div ng-show="importing && !complete">
+				<strong>Progress:</strong>
+				<span ng-bind="progress"></span>
+				<span>% completed</span>
+				<span ng-show="progress === 100">- Importing...</span>
+			</div>
+
+			<!-- EVERYTHING FINISHED SUCCESSFULLY -->
+			<div ng-show="complete && (data.testbank || data.testbanks)">
+				<hr>
+				<div>
+					<h5><strong class="text-success">File successfully imported</strong></h5>
+					<h4><small>You must reload the page in order to show the newly created testbank(s)</small></h4>
+				</div>
+				<!-- ONE TESTBANK -->
+				<div ng-if="!data.multiple">
+					<div>
+						<strong>File:</strong>
+						<span ng-bind="data.fileName"></span>
+					</div>
+					<div>
+						<strong>Testbank:</strong>
+						<span ng-bind="data.testbank.title + ' (' + (data.testbank.questions.length || '0') + ' questions)'"></span>
+					</div>
+				</div>
+				<!-- MULTILPLE TESTBANKS -->
+				<div ng-if="data.multiple">
+					<div>
+						<strong>File:</strong>
+						<span ng-bind="data.fileName + ' (' + (data.files.length || '0') + ' compatible files)'"></span>
+					</div>
+					<div>
+						<strong>Testbanks created:</strong>
+					</div>
+					<div ng-repeat="testbank in data.testbanks">
+						<i class="fa fa-check"></i>
+						<span ng-bind="testbank.title + ' (' + (testbank.questions.length || '0') + ' questions)'"></span>
+					</div>
+				</div>
+				</div>
+			</div>
+
+			<!-- ERROR -->
+			<h4>
+				<strong class="text-danger" ng-show="error" ng-bind="error"></strong>
+			</h4>
+			<!-- ERROR -->
+			<h5 ng-show="complete && (!data.testbank && !data.testbanks)">
+				<strong class="text-danger">File was uploaded and tested, but no testbanks were found in it</strong>
+			</h5>
+		</div>
+	</div>
+</div>

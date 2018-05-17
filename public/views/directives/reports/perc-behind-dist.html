@@ -1,0 +1,49 @@
+<div ng-if="error" data-ng-bind="error" class="alert alert-danger"></div>
+<div data-ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div data-ng-hide="loading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div>
+                Select a class
+                <select
+                        class="width-100"
+                        data-ng-model="selectedClass"
+                        data-ng-change="selectClass()"
+                        data-ng-options="class.id as class.name for class in classes">
+                </select>
+            </div>
+        </div>
+        <div class="panel-body" >
+            <div class="col-sm-4 col-xs-12 students-container">
+                <canvas id="pie" class="chart chart-pie margin-bottom-15"
+                        chart-colours="colors"
+                        chart-click="onClick"
+                        chart-options="chartOptions"
+                        chart-data="data" chart-labels="labels" legend="{{true}}"
+                ></canvas>
+            </div>
+            <div class="col-sm-8 col-xs-12 students-container">
+                <div class="col-xs-4 students-container width-100" ng-repeat="students in students track by $index">
+                    <div class="panel panel-default student-tab" >
+                        <div class="panel-heading" data-ng-bind="labels[$index] + ' ('+students.length+')'"></div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr class="student"
+                                    data-ng-repeat="student in students | orderBy:'name'">
+                                    <td data-ng-bind="student.name"></td>
+                                    <td ng-class="{'text-success':student.percBehind<0}" data-ng-bind="formatProgress(student.percBehind)"></td>
+                                </tr>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>

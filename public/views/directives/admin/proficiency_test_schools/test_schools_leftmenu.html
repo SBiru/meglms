@@ -1,0 +1,30 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-text navbar-title" style="font-size: 20px">Schools</div>
+        <button type="button" class="btn btn-default navbar-btn btn-sm" ng-click="addNew()" style="margin-top: 15px;">Add new</button>
+    </div>
+</nav>
+<ul class="nav nav-list nav-pills nav-stacked">
+    <li role="presentation">
+        <div class="filter-group">
+            <input placeholder="Search for a school">
+        </div>
+
+
+    </li>
+</ul>
+<ul class="nav nav-list nav-pills nav-stacked">
+    <li role="presentation" class="nav-divider"></li>
+    <li role="presentation" ng-show="model.loading.schools==1">
+        Loading <span class="fa fa-spinner fa-pulse"></span>
+    </li>
+    <li role="presentation" ng-show="model.loading.schools==2">
+        Sorry, something went wrong.
+    </li>
+    <li role="presentation" class="school-name" data-ng-repeat="school in model.schools | orderBy:'name'" ng-class="{'active':model.selectedSchoolId==school.id}">
+        <a ng-click="selectSchool(school.id)">
+            <span ng-bind="school.name"></span>
+            <span class="fa fa-trash pull-right pointer" ng-click="removeSchool(school.id,$event)" ></span>
+        </a>
+    </li>
+</ul>

@@ -1,0 +1,90 @@
+
+<div ng-style="chatclass" class="userList chatclass">
+    <div class="top-buttons clearfix">
+        <i class="fa fa-user"></i>
+        <span class="dropdown pointer" style="position:relative;" ng-show="$root.user.is_teacher">
+            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-mouseenter="hovering=true" ng-mouseleave="hovering=false">
+            <span class="show-status-text">{{hideFromOthers? "Offline":"Online"}}</span>
+            <span class="fa pointer dropdown-toggle" id="dropdownMenu"
+                  ng-class="{'fa-circle':!hovering, 'status-icon':!hovering, 'fa-caret-down':hovering, 'fa-2':hovering, 'offline-icon':hideFromOthers, 'online-icon':!hideFromOthers}"></span>
+            </span>
+            <span id="status-tooltip" class="status-tooltip" ng-if="hovering">Change status</span>
+            <ul class="dropdown-menu status-menu" aria-labelledby="dropdownMenu">
+                <li ng-click="setHideFromOthers(false)"><a><span class="fa fa-circle status-icon online-icon"></span> Online</a></li>
+                <li ng-click="setHideFromOthers(true)"><a><span class="fa fa-circle status-icon offline-icon"></span> Offline</a></li>
+
+            </ul>
+        </span>
+
+        <div class="pull-right">
+            <span class="fa fa-minus pointer chat-icons" ng-click="closeChat()"></span>
+        </div>
+    </div>
+    <div class="sort-by-wrapper" ng-hide="hasOnlyOneClass()">
+        <span>Sort by:</span>
+        <span class="btn-group">
+            <label class="btn btn-default" ng-model="sortBy.type" btn-radio="'user'">User</label>
+            <label class="btn btn-default" ng-model="sortBy.type" btn-radio="'class'" >Class</label>
+            <label class="btn btn-default" ng-model="sortBy.type" btn-radio="'site'" ng-show="hasTeacherRole()">Site</label>
+        </span>
+    </div>
+    <div class="filter-wrapper">
+        <table class="list-inline">
+            <tr>
+                <td ng-repeat="tab in tabs" class="pointer" ng-class="{active:currentTab==tab.label}" ng-click="changeTab(tab.label)" >
+                    <span ng-bind="tab.label"></span>
+                    <span ng-show="tab.unreadFunction()>0" ng-bind="'(' + tab.unreadFunction() + ')'"></span>
+                </td>
+            </tr>
+        </table>
+        <div class="search-user">
+            <div class="inner-addon left-addon">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Search" class="form-control" ng-model="filterUser" />
+            </div>
+        </div>
+    </div>
+    <div class="btn btn-default btn-xs pull-right" ng-hide="noUsersAvailable()" ng-click="collapseAll=!collapseAll">
+        {{collapseAll?'Expand all':'Collapse all'}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="users">
+        <div class="no-users" ng-show="noUsersAvailable()">
+            <div>
+                No users available
+            </div>
+        </div>
+        <div class="no-users" ng-show="loadingOfflineUsers">
+            <div>
+                Loading
+                <span class="fa fa-pulse fa-spinner"></span>
+            </div>
+        </div>
+        <div ng-hide="noUsersAvailable()">
+
+            <div ng-if="sortBy.type=='user'">
+                <div e3-chat-user-group group="{users:visibleUsers.teachers,title:'Teachers',collapseAll:collapseAll}" filter-user="filterUser"></div>
+                <div e3-chat-user-group group="{users:visibleUsers.students,title:'Students',collapseAll:collapseAll}" hide-picture="true" filter-user="filterUser"></div>
+                <div ng-if="visibleUsers.groups" e3-chat-user-group group="{users:visibleUsers.groups,title:'Groups',hideDetails:true,collapseAll:collapseAll}" filter-user="filterUser" hide-picture="true"></div>
+            </div>
+            <div ng-if="sortBy.type=='class'">
+                <div ng-repeat="class in visibleUsers" ng-if="class.hasEntries">
+                    <span ng-bind="class.name" class="class-name"></span>
+                    <div e3-chat-user-group group="{users:class.students,title:'Students',collapseAll:collapseAll}" filter-user="filterUser" class="by-class"></div>
+                    <div e3-chat-user-group group="{users:class.teachers,title:'Teachers',collapseAll:collapseAll}" filter-user="filterUser" class="by-class"></div>
+                </div>
+            </div>
+            <div ng-if="sortBy.type=='site'">
+                <div ng-repeat="site in visibleUsers">
+                    <div e3-chat-user-group group="{users:site.users,title:site.name,collapseAll:collapseAll}" filter-user="filterUser" class="by-class"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<e3-chat-group ng-style="chatclass" class="chatBoxGroup chatclass"  boxes="openedBoxes"></e3-chat-group>
+<div chat-user-details class="chat-user-details" user="hoveredUser" role="hoveredUser.isTeacher?'teacher':'student'" ng-if="hoveredUser"></div>
+

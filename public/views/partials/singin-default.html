@@ -1,0 +1,12 @@
+<form method="post" action="/signin/" class="form-signin" role="form" >
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <input type="email" id="username" name="username"  ng-model="user.email" class="form-control" placeholder="Email address"  autofocus>
+    <input type="password" id="password" name="password"  class="form-control" placeholder="Password" >
+    <p class="alert-warning" ng-show='isCapsLockOn'>Caps lock is on</p>
+    <!-- <a ng-click="resetPassword()" style="cursor:pointer">Forgot password?</a> -->
+    <div>If you forget your password, please e-mail <a href="mailto:support@english3.com">support@english3.com</a></div>
+    <br />
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <a class="btn btn-lg btn-primary btn-block" href="/new-license" ng-show="showRegisterWithLicenseButton()">Register with a license code</a>
+    <p class="msgError">{{msgError}}</p>
+</form>

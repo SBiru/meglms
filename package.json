@@ -1,0 +1,23 @@
+{
+  "name": "english3-meglms",
+  "version": "2018.04.05",
+  "devDependencies": {
+    "gulp": "~3.9.0",
+    "gulp-concat": "~2.6.0",
+    "gulp-dest": "~0.2.3",
+    "gulp-git": "~1.6.0",
+    "gulp-inject": "~3.0.0",
+    "gulp-remove-files": "0.0.3",
+    "gulp-rename": "~1.2.2",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-uglify": "~1.5.1",
+    "gulp-uglifycss": "~1.0.5",
+    "jasmine": "~2.4.1",
+    "jasmine-node": "~1.14.5",
+    "jasmine-sinon": "~0.3.2",
+    "request": "~2.69.0",
+    "require-dir": "~0.3.0",
+    "sinon": "~1.17.3"
+  },
+  "dependencies": {}
+}

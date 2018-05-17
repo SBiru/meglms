@@ -1,0 +1,103 @@
+<div ng-controller="ContentController">    
+    <h2>{{ pagename }}</h2>
+    <hr />
+    <p ng-bind-html="contenthtml"></p>        
+    <hr />
+    <button type="button" class="btn btn-primary btn-sm" style="margin-top:7px; margin-bottom:7px" data-toggle="modal" data-target="#basicModal">Reply</button>
+    <div class="well">
+    <ul class="media-list">
+      <li class="media">
+        <a class="pull-left" href="#">
+          <img class="media-object" data-src="holder.js/64x64" alt="Avatar">
+        </a>
+        <div class="media-body">
+          <h4 class="media-heading">John Buonagurio</h4>
+          <img class="media-object" data-src="holder.js/160x120" alt="Video Post">
+          <button type="button" class="btn btn-primary btn-sm" style="margin-top:10px" onclick="openMegCapture(&quot;20140727193212VUOs6dFzoM&quot;,&quot;&quot;,1,0,&quot;&quot;,0,&quot;&quot;,&quot;&quot;,&quot;20140727193212VUOs6dFzoM&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;)">Reply</button>
+          <div class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object" data-src="holder.js/64x64" alt="Avatar">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading">Mike Griffiths</h4>
+              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+              <div class="media">
+                <a class="pull-left" href="#">
+                  <img class="media-object" data-src="holder.js/64x64" alt="Avatar">
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">John Buonagurio</h4>
+                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object" data-src="holder.js/64x64" alt="Avatar">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading">Don Flake</h4>
+              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    </div>
+</div>
+
+
+
+<!-- bootstrap modal -->
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Reply</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Beginning Of Flash Video Recorder -->
+			<div id="meg_capture_container1" class="meg_capture_container_active">
+				<div style="width:auto; height:auto;">
+					<div id="webcamarea">
+						<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="380px" height="280px">
+							<param name="movie" value="meg-red-flexible.swf?videofile=20140727193212VUOs6dFzoM&amp;rtmpserver=rtmp://ec2-54-186-123-190.us-west-2.compute.amazonaws.com/vod">
+							<!--[if !IE]>-->
+								<object id="bob" type="application/x-shockwave-flash" data="meg-red-flexible.swf?videofile=20140727193212VUOs6dFzoM&amp;rtmpserver=rtmp://ec2-54-186-123-190.us-west-2.compute.amazonaws.com/vod" width="340px" height="280px">
+							<!--<![endif]-->
+									<table style="margin-top:10px">
+										<tbody>
+											<tr>
+												<td width="20px"></td><td><p>Flash object is not working on your browser. If your using a mobile device, click on upload to record your video. If not, then flash has not been set up correctly.</p></td>
+												<td width="20px"></td>
+											</tr>
+										</tbody>
+									</table>
+							<!--[if !IE]>-->
+								</object>
+							<!--<![endif]-->
+						</object>
+					</div>
+					<br />
+					<div id="buttonsarea" align="center">
+						<img src="img/recordbttn.png" id="button" onclick="callAS(bob,$newvideofile)"> &nbsp;&nbsp; <img id="submitted" src="./img/submitbttn.png" onclick="clicksubmit(&quot;20140727193212VUOs6dFzoM&quot;,&quot;&quot;,&quot;1&quot;,&quot;0&quot;,&quot;&quot;,&quot;0&quot;,&quot;&quot;,&quot;&quot;,&quot;20140727193212VUOs6dFzoM&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;0&quot;)">
+					</div>
+					<div id="bottompart"> 
+						<p align="center">If necessary, add a text comment below. <br>Click submit when you are finished.</p>
+					</div>
+					<br />
+					<div id="commentsarea" align="center">
+						<textarea name="comments" id="comments" cols="35" rows="3"></textarea>
+					</div>
+				</div>
+			</div>
+                <!-- End Of Flash Video Recorder -->
+	     </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>

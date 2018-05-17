@@ -1,0 +1,35 @@
+<div ng-include="'/public/views/partials/admin/addorganizationuser.html'" ng-controller="AddOrganizationUsersController"></div>
+<p ng-bind="userAdded?'User was successfully added':''"></p>
+<div>
+	<h4>Enroll User For Class {{ className }} <span ng-show="groupInfo"> - {{groupInfo.name}}</span></h4>
+	<table class="classuser_type">
+		<tr>
+			<td><input type="checkbox" id="is_student" ng-model="is_student"><label for="is_student">Is Student</label></td>
+			<td><input type="checkbox" id="is_teacher" ng-model="is_teacher"><label for="is_teacher">Is Teacher</label></td>
+			<td><input type="checkbox" id="is_edit_teacher" ng-model="is_edit_teacher"><label for="is_edit_teacher">Is Content Editor</label></td>
+			<td><input type="checkbox" id="is_observer" ng-model="is_observer"><label for="is_edit_teacher">Is Observer</label></td>
+		</tr>
+		<tr>
+
+			<td style="padding:15px 20px"><button type="button" class="btn btn-primary btn-sm" ng-click="addUser()">Enroll User</button></td>
+
+		</tr>
+
+	</table>
+	<!--<table>-->
+		<!--<tr>-->
+			<!--<td style="padding-bottom:15px;"><label for="userToEnroll" class="control-label" style="font-size:1.4em">User</lable></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><select id="userToEnroll" name="userToEnroll" ng-model="userToEnroll" ng-options="user.fname + ' ' + user.lname for user in users" class="form-control ng-pristine ng-valid ng-valid-required" required><option value="">--Select User--</option></select></td>-->
+		<!--</tr>-->
+              <!--<tr>-->
+                     <!--<td style="padding-bottom:15px;width:100px;"><label for="userType" class="control-label" style="font-size:1.4em">Type</label></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><select id="userType" name="userType" ng-model="userType" ng-options="type.name for type in types" class="form-control ng-pristine ng-valid ng-valid-required" required><option value="">--Select Type--</option></select></td>-->
+
+			<!--<td style="padding-bottom:15px; padding-left:20px;" ng-show="userType.name=='teacher'"><input type="checkbox" id="content_editor" ng-model="is_content_editor"><label for="content_editor"> Content Editor</label></td>-->
+              <!--</tr>-->
+		<!--<tr>-->
+			<!--<td style="padding-bottom:15px;"></td>-->
+			<!--<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="addUser()">Enroll User</button></td>-->
+		<!--</tr>-->
+	<!--</table>-->
+</div>

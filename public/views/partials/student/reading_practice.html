@@ -1,0 +1,13 @@
+<div ng-if="need_password">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="user_password">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+      </span>
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+</div>
+<div class="" ng-if="!need_password">
+    <iframe class='reading_practice' ng-src="{{src}}"/>
+</div>

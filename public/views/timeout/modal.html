@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="iamhere()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Warning</h4>
+</div>
+<div class="modal-body">
+    Are you still with us?
+    <timer finish-callback="logout()" id="contdown-timer" countdown="timeleft" interval="1000">{{minutes}} minutes, {{seconds}} seconds</timer>
+    <!--<timer  end-time="1451628000000" ></timer>-->
+</div>
+<div class="modal-footer">
+    <div class="btn btn-primary btn-sm" data-ng-click="iamhere()">
+        <span>Wait, I'm here!</span>
+    </div>
+
+</div>

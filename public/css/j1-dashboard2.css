@@ -1,0 +1,323 @@
+.j1-dashboard-container{
+    position: relative;
+    background: rgb(249,249,249);
+    margin: 0 0 20px -3px;
+}
+.j1-dashboard-container [ui-view="sidebar"]{
+    height: 100%;
+}
+.j1-dashboard-container .sidebar{
+    width: 30%;
+    max-width: 386px;
+    height: calc(100%);
+    position: relative;
+    top:0;
+    background: white;
+    overflow: hidden;
+    box-shadow: 1px 0px 2px #ccc;
+    z-index: 0;
+    transition: all 0.5s ease;
+    border-left: 4px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+
+}
+.j1-dashboard-container .sidebar.ng-hide-add {
+    -webkit-animation:0.5s hide ease;
+    animation:0.5s hide ease;
+    display: block !important;
+}
+.j1-dashboard-container .sidebar.ng-hide-remove {
+    -webkit-animation:0.5s show ease;
+    animation:0.5s show ease;
+    display: block !important;
+}
+@keyframes hide {
+    0% {
+        left:0;
+
+    }
+    100% {
+        left:-1000px;
+    }
+}
+@keyframes show {
+    0% {
+        left:-1000px;
+
+    }
+    100% {
+        left:0;
+    }
+}
+
+.j1-dashboard-container .toggle-sidebar{
+    position: fixed;
+    font-size: 20px;
+    top: 65px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 100;
+    display: none;
+}
+
+.j1-dashboard-container .classes-container .selectize-input > div{
+    color: #ab2121;
+    font-size: 20px;
+}
+.j1-dashboard-container .classes-container .selectize-input:after{
+    border-color: #ab2121 transparent transparent transparent !important;
+}
+.j1-dashboard-container .classes-container{
+    padding: 0 20px;
+    text-align: center;
+    margin-bottom: -15px;
+    margin-top: 0;
+
+}
+.j1-dashboard-container .search-container{
+    padding: 20px;
+}
+.j1-dashboard-container .applicants-container{
+    height: calc(100% - 76px);
+}
+.j1-dashboard-container .applicants-container ul{
+    list-style: none;
+    padding: 0 0 0 20px;
+
+}
+.j1-dashboard-container .applicants-container ul:first-child{
+    margin-bottom: 0;
+}
+.j1-dashboard-container .applicants-container ul:nth-child(2){
+    overflow-y: scroll;
+    overflow-x: hidden;
+    min-height: calc(100% - 32px);
+    max-height: calc(100% - 32px);
+    position: relative;
+    margin-bottom: 0;
+}
+.j1-dashboard-container .applicants-container li > a{
+    color: inherit;
+    text-decoration: none;
+}
+
+.j1-dashboard-container .applicants-container li > a > div{
+    display: inline-block;
+    cursor: pointer;
+}
+.j1-dashboard-container .applicants-container li > a > div:nth-child(1){
+    width: calc(100% - 170px);
+}
+.j1-dashboard-container .applicants-container ul:nth-child(2) li > a > div:nth-child(1) {
+    width: calc(100% - 160px);
+}
+
+.j1-dashboard-container .applicants-container li > a > div:nth-child(2){
+    width:91px
+}
+.j1-dashboard-container .applicants-container li.header > a > div:nth-child(3){
+    width: 79px;
+}
+.j1-dashboard-container .applicants-container li > a > div:nth-child(3){
+    width:58px;
+    text-align: center;
+}
+.j1-dashboard-container .applicants-container .header{
+    color: #ab2121;
+    font-size: 17px;
+    padding: 5px;
+    border-bottom: 2px solid #ccc;
+}
+.j1-dashboard-container ul.nav li:hover {
+    background: #ccc;
+}
+
+.j1-dashboard-container .applicants-container li:not(.header){
+    font-size: 13px;
+    padding: 10px 0;
+    color: #656464;
+}
+.j1-dashboard-container .applicants-container li.active{
+    padding-left: 4px;
+    margin-left: -7px;
+    border-left: 3px solid #ab2121;
+    background: #f5f5f5;
+}
+
+.j1-dashboard-container .content{
+    width: 70%;
+    padding: 20px;
+    right: 0;
+    position: absolute;
+    top:0;
+    overflow: auto;
+    overflow-x: hidden;
+    height: 100%;
+
+}
+.j1-dashboard-container .content .section{
+    width: 100%;
+    min-width: calc(100% - 386px);
+    max-width: 1000px;
+    background: white;
+    min-height: 50px;
+    margin: auto;
+    box-shadow: 1px 1px 3px #9c9c9c;
+    margin-bottom: 10px;
+}
+.j1-dashboard-container .section.body,.section.footer{
+    padding:20px 10px;
+}
+.j1-dashboard-container .section.header > div {
+    display: inline-block;
+}
+.j1-dashboard-container .applicants-container span.student-name{
+    width: 120px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    top: 5px;
+    position: relative;
+}
+.j1-dashboard-container span.student-img{
+    background: #ab2121;
+    color: white;
+    border-radius: 15px;
+    padding: 7px 6px;
+    text-align: center;
+    font-size: 13px;
+    margin-left: 0;
+    margin-right: 3px;
+    text-transform: uppercase;
+}
+.j1-dashboard-container .section.header .student-name{
+    width:45%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    font-size: 17px;
+    color: #1ebbd4;
+}
+.j1-dashboard-container .section.header .student-email{
+    width:45%;
+    padding: 20px 10px;
+    position: relative;
+    top: -3px;
+
+}
+.j1-dashboard-container .section-heading{
+    font-size: 18px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ececec;
+
+}
+.j1-dashboard-container .interview-summary > div{
+    display: table-cell;
+    padding: 10px;
+    border: 1px solid #ececec;
+    border-right: none;
+    border-top: none;
+}
+.j1-dashboard-container .interview-summary > div:first-child{
+    border-left: none;
+    min-width: 150px;
+}
+.j1-dashboard-container .interview-summary > div:nth-child(2){
+    text-align: center;
+    min-width: 70px;
+}
+.j1-dashboard-container .interview-summary > div:last-child{
+    width: 100%;
+}
+.j1-dashboard-container .interview-summary .th{
+    font-weight: bold;
+}
+.j1-dashboard-container .interview-summary .info{
+    font-size: 14px;
+    color:#1ebbd4;
+}
+.j1-dashboard-container .btn-container > div{
+    width: 490px;
+    margin:auto
+}
+.j1-dashboard-container .btn-container > div > div:not(:first-child) {
+    margin-left:50px;
+}
+.j1-dashboard-container .btn-container > div > div{
+
+    display: inline-block;
+    float: left;
+    position: relative;
+    top: 4px;
+    text-align: center;
+}
+.btn-container span.fa{
+    color: #6d96b1;
+    font-size: 17px;
+    top: 1px;
+    position: relative;
+}
+.btn-flat.btn-flat-primary{
+    color: #0084bf;
+    border: 0;
+    box-shadow: inset 0 0 0 1px #0084bf;
+    border-radius: 2px;
+    padding: 5px;
+}
+.btn-flat.btn-flat-primary:hover{
+    background-color: #f4f1f1;;
+    color:#0084bf;
+    box-shadow: inset 0 0 0 2px #0073b1;
+
+}
+.j1-dashboard-container .student-video > div{
+    margin: 10px auto;
+}
+@media(max-width: 767px){
+    .j1-dashboard-container .sidebar{
+        width: 100%;
+        max-width: 386px;
+        z-index: 10;
+    }
+    .j1-dashboard-container .sidebar.hide{
+       width: 0 !important;
+    }
+    .j1-dashboard-container .content{
+        width: 100%;
+        padding: 20px;
+        top: 80px
+
+    }
+    .j1-dashboard-container .toggle-sidebar{
+        display: block;
+    }
+    .j1-dashboard-container .section.header .student-name{
+        width:100%;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ccc;
+
+    }
+    .j1-dashboard-container .section.header .student-email{
+        width: calc(100% - 70px);
+        padding: 10px;
+
+    }
+    .j1-dashboard-container .interview-summary > div{
+        display: inline-block;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+    .j1-dashboard-container .interview-summary > div:first-child{
+        border-left: 1px solid #ccc;
+        min-width: calc(100% - 75px);
+    }
+    .j1-dashboard-container .interview-summary > div:nth-child(2){
+        margin-left: -4px;
+        width: 74px;
+    }
+    .j1-dashboard-container .btn-container > div{
+        top:0;
+    }
+}
+

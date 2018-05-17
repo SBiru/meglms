@@ -1,0 +1,47 @@
+<button type="button" class="{{btnClass}}" ng-click="isProficiencyClass()?getFile($event):showTypes($event)"
+        data-ng-disabled="showPostTypes">{{btnText}}
+</button>
+<input type="file" ng-file-select="onFileSelect_($files,$event)" ng-show="false" multiple>
+<progressbar ng-show="showProgressBar" value="progress" type="success"></progressbar>
+<div ng-show="showPostTypes" class="text-post-wrapper">
+    <span class="btn btn-danger pull-right" ng-click="showTypes()">
+        <span class="fa fa-close "></span>
+    </span>
+    <div ng-hide="showLinkBox">
+        <div class="btn btn-primary" style="margin-right: 5px" ng-click="postFile()">{{selectedFiles?'Add':'Post'}} File</div>
+        <div class="btn btn-primary" ng-click="postLink()">Post Link</div>
+    </div>
+    <div ng-if="selectedFiles" style="margin-top: 10px;margin-bottom: 10px">
+        <div ng-repeat="file in selectedFiles track by $index" >
+            <div style="    padding: 8px;background: #f7f3f3;display: inline-block;border: 1px solid #ccc;margin-bottom: 5px;">
+                <span ng-bind="file.name"></span>
+                <span ng-bind="humanFileSize(file.size,true)"></span>
+                <span class="fa fa-close pointer" style="color:dimgrey " ng-click="removeFile($index)"></span>
+            </div>
+        </div>
+        <div class="btn btn-primary" ng-click="submitPost_('file','')">Submit</div>
+    </div>
+
+    <div ng-show="showLinkBox">
+        <input type="url" class="form-control" ng-model="fileLink" style="width: 70%;display: inline-block" value=""
+               placeholder="Paste the file link">
+        <div class="btn btn-primary" style="vertical-align: top;margin-left: 15px" ng-click="submit()">{{submit_file_automatically?'Submit':'Add link'}}</div>
+        <div ng-show="links" style="margin-top: 10px">
+            <div ng-repeat="link in links track by $index" >
+                <div style="    padding: 8px;background: #f7f3f3;display: inline-block;border: 1px solid #ccc;margin-bottom: 5px;">
+                    <span ng-bind="link"></span>
+
+                    <span class="fa fa-close pointer" style="color:dimgrey " ng-click="removeLink($index)"></span>
+                </div>
+            </div>
+            <div class="btn btn-primary" ng-click="submitLinks()">Submit</div>
+        </div>
+
+        <p style="
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 0;
+        ">If you are posting a link to a shared file, i.e. Google doc or Google sheet, please make sure you adjust the
+            sharing permission so others can open it.</p>
+    </div>
+</div>

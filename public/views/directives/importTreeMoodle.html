@@ -1,0 +1,68 @@
+<ul class="units">
+	<li ng-repeat="unit in data.units">
+		<div class="line" ng-class="{'greyed': !isIncluded(unit)}" ng-click="toggleInclude(unit)">
+			<i class="fa fa-check"></i>
+			<i class="fa fa-times"></i>
+			Unit: <span ng-bind="unit.name"></span>
+		</div>
+		<div class="unit-groups" ng-show="isIncluded(unit)">
+			<ul class="groups">
+				<li ng-repeat="pagegroup in unit.pageGroups">
+					<div ng-switch on="pagegroup.type">
+						<div ng-switch-when="lesson">
+							<div class="line" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+								<i class="fa fa-check"></i>
+								<i class="fa fa-times"></i>
+								Lesson: <span ng-bind="pagegroup.title"></span>
+							</div>
+							<ul class="pages" ng-show="isIncluded(pagegroup)">
+								<li ng-repeat="page in pagegroup.pages">
+									<div class="line" ng-class="{'greyed': !isIncluded(page)}" ng-click="toggleInclude(page)">
+										<i class="fa fa-check"></i>
+								<i class="fa fa-times"></i>
+										Page: <span ng-bind="page.title"></span>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="line" ng-switch-when="page" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Page: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="assign" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Assignment: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="book" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Book: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="journal" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Journal: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="resource" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Resource: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="quiz" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							Quiz: <span ng-bind="pagegroup.title"></span>
+						</div>
+						<div class="line" ng-switch-when="url" ng-class="{'greyed': !isIncluded(pagegroup)}" ng-click="toggleInclude(pagegroup)">
+							<i class="fa fa-check"></i>
+							<i class="fa fa-times"></i>
+							URL: <span ng-bind="pagegroup.title"></span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</li>
+</ul>

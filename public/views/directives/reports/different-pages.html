@@ -1,0 +1,86 @@
+<div data-ng-show="amIAdmin()" class="row">
+    <div class="col-xs-6">
+        <div data-ng-include="'public/views/directives/reports/components/select-teacher.html'"></div>
+    </div>
+</div>
+<div ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-hide="loading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    Select a class
+                    <select
+                            selectize
+                            data-ng-model="class.selected"
+                            data-ng-options="c.id as c.name for c in classes | filter:isTeacher| orderBy:'name'">
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div ng-show="report.classInfo" data-ng-bind="'Active students:'+ report.classInfo.studentCount"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" ng-if="report.pages.length">
+                <div class="col-sm-4 graph-container" >
+                    <div>Click on a bar to see the students' names</div>
+                    <canvas id="bar" class="chart chart-bar"
+                            chart-data="report.data"
+                            chart-labels="report.labels"
+                            chart-click="onClick"
+                            >
+                    </canvas>
+                    <div class="col-xs-12">
+                        <b>Avg. Different pages:</b>
+                        <span ng-bind="report.avg_diff_pages"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3"  ng-if="selectedGroup.label!==undefined">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span data-ng-bind="selectedGroup.label + ' ('+selectedGroup.students.length+')'"></span>
+                            <span class="fa fa-remove pointer pull-right" ng-click="closeSelectedGroup()"></span>
+                        </div>
+                        <div class="panel-body">
+                            <sortable-table
+                                    header="config.studentTableHeader"
+                                    rows="selectedGroup.students"
+                                    on-select="selectStudent"
+                                    table-height="250px">
+                            </sortable-table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default assignment-tab">
+                        <div class="panel-heading tooltip-relative">
+                            <span ng-bind="selected.student.id?selected.student.name:'All'"></span>
+                            Pages
+                        </div>
+                        <div class="panel-body">
+                            <input data-ng-model="config.pageFilter" placeholder="Filter">
+                            <div class="list-group assignments">
+                                <div data-ng-repeat="page in selected.student.pages | filter:config.pageFilter track by $index">
+                                    <a href="#"
+                                       class="list-group-item"
+                                       >
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td data-ng-bind="page.name" style="width: 60%"></td>
+                                                <td data-ng-bind="'Students: '+page.studentCount" style="width: 40%"></td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

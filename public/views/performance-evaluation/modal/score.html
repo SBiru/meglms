@@ -1,0 +1,87 @@
+<div class="gradebook-modal">
+    <div class="modal-header">
+        <!-- close button -->
+        <button type="button" class="close " ng-click="cancel()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+                <span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">Task and Grade Details</h4>
+    </div>
+    <div class="modal-body">
+        <render-page page-id="params.page.id" options="pageOptions" style="  height: 250px;overflow: auto;display: flex;padding: 8px;border: 1px solid #ccc;"></render-page>
+
+        <div ng-show="recalculating">We are recalculating the grades for this student <span class="fa fa-spinner fa-pulse"></span></div>
+        <div ng-show="!recalculating" style="padding: 8px;" class="row">
+            <div class="col-xs-12">
+                <div>Student: <span class="normal" ng-bind="params.student.lname + ', ' + params.student.fame"></span></div>
+                <div>Unit: <span class="normal" ng-bind="page.unit.number + ' - ' + page.unit.name"></span></div>
+                <div ng-if="page.parent">Page Group: <span class="normal" ng-bind="page.parent.name"></span></div>
+                <div>Page: <span class="normal" ng-bind="page.name"></span></div>
+                <div ng-show="!extraAttempt">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            Score:
+                            <span class="normal" ng-hide="isScored() || isExempt">Not Scored yet</span>
+                            <span class="exempt-highlight" ng-show="isExempt">Exempt</span>
+							<span class="normal" ng-show="isScored() && !isExempt">
+								<input class="edit-score" ng-model="score.initial" />
+								out of
+								<span ng-bind="params.page.maxScore"></span>
+								(<span ng-bind="scoreAsPercent()"></span>%)
+								<grader-non-submittable
+                                        ng-if="!params.page.requireSubmission "
+                                        params="params"
+                                        classInfo="classInfo"
+                                        page="params.page"
+                                        score="score"
+                                        options="{reload:false}"
+                                        style="  display: block;">
+                                </grader-non-submittable>
+							</span>
+                        </div>
+                    </div>
+                    <div ng-show="isOverriden && !isExempt && params.page.overrideOn">
+                        Edited by:
+						<span class="normal">
+							<span ng-bind="overridingUser.lastName + ', ' + overridingUser.firstName"></span>
+							<strong>on</strong>
+							<span ng-bind="params.page.overrideOn | date:'medium'"></span>
+						</span>
+                    </div>
+                    <div ng-show="isExempt">
+                        Comments:
+                        <span class="normal" ng-bind="params.page.exemptedComments"></span>
+                        <div class="exempt-comments normal">
+                            <textarea ng-show="addExemptComments !== null" ng-model="addExemptComments" placeholder="Enter any comments here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="page.quiz && page.quiz.completedAttempts">
+                    <div>
+                        Attempts:
+                        <span class="normal" ng-bind="page.quiz.completedAttempts + ' out of ' + getMaxAttempts()"></span>
+                    </div>
+                    <div>
+                        Submitted on:
+                        <span class="normal" ng-bind="page.quiz.submitDate | date:'medium'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" ng-show="!recalculating">
+        <button class="btn btn-primary pull-left" ng-hide="isScored() || isExempt" ng-click="addScore()">Add Score</button>
+        <button ng-show="showGiveExtra()" class="btn btn-warning pull-left btn-extra-attempt" ng-click="toggleExtraAttempt()" ng-class="{'selected': extraAttempt}" tooltip="Click to allow this student to take this quiz one more time" tooltip-placement="down">
+            <i class="fa fa-toggle-off" ng-hide="extraAttempt"></i>
+            <i class="fa fa-toggle-on" ng-show="extraAttempt"></i>
+            Extra attempt
+        </button>
+        <button class="btn btn-primary" ng-disabled="!canSave()" ng-click="save()">
+            <span ng-hide="saving">Save</span>
+            <span ng-show="saving">Saving...</span>
+            <i class="fa fa-refresh fa-spin" ng-show="saving"></i>
+        </button>
+    </div>
+</div>

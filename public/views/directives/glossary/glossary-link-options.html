@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h4><small>Select the page types to automatically link the glossary words</small></h4>
+        <div>
+            <button ng-click="selectAll()">Select all</button>
+            <button ng-click="clear()">Clear</button>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="column in columns">
+        <div data-ng-repeat="option in linkOptions | slice:column.start:column.end">
+            <input type="checkbox" ng-model="option.checked" data-ng-change="saveLinkOptions()"> <span ng-cloak>{{option
+        .label}}</span>
+        </div>
+    </div>
+</div>
+

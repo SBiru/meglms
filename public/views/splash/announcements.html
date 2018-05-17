@@ -1,0 +1,101 @@
+<div class="panel panel-default panel-announcements" ng-class="{expanded:announcementExpanded}" stop-digest data-ng-controller="AnnouncementsController" data-ng-show="announcements.length || showButtons() || class_announcements">
+    <div class="panel-heading">
+        <div class="title" ng-click="hideAnnouncements=!hideAnnouncements">
+            <div class="org pointer">
+                <span class="fa" ng-class="hideAnnouncements?'fa-plus':'fa-minus'"></span>
+                Announcements
+            </div>
+            <ul >
+                <li data-ng-show="showButtons() && !$root.hideAddAnnouncement" class="btn btn-default btn-sm" data-ng-click="open(null,$event)">
+                    <a>
+                        Add Announcement
+                    </a>
+                </li>
+                <li data-ng-show='class_announcements' class="class-announcements">
+
+                        <select selectize
+                                data-ng-options="c.announcements as c.name for c in class_announcements | orderBy:'-unViewedAnnouncements'"
+                                data-ng-model="announcements"></select>
+
+                </li>
+            </ul>
+            <div>
+                <input placeholder="Search for an announcement" ng-disabled="searching" style="    width: 200px;position: relative;margin-top: -2px;margin-left: 20px;" ng-model="searchTerm"  ng-click="$event.preventDefault();$event.stopPropagation()">
+                <span class="fa fa-pulse fa-spinner" ng-show="searching"></span>
+                <button ng-click="changedSearchTerm($event,searchTerm)">Search</button>
+            </div>
+
+            <div class="btn btn-default btn-sm expand-btn" ng-click="expand($event)" ng-show="showButtons({class_name:true}) && !$root.hideAddAnnouncement">
+                <span class="fa" ng-class="announcementExpanded?'fa-close':'fa-expand'" ></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="body" ng-hide="hideAnnouncements">
+        <ul class="list-group">
+            <li class="list-group-item"
+                data-ng-repeat="announcement in announcements"
+                ng-class="{
+                    'list-group-item-warning':!announcement.class_name || isViewed(announcement)===0,
+                    'expired-announcement':announcement.isExpired
+                }"
+                ng-if="showButtons() || !announcement.isExpired">
+                <div class="tools" ng-show="showButtons(announcement)">
+                    <div class="tool">
+                        <div class="btn btn-sm btn-default" tooltip="Edit" tooltip-placement="right" ng-click="open(announcement,$event)">
+                            <span class="fa fa-edit"></span>
+                        </div>
+                    </div>
+                    <div class="tool">
+                        <div class="btn btn-sm btn-default" tooltip="Remove" tooltip-placement="right" ng-click="remove(announcement)">
+                            <span class="fa fa-trash"></span>
+                        </div>
+                    </div>
+                </div>
+                <span ng-if="announcement.class_name" class="tooltip-relative">
+                    <b ng-bind-html="trustAsHtml(highlightSearch( announcement.class_name) + ':')"></b>
+                    <span ng-show="announcement.studentCount==0" class="label label-info pointer">
+                        all students
+                    </span>
+                    <span ng-show="announcement.studentCount>0" class="label label-info pointer"
+                          ng-bind="announcement.studentCount + ' students'"
+                          tooltip="Click to show the students" tooltip-placement="bottom"
+                          ng-click="announcement.showStudents=!announcement.showStudents"></span>
+                </span>
+                <span ng-if="!announcement.class_name">
+                    <b>General Announcement: </b>
+                </span>
+                <div class="clearfix"></div>
+                <div ng-show="announcement.showStudents" style="    display: inline-block;
+    min-width: 400px;
+    border: 1px solid #ccc;
+        margin: 5px 0;
+    padding: 5px;">
+                    <span  class="fa fa-close pointer  pull-right" ng-click="announcement.showStudents=false" ></span>
+                    <b>Students who can see this announcement:</b>
+
+                    <div data-ng-repeat="student in announcement.students" ng-bind="student.name"></div>
+                </div>
+                <span ng-bind-html="trustAsHtml(highlightSearch(announcement.text))">
+
+                </span>
+                <span ng-show="announcement.isExpired">
+                    (This announcement has been expired. Students are not able to see it)
+                </span>
+                <div>
+                    <b ng-show="announcement.start_date">Begins on:</b>
+                    <span data-ng-bind="announcement.start_date || announcement.created"></span>
+                </div>
+                <div ng-show="announcement.addExpirationDate">
+                    <b>Expires on:</b>
+                    <span data-ng-bind="announcement.expiration_date"></span>
+                </div>
+                <div ng-show="showViewedButton()">
+                    <button class="read btn  btn-primary" ng-show='!announcement.isViewed' ng-click="toggleViewed(announcement)"
+                            ng-bind="'I have read this announcement'"></button>
+                </div>
+            </li>
+            <li ng-show="loadingAnnouncements" style="padding: 20px">Loading... <span class="fa fa-spinner fa-pulse"></span></li>
+        </ul>
+    </div>
+</div>

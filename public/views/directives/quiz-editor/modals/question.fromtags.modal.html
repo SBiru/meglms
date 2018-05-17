@@ -1,0 +1,33 @@
+
+
+<style>
+
+</style>
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" ><em>Choose the tags and then select the questions you wish to add.</em></h4>
+    <!--<div>-->
+        <!--<em><a>Don't like it? Change to the old banks style</a></em>-->
+    <!--</div>-->
+</div>
+<div class="modal-body">
+    <div class="question-tags-filter">
+        <select-tags class="tag-search-wrapper" ng-model="selectedTagIds"></select-tags>
+        <div class="select-all-btn btn btn-primary" data-ng-disabled="!questions.length" ng-click="selectAll()">Select all</div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="loadingQuestions">Loading <span class="fa fa-spinner fa-pulse"></span></div>
+
+    <div e3-pagination-async update="changePage" config="paginationConfig" >
+        <div style="max-height: 300px;overflow-y:auto">
+            <edit-question $index="$index" type='select' question="question"  class=" question-display" ng-repeat="question in questions"></edit-question>
+        </div>
+
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="addQuestions()">Add Questions</button>
+</div>

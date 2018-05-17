@@ -1,0 +1,18 @@
+<div fabric-new-post>
+    <div class="modal-header">
+        New post
+        <span aria-hidden="true" ng-click="cancel()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+    </div>
+    <div class="modal-body">
+        <span class="fa fa-spinner fa-pulse" ng-show="!ready"></span>
+        <div ng-if="ready">
+            <fabric-previewer preview-id="templateId" ng-if="!allowEditor"></fabric-previewer>
+            <div fabric-editor template-id="templateId" save-file="saveFile" config="{useStudentFilter:true,onlyOwnerCanSave:true}" ng-if="allowEditor"></div>
+        </div>
+
+    </div>
+    <div class="modal-footer" style="width:100%;text-align:center">
+        <button type="button" class="btn btn-success" ng-click="ok()">Submit</button>
+    </div>
+</div>
+

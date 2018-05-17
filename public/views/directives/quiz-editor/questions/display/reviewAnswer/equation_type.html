@@ -1,0 +1,3 @@
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<div ng-if="question.is_correct=='-1' && question.extra.gradeType=='manual'"><p><em style="color:red">Waiting to be graded </em></p></div>
+<em  style="color:green">Your Answer </em>:<span>{{question.answeredMath}}</span>

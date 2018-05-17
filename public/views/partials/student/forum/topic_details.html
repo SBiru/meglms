@@ -1,0 +1,95 @@
+<style>
+    body {
+        overflow-x: hidden;
+        overflow-y: scroll !important;
+    }
+</style>
+<a ui-sref="forum.topics({pageId:topicVC.topic.pageid})">
+    Back to discussions
+</a>
+<a class="btn btn-info" ng-show="topicVC.settings.hasArchive" style="margin-left: 20px"
+   ng-click="topicVC.isArchive = !topicVC.isArchive">
+    {{topicVC.isArchive?'Hide':'Show'}} archived posts
+</a>
+<a class="pull-right" download ng-href="/api/classes/0/forum/topic/{{topicVC.topic.id}}/export">
+    Export discussion
+</a>
+
+<div class="alert alert-info" ng-show="topicVC.settings.type=='q_a' && topicVC.settings.hasNotPosted">
+    You will be able to see other students' responses after you post once.
+</div>
+<div class="forum-topic-search search-wrapper" >
+    <input placeholder="Search" ng-model="topicVC.searchTerm" data-ng-change="topicVC.onFilterChange()">
+    <i class="fa fa-search"></i>
+</div>
+<forum-topic-box topic="topicVC.topic" hidden-topics="topicVC.hiddenTopics" update-callback="topicVC.loadTopic"
+                 settings="topicVC.userSettings"
+                 is-archive="topicVC.isArchive"
+                 ng-if="topicVC.topic"></forum-topic-box>
+
+<script type="text/ng-template" id="topic-box.html">
+    <div class="standard-box" ng-hide="hiddenTopics[topic.id] || (isArchive && topic.is_deleted==='0')">
+        <div class="forum-topbar" ng-class="{unread:topic.created>topic.last_read,first:topic.title}">
+            <div>
+                <div class="topic" ng-bind="topic.title"></div>
+                <div><span ng-show="topic.title">by </span><span ng-bind="topic.author"></span> </div>
+            </div>
+
+            <div ng-bind="'#' + topic.index" ng-show="topic.index"></div>
+            <div class="spacer"></div>
+            <div><span class="time" ng-bind="topic.time"></span></div>
+
+        </div>
+        <div class="forum-middle" ng-hide="topic.is_deleted==='1' && !isArchive">
+            <div ng-bind-html="$root.trustAsHtml(topic.message)" ng-hide="vc.editing"></div>
+            <div ng-show="vc.editing">
+                <textarea ckeditor disable-double-bind="true" class="form-control" ng-model="topic.message"
+                          style="margin-bottom: 10px"></textarea>
+                <div style="margin: 10px 0">
+                    <div class="btn btn-primary pull-right" ng-click="saveReply(topic.id)">Save</div>
+                    <div class="btn btn-default pull-right" ng-click="vc.editing=false" style=" margin-right: 10px;">Cancel</div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="forum-middle" ng-show="topic.is_deleted==='1' && !isArchive" style="padding-bottom: 10px">
+            [DELETED]
+        </div>
+        <div class="forum-bottombar" ng-hide="vc.editing || topic.is_deleted">
+            <div ng-hide="vc.replying">
+
+                <a class="forum-bottom-action btn btn-sm btn-default" ng-click="vc.editing = true;reply = topic"
+                   ng-show="topic.canEdit">Edit</a>
+                <a class="forum-bottom-action btn btn-sm btn-primary" ng-click="vc.replying = true"
+                   style="margin-left: 5px">
+                    Reply</a>
+                <a class="forum-bottom-action btn btn-sm btn-danger" ng-click="delete(topic)"
+                   ng-show="topic.canDelete"
+                   style="margin-left: 5px"><span class="fa fa-trash-o"></span></a>
+
+            </div>
+            <div ng-show="vc.replying" class="forum-reply-box">
+                <textarea ckeditor disable-double-bind="true" class="form-control" ng-model="reply.message"
+                          style="margin-bottom: 10px"></textarea>
+                <div style="margin: 10px 0">
+                    <div class="btn btn-primary pull-right" ng-click="saveReply()">Reply</div>
+                    <div class="btn btn-default pull-right" ng-click="vc.replying=false" style=" margin-right: 10px;">Cancel</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="threading" data-ng-repeat="(id,child) in topic.children"
+         ng-hide="!isArchive && child.is_deleted==='1' && !hasValidChild(child)"
+         ng-if="topic.children">
+        <forum-topic-box topic="child"
+                         hidden-topics="hiddenTopics"
+                         settings="settings"
+                         is-archive="isArchive"
+                         update-callback="updateCallback"></forum-topic-box>
+    </div>
+</script>

@@ -1,0 +1,6 @@
+<!-- todo make this a switch? -->
+<button ng-click="recorder.start()" ng-disabled="!recorder.canStart">Start Recording</button>
+<button ng-click="recorder.stop()" ng-disabled="!recorder.canStop">Stop Recording</button>
+<video ng-src="{{previewUrl}}" muted="true" ng-show="!!previewUrl" autoplay></video>
+
+

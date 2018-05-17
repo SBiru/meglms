@@ -1,0 +1,238 @@
+
+/* override the bootstrap media */
+.col-sm-offset-1 {
+	margin-left: 8.33333333%;
+}
+
+.col-sm-11 {
+	width: 91.66666667%;
+}
+
+.nav >.sidebar-edit-child > a {
+	padding-left: 40px !important;
+}
+
+.sidebar-button {
+	left: 2px;
+	top: 70px;
+	position: absolute;
+	z-index: 99;
+}
+.sidebar-edit-item.active .move-arrows {
+	color:white
+}
+.sidebar-edit-item .move-arrows {
+	color:#428bca;
+	position: absolute;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.sidebar-edit-item .move-arrows .move-down {
+	cursor: s-resize;
+}
+
+.sidebar-edit-item .move-arrows .move-up {
+	cursor: n-resize;
+}
+
+/*Golabs when left menu is minimized Start*/
+.arrowsminleft,.arrowsminright
+{
+
+	font-size: 20px;
+	margin-top: -15px  !important;
+	width:11px;
+}
+.arrowsminleft{
+	margin-left: -8px;
+}
+.arrowsminright{
+	margin-left: -10px;
+}
+
+.arrowsmintext{
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	z-index:-1;
+}
+
+.arrowscontainerminleft,.arrowscontainerminright
+{
+	height: 20px !important;
+	width: 30%;
+}
+
+.arrowscontainerminleft
+{
+	float:left;
+}
+
+.arrowscontainerminright
+{
+	float:right;
+}
+/*Golabs when left menu is minimized end*/
+
+/* grades/dates */
+.quiz.overdue {
+	color: #a94442 !important;
+}
+
+.sidebar-nav-item.active .grade {
+	background: #eee;
+	border-radius: 5px;
+	padding: 0px 4px 0px 2px;
+}
+
+.grade.high {
+	color: #42a944 !important;
+}
+.grade.low {
+	color: #a94442 !important;
+}
+.grade.mid {
+	color: #333 !important;
+}
+/*.sidebar-edit-item .fa-trash{*/
+/*position: absolute;*/
+/*z-index: 1;*/
+/*top: 50%;*/
+/*transform: translateY(-50%);*/
+/*left: 5px;*/
+/*font-size: 17px;*/
+/*color: #428bca;*/
+/*}*/
+/*.sidebar-edit-item.active .fa-trash{*/
+/*color: white;*/
+/*}*/
+.sidebar-edit-item.moving a {
+	background: silver !important;
+}
+.sidebar-edit-item a{
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #a1a1a2;
+	border-radius: 0px !important;
+	padding-top: 15px !important;
+	padding-bottom: 15px !important;
+	padding-left: 30px !important;
+
+}
+.not_allowed a{
+	color: rgb(206, 206, 206);
+}
+.editor.tools{
+	left: -10px !important;
+}
+.editor-body > .tooltip > .tooltip-inner {
+	width: auto !important;
+	left:0 !important;
+	margin-top: 7px;
+
+}
+.tools{
+	position: absolute;
+	z-index: 2;
+	left: -10px;
+	transform: translateY(-50%);
+	top: 50%;
+
+}
+.tools .tool span{
+	font-size:12px;
+}
+.tools .btn-sm{
+	padding: 1px 2px;
+	width: 18px;
+	font-size:10px;
+	/* height: 28px; */
+}
+.tools .tool{
+	padding: 0px;}
+
+.tools .tooltip .tooltip-inner
+{
+	font-size:10px !important;
+	width:50px;
+}
+
+
+.move-here{
+	position: absolute;
+	bottom: 0;
+
+	left: 50%;
+	transform: translate(-50%,50%);
+	z-index: 10;
+}
+.move-here .btn{
+	padding: 0 5px;
+	font-size: 10px !important;
+}
+.collapse-menu-icon{
+	position: absolute;
+	/* left: 0; */
+	cursor: pointer;
+	z-index: 100000;
+	padding-top: 15px;
+	left: 15px;
+	font-size: 20px;
+
+}
+.edit-class-icon{
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
+	z-index: 100000;
+	padding-top:20px;
+	font-size: 20px;
+	top: -3px;
+}
+.exempt{
+	color:silver !important
+}
+.btn-edit{
+	position: absolute !important;
+	background-color: transparent !important;
+}
+.btn-edit{
+	left: -10px;
+	top: 4px;
+	padding-right: 0px !important;
+}
+li.sidebar-nav-child .btn-edit, li.sidebar-header .btn-edit{
+	left: -40px;
+
+}
+.text-with-edit{
+	margin-left: 5px;
+}
+.sidebar .sidebar-nav{
+	margin-top: 10px;
+}
+.sidebar .sidebar-nav.nav-pills>li.active>a, .sidebar .sidebar-nav.nav-pills>li.active>a:hover, .sidebar .sidebar-nav.nav-pills>li.active>a:focus {
+	color: #428bca;
+	background-color: #d9d9d9;
+}
+.sidebar .course-units-nav>li>a{
+	padding: 6px 15px;
+}
+.sidebar .course-name-wrapper{
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.unit-select .selectize-input{
+	font-size: 18px;
+	border: white;
+	font-style: italic;
+	text-align: center;
+	background-image: none !important;
+}
+select.unit-select option{
+	background: white;
+	color: black
+}
+

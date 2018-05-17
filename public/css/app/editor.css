@@ -1,0 +1,309 @@
+.panel.editor-panel{
+    padding: 2px 10px;
+}
+.teacher_info{
+    background-color: white;
+    padding: 5px 10px;
+    clear: both;
+}
+.photo_container{
+    width:20%;
+    float:left
+}
+.info_container{
+
+}
+.teacher_name{
+    color:#428bca;
+}
+.teacher_contact .icon{
+    margin-left: 0;
+    margin-right: 10px;
+    font-size: 12px;
+}
+.teacher_contact{
+    width: 80%;
+    float: right;
+}
+.teacher_contact .teacher-email{
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+}
+.phone{
+    font-size: 10px;
+    line-height: 2;
+}
+.office_hours{
+    font-size: 11px;}
+.office_hours td{
+
+    padding-left: 3px;
+    padding-right: 5px;
+
+}
+.info_container .links{
+    font-size:11px
+}
+.info_container .links a{
+    color:black;
+    cursor:pointer;
+}
+.photo_container .no-photo{
+    width:50px;
+    height: 50px;
+    background: #F7F7F7;
+}
+.photo_container .no-photo span{
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+    position: relative;
+    font-size: 25px;
+    color: rgb(186, 186, 186);
+}
+.editor .photo_container{
+    width: auto;
+    margin-top: 15px;
+    position: relative;
+}
+
+.modal-dialog .editor .photo_container{
+    width: 185px;
+    margin-top: 15px;
+    position: relative;
+    height: 200px;
+}
+.editor .photo_container .no-photo{
+    width:200px;
+    height: 200px;
+}
+.editor .photo_container .no-photo span{
+    font-size: 50px;
+}
+.photo_container .top{
+    width: 200px;
+    height: 55px;
+    background: rgba(0,0,0,0.3);
+    position: absolute;
+    top: 0px;
+    line-height: 4;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+.photo_container .top:hover{
+    background: rgba(0,0,0,0.4);
+}
+
+.info-form .input-group{
+    padding-top:10px;
+    padding-left: 15px;
+}
+img-crop{
+    height:338px !important;
+}
+.editor_dialog {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+.editor_dialog li {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    font-size: 20px;
+    display: flex;
+    background: white;
+}
+.editor_remove {
+    background: transparent;
+    color: #f88;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+}
+.standard_select{
+    width: 80%;
+}
+.page-control{
+    width: 50%;
+    float: left;
+}
+.editor-table > tbody > tr > td:first-child{
+    padding-bottom:5px;
+}
+.editor-table.left > tbody > tr > td:first-child{
+    width:120px;
+}
+.editor-table > tbody > tr > .info{
+    padding-left:10px;
+}
+.autograde table th,.autograde table td{
+    padding-left: 10px;
+}
+.autograde .spinner{
+    position: relative;
+}
+.autograde .panel-heading{
+    background: #f2f2f2;
+}
+.tooltip-relative .tooltip-inner{
+    position:relative !important;
+    width: auto !important;
+}
+
+.minimum_score{
+    width:100px;
+    display: inline;
+}
+.move-to-unit{
+
+    float: right;
+    margin-left: 10px;
+    font-size: 14px;
+    padding: 0 2px;
+}
+.move-to-unit:hover{
+    background:#428bca;
+    color:white;
+    border-bottom: 2px solid #3877AD;
+}
+
+.clone-quizzes{
+    color:orange;
+}
+.journal-grade-type{
+    padding:5px;
+}
+.btn-remove-question{
+    position: absolute;
+    right: 0;
+    margin-top: 7px;
+    margin-right: 20px;
+}
+vocab-config .select-row{
+    margin-bottom: 10px;
+}
+vocab-config{
+    display: block;
+
+}
+vocab-config .content{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+vocab-config .vocab-option{
+    position: relative;
+}
+vocab-config .vocab-option .glyphicon-unchecked{
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+}
+vocab-config .vocab-option .option{
+    padding: 10px 15px;
+}
+
+.editor-body.modal-open{
+    overflow: visible;
+}
+quiz-editor {
+    display: block;
+}
+quiz-editor .disabled {
+    width: 100%;
+    height: calc(100% - 70px);
+    margin-top: 70px;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    background: rgba(255,255,255,0.4);
+}
+.new-quiz-button .btn{
+    margin-bottom: 15px;
+}
+.edit-class-icon a{
+    color: black;
+    text-decoration: none !important;
+}
+
+[canvas-template-select] > span{
+
+}.course_description_image .upload-image{
+    width: 250px;
+    height: 150px;
+    border: dashed #ddd;
+    cursor: pointer;
+    background: white;
+}
+.course_description_image .upload-image .text {
+    position: relative;
+    top: calc(50% - 12px);
+    text-align: center;
+    font-size: 20px;
+    color: #888;
+}
+.course_description_image{
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+    max-width: 320px;
+}
+.course_description_title{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+}
+.course_description_title input{
+    border: 1px solid transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.course_description_body.editor div:hover{
+    background-color: #ddd;
+}
+.course_description_body textarea{
+    width: 100%;
+    height: 125px;
+}
+.course_description_table{
+    width: 100%;
+    margin-bottom: 30px;
+}
+.course_description_table input.credit{
+    width: 40px;
+}
+.course_description_table .has-dropdown > div > b{
+    top: -3px;
+    position: relative;
+}
+.course_description_table .has-dropdown > div{
+    display: inline-block;
+}
+
+.course_description_table .has-dropdown span.dropdown{
+    padding-left: 5px;
+    top:1px;
+    display: inline-block;
+}
+.course_description_table .has-dropdown span.dropdown .selectize-input {
+    padding: 0 15px 0 2px;
+    background: white;
+    min-width: 100px;
+}
+.course_description_table .has-dropdown span.dropdown .selectize-input:after {
+    right: 3px;
+}
+.course_description_table .has-dropdown span.dropdown .selectize-input:hover, .course_description_table .has-dropdown span.dropdown .selectize-input.input-active {
+    border: 1px solid #ccc;
+}
+.scorm_settings .form-control{
+    width: auto;
+    display: inline;
+}
+#pe_PropertyContainer{
+    font-size: 16px;
+}

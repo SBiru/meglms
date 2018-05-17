@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Enabled reports</h4>
+</div>
+<div class="modal-body">
+    <div class="col-sm-6">
+        <div class="small-heading">Students</div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_activity" />
+            Activity Report
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_attendance" />
+            Attendance
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_different_pages" />
+            Different Pages
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_not_logged_in" />
+            Not logged in
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_posts_per_student" />
+            Posts
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="small-heading">Courses</div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_grades" />
+            Grades
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_progress" />
+            Progress
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_time_spent" />
+            Time Spent
+        </div>
+        <div>
+            <input type="checkbox" ng-model="enabledReports.enable_report_grading_queue" />
+            Grading Queue
+        </div>
+    </div>
+</div>

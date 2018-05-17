@@ -1,0 +1,72 @@
+<div class='editor'>
+    <div class="photo_container">
+        <img width="200px" height="200px" src="{{me.data.profile_picture.meta_value}}" ng-if="me.data.profile_picture.meta_value">
+        <div class="no-photo" ng-hide="me.data.profile_picture.meta_value">
+            <span class="fa fa-camera"></span>
+        </div>
+        <div class="top" ng-click="open()">
+            Change profile photo
+        </div>
+    </div>
+    <div class="info-form">
+        <div class="row">
+            <div class="col-sm-5 input-group">
+                <span>Teacher: </span>
+                <select selectize
+                        ng-model="me.data.teacher.meta_value"
+                        ng-options="teacher.id as teacher.fname + ' ' + teacher.lname for teacher in teachers"></select>
+            </div>
+            <div ng-if="me.data.ignore_profile.meta_value">
+                <div class="col-sm-4">
+                    <div class="input-group input-group-md">
+                        <span class="input-group-addon"><i class=" fa fa-clock-o"></i></span>
+                        <input placeholder="Virtual Classroom Hours" type="text" id="vOfficeHours" ng-model="me.data.v_office_hours.meta_value" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="input-group input-group-md">
+                        <span class="input-group-addon"><i class=" fa fa-clock-o"></i></span>
+                        <input placeholder="Classroom Hours" type="text" id="OfficeHours" ng-model="me.data.office_hours.meta_value" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="input-group input-group-md">
+                        <span class="input-group-addon"><i class=" fa fa-lock"></i></span>
+                        <input placeholder="Virtual classroom url" type="text" id="officeUrl" name="officeUrl" ng-model="me.data.v_office_url.meta_value" class="form-control ng-pristine ng-valid ng-valid-required">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input type="checkbox" ng-model="me.data.show_for_student.meta_value">
+                    <label> Show profile for students</label>
+                </div>
+
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input type="checkbox" ng-model="me.data.ignore_profile.meta_value">
+                    <label> Ignore profile information</label>
+                </div>
+
+            </div>
+            <div class="col-sm-1 col-sm-offset-7">
+                <button ng-click="save()">
+                    <span ng-hide="saving">Save</span>
+                    <span ng-show="saving">Saving..</span>
+                </button>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+</div>

@@ -1,0 +1,92 @@
+page-requirements{
+    border: 1px solid #ccc;
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    margin-bottom: 15px;
+}
+.page-selector.modal .modal-dialog{
+    height: 90%;
+}
+.page-selector.modal .modal-content{
+}
+.page-selector.modal .modal-body{
+    padding: 0;
+    height: calc(100% - 130px);
+}
+
+.page-selector.modal .left{
+    position: fixed;
+
+    left: 1px;
+    /* padding: 10px; */
+}
+.page-selector.modal .left .unit{
+    padding: 5px 10px;
+
+    margin-bottom: 1px;
+    background-color: #e9e9ea;
+    color: #428bca;
+    cursor: pointer;
+}
+.page-selector.modal .right{
+    max-height: 100%;
+
+    position: relative;
+    overflow: auto;
+    margin-left: 35px;
+}
+.page-selector.modal .right .title{
+    background-color: #F8F8F8;
+
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 2px solid #ccc;
+    padding: 5px;
+}
+.page-selector.modal .right .body{
+    padding-left: 5px;
+
+}
+.page-selector.modal .right .page{
+    border-bottom: 1px solid #E8E8E8;
+
+    padding: 5px 2px;
+    display: block;
+}
+.page-selector.modal .right .page .page-checkbox{
+    transform: translateY(-50%);
+    float: right;
+}
+.page-selector.modal .right .page.header{
+    font-size: 12px;
+
+    font-weight: bold;
+    background-color: #F9F9F9;
+}
+.page-selector.modal .right .page.child{
+    padding-left: 20px;
+
+}
+.page-selector.modal .left .unit:hover{
+    background-color:#ccc;
+}
+
+.selected-pages-title{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.selected-page{
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    height:34px;
+}
+.selected-page .page-name{
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    width: 100%;
+}
+.btn-add-pages{
+    margin-top:10px;
+}

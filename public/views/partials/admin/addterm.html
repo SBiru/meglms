@@ -1,0 +1,21 @@
+<div>
+    <h2>Add Term</h2>
+    <table>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termName" class="control-label" style="font-size:1.4em">Name</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termName" name="termName" ng-model="term.name" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Term Name" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termStartDate" class="control-label" style="font-size:1.4em">Start Date</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termStartDate" name="termStartDate" ng-model="term.start_date" class="form-control ng-pristine ng-valid ng-valid-required date" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"><label for="termEndDate" class="control-label" style="font-size:1.4em">End Date</lable></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="termEndDate" name="termEndDate" ng-model="term.end_date" class="form-control ng-pristine ng-valid ng-valid-required date" required></td>
+        </tr>
+        <tr>
+            <td style="padding-bottom:15px;"></td>
+            <td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="addTerm()">Add Term</button></td>
+        </tr>
+    </table>
+</div>

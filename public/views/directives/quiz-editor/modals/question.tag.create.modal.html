@@ -1,0 +1,16 @@
+
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+
+</div>
+<div class="modal-body">
+    <div async-search ng-model="selectedTagId" options="tagOptions" search-method="startSearch"
+         config="selectizeConfig" on-initialize="onInitialize"></div>
+    <!--<div class="btn btn-primary" ng-show="showCreateButton" ng-click="createNew()" >Create and add tag</div>-->
+</div>
+<div class="modal-footer">
+    <div class="btn btn-primary" data-ng-disabled="!selectedTagId" ng-click="addTag()">Add</div>
+</div>
+

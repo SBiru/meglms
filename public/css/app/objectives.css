@@ -1,0 +1,38 @@
+table.objectives{
+    margin:auto;
+}
+table.objectives th,table.objectives td{
+    padding: 5px 10px;
+}
+.objectives .panel{
+    /* margin: 3px; */
+    padding:8px;
+}
+span.standard{
+    padding:3px;
+    border-radius:4px;
+    background: rgb(150, 150, 255);
+    margin:1px;
+    color:white;
+}
+.objectives {
+    background:  rgb(218, 218, 218);
+}
+.row.objective{
+    margin-left: 0;
+    margin-right: 0;
+    display: flex;
+}
+.bordered-page{
+    margin: 0 -10px;
+    border: 10px solid gray;
+    padding: 10px;
+}
+.bordered-page .objectives{
+    margin: -11px;
+    margin-bottom: 10px;
+}
+.rubric-btn{
+    top: 5px;
+    position: relative;
+}

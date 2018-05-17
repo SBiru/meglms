@@ -1,0 +1,106 @@
+<div ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-hide="loading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    Select a class
+                    <select
+                            selectize
+                            data-ng-model="selected.class"
+                            data-ng-options="c as c.name for c in classes | filter:isTeacher| orderBy:'name'">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 graph-container" ng-show="report.pages">
+                    <div>
+                        <b data-ng-show="selected.pageId=='all'" data-ng-bind="selected.class.name"></b>
+                        <b data-ng-show="selected.pageId!='all'" data-ng-bind="selected.page.name"></b>
+                    </div>
+                    <div>Click on a bar to see the students' names</div>
+                    <canvas id="bar" class="chart chart-bar"
+                            chart-data="config.data"
+                            chart-labels="config.labels"
+                            chart-click="onClick"
+                            >
+                    </canvas>
+                    <div class="col-xs-12">
+                        <b>Avg. posts per page:</b>
+                        <span ng-bind="(selected.pageId=='all'?report.avg:selected.page.avg)"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3"  ng-if="selectedGroup.label!==undefined">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span data-ng-bind="selectedGroup.label + ' ('+selectedGroup.students.length+')'"></span>
+                        </div>
+                        <div class="panel-body">
+                            <sortable-table
+                                    header="config.studentTableHeader"
+                                    rows="selectedGroup.students"
+                                    table-height="250px"
+                                    >
+                            </sortable-table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" ng-show="report.pages">
+                    <div class="panel panel-default assignment-tab">
+                        <div class="panel-heading tooltip-relative">
+                            Assignments
+                            <span class="fa fa-question-circle"
+                                  tooltip="Click on the assignment to load the posts distribution"></span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <table>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <th style="width: 60%">Page</th>
+                                            <th style="width: 30%;padding-left: 7px">Total / %Resubmission</th>
+                                        </tr>
+                                    </table>
+                                </table>
+                                <a href="#"
+                                   class="list-group-item"
+                                   data-ng-click="selectAssignment('all')"
+                                   data-ng-class="{active:selected.pageId=='all'}">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td><b>All</b></td>
+                                            <td  style="width: 25%"><b data-ng-bind="report.total + ' / ' + report.resubmissionPercentage + '%'"></b></td>
+                                        </tr>
+                                    </table>
+
+                                </a>
+
+                                <div class="assignments">
+
+                                    <a href="#"
+                                       data-ng-repeat="page in report.pages track by $index"
+                                       class="list-group-item"
+                                       data-ng-click="selectAssignment(page)"
+                                       data-ng-class="{active:selected.pageId==page.id}"
+                                            >
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td data-ng-bind="page.name" style="width: 75%"></td>
+                                                <td  style="width: 25%"><b data-ng-bind="page.total + ' / ' + page.resubmissionPercentage + '%'"></b></td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

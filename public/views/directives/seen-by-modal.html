@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="$dismiss()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Seen by <span ng-show="users.length" ng-bind="'('+users.length+')'"></span></h4>
+</div>
+
+<div class="modal-body">
+    <div><span class="fa fa-spinner fa-pulse" ng-show="loading"></span></div>
+    <div ng-repeat="user in users" ng-hide="loading" class="seen-by-row">
+        <span class="default-user-icon fa fa-user-o" ng-show="!user.profilePicture"></span>
+        <img ng-show="user.profilePicture" src="{{user.profilePicture}}" style="width:40px;height: 40px">
+        <div class="seen-by-user-info">
+            <div>
+                <span ng-bind="user.fname"></span>
+                <span ng-bind="user.lname"></span>
+            </div>
+            <div class="seen-by-country">
+                <span ng-bind="user.country"></span>
+            </div>
+        </div>
+
+    </div>
+</div>

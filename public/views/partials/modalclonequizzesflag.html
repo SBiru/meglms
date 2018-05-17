@@ -1,0 +1,14 @@
+<div class="modal-header btn-warning">Select the desired cloning option</div>
+<div class="modal-body">
+    <div class="alert">
+        By default when you clone a test/quiz, it only clones the shell (page) and it will still point to the original quiz/test. If you want to clone both the shell and the quiz/test you need to select the box for Clone both page and quiz/test
+    </div>
+
+    <input type="radio" name="cloneQuizzes" ng-model="cloneQuizzes" value="0"> Clone page only
+    <input type="radio" name="cloneQuizzes" ng-model="cloneQuizzes" value="1"> Clone both page and quiz/test
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-sm btn-primary" ng-click="ok()">Clone</button>
+</div>

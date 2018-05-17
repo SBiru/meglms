@@ -1,0 +1,18 @@
+<div class="testbank-filters" >
+    <div class="dropdowns">
+        <div class="filter row">
+            <div class="filterlabel col-xs-4">Class:</div>
+            <div class="select col-xs-8"ng-init="reloadClasses()">
+                <select
+                        style = "  width: 100%;padding: 5px;"
+                        selectize
+                        ng-model="selected.classId"
+                        ng-options="class.id as class.name for class in classes"
+                        >
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <button style="width:103%;margin-top:10px;margin-bottom:10px" class="btn btn-sm btn-info" data-ng-click="setModel()" ng-show="canFinish() && !hideViewBtn">View</button>
+</div>

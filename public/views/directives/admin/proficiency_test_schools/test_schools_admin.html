@@ -1,0 +1,27 @@
+<div class="panel-title">
+    <div class="small-heading" style="display: inline-block">Admins</div>
+    <span ng-hide="addingNew" class="btn btn-primary btn-sm add-new-btn" ng-click="addingNew=true"> Add new</span>
+</div>
+
+<div ng-show="addingNew" style="position: relative">
+    <div ng-if="startSearch" async-search ng-model="selectedUser.Id" search-method="startSearch" class="search-admins"></div>
+    <async-button color-style="primary" class="add-new-admin" text="Add new" flash-text="Saved!" loading="loading.adding" ng-click="addAdmin()" ng-disabled="!canAddAdmin()"></async-button>
+</div>
+
+<span class="fa fa-spinner fa-pulse" ng-show="loading.admins"></span>
+<div class="mobile-overflow-x-auto width-100">
+    <table class="table table-striped" ng-hide="loading.admins">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="admin in admins">
+            <td ng-bind="admin.fname + ' ' + admin.lname"></td>
+            <td ng-bind="admin.email"></td>
+            <td>
+                <span class="fa fa-trash pointer" ng-click="removeAdmin(admin.id)"></span>
+            </td>
+        </tr>
+    </table>
+</div>

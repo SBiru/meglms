@@ -1,0 +1,19 @@
+<h2>Exports</h2>
+
+<div>
+    <div>
+        <input type="checkbox" ng-model="preferences.enable_final_grades_export"/> Enable final grades export
+    </div>
+    <div>
+        <input type="checkbox" ng-model="preferences.enable_attendance_export"/> Enable attendance export
+    </div>
+</div>
+
+<tabset class="exports-tabset">
+    <tab ng-if="preferences.enable_final_grades_export" heading="Final grades" >
+        <final_grades_export preferences="preferences" prefix="'final-grades'" org-id="orgId"></final_grades_export>
+    </tab>
+    <tab ng-if="preferences.enable_attendance_export" heading="Attendance" >
+        <attendance_export preferences="preferences" prefix="'attendance'" org-id="orgId"></attendance_export>
+    </tab>
+</tabset>

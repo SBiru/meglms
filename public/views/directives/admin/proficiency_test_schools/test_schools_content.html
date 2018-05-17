@@ -1,0 +1,54 @@
+<div ng-show="model.loading.selectedSchool==1">
+    Loading <span class="fa fa-spinner fa-pulse"></span>
+</div>
+<div ng-show="model.loading.selectedSchool==2">
+    Sorry, something went wrong =(
+</div>
+<h4>
+    <span ng-show="model.selectedSchoolId=='new'">New school</span>
+    <span ng-hide="!model.selectedSchool || model.selectedSchool.id=='new'">
+        <span>
+            <span ng-bind="model.selectedSchool.name" ng-hide="model.selectedSchool.editing"></span>
+            <span ng-show="model.selectedSchool.editing">
+                <div data-ng-include="'edit_school.html'"></div>
+            </span>
+
+        </span>
+        <i class="fa fa-edit text-primary pointer" ng-click="model.selectedSchool.editing=true" ng-hide="model.selectedSchool.editing"></i>
+    </span>
+</h4>
+<div ng-show="model.selectedSchoolId=='new'">
+    <div data-ng-include="'edit_school.html'"></div>
+</div>
+
+<div class="row content" style="margin-top:20px" ng-if="model.selectedSchoolId != 'new'">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <test-schools-admins admins="model.selectedSchool.admins" school-id="model.selectedSchoolId"></test-schools-admins>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default" >
+            <test-schools-submitted style="min-height: 300px" tests="model.selectedSchool.tests" school-id="model.selectedSchoolId"></test-schools-submitted>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/ng-template" id="edit_school.html" >
+    <div class="edit-school mobile-100-width">
+        <input ng-model="model.selectedSchool.name" placeholder="School name" class="form-control">
+        <input ng-model="model.selectedSchool.country" placeholder="Country" class="form-control">
+        <input ng-model="model.selectedSchool.state" placeholder="State/Province" class="form-control">
+        <div style="text-align: right">
+            <button class="btn btn-sm btn-primary" ng-click="save()">Save</button>
+        </div>
+
+    </div>
+</script>
+<style>
+    .test-schools-container .modal-dialog{
+        width: 80%;
+    }
+</style>

@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Change profile picture</h4>
+</div>
+
+<div class="modal-body">
+    <div>Select an image file: <input type="file" id="fileInput" ng-file-select="onFileSelect($files)" /></div>
+    <div class="cropArea">
+        <img-crop image="myImage" result-image="croppedImage"></img-crop>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="ok()">Save changes</button>
+</div>

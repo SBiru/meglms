@@ -1,0 +1,69 @@
+
+
+<style>
+    .modal {
+        overflow: hidden !important;
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+
+    <span ng-switch on="values.selection">
+    <h4 class="modal-title"  ng-switch-when="selectQuestions" ><em>Select A Bank and then Select the questions you wish to add.</em><br>
+        <a ng-click="cancel('randomQuestions')" style="cursor: pointer;font-size: small;text-align: center;font-style: italic;">or Choose Random Questions from Banks</a></h4>
+    <h4 class="modal-title"  ng-switch-when="randomQuestions" ><em>Set random questions from banks chosen</em>
+        <br><a ng-click="cancel('selectQuestions')" style="cursor: pointer;font-size: small;text-align: center;font-style: italic;">Back to Selection Question from Banks</a></h4>
+    <h4 class="modal-title"  ng-switch-when="randomGroupQuestions" ><em>Random Question Group</em></h4>
+    <h4 class="modal-title"  ng-switch-default><em>Set questions from banks chosen</em></h4>
+    </span>
+    <!--<div ng-if="values.selection === 'randomGroupQuestions'" ng-include="'testsBanks.form.modal.html'"></div>-->
+</div>
+<div class="modal-body">
+    <form role="form">
+        <div style="width:100%">
+            <div style="float:left" class="form-group" ng-if="from!='bank'">
+                <label for="modalBank" style="float: left;line-height: 2;">Choose A Bank :</label>
+                <div style="float:left;width:210px">
+                    <select id="modalBank" selectize ng-required="true" ng-model="values.bank_id" ng-change="selectbank()" ng-options="bank.id.toString() as bank.titleCounter  for bank in allBanks|filter:filterEmptyBanks">
+                        <!--<option ng-repeat="bank in allBanks" ng-value="bank.id">{{bank.title}}</option>-->
+                    </select>
+
+                </div>
+                <span ng-show="hasUsedQuestions" class="fa fa-warning" style="float: left;color:yellow;line-height:2;margin-left:5px" tooltip="This test already has questions from this bank"></span>
+
+
+            </div>
+            <div style="float:right" ng-if="values.selection !== 'randomQuestions' && values.selection !== 'randomGroupQuestions'" class="btn btn-default btn-sm" ng-click="selectAll(bank)">
+                <span ng-hide="bank.allSelected">Select All</span>
+                <span ng-show="bank.allSelected">Clear Selection</span>
+            </div>
+            <div style="float:right" ng-if="values.selection === 'randomQuestions' || values.selection === 'randomGroupQuestions'">
+
+                <div style="float:left" class="form-group" ng-if="from!='bank'">
+                    <label for="selectrandomquestions">Random Number :</label>
+                    <select style="  height: 40px;width: 50px;color: #808080;background-color: #f7f7f7;border-radius: 5px;" id="selectrandomquestions" class="selectpicker" ng-required="true" ng-model="values.counter">
+                        <option value="{{bank.count}}">All</option>
+                        <option ng-repeat="dropDownoptions in bank.dropDownoptions" value="{{dropDownoptions}}">{{dropDownoptions}}</option>
+                        <option value="{{bank.count}}">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--Display of our question after bank is selected start -->
+            <div class="modallist" style="{{modallistoverflow()}}" style="clear: both;">
+                <edit-question $index="$index" type='select' question="question" ng-if="values.selection === 'selectQuestions'" class=" question-display" ng-repeat="question in bank.questions"></edit-question>
+                <edit-question $index="$index" type='select' question="question" ng-if="values.selection === 'randomQuestions'" class="question question-display" ng-repeat="question in bank.questionsRandom"></edit-question>
+                <div ng-if="values.selection === 'randomGroupQuestions'" class="question question-display">
+                    <em>Questions will appear randomly when students take a quizz each student will get different random questions from the Bank Chosen.</em>
+                </div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="setquestions()">Set Questions</button>
+</div>

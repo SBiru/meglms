@@ -1,0 +1,547 @@
+<div ng-if="need_password">
+	<div class="col-lg-6">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="user_password">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+      </span>
+		</div><!-- /input-group -->
+	</div><!-- /.col-lg-6 -->
+</div>
+<div class="" ng-if="!need_password">
+	<div id="objectivesTable" ng-include="'/public/views/partials/student/objectives_table.html'" ng-controller="ObjectivesController"></div>
+	 <div>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#vocab" target="_self" data-toggle="tab">{{ preference.navs.vocabulary.translation }}</a></li>
+			<li><a href="#cards" target="_self" data-toggle="tab">{{ preference.navs.flashcards.translation }}</a></li>
+			<!-- <li><a href="#seeitandwrite" target="_self" data-toggle="tab">{{ preference.navs.seeitandwrite.translation }}</a></li> -->
+			<li><a href="#speedflash" target="_self" data-toggle="tab">{{ preference.navs.speedflash.translation }}</a></li>
+			<li><a href="#audioflash" target="_self" data-toggle="tab">{{ preference.navs.speedflashaudio.translation }}</a></li>
+
+		   <!-- <li><a href="#hearitandwrite" target="_self" data-toggle="tab">{{ preference.navs.hearitandwrite.translation }}</a></li>
+
+			<li><a href="#testskill" target="_self" data-toggle="tab">{{ preference.navs.testyourskill.translation }}</a></li>
+			<li><a href="#gamifyit" target="_self" data-toggle="tab">{{ preference.navs.gamifyit.translation }}</a></li>
+			<li><a href="#masterychallenge" target="_self" data-toggle="tab">{{ preference.navs.masterychallenge.translation }}</a></li>
+			   -->
+		 </ul>
+
+		<div class="tab-content" >
+
+			<!-- VOCABULARY -->
+
+			<div class="tab-pane active" id="vocab">
+				<br>
+				<table class="table">
+					<tr ng-repeat="vocab in vocabItems">
+						<td>
+							<a href="" class="star" ng-click="setStarred()" ng-class="isStarred(vocab.id)"><span class="fa fa-star fa-fw"></span></a>
+							<a href="" ng-click="playAudio(vocab.id)"><span class="fa fa-play fa-fw"></span></a>
+						</td>
+						<td class="text-center">{{vocab.phrase}}</td>
+						<td class="text-center">{{vocab.translation}}</td>
+					 </tr>
+
+				</table>
+			  </div>
+
+			<!-- FLASHCARDS -->
+
+			<div class="tab-pane" id="cards" ng-keypress="keyPress()">
+
+				<div ng-repeat="vocab in filtered = (vocabItems | starFilter:starred) | startFrom:currentItem | limitTo:1">
+					{{$parent.setVocabObject(vocab)}}
+					<br>
+					<div class="centered-buttons">
+						<a href="" class="star" ng-click="setStarred()" ng-class="isStarred(vocab.id)"><span class="fa fa-2x fa-star fa-fw"></span></a>
+						<a href="" ng-click="playAudio()"><span class="fa fa-2x fa-play fa-fw"></span></a>
+						<span id="flashCardRecordWrapper">
+							<a href="" class="microphone" ng-click="recordAudio()" ng-class="isRecording()"><span class="fa fa-2x fa-microphone fa-fw"></span></a>
+							<a href="" ng-click="playRecordedAudio()" ng-style="{'color': isRecorded() }"><span class="fa fa-2x fa-play fa-fw"></span></a>
+						</span>
+					</div>
+
+
+				   <div class="flip">
+						<div class="card" ng-click="flip()">
+							<div class="face front">
+								<div ng-class="textWrapClass(vocab.phrase)">
+									<span ng-if="!vocab.image">{{vocab.phrase}}</span>
+								</div>
+								<img ng-if="vocab.image" ng-src="{{vocab.image}}" style="max-height: 100%;    transform: translate(-50%,-50%);top: 50%;position: absolute;">
+								<div ng-if="vocab.image" style=" background: black;position: absolute;text-align: center;width: 100%;max-height: 65px;overflow: auto;bottom: 0;/* height: 65px; */color: white;">{{vocab.phrase}}</div>
+
+							</div>
+							<div class="face back"><div ng-class="textWrapClass(vocab.translation)">{{vocab.translation}}</div></div>
+						</div>
+				   </div>
+
+				  </div>
+
+				<h3 class="text-center">{{currentItem+1}} / {{filtered.length}}</h3>
+
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" style="width: {{(((currentItem+1) / filtered.length) * 100).toFixed(2)}}%"></div>
+				</div>
+				<div class="centered-buttons">
+					<div style="display: inline-block">
+					<button type="button" class="btn btn-default" ng-disabled="currentItem == 0" ng-click="prevItem()"><i class="fa fa-chevron-left" ></i>&nbsp;&nbsp;{{ preference.navs.prev.translation }}</button>
+					<button type="button" class="btn btn-default" ng-disabled="currentItem >= filtered.length - 1" ng-click="nextItem()">{{ preference.navs.next.translation }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+
+					<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-primary" ng-click="disableStarFilter()">
+							<input type="radio" name="options" id="disableStarFilter">{{ preference.navs.all.translation }}&nbsp;&nbsp;<span class="badge">{{totalItems}}</span>
+						</label>
+						<label class="btn btn-primary" ng-click="enableStarFilter()">
+							<input type="radio" name="options" id="enableStarFilter"><span class="fa fa-star fa-fw"></span>&nbsp;<span class="badge">{{starred.length}}</span>
+						</label>
+					</div>
+					</div>
+				</div>
+
+
+			</div>
+
+
+			<!-- SEE IT AND WRITE IT  -->
+
+
+			<div class="tab-pane test-skill-question" id="seeitandwrite">
+				<h3 class="text-center">{{preference.navs.writeit_instruction.translation}} <!--<a href=""><span class="pull-right"><i class="fa fa-cog"></i> option</span></a> --> </h3>
+				<div class="test-skill-main">
+					<div class="row">
+						<form class="seeitandwrite" novalidate="novalidate" id="seeitandwrite">
+
+
+							<div class="col-md-10">
+								<div class="modal-content col-md-8" ng-show="seeIncomplete&&!seeNotStarted">
+									<div class="form-group">
+										<p id="seeItCurrentQuestionText">
+											<strong>
+
+												{{seeCurrentQuestion}} <!-- - {{seeAnswer}} -->
+
+
+											</strong>
+										</p>
+										<div class="col-md-8">
+											<!--<input type="hidden" ng-model="see_right_question_id" name="see_right_question_id" id="see_right_question_id" />-->
+											<input type="text" ng-model="seeResponse" class="form-control" name="ans">
+										</div>
+										<div class="col-md-4">
+											<button class="btn btn-info" ng-click="submitAnswer(this)">{{preference.navs.writeit_answer.translation}}</button>
+											<button class="btn btn-danger pull-right" ng-click="skipQuestion(this)">{{preference.navs.writeit_skip.translation}}</button>
+										</div>
+										<!--
+													<div class="col-md-2">
+														<button class="btn btn-danger pull-right" ng-click="skipQuestion(this)">Skip</button>
+													</div>
+				-->
+									</div>
+								</div>
+
+								<div class="modal-content col-md-8" ng-show="!seeIncomplete&&!seeNotStarted">
+									<br>
+									<table class="table">
+										<!--
+				<thead>
+					<tr>
+						<th >Result</th>
+						<th >Word</th>
+						<th >Translation</th>
+					</tr>
+				</thead>
+				-->
+										<tr class="animate-repeat" ng-repeat="(vocabPosition, vocab) in vocabContentRandom">
+											<!--
+											<td>
+												<div ng-if="checkAnswer(vocabPosition) == 'correct'">
+													<div class="btn-success btn center-block">Complete</div>
+												</div>
+												<div ng-if="checkAnswer(vocabPosition) == 'skipped'">
+													<div class="btn-danger btn center-block">Skipped</div>
+												</div>
+
+											</td>
+												-->
+											<td>{{vocab.phrase}}</td>
+											<td>{{vocab.translation}}</td>
+											<td>
+												<div ng-if="(vocabCount = seeGetQuestionCount(vocabPosition)) > 1">
+													<div ng-class="{'btn-danger' : (vocabCount>=2)}" class=" btn text-center center-block">
+														<span ng-if="((vocabCount - 1 ) == 1) && checkAnswer(vocabPosition) != 'skipped'">{{vocabCount - 1}} {{preference.navs.writeit_mistake.translation}} </span>
+														<span ng-if="(vocabCount-1 ) > 1">{{vocabCount - 1}} {{preference.navs.writeit_mistakes.translation}} </span>
+														<span ng-if="checkAnswer(vocabPosition) == 'skipped' &&  ((vocabCount - 1 )==1)"> {{preference.navs.writeit_skipped.translation}} </span>
+
+													</div>
+												</div>
+											</td>
+										</tr>
+									</table>
+
+									<button id="seeitStartOverFinished" class="btn btn-success pull-right center-block" ng-click="startSeeOver(this)">{{preference.navs.writeit_tryagain.translation}}</button>
+
+								</div>
+
+								<div class="modal-content col-md-8" ng-show="!seeIncomplete&&seeNotStarted">
+									<button id="seeitStartOverFinished" class="btn btn-success pull-right center-block" ng-click="startSeeOver(this)">{{preference.navs.writeit_begingame.translation}}</button>
+								</div>
+
+
+								<div id="" class="seeItSpacer col-md-1">
+								</div>
+
+									<div class="modal-content col-md-2 scoreKeeping">
+
+										<label class="control-label text-center" ng-bind="seeitCurrentGameText"></label>
+										<div class="btn-info btn-pd label-group">
+											<div ng-bind="remainingQuestions"></div>
+											<div class="text-center" ng-bind="preference.navs.writeit_remaining.translation"></div>
+										</div>
+
+										<div class="btn-danger btn-pd label-group">
+											<div ng-bind="incorrect"></div>
+											<div class="text-center" ng-bind="preference.navs.writeit_incorrect.translation"></div>
+										</div>
+
+										<div class="btn-success btn-pd label-group">
+											<div ng-bind="correct"></div>
+											<div class="text-center" ng-bind="preference.navs.writeit_correct.translation"></div>
+										</div>
+
+										<div class="start-over">
+											<button class="btn btn-info" ng-click="startSeeOver(this)" ng-show="seeIncomplete">{{preference.navs.writeit_startover.translation}}</button>
+										</div>
+										<span ng-show="!seeIncomplete">
+											<label class="control-label">{{seeItHighScoreText}}</label>
+											<nvd3-pie-chart data="exampleData"
+															id="donutExample"
+															width="550"
+															height="350"
+															x="xFunction()"
+															y="yFunction()"
+															donut="true"
+															color="colorFunction()"
+															callback="callbackFunction()"
+															margin="{left:0,top:0,bottom:0,right:0}">
+
+												<svg height="250"></svg>
+											</nvd3-pie-chart>
+										</span>
+										<!--
+				<br />
+				<label for="username" class="control-label">Option</label>
+
+				<div class="checkbox">
+					<label>
+						<input name="remember" id="remember" type="checkbox"> See English first
+					</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input name="remember" id="remember" type="checkbox"> Speak Text
+					</label>
+				</div>
+					-->
+									</div>
+
+
+									<div class="col-md-2">
+
+
+
+									</div>
+								</div>
+
+
+
+	</form>
+
+
+
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Speed Flash -->
+			<div class="tab-pane test-skill-question" id="speedflash">
+				<h3 class="text-center" ng-bind="preference.navs.flashit_instruction.translation"><!--<a href=""><span class="pull-right"><i class="fa fa-cog"></i> option</span></a> --> </h3>
+				<div class="test-skill-main">
+					<div class="row">
+						<form class="seeitandwrite" novalidate="novalidate" id="speedflash ">
+
+
+								<div class="col-md-8">
+									<div class="modal-content col-md-12" ng-show="!flashItGameStarted">
+										<div class="row">
+											<!--<div class="col-md-4">Game Speed:</div>-->
+											<!--<div class="col-md-4 text-center" ng-bind="preference.navs.flashit_gametype.translation"></div>-->
+										</div>
+										<div class="row">
+											<!--
+											<div class="col-md-4">
+
+												<span class="label label-default">Fast</span>
+												<input id="flashitModelValue" type="range" ng-model="flashStartTime" min="{{flashStartSpeedSlide.min}}" step="{{flashStartSpeedSlide.step}}" max="{{flashStartSpeedSlide.max}}" tooltip="{{flashStartSpeedSlide.tooltip}}" formater="formaterFn(flashStartTime)" />
+												<span class="label label-default">Slow</span>
+												<span id="flashitSecondsDisplay" class="center-block">{{flashStartTime}} Seconds</span>
+
+											</div>
+										-->
+											<div class="col-md-4">
+
+												<!--
+												<toggle-switch ng-model="flashLanguageFlip"
+															   on-label={{preference.navs.flashit_english.translation}}
+															   off-label={{preference.navs.flashit_mylanguage.translation}}>
+													<toggle-switch>
+													-->
+
+	</div>
+
+
+										</div>
+										<button id="flashitStartOverFinished" class="btn btn-success pull-right center-block" ng-click="beginFlashItGame(this)">{{preference.navs.writeit_begingame.translation}}</button>
+									</div>
+
+									<div class="modal-content col-md-12 flashitHeaderWord" ng-show="flashItGameStarted">
+										<div class="row">
+											<!--
+											<div class="col-md-12">
+												<progressbar value="flashitQuestionProgress" type="{{type}}"></progressbar>
+												-->
+												<!--<span ng-hide="(bar.value <= 30)&&($index!=0)">{{$index}}%</span><-->
+												<!--<progress><bar ng-repeat="bar in stacked track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>-->
+											<!--</div>-->
+
+										</div>
+										<div class="row">
+											<div class="text-center col-md-12" >
+												<div ng-hide="flashitShowAnswerFeedback" class="hide-fade ">
+													<img id="flashitAnswerFeedbackImage" class="img-responsive" ng-src="/public/img/{{flashitAnswerFlashing}}" />
+												</div>
+
+												<h1>{{(!flashLanguageFlip) ? flashitSelectedQuery.phrase : flashitSelectedQuery.translation}}</h1>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="modal-content col-md-12 text-center" ng-show="flashItGameStarted">
+										<!--class="btn-group-vertical col-md-12" role="group"-->
+										<div class="col-md-12 text-center" ng-show="flashItGameStarted&&!flashitGameEnded">
+											<button type="button" class="animate-repeat btn btn-default flashItAnswerButton" ng-repeat="vocab in flashitPossibleanswers track by $index" ng-click="flashitProcessAnswer(vocab)">{{(!flashLanguageFlip) ? vocab.translation : vocab.phrase}}</button> <br /><br />
+										</div>
+										<div class=" col-md-12 text-center" ng-show="flashItGameStarted&&(flashitGameEnded||flashitGameTransitioning)">
+											<button ng-disabled="true" ng-class="{'btn-success' : (vocab.correctAnswer)}" type="button" class="animate-repeat btn btn-default flashItAnswerButton" ng-repeat="vocab in flashitPossibleanswers track by $index" ng-click="flashitProcessAnswer(vocab)">{{(!flashLanguageFlip) ? vocab.translation : vocab.phrase}}</button><br /><br />
+										</div>
+									</div>
+									</div>
+
+							<div class="col-md-3">
+								<div id="flashitScoreKeeping" class="row modal-content  scoreKeeping">
+
+									<!--<label class="control-label">{{flashitCurrentGameText}}</label>-->
+
+
+									<div class="text-center" ng-bind="preference.navs.flashit_currentscore.translation"></div>
+									<div class="btn-success btn-pd text-center">{{flashitCorrect}}</div>
+
+									<div class="text-center" ng-bind="preference.navs.writeit_incorrect.translation"></div>
+									<div class="btn-danger btn-pd text-center">{{flashitIncorrectScore}}</div>
+
+
+									<div class="text-center" ng-bind="preference.navs.flashit_highscore.translation"></div>
+									<div class="btn-info btn-pd text-center">{{flashitHighScore}}</div>
+
+
+
+									<div ng-show="flashItGameStarted&&!flashitGameEnded">
+
+										<label class="control-label">{{flashitHighScoreText}}</label>
+										<nvd3-pie-chart data="flashitPieData"
+														id="donutExample2"
+														width="550"
+														height="350"
+														x="xFunction()"
+														y="yFunction()"
+														donut="true"
+														color="colorFunction2()"
+														callback="callbackFunction2()"
+														margin="{left:0,top:0,bottom:0,right:0}">
+
+											<svg height="250" id="flashitSVG"></svg>
+										</nvd3-pie-chart>
+
+									</div>
+
+									<div class="start-over">
+										<button class="btn btn-info" ng-click="startFlashitOver(this)" ng-show="flashitGameEnded">{{preference.navs.flashit_startagain.translation}}</button>
+									</div>
+
+
+
+								</div>
+								<!--
+								<div class="row">
+
+									<div ng-hide="flashitShowAnswerFeedback" class="hide-fade ">
+										<img id="flashitAnswerFeedbackImage" class="img-responsive" ng-src="/public/img/{{flashitAnswerFlashing}}" />
+									</div>
+
+								</div>
+									-->
+							</div>
+
+
+
+
+
+
+
+						</form>
+
+
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Audio Speed Flash -->
+			<!-- The directive only asks for the playAudio function to be passed in. This is to avoid reloading the audio files twice -->
+			<div class="tab-pane test-skill-question" id="audioflash" audio-flash-it play="playAudio" />
+
+
+
+			   <!-- HEAR IT AND WRITE IT  -->
+			<!--
+			<div class="tab-pane test-skill-question" id="hearitandwrite">
+				 <h3>Titles <a href=""><span class="pull-right"><i class="fa fa-cog"></i> option</span></a>  </h3>
+
+	 <div class="test-skill-main">
+
+		<div class="row">
+			 <div class="col-md-2">
+				  <form class="seeitandwrite"  novalidate="novalidate">
+
+					  <div class="btn-default btn-pd text-right"> 0% </div>
+					   <br/>
+					  <div class="btn-default btn-pd text-right"> 0/4 </div>
+					  <br/>
+					  <select class="form-control">
+						<option>Speak English</option>
+						<option>Speak Spanish</option>
+					  </select>
+
+					<div class="start-over">
+						 <button class="btn btn-default">Replay audio</button>
+					</div>
+
+			  </div>
+
+			  <div class="col-md-10">
+				   <div class="modal-content col-xs-8">
+
+					   <div class="form-group">
+						   <div class="col-xs-8">
+								<textarea class="form-control" rows="3"></textarea>
+						   </div>
+						   <div class="col-xs-2">Reina</div>
+					   </div>
+
+				   </div>
+
+			  </div>
+
+				 </form>
+			 </div>
+		 </div>
+	  </div>
+				 -->
+			<!-- TEST YOUR SKILL  -->
+
+			<div class="tab-pane" id="testskill">
+
+
+	<form novalidate="novalidate" class="test-skill-question"><button style="display: none; width: 0px; height: 0px;" class="bv-hidden-submit" type="submit"></button>
+		<h3>Titles <a href=""><span class="pull-right"><i class="fa fa-cog"></i> option</span></a>  </h3>
+
+		<div class="test-skill-main">
+
+			<h4>2 Written Questions</h4>
+
+		<div class='form-row'>
+				  <div class='col-xs-12 form-group'>
+					<label class='control-label'>Reina</label>
+					<input class="form-control col-xs-4"  type="text">
+				  </div>
+				</div>
+		 <div class='form-row'>
+				  <div class='col-xs-12 form-group'>
+					<label class='control-label'>Princess</label>
+					<input class="form-control col-xs-4"  type="text">
+				  </div>
+				</div>
+
+
+				<h4>1 Multiple Choice Question</h4>
+		<div class="form-group ">
+			<label class="col-sm-3 ">Principe</label>
+			<div class="clearfix"></div>
+			<div class="col-sm-4">
+				<div class="radio">
+				   <label class="number">a. </label>
+					<label>
+						<input data-bv-field="languages[]" name="languages[]" value="net" type="radio"> Princess
+					</label>
+				</div>
+				<div class="radio">
+						 <label class="number">b. </label>
+					<label>
+						<input data-bv-field="languages[]" name="languages[]" value="java" type="radio"> King
+					</label>
+				</div>
+				<div class="radio">
+						 <label class="number">c. </label>
+					<label>
+						<input data-bv-field="languages[]" name="languages[]" value="c" type="radio"> Queen
+					</label>
+				</div>
+				<div class="radio">
+						 <label class="number">d. </label>
+					<label>
+						<input data-bv-field="languages[]" name="languages[]" value="php" type="radio"> Prince
+					</label>
+				</div>
+	   </div>
+
+
+
+		</div>
+
+
+	  </div>   </form>   </div>
+
+			<!-- GAMIFY IT  -->
+
+			<div class="tab-pane" id="gamifyit">
+				<br>
+	<h3>dummy lorem ipsum dummy lorem ipsum</h3>
+			</div>
+			 <!--MASTERY CHALLENGE  -->
+
+			<div class="tab-pane" id="masterychallenge">
+				<br>
+	<h3>dummy lorem ipsum dummy lorem ipsumlorem ipsum dummy lorem ipsum</h3>
+
+			</div>
+
+		</div>
+		 <div ng-show="showNextButton()" ng-controller="NoMenuController">
+			 <button ng-click="nextPage()" >Continue</button>
+		 </div>
+
+	</div>
+</div>

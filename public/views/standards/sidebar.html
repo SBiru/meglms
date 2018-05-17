@@ -1,0 +1,17 @@
+<div>
+        <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li role="presentation" ><a ui-sref="standard.create"><span class="glyphicon glyphicon-plus"></span> Add New Standard</a></li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation" >
+                        <h3 style="text-align: center">Standards</h3>
+                        <div
+                                angular-treeview="true"
+                                data-tree-id="t"
+                                data-tree-model="dataService.data"
+                                data-node-id="id"
+                                data-node-label="name"
+                                data-node-children="children" >
+                        </div>
+                </li>
+        </ul>
+</div>

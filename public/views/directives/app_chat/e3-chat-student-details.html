@@ -1,0 +1,45 @@
+<div class="teacher_info">
+    <div class="teacher_contact_wrapper">
+        <div class="teacher_contact">
+            <div class="teacher_name">
+                {{userData.firstName}} {{userData.lastName}}
+                <span class="user-site" ng-show="$root.user.org.show_site">
+                    Site: {{userData.site}}
+                </span>
+            </div>
+            <div>
+                <span class="btn-email icon"><span class="fa fa-envelope" ng-init="specificUser=true"></span></span>
+                <span class="teacher-email">{{userData.email}}</span>
+            </div>
+            <div class="phone" ng-if="userData.phone">
+                <span class="btn-email icon"><span class="fa fa-phone"></span></span>
+                {{userData.phone}}
+            </div>
+            <div ng-show="isMissingAttendance(userData.userId)" class="text-red">
+                Missing attendance
+            </div>
+            <div data-ng-repeat="class in classes">
+                <span>{{class.name}}</span>
+            </div>
+            <div class="currently-working" ng-if="currentJob && user.canViewCurrentJob">
+                <b>Currently working on: </b> <span class="fa fa-spinner fa-pulse" ng-show="currentJob.loading"></span>
+                <div ng-if="currentJob.currentWorking" ng-bind="currentJob.currentWorking"></div>
+                <table class="table" ng-if="currentJob.className">
+                    <tr>
+                        <th>Class</th>
+                        <th>Unit</th>
+                        <th>Activity</th>
+                    </tr>
+                    <tr>
+                        <td ng-bind="currentJob.className"></td>
+                        <td ng-bind="currentJob.unitName"></td>
+                        <td ng-bind="currentJob.pageName"></td>
+
+                    </tr>
+                </table>
+            </div>
+            <span class="logged-in-since" ng-show="user.loggedInSince && user.canViewCurrentJob"> Logged in since: {{user.loggedInSince}}</span>
+        </div>
+    </div>
+
+</div>

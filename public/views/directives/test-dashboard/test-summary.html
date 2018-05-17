@@ -1,0 +1,65 @@
+<e3-pagination class="tests-container"  config="paginationConfig"
+     set-items="setPaginationItems" set-model="updateFilteredStudents"  >
+    <input ng-model="filterInput" class="form-control" style="max-width: 240px;" placeholder="{{'Search for ' + (isJ1?'an applicant':'a student')}}">
+    <div class="clearfix"></div>
+    <div class="div-table-2">
+    <table class="table table-striped">
+        <thead>
+        <tr class="scores-title-row" ng-hide="isJ1">
+            <td colspan="3"></td>
+            <td colspan="5" class="scores-title test_dashboard_font_color">Scores</td>
+        </tr>
+        <tr>
+            <td class="static-header-column test_dashboard_font_color pointer fixed-column-2" ng-click="orderStudents.orderBy('name')">
+                <span>{{isJ1?'Applicant':'Student'}}</span>
+                <span class="fa fa-caret-up" ng-show="orderStudents.selected=='name'"></span>
+                <span class="fa fa-caret-down" ng-show="orderStudents.selected=='-name'"></span>
+            </td>
+            <td class="static-header-column test_dashboard_font_color pointer" ng-click="orderStudents.orderBy('groupName')" ng-hide="isJ1">
+                {{isJ1?'Department':'Group'}}
+                <span class="fa fa-caret-up" ng-show="orderStudents.selected=='groupName'"></span>
+                <span class="fa fa-caret-down" ng-show="orderStudents.selected=='-groupName'"></span>
+            </td>
+            <td class="static-header-column test_dashboard_font_color pointer" ng-click="orderStudents.orderBy('date')">
+                Date
+                <span class="fa fa-caret-up" ng-show="orderStudents.selected=='date'"></span>
+                <span class="fa fa-caret-down" ng-show="orderStudents.selected=='-date'"></span>
+            </td>
+
+            <td  ng-if="pageGroups.length>1"
+                 data-ng-repeat="pg in pageGroups"
+                class="test_dashboard_font_color pointer"
+
+                ng-click="orderStudents.orderBy('pageGroups['+$index+'].score')">
+                <span ng-bind="pg.name"></span>
+                <span class="fa fa-caret-up" ng-show="orderStudents.selected=='pageGroups['+$index+'].score'"></span>
+                <span class="fa fa-caret-down" ng-show="orderStudents.selected=='-pageGroups['+$index+'].score'"></span>
+            </td>
+
+
+            <td class="test_dashboard_font_color pointer" ng-click="orderStudents.orderBy('percTotalScore')">
+                <span ng-bind="isJ1?'Score':'Total'"></span>
+                <span class="fa fa-caret-up" ng-show="orderStudents.selected=='percTotalScore'"></span>
+                <span class="fa fa-caret-down" ng-show="orderStudents.selected=='-percTotalScore'"></span>
+            </td>
+            <td></td>
+        </tr>
+        </thead>
+        <tr data-ng-repeat="student in pagedStudents">
+            <td ng-bind="student.name" class="fixed-column-2 height-60">John Doe</td>
+            <td ng-bind="student.groupName" ng-hide="isJ1" class="height-60">John Doe</td>
+            <td ng-bind="student.date" class="height-60">7/15/16</td>
+            <td class="test-score height-60"  ng-if="pageGroups.length>1" data-ng-repeat="pg in student.pageGroups" ng-bind="(!isJ1&&student.finishedGradeClass) || (isJ1&&pg.finishedGrade)?round(pg.actualScore) + '/' + pg.maxScore:'-'" ng-style="{width:scoreColumnWidth}"></td>
+            <td class="test-score total-score test_dashboard_font_color height-60" ng-bind="student.finishedGradeClass?round(student.actualTotalScore) + '/' + student.maxTotalScore:'-'"></td>
+            <td class="test-score height-60">
+                <a class="btn-flat"
+                   ng-click="viewStudent(student,classId)"
+                   data-ng-disabled="!student.submittedToAllActivities">
+                    View
+                </a>
+            </td>
+        </tr>
+    </table>
+    </div>
+</e3-pagination>
+<div class="clearfix"></div>

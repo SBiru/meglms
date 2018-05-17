@@ -1,0 +1,251 @@
+<style>
+    .unit-button-inactive,.sidebar-nav-item {
+        background-color: #f3f3f4;
+        color: #428bca !important;
+    }
+    .unit-button-active,.sidebar-nav-item.active {
+        color: #fff;
+        background-color: #428bca !important;
+        position: relative;
+    }
+
+    .sidebar-nav-item.active a{
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .unit-button-active:after,.has-arrow .sidebar-nav-item:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .unit-button-active:after,.has-arrow  .sidebar-nav-item:after {
+        border-color: rgba(136, 183, 213, 0);
+        border-top-color: #428bca;
+        border-width: 15px;
+        margin-left: -15px;
+    }
+    .menu-table{
+        margin-bottom: 15px;
+        border-spacing: 4px 0;
+        width: initial;
+    }
+    .menu-table td{
+        width:200px;
+        max-width:200px;
+        min-width:200px;
+        display: inline-block;
+        min-height: 50px;
+        margin: 3px;
+    }
+    .top-nav-menu .table-bordered{
+        border: none;
+        border-collapse: separate;
+    }
+    .top-nav-menu td{
+        border-radius: 4px;
+        border:none !important;
+    }
+    .menu-pager{
+        cursor: pointer;
+        color: #428bca;
+        font-size: 24px;
+        padding: 0 17px;
+
+    }
+    .teacher_contact{
+        float: left;
+    }
+    .teacher_contact._2{
+        width: 60%;
+    }
+    .teacher_contact._1{
+        width: 40%;
+
+    }
+    .unit-lesson-combos .item{
+        font-size:20px;
+    }
+    .progress.progressV3{
+        margin: 0 !important;
+        margin-bottom: 10px !important;
+    }
+    .progressV3 .avg-grade-wrapper{
+        font-size: 9px;
+        top:18px !important;
+    }
+    #nav-menu.ng-hide-add         {
+        -webkit-animation: fadeOutUp 0.4s;
+        display: block!important;
+    }
+    @-webkit-keyframes fadeOutUp {
+        0% {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0;
+            -webkit-transform: translateY(-20px);
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes fadeOutUp {
+        0% {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            -ms-transform: translateY(0);
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0;
+            -webkit-transform: translateY(-20px);
+            -ms-transform: translateY(-20px);
+            transform: translateY(-20px);
+        }
+    }
+
+</style>
+<script>
+    window.calculateWidth = function(numberOfCols){
+        return 100/numberOfCols + '%'
+    }
+</script>
+<div ng-if="!$root.show_menu" style="margin-top: 10px;padding-left: 15px;font-size: 20px; ">
+    <span data-ng-repeat="step in breadcrumbs">
+       <span ng-show="$index!=0"> / </span>  <span ng-bind="step" style="color: #428bca"></span>
+    </span>
+</div>
+<div ng-show="$root.show_menu" id="nav-menu">
+    <div class="row-fluid" style="padding-top: 15px;" >
+        <div class="col-xs-4">
+            <div class="dropdown course-dropdown" ng-controller="CourseController" ng-class="{'with-edit-class':showEditClassButton()}">
+                <table style="margin: auto;" >
+                    <tr>
+                        <td>
+                            <select selectize ng-model="currentCourseID"
+                                    style="width:100%"
+                                    ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                                    ng-change="changeCourse(currentCourseID)">
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <div  ng-if="useSuperUnits" ng-hide="hideFromStudent" ng-controller="SuperUnitController">
+                    <div class="dropdown course-dropdown" style="padding-top:0">
+                        <table style="margin: auto;">
+                            <tr>
+                                <td>
+                                    <select selectize ng-model="superUnit.currentUnit"
+                                            style="width:100%"
+                                            ng-options="unit as unit.name for unit in superUnit.units | orderBy:'position'">
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <table style="width: 100%" class="unit-lesson-combos">
+                <tr>
+                    <td>
+                        <div style="float: left">
+                            <span class="previous"><span data-ng-click="prevUnit()" class="btn btn-default menu-pager"><span class="fa fa-angle-left"></span></span></span>
+                        </div>
+                        <div style="width: calc(100% - 100px);float: left;padding-left: 10px">
+                            <select selectize ng-model="current_unit_id"
+                                    ng-options="unit.id as unit.description for unit in navData.units"
+                                    data-ng-change="changeToUnit(current_unit_id)"
+                                    ></select>
+                        </div>
+
+                        <div style="width: 40px;float: left;padding-left: 10px">
+                            <span class="next"><span data-ng-click="nextUnit()" class="btn btn-default menu-pager"><span class="fa fa-angle-right"></span></span></span>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="float: left">
+                            <span class="previous"><span data-ng-click="prevLesson()" class="btn btn-default menu-pager"><span class="fa fa-angle-left"></span></span></span>
+                        </div>
+                        <div style="width: calc(100% - 100px);float: left;padding-left: 10px">
+                            <select selectize ng-model="navService.currentHeaderId"
+                                    ng-options="nav.id as nav.label for nav in navService.getHeaders()"
+                                    data-ng-change="expandHeader2(navService.currentHeaderId, $event,$index)"
+                                    ></select>
+                        </div>
+                        <div style="width: 40px;float: left;padding-left: 10px">
+                            <span class="next"><span data-ng-click="nextLesson()" class="btn btn-default menu-pager"><span class="fa fa-angle-right"></span></span></span>
+                        </div>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-4">
+            <div style="    max-width: 80%;margin: auto;padding: 15px 0;text-align: center;">
+                <img src="{{current_unit_image_url}}">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div style="font-weight: bold">Course information</div>
+            <div class="progress progressV2 progressV3" ng-controller="ProgressBarController" ng-show="ProgressBarControllerNo === false">
+        <span class="avg-grade-wrapper" ng-show="class.show_grades==1">
+            <span class="" style="font-weight: bold;" ng-bind="gradeText()"></span>
+            <span class="" ng-bind="formatGrade()"></span>
+            <span class="" style="font-weight: bold;margin-left:20px" ng-show="showSecondaryGrade()"> Current grade: <span style="font-weight:300" ng-bind="secondaryGrade()"></span></span>
+        </span>
+        <span class="progress-bar" ng-class="{'full-width':class.show_grades==0}">
+
+            <span class="progress-in" ng-style="{width: progress_perc+'%',background: barBackground()}"></span>
+            <span class="expected-tasks"  ng-show="shouldUseCustomProgressBar()" ng-style="{left: progressReport.percExpectedTasks+'%'}"></span>
+        </span>
+        <span class="expected-current-progress" ng-show="shouldUseCustomProgressBar()">
+            <span class="expected-progress">Completed: {{progress_perc}}%</span>
+            <span class="current-progress">Expected: {{progressReport.percExpectedTasks}}%</span>
+            <span class="current-progress"> <span ng-class="currentProgressVsExpected()<0?'text-danger':'text-success'" ng-bind="currentProgressText()"></span></span>
+        </span>
+            </div>
+            <div style="font-weight: bold">Teacher information</div>
+            <div ng-controller="TeacherInfoMenuController">
+                <div  ng-if="me.data.show_for_student.meta_value">
+                    <div data-ng-include="'/public/views/partials/teacher_info_3.html?v=2'"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div>
+        <div class="row-fluid" style="padding: 0 20px;">
+
+            <div style="width: 100%;overflow: auto;">
+                <table class="table table-bordered menu-table">
+                    <tr>
+                        <td data-ng-repeat="nav in subPages track by $index" ng-class="navItemClasses(nav,$index)">
+                            <a ng-href="{{getHref(nav,$index)}}" ng-bind="nav.label"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+
+
+
+
+        </div>
+
+    </div>
+</div>

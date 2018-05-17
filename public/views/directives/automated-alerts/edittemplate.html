@@ -1,0 +1,25 @@
+<div ng-if="hasVariables">
+    <p>Use {variable_name} to indicate dynamic values.</p>
+
+    <p>Variables available:</p>
+
+    <ul>
+        <li data-ng-repeat="(id,option) in alert.options" ng-if="id!='descriptions'">
+            <b ng-bind="'{' + id + '} -'"></b>
+            <span ng-bind="option.description"></span>
+            <div ng-if="option.unit.options">
+                <b ng-bind="'{' + id + '_unit} -'"></b>
+                <span ng-bind="option.unit.description"></span>
+            </div>
+        </li>
+
+    </ul>
+</div>
+<div>
+    <textarea ckeditor ng-model="text"></textarea>
+</div>
+<div class="pull-right"    style="margin-top: 15px;">
+    <div class="btn btn-default" ng-click="close(false)">Cancel</div>
+    <div class="btn btn-primary" ng-click="close(text)">Save</div>
+</div>
+<div class="clearfix"></div>

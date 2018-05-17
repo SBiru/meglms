@@ -1,0 +1,17 @@
+<div ng-hide="ready">Loading...</div>
+<div ng-show="ready">
+    <div class="completed-message">
+        <div class="previous-page-info">{{courseCompleted?courseName:previousPageGroup}} has been completed</div>
+        <div class="checkmark-wrapper">
+            <span class="fa fa-check-circle-o"></span>
+        </div>
+    </div>
+    <div class="instructions-area" ng-hide="courseCompleted">
+        <span class="previous-btn btn btn-success" ng-click="goToPrevious()" data-ng-disabled="!currentPage.no_menu_go_back"> <i class="fa fa-chevron-left"></i> PREVIOUS</span>
+        <span class="instruction-box">
+            <div ng-show="currentPage.objective">In the next assignment you will {{currentPage.objective}}</div>
+            <div>Click NEXT when you are ready</div>
+        </span>
+        <div class="next-btn btn btn-success" ng-click="goToNext()">NEXT <i class="fa fa-chevron-right"></i></div>
+    </div>
+</div>

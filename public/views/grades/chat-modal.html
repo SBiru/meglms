@@ -1,0 +1,34 @@
+
+<!-- bootstrap modal -->
+<div id="basicChatModal" class="chat-window chat-fade" style="right: 10px" aria-labelledby="basicChatModal"
+     aria-hidden="true" ng-controller="ChatBoxController">
+    <div class="chat-window-title" ng-click="collapseToggle()">
+        <div class="close" data-dismiss="modal" aria-hidden="true"></div>
+                <span class="fa fa-comments-o fa-fw chat-window-title-icon">
+                </span>
+        <span class="text">Chatting To {{ chatter.fname }} {{ chatter.lname }}</span>
+    </div>
+    <div id="chatWindowContent" ng-hide="chatCollapsed" class="chat-window-content"
+         style="height: 300px; display: block;">
+        <div class="chat-window-inner-content message-board pm-window">
+            <div class="messages-wrapper" style="height: 240px">
+                <div class="chat-message" ng-repeat="message in messages">
+                    <div class="chat-gravatar-wrapper">
+                        <img class="profile-picture" src="/public/img/chatuserdefault.png">
+                    </div>
+                    <div class="chat-text-wrapper">
+                        <p>{{ message.fname }} {{ message.lname }}<br/>{{ message.created }}</p>
+                        <p>{{ message.message }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window-text-box-wrapper">
+                <textarea ui-keypress="{'enter':'send()'}" class="chat-window-text-box" ng-model="chat_message"
+                          style="overflow: hidden; word-wrap: break-word;height:100%;" rows="3"
+                          placeholder="Type message here and press 'Enter'"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->
+

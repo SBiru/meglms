@@ -1,0 +1,65 @@
+.test-schools-container .modal-dialog{
+    width: 95%;
+}
+.test-schools-container test-schools-sidebar{
+    background: #FFF;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+    box-shadow: 1px 0 0 #f0f0f2 inset;
+}
+.test-schools-container test-schools-sidebar .navbar-title {
+    margin-left: 0;
+    font-size: 18px;
+}
+.test-schools-container test-schools-content{
+    height: 100%;
+}
+test-schools-admins,test-schools-submitted{
+    display: block;
+}
+test-schools-admins .panel-title,test-schools-submitted .panel-title{
+    padding: 0 10px
+}
+test-schools-admins .panel-title .add-new-btn{
+    float: right;
+    margin-top: 4px;
+}
+test-schools-admins .search-admins{
+    width: calc(100% - 95px);
+    display: inline-block;
+    margin-left: 10px;
+}
+test-schools-admins .add-new-admin{
+    top: 3px;
+    position: absolute;
+    right: 5px;
+}
+
+test-schools-admins table{
+    margin-top: 20px;
+}
+.test-details-modal .modal-dialog{
+    width: 95%;
+    position: relative;
+}
+.test-details-modal .fa-close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 16px;
+    color: #D56D6D;
+    cursor: pointer;
+}
+
+.test-details-modal .test-details-container{
+    padding:10px 25px;
+}
+.edit-school{
+    width: 50%;
+}
+.edit-school input{
+    margin: 5px 0;
+}

@@ -1,0 +1,49 @@
+<div class="Game">
+<!-- conversation.html
+Play an individual conversation
+-->
+<h4 class="Game_title">
+    {{game.title}}
+
+    <div class="Game_progress" ng-show="game.state === 'running'">
+        <div>
+            <!--strong>Score:</strong> {{game.score}} -->
+            <strong>Completion:</strong> {{game.index + 1}}/{{game.length}}
+        </div>
+    </div>
+</h4>
+
+<div ng-switch="game.state">
+    <div class="Game_body" ng-switch-when="started">
+        Starting...
+    </div>
+
+    <div class="Game_body" ng-switch-when="error">
+        Failed to start conversation. Make sure you're running on a modern
+        browser.
+    </div>
+
+    <div class="Game-running" ng-switch-when="running">
+        <div dialog-item
+            stream="game.mediaStream"
+            time-limit="timeLimit"
+            pause-duration="pauseDuration"
+            data="game.getCurrentDialog()"
+            on-data="game.onData"
+            on-done="game.next"></div>
+    </div>
+
+    <div class="Game_body Game_body-finishing" ng-switch-when="finishing">
+        <img class="Game_loading" src="/public/img/loading.gif"/>
+        Submitting Video...
+    </div>
+
+    <div class="Game_body" ng-switch-when="upload-error">
+        <h2 class="Game_finished">Failed to upload response. Please try again.</h2>
+    </div>
+
+    <div class="Game_body" ng-switch-when="finished">
+        <h2 class="Game_finished">Finished!</h2>
+    </div>
+</div>
+</div>

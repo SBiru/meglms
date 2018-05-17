@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <span class="modal-flat-header">
+        School Selection
+    </span>
+    <span aria-hidden="true" ng-click="cancel()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+<div class="modal-body">
+    <div class="select-schools-message">
+        <p>Please select the school(s) you would like to have access to your report.</p>
+    </div>
+
+    <div class="school-selection row">
+        <div class="col-sm-6">
+            <select selectize ng-model="selectedCountry" placeholder="Country" data-ng-options="country.name for country in countries | orderBy:'name'" class="selectize-flat"></select>
+        </div>
+        <div class="col-sm-6">
+            <select selectize ng-model="selectedState" placeholder="State/Province" data-ng-options="state.name for state in states | orderBy:'name'" class="selectize-flat"></select>
+        </div>
+        <div class="col-sm-12">
+            <select selectize ng-model="selectedSchool" placeholder="School name" data-ng-options="school.name for school in schools | orderBy:'name'" class="selectize-flat"></select>
+        </div>
+
+    </div>
+    <p>Your report will be sent to the following schools:</p>
+    <div class="selected-schools row">
+        <div class="col-sm-6" data-ng-repeat="school in schoolsToSubmit">
+            <div class="selected-school" >
+                <span ng-bind="school.name"></span>
+                <span ng-click="removeSchool(school)" class="pull-right pointer">x</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="btn-flat-full btn-flat-full-success submit-btn" ng-click="submit()">Submit</div>
+</div>

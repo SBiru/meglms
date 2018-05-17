@@ -1,0 +1,242 @@
+body {
+    padding-top: 60px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight : 700;
+}
+
+img { 
+    max-width: 100%;
+    height: auto;
+}
+
+/* Side Nav */
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #efefef;
+    border-right: 1px solid #ddd;
+}
+
+/* Main Content */
+
+.main {
+    padding-right: 40px;
+    padding-left: 40px;
+}
+
+/* Vocabulary */
+
+.star {
+
+}
+
+.star.active {
+    color: yellow;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: orange;
+}
+
+.microphone {
+
+}
+
+.microphone.active {
+    color: red;
+}
+
+/* Flashcards */
+
+.flip {
+    perspective: 800;
+    -webkit-perspective: 800;
+    width: 600px;
+    height: 300px;
+    position: relative;
+    margin: 50px auto;
+}
+
+.flip .card.flipped {
+    transform: rotatex(-180deg);
+    -webkit-transform: rotatex(-180deg);
+}
+.flip .card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+}
+.flip .card .face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    z-index: 2;
+    font-family: Georgia;
+    font-size: 3em;
+    text-align: center;
+    padding-top: 100px;
+}
+.flip .card .front {
+    position: absolute;
+    z-index: 1;
+    background-color: black;
+    color: white;
+}
+.flip .card .back {
+    transform: rotatex(-180deg);
+    -webkit-transform: rotatex(-180deg);
+    background-color: #ddd;
+    color: black;
+}
+
+/* Angular Bootstrap Nav Plugin Classes */
+/*
+.abn-tree-animate-enter,
+li.abn-tree-row.ng-enter {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  opacity: 0;
+  max-height:0px;
+}
+.abn-tree-animate-enter.abn-tree-animate-enter-active,
+li.abn-tree-row.ng-enter-active{
+  opacity: 1;
+  max-height:30px;
+}
+.abn-tree-animate-leave,
+li.abn-tree-row.ng-leave {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  height:30px;
+  max-height: 30px;
+  opacity: 1;
+}
+.abn-tree-animate-leave.abn-tree-animate-leave-active,
+li.abn-tree-row.ng-leave-active {  
+  height: 0px;
+  max-height:0px;
+  opacity: 0;
+}
+.abn-tree-animate.ng-enter{
+
+}
+.abn-tree-animate.ng-enter{
+
+}
+ul.abn-tree li.abn-tree-row {  
+  padding: 0px;
+  margin:0px;
+}
+
+ul.abn-tree li.abn-tree-row a {
+  padding: 3px 10px;
+}
+
+ul.abn-tree i.indented {
+  padding: 2px;
+}
+
+.abn-tree {
+  cursor: pointer;
+}
+ul.nav.abn-tree .level-1 .indented {
+  position: relative;
+  left: 0px;
+}
+ul.nav.abn-tree .level-2 .indented {
+  position: relative;
+  left: 20px;
+}
+ul.nav.abn-tree .level-3 .indented {
+  position: relative;
+  left: 40px;
+}
+ul.nav.abn-tree .level-4 .indented {
+  position: relative;
+  left: 60px;
+}
+ul.nav.abn-tree .level-5 .indented {
+  position: relative;
+  left: 80px;
+}
+ul.nav.abn-tree .level-6 .indented {
+  position: relative;
+  left: 100px;
+}
+ul.nav.nav-list.abn-tree .level-7 .indented {
+  position: relative;
+  left: 120px;
+}
+ul.nav.nav-list.abn-tree .level-8 .indented {
+  position: relative;
+  left: 140px;
+}
+ul.nav.nav-list.abn-tree .level-9 .indented {
+  position: relative;
+  left: 160px;
+}
+*/
+
+.indent-0 {
+  padding-left: 5px; 
+}
+
+.indent-1 {
+  padding-left: 40px; 
+}
+
+.indent-2 {
+  padding-left: 75px; 
+}
+
+.indent-3 {
+  padding-left: 110px; 
+}
+
+.indent-4 {
+  padding-left: 145px; 
+}
+
+.indent-5 {
+  padding-left: 180px; 
+}
+
+.indent-6 {
+  padding-left: 205px; 
+}
+
+.indent-7 {
+  padding-left: 240px; 
+}
+
+.indent-8 {
+  padding-left: 275px; 
+}
+
+.indent-9 {
+  padding-left: 310px; 
+}
+
+.file-upload-progress-container {
+    margin-top: 10px;
+    width: 400px;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.padding-right-20 {
+    padding-right: 20px;
+}

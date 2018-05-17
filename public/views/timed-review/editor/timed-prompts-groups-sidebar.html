@@ -1,0 +1,35 @@
+<nav class="navbar navbar-default">
+    <div class="collapse-menu-icon" style="top: -4px;">
+        <span class="fa fa-list-ul" ng-click="togglePromptsSidebar()" style="cursor:pointer"> </span>
+    </div>
+    <div class="container-fluid" style="margin-left: 40px">
+        <div class="navbar-text navbar-title display-inline">Groups</div>
+        <button type="button" class="btn btn-default navbar-btn" data-ng-click="timedGroupEditor.currentGroup='new'">Create new</button>
+    </div>
+</nav>
+<ul class="nav nav-list nav-pills nav-stacked">
+    <li role="presentation">
+        <div class="filter-group">
+            <input placeholder="Search for a  group" ng-model="filterGroup">
+        </div>
+
+
+    </li>
+</ul>
+<ul class="nav nav-list nav-pills nav-stacked group-list" data-ng-class="{'dragging':timedGroupEditor.startedDraggingPrompt}">
+    <li role="presentation" class="nav-divider"></li>
+    <li role="presentation" ng-show="loading.groups==1">
+        Loading <span class="fa fa-spinner fa-pulse"></span>
+    </li>
+    <li role="presentation" ng-show="loading.groups==2">
+        Sorry, something went wrong.
+    </li>
+    <li role="presentation" class="group-title" data-ng-repeat="(i,group) in timedGroupEditor.groups | filter:filterGroup"
+        e3-drop-target data-on-drop="onDropPrompt(dragEl,dropEl,data,scope)" data-ng-class="{active:timedGroupEditor.currentGroup==group.id}">
+        <a ng-click="timedGroupEditor.currentGroup=group.id">{{group.title}} ({{group.numPrompts}})
+            <span class="fa fa-spinner fa-pulse" ng-show="group.moving"></span>
+            <span class="fa fa-trash pull-right" data-ng-click="removeGroup(i,group);$event.stopPropagation();"></span>
+            <span class="fa fa-copy pull-right" data-ng-click="cloneGroup(i,group);$event.stopPropagation();"></span>
+        </a>
+    </li>
+</ul>

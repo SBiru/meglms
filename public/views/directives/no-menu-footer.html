@@ -1,0 +1,6 @@
+<div ng-show="showNextButton() && !options.lastPageOfCourse" ng-controller="NoMenuController" class="no-menu-next">
+    <button ng-click="nextPage()" class="btn" data-ng-class="options.nextClassName||defaultNextClassName"
+            data-ng-bind-html="trustAsHtml(options.nextText||defaultNextText)"
+            data-ng-disabled="options.isIdVerification&&!options.fileSelected">
+    </button>
+</div>

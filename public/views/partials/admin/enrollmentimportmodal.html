@@ -1,0 +1,29 @@
+<!-- bootstrap modal -->
+
+<style>
+    #enrollmentImportModal{overflow: hidden;}
+</style>
+<div id="enrollmentImportModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="enrollmentImportModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 90%; height: 80%; overflow: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="enrollmentImportModalLabel">Import Enrollments from CSV File</h4>
+            </div>
+            <div class="modal-body" >
+                Upload a CSV file with user data. The CSV file can have column headers for "Class ID", "User ID",
+                "Is Student", "Is Teacher", "Is Edit Teacher", "Is Observer"
+                <br><br>
+                Each row represents an enrollment of a user into a class.
+                Class ID and User ID can be an external id or the internal id that was created by the system.
+
+                <br><br>
+                Upload Enrollments: <input type="file" ng-file-select="onCsvFileSelectForEnrollments($files)">
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->

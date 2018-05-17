@@ -1,0 +1,20 @@
+<div class="progress progressV2 progressV3" ng-controller="ProgressBarController" ng-show="ProgressBarControllerNo === false">
+        <span class="avg-grade-wrapper" ng-show="class.show_grades==1">
+            <span class="grade-text"  ng-bind="gradeText()"></span>
+            <span class="avg-grade" style="margin-left: 10px" ng-bind="formatGrade()"></span>
+            <span class="current-progress" ng-show="showSecondaryGrade()">Current grade: <span style="font-weight:300" ng-bind="secondaryGrade()"></span></span>
+        </span>
+        <span class="progress-val-wrapper" ng-class="{'full-width':class.show_grades==0}">
+
+        </span>
+        <span class="progress-bar" ng-class="{'full-width':class.show_grades==0}">
+
+            <span class="progress-in" ng-style="{width: progress_perc+'%',background: barBackground()}"></span>
+            <span class="expected-tasks"  ng-show="shouldUseCustomProgressBar()" ng-style="{left: progressReport.percExpectedTasks+'%'}"></span>
+        </span>
+        <span class="expected-current-progress" ng-show="shouldUseCustomProgressBar()">
+            <span class="expected-progress">Completed: {{progress_perc}}%</span>
+            <span class="expected-progress" style="margin-left: 10px">Expected: {{progressReport.percExpectedTasks}}%</span>
+            <span class="current-progress"> <span ng-class="currentProgressVsExpected()<0?'text-danger':'text-success'" ng-bind="currentProgressText()"></span></span>
+        </span>
+</div>

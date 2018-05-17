@@ -1,0 +1,6 @@
+<div class="modal-body">
+    <div ng-init="$root.hideAddAnnouncement=true" data-ng-include="'/public/views/splash/announcements.html?v=1'" data-ng-controller="AnnouncementsController"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn  btn-primary" data-ng-disabled="!canClose()" ng-click="cancel()">Close</button>
+</div>

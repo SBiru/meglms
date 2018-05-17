@@ -1,0 +1,194 @@
+<div class="container-fluid">
+    <ng-include src=" '/public/views/partials/admin/gradingscalemodal.html' "></ng-include>
+    <div ng-show="!isEnrollModalBusy && !isEditModalBusy && !isGradeScaleBusy">
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-warning btn-sm pull-right" ng-if="canImportStudentData()" ng-click="importStudentData()">Import Student Data</button>
+            </div>
+        </div>
+        <form name="ediClassForm" ng-submit="updateClass()" novalidate>
+
+
+            <div class="row">
+                <div class="column">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.lmsId.$invalid && !ediClassForm.lmsId.$pristine }">
+                                <label for="lmsId" class="control-label"> LMS Id</label>
+                                <input placeholder="None Provided" id="lmsId" type="text" name="lmsId" class="form-control" ng-model="classInfo.lmsId" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.external_id.$invalid && !ediClassForm.external_id.$pristine }">
+                                <label for="externalId" class="control-label"> External Id</label>
+                                <input placeholder="None Provided" id="externalId" type="text" name="externalId" class="form-control" ng-model="classInfo.externalId" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label for="nativeLanguage" class="control-label"> Native Language</label>
+                                <select id="nativeLanguage" name="nativeLanguage" ng-model="classInfo.native_language" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="language.language_id as language.language_name for language in languages" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label for="chatPreference" class="control-label">Classmate Chat Setting</label>
+                                <select id="chatPreference" name="chatPreference" ng-model="classInfo.chatPreferenceSelection" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="chatPreference.label for chatPreference in chatPreferences" required></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.department.$invalid && !ediClassForm.department.$pristine }">
+                                <label class="control-label"> Department</label>
+                                <select selectize ng-options="department.id as department.name for department in departments" ng-model="classInfo.departmentId" required></select>
+                                <p ng-show="ediClassForm.department.$invalid && !ediClassForm.department.$pristine" class="help-block">Department is required.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.name.$invalid && !ediClassForm.name.$pristine }">
+                                <label for="className" class="control-label"> Name</label>
+                                <input id="className" type="text" name="name" class="form-control" ng-model="classInfo.className" required>
+                                <p ng-show="ediClassForm.name.$invalid && !ediClassForm.name.$pristine" class="help-block">Name is required.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-xs-12"  ng-class="{ 'has-error' : ediClassForm.description.$invalid && !ediClassForm.description.$pristine }">
+                                <label for="courseDescription" class="control-label"> Description</label>
+                                <input id="courseDescription" type="text" name="description" class="form-control" ng-model="classInfo.courseDescription" required>
+                                <p ng-show="ediClassForm.description.$invalid && !ediClassForm.description.$pristine" class="help-block">Name is required.</p>
+                            </div>
+                        </div>
+                        <div class="row" ng-show="classInfo.enable_credited_assignments">
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label class="control-label"> Default points for credited activities</label>
+                                <input style="width: 70px;display: inline-block" type="number" name="default_exempt_points" class="form-control" ng-model="classInfo.default_exempt_points" required>
+                                %
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="column">
+                    <div class="col-sm-6">
+                        <div>
+                            <input type="checkbox" ng-model="is_active" ng-click=fixbadmodel(is_active,'is_active') >
+                            <label>Show Class</label>
+                        </div>
+                        <div class="tooltip-relative">
+                            <input type="checkbox" data-ng-model="show_dates" id="show_dates" ng-click=fixbadmodel(show_dates,'show_dates')>
+                            <label for="show_dates">Show dates <span tooltip="If show dates is disabled the student won't see the due dates for the activities. Note that disabling the flag also disables the custom progress bar." tooltip-placement="right" class="fa fa-question-circle"></span></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="show_grades" id="show_grades" ng-click=fixbadmodel(show_grades,'show_grades')>
+                            <label for="show_grades">Show grades</label>
+                        </div>
+                        <label ng-show="show_grades">Grade Display Format &nbsp;&nbsp;&nbsp;</label>
+                        <div ng-show="show_grades">
+                            <input type="checkbox" data-ng-model="show_grades_as.score" >Score</input>
+                            <input type="checkbox" data-ng-model="show_grades_as.percentage">Percentage</input>
+                            <input type="checkbox"data-ng-model="show_grades_as.letter">Letter</input>
+                            <button style="margin-left: 20px;" ng-show="show_grades_as.letter" type="button" class="btn btn-primary btn-sm" ng-click="setGradingScale()">Set Grading Scale</button>
+                        </div>
+                        <br>
+                        <button id="submitBtn" type="submit" class="btn btn-primary btn-sm ">Save Changes</button>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="col-sm-6">
+                        <div>
+                            <input type="checkbox" ng-model="hide_exempted_activities" ng-click=fixbadmodel(hide_exempted_activities,'hide_exempted_activities') >
+                            <label>Hide exempted activities</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" ng-model="exclude_from_alerts" ng-click=fixbadmodel(exclude_from_alerts,'exclude_from_alerts') >
+                            <label>Exclude from alerts</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" ng-model="use_super_units" ng-click=fixbadmodel(use_super_units,'use_super_units') >
+                            <label>Allow super units</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="no_menu" id="no_menu" ng-click=fixbadmodel(no_menu,'no_menu')>
+                            <label for="no_menu">No Menu</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="classInfo.show_unit_tabs" id="no_menu"
+                                   ng-click="classInfo.changedUnitTabs=true">
+                            <label for="no_menu">Show unit tabs</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="classInfo.show_table_of_contents">
+                            <label>Show table of contents</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="classInfo.meta.show_breadcrumbs" id="breadcrumbs">
+                            <label for="breadcrumbs">Show breadcrumbs</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" data-ng-model="classInfo.meta.show_progress_bar" id="progress_bar">
+                            <label for="progress_bar">Show progress bar</label>
+                        </div>
+                        <div ng-show="$root.user.org.id!=10">
+
+                            <input type="checkbox" data-ng-model="is_j1_class" id="is_j1_class" ng-click=fixbadmodel(is_j1_class,'is_j1_class')>
+                            <label for="is_j1_class">Is J1 class</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div ng-if="!isAdminView">
+            <hr/>
+            <div class="panel panel-default" ng-init="show_groups=false" ng-controller="GroupController">
+                <div class="panel-heading" ng-click="show_groups=!show_groups">
+                    <a>Groups</a>
+                </div>
+                <div class="panel-body" ng-show="show_groups" ng-init="show_add_group=false">
+                    <div>
+                        <a ng-click="show_add_group=!show_add_group">+Add group</a>
+                    </div>
+
+                    <div class="panel panel-default panel-body" ng-show="show_add_group">
+                        <div class="input-group input-group-md">
+                            <input class="form-control" ng-model="newGroup.name" placeholder="Group name">
+                    <span class="input-group-addon" style="cursor: pointer;" ng-click="add()">
+                        Add
+                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select selectize ng-options="group.id as group.name for group in groups" ng-model="currentGroup.group_id"></select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-md">
+                            <input ng-model="group.name" class="form-control">
+                <span class="input-group-addon" style="cursor: pointer;">
+                    <span>Update</span>
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="btn btn-sm btn-danger" ng-click="remove()"><i class="fa fa-remove"></i></div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div ng-include="'/public/views/partials/admin/courseclassuser.html'" ng-controller="CourseClassUsersController"></div>
+        </div>
+    </div>
+    <div ng-include="'/public/views/partials/admin/enrollcourseclassuser.html'"
+         ng-controller="EnrollCourseClassUserController"
+         ng-if="isEnrollModalBusy"></div>
+    <div ng-include="'/public/views/partials/admin/editcourseclassuser.html'"
+         ng-controller="EditCourseClassUserController"
+         ng-if="isEditModalBusy"></div>
+</div>

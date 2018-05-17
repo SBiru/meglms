@@ -1,0 +1,16 @@
+<div ng-controller = "LinkStandardController" class="editor panel panel-default">
+    <ul class="editor_dialog">
+        <li ng-repeat="standard in standardData.links">
+            <div class="standard_select">
+                <select
+                        selectize id="standardSelect" name="standardSelect" ng-model="standard.standard_id"
+                        ng-options="flatStandard.id.toString() as flatStandard.fakeName for flatStandard in flatStandards" required>
+                </select>
+            </div>
+            <button ng-click="remove($index)" class="editor_remove">×</button>
+        </li>
+    </ul>
+    <button ng-click="new()">Add new</button>
+    <button ng-click="save()" ng-hide="hide_save">Save</button>
+    <span ng-show="loading_saveStandard">Saving..</span>
+</div>

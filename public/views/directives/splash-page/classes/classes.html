@@ -1,0 +1,25 @@
+<div data-ng-show="loading" class="loader">
+    <span class="fa fa-circle-o-notch fa-spin"></span>
+</div>
+<div data-ng-show="error" class="error">
+    Sorry, something went wrong. Try to reload the page.
+</div>
+<div ng-show="!loading && showTeacherWarning()">
+    <div class="alert alert-warning">
+        The courses' activities are not automatically loaded for classes you teach.
+    </div>
+</div>
+
+<div class="row" style="padding: 0 10px;">
+    <div ng-hide="loading" ng-repeat="class in classes | orderBy:'name'" ng-if="class.isTeacher" class="teacher-class classes col-md-4 col-lg-3 col-sm-6 col-xs-12">
+        <splash-page-class ></splash-page-class>
+    </div>
+</div>
+<div class="start-learning-text" ng-show="showStartLearningText()">
+    Click on the name of a course to start learning.
+</div>
+<div class="row" style="padding: 0 10px;">
+    <div ng-hide="loading" ng-repeat="class in classes | orderBy:'name'" ng-if="!class.isTeacher" class="student-class classes col-md-4 col-lg-3 col-sm-6 col-xs-12">
+        <splash-page-class></splash-page-class>
+    </div>
+</div>

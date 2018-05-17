@@ -1,0 +1,66 @@
+<div ng-controller="HomeTabsetController as tabsetVC">
+    <tabset active="tabsetVC.active">
+        <!-- ANNOUNCEMENTS -->
+        <tab heading="Home" index="0" ng-if="!user.hasOnlyProficiencyClasses">
+            <div data-ng-include="'/public/views/splash/announcements.html?v=2'"
+                 ng-if="!user.hasOnlyProficiencyClasses"></div>
+
+            <!--Shoud u se the directive after finishing the tests-->
+            <!--<splash-page-classes class="classes-container" ng-class="{'categories-container':user.org.category_dashboard}"></splash-page-classes>-->
+            <div ng-if="!user.org.category_dashboard && !user.hasOnlyProficiencyClasses" class="classes-container"
+                 data-ng-include="'/public/views/splash/classes.html'"
+                 data-ng-controller="SplashClassesController"></div>
+            <div ng-if="user.org.category_dashboard && !user.hasOnlyProficiencyClasses"
+                 class="classes-container categories-container"
+                 data-ng-include="'/public/views/splash/categories.html'"
+                 data-ng-controller="SplashCategoriesController"></div>
+        </tab>
+        <tab heading="Interviews" ng-show="$root.proficiencyTestStatus.proficiency['j1-available'] && $root.proficiencyTestStatus.j1"
+             select="tabsetVC.onSelect('j1')">
+            <div ui-view="" ng-if="tabsetVC.active==1"/>
+            <!--<div class="j1-dashboard-container" ng-controller="J1DashboardController as vc_dash">-->
+            <!--<div class="toggle-sidebar">-->
+            <!--<span class="fa fa-list-ul" ng-click="vc_dash.toggleSidebar()"></span>-->
+            <!--</div>-->
+            <!--<div ng-controller="J1SidebarController as vc_sidebar">-->
+            <!--<div data-ng-include="'/public/views/j1-dashboard/sidebar.html'"></div>-->
+            <!--<div data-ng-include="'/public/views/j1-dashboard/content.html'"-->
+            <!--ng-controller="J1ContentController as vc_content"></div>-->
+            <!--</div>-->
+            <!--</div>-->
+        </tab>
+        <tab heading="E3PT" ng-show="$root.proficiencyTestStatus.proficiency['e3pt-available'] && $root.proficiencyTestStatus.e3pt" index="2"
+             select="tabsetVC.onSelect('e3pt')">
+            <div ui-view="" ng-if="tabsetVC.active==2"/>
+        </tab>
+        <tab heading="Users" ng-show="$root.proficiencyTestStatus.compliance" index="3"
+             select="tabsetVC.onSelect('users')">
+            <div ui-view="" ng-if="tabsetVC.active==3"/>
+        </tab>
+        <tab heading="Classes" ng-show="$root.proficiencyTestStatus.compliance" index="4"
+             select="tabsetVC.onSelect('classes')">
+            <div ui-view="" ng-if="tabsetVC.active==4"/>
+        </tab>
+        <!-- ALERTS SHOULD CREATE A DIRECTIVE INSTEAD OF USE REPORTSCONTROLLER-->
+        <tab select="initAlerts=true;" ng-show="$root.proficiencyTestStatus.my_alerts"
+             ng-if="user.org.use_alert_splash && (user.is_teacher||user.is_organization_admin||user.is_super_admin)"
+             style="position:relative;height: 100%">
+            <tab-heading>My Alerts</tab-heading>
+            <alert-page ng-if="initAlerts" user-id="user.id"></alert-page>
+        </tab>
+        <tab heading="Alerts"
+             ng-if="false && user.org.enable_reports && (user.is_advisor||user.is_organization_admin||user.is_super_admin) && user.org.id==10">
+            <div data-ng-include="'/public/views/splash/alerts.html'" data-ng-controller="ReportsController"></div>
+        </tab>
+        <!-- REPORTS -->
+        <tab heading="Reports" ng-show="$root.proficiencyTestStatus.reports"
+             ng-if="user.org.enable_reports && (user.is_advisor||user.is_teacher||user.is_organization_admin||user.is_super_admin)">
+            <div data-ng-include="'/public/views/splash/reports.html'" data-ng-controller="ReportsController"></div>
+        </tab>
+        <tab heading="Passwords" active="selectPasswordTab"
+             ng-if="user.org.show_password_manager && (user.is_edit_teacher||user.is_organization_admin||user.is_super_admin)">
+            <page-passwords></page-passwords>
+        </tab>
+    </tabset>
+</div>
+

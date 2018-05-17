@@ -1,0 +1,13 @@
+render-page-vocab .starred {
+	color: yellow;
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: orange;
+}
+
+render-page-listening iframe {
+	border: none;
+	box-sizing: border-box;
+	height: 100%;
+	min-height: 700px;
+	width: 100%;
+}

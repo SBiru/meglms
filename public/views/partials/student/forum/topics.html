@@ -1,0 +1,107 @@
+<div class="forum-actions">
+    <div class="btn btn-flat btn-flat-primary" ng-click="topicsVC.openCreateNew()"
+         ng-show="topicsVC.forum.canCreateNew()">
+        {{topicsVC.forum.newPostText}}
+    </div>
+    <div class="btn btn-flat btn-flat-primary" ng-click="topicsVC.goToDashboard()">
+        See all forums for this course
+    </div>
+    <div class="btn btn-flat btn-flat-primary"
+         ng-show="topicsVC.forumSettings.hasArchive" ng-click="topicsVC.isArchive=!topicsVC.isArchive">
+        {{topicsVC.isArchive?'Hide':'Show'}} archived topics
+    </div>
+    <div class="btn btn-flat btn-flat-primary pull-right" ng-show="topicsVC.userSettings.editable"
+         ng-click="topicsVC.openSettings()">
+        <span class="fa fa-gear"></span>
+    </div>
+    <a style="margin-right:10px;color: black;" class="btn btn-flat btn-flat-primary pull-right"
+         ng-show="topicsVC.userSettings.isTeacher"
+        ui-sref="forum.participants()"
+    >
+        Participants <span class="fa fa-users"></span>
+    </a>
+</div>
+<table class="table forum-table">
+    <tr class="forum-table-header">
+        <td ng-bind="topicsVC.forum.topicsColName">
+        </td>
+        <td>
+            REPLIES
+        </td>
+        <td ng-show="topicsVC.userSettings.track_reading">
+            UNREAD
+        </td>
+        <td>
+            LAST POST
+        </td>
+    </tr>
+    <tr data-ng-repeat="topic in topicsVC.topics"
+        ng-hide="(!topicsVC.isArchive && topic.is_deleted==='1') || (topicsVC.isArchive && topic.is_deleted==='0')"
+        ng-class="{unread:topicsVC.userSettings.track_reading && (topic.isNeverRead || topic.unread>0)}"
+        class="forum-table-item"
+        ui-sref="forum.topic_details({topicId:topic.id})">
+        <td>
+            <div ng-bind="topic.title" class="forum-table-item-title"></div>
+            <div ng-bind-html="trustAsHtml(topic.shortText)"></div>
+        </td>
+        <td ng-bind="topic.replies" class="forum-table-item-bold"></td>
+        <td ng-bind="topic.unread" class="forum-table-item-bold" ng-show="topicsVC.userSettings.track_reading"></td>
+        <td >
+            <div ng-bind="topic.lastPost.author"></div>
+            <div ng-bind="topic.lastPost.time"></div>
+        </td>
+    </tr>
+</table>
+<script type="text/ng-template" id="new-topic-modal.html">
+    <div class="modal-header">
+        <button type="button" class="close " ng-click="$dismiss()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">New Topic Discussion</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+            <input class="form-control" placeholder="Topic title" ng-model="modalVC.newTopic.title" />
+            <textarea class="form-control" ckeditor placeholder="Topic message"
+                      ng-model="modalVC.newTopic.message"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn btn-primary" ng-click="modalVC.postNewTopic()">Post</div>
+    </div>
+</script>
+<script type="text/ng-template" id="forum-settings-modal.html">
+    <div class="modal-header">
+        <button type="button" class="close " ng-click="$dismiss()">
+            <div class="btn btn-danger btn-sm">
+                <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+            </div>
+        </button>
+        <h4 class="modal-title">Settings</h4>
+    </div>
+    <div class="modal-body modal-forum-settings">
+        <table>
+            <tr ng-show="userSettings.editable.subscribe">
+                <td>
+                    Subscribe:
+                </td>
+                <td>
+                    <switch ng-model="userSettings.subscribe" class="green"></switch>
+                </td>
+            </tr>
+            <tr ng-show="userSettings.editable.track_reading">
+                <td>
+                    Track reading status:
+                </td>
+                <td>
+                    <switch ng-model="userSettings.track_reading" class="green"></switch>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <div class="btn btn-primary" ng-click="save()">Save</div>
+    </div>
+</script>

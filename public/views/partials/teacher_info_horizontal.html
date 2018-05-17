@@ -1,0 +1,64 @@
+<style>
+    .teacher_contact{
+        width: 40%;
+        float: left;
+    }
+</style>
+<div ng-init="show_hide=false">
+    <div ng-show="show_hide"><a ng-click="show_hide=false" style="  text-align: center;display: block;" >Show teacher profile</a></div>
+    <div class="teacher_info"  ng-hide="show_hide">
+        <div class="teacher_contact_wrapper">
+            <div class="photo_container">
+                <img width="50px" height="50px" src="{{me.data.profile_picture.meta_value}}" ng-if="me.data.profile_picture.meta_value">
+                <div class="no-photo" ng-hide="me.data.profile_picture.meta_value">
+                    <span class="fa fa-camera"></span>
+                </div>
+                <div>
+                    <a style="  font-size: 10px;
+                    text-align: center;
+                    cursor: pointer;
+                    " ng-click="show_hide = true">Hide
+                    </a>
+                </div>
+            </div>
+            <div class="teacher_contact">
+                <div class="teacher_name" ng-class="{pointer:checkIsOnline()}" ng-click="openChat()">
+                    {{me.teacher.fname}} {{me.teacher.lname}}
+                    <span class="fa fa-circle" style="    color: rgb(66, 183, 42);font-size: 10px;padding-left: 10px;" ng-show="checkIsOnline()"></span>
+
+                </div>
+                <div>
+                    <span class="btn-email icon" ng-controller="EmailController"><span class="fa fa-envelope" ng-click="open(me.teacher) " ng-init="specificUser=true"></span></span>
+                    <span class="teacher-email">{{me.teacher.email}}</span>
+                </div>
+                <div class="phone">
+                    <span class="btn-email icon"><span class="fa fa-phone"></span></span>
+                    {{me.teacher.phone}}
+                </div>
+            </div>
+            <div class="teacher_contact">
+
+                <div class="phone" ng-if="me.data.office_hours.meta_value">
+                    <span class="btn-email icon"><span class="fa fa-clock-o"></span></span>
+                    {{me.data.office_hours.meta_value}}
+                </div>
+                <div class="phone" ng-if="me.data.v_office_hours.meta_value" >
+                    <span class="btn-email icon">
+                        <a href="{{me.data.v_office_url.meta_value}}" target="_blank" style="color: #62c354;text-decoration: none">
+                            <span class="fa fa-tablet"></span>
+                        </a>
+                    </span>
+                    {{me.data.v_office_hours.meta_value}}
+                </div>
+            </div>
+        </div>
+
+        <div class="info_container">
+            <div class="row links">
+                <div class="col-sm-6" ng-if="show_edit()"><a href="#/profile">Edit profile</a></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

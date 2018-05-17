@@ -1,0 +1,399 @@
+.overflow-auto{
+    overflow: auto;
+}
+all-current-students .filters{
+    margin-bottom: 10px;
+}
+perc-behind-dist .student-tab .panel-body,
+course-grades .student-tab .panel-body,
+course-grades .assignment-tab .panel-body
+{
+    max-height:250px;
+    overflow: auto;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+time-spent .assignment-tab .panel-body .assignments
+{
+
+    max-height: 275px;
+    overflow: auto;
+    margin-top: 10px;
+
+}
+resubmissions .assignment-tab .panel-body .assignments{
+    max-height: 236px;
+    overflow: auto;
+}
+resubmissions .assignment-tab .panel-body td:last-child{
+    padding-left:10px;
+}
+perc-behind-dist .student-tab .panel-body .student td{
+    padding: 5px;
+}
+perc-behind-dist .students-container{
+    padding-left: 3px;
+    padding-right: 3px;
+}
+time-spent .units{
+    margin-bottom:10px;
+}
+grading-queue .assignments td{
+    padding:5px 5px;
+}
+attendance-report .save-all.floating{
+    position: fixed;
+    top: 60px;
+    right: 47px;
+}
+.time-spent-table .input-th{
+    width: 136px;
+    padding:0px 6px;
+    font-size: 11px;
+    min-width: 136px;
+
+}
+attendance-table{
+    position: relative;
+    display: block;
+}
+attendance-table .fixed-first-column{
+    position:absolute;
+    top: 0px;
+   }
+attendance-table .input-table-body{
+    max-height: 420px;
+    overflow: auto;
+    position: relative;
+}
+
+attendance-table .scrollable-table    {
+    position: relative;
+    overflow-x: auto;
+}
+attendance-table .fixed-right-table    {
+    position: absolute;
+    top: 0px;
+    right: 0;
+
+}
+attendance-table .custom-scrollbar-wrapper{
+    position: relative;
+    overflow-x: auto;
+}
+attendance-table .custom-scrollbar{
+    height: 1px;
+}
+attendance-table .fixed-right-table    td{
+    padding-left: 5px;
+}
+.time-spent-table .expand-first-column{
+    padding-bottom: 20px;
+}
+.time-spent-table .expand-first-column .custom-reason{
+    position: absolute;
+    width: 208px;
+    font-size: 11px;
+    margin-top: 2px;
+}
+.time-spent-table .expand-first-column .custom-reason input{
+    position: absolute;
+    width: 73px;
+    right: 10px;
+    top: 0;
+    height: 16px;
+    font-size: 11px;
+}
+
+.time-spent-table .input-td.expand-first-column {
+    vertical-align: top;
+    padding-top: 19px;
+}
+.time-spent-table .headcol{
+
+}
+.time-spent-table .input-td{
+    width: 136px;
+    padding:5px;
+    padding-left:4px;
+    min-width: 136px;
+}
+attendance-report .filters{
+    max-width: 400px;
+}
+
+.vr{
+    border-right: 1px solid #ddd !important;
+}
+.hr3{
+    border-bottom: 1px solid #ddd !important;
+}
+attendance-report .datepicker{
+    display: flex;
+    padding-left: 15px !important;
+}
+attendance-report .ui-datepicker .text-danger a{
+    color:#a94442
+}
+.student-list-box{
+    padding: 2px;
+}
+
+.withdraw-datepicker{
+    width: 115px;
+    margin-left: 3px;
+}
+.withdraw-datepicker .input-group-btn > button{
+    padding: 2px 7px;
+    height: 25px;
+}
+.withdraw-datepicker input{
+    padding: 2px;
+    font-size: 11px;
+    height: 25px;
+}
+attendance-table .attendance-row td{
+    padding:5px 0;
+}
+attendance-table .attendance-input{
+    width: 50%;
+    float: left;
+}
+attendance-table .day-has-errors{
+    color: red;
+}
+attendance-table .day-has-errors input{
+    border-color:red;
+}
+attendance-table .approved-row{
+    background-color:  rgba(128, 128, 128, 0.06);
+}
+
+attendance-table .pending-status{
+    padding:0 5px;
+    font: 11px arial,sans-serif;
+    background-color: lightgrey;
+    border-color: lightgrey;
+}
+attendance-table .approved-day{
+    background-color: #42d692;
+    border-color: #42d692;
+}
+attendance-table .pending-status.pending-day{
+    background-color: #FCFF52;
+    border-color: #FCFF52;
+}
+
+attendance-table .calculated{
+    width: 50%;
+    float: left;
+    padding: 0 5px;
+}
+attendance-report .get-report-button{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+attendance-report .report{
+    margin-bottom: 20px;
+}
+attendance-report .layout-creator .panel-heading{
+    display:flex;
+}
+
+attendance-report .layout-creator .edit-layout-wrapper{
+    margin: 0 15px;
+    margin-bottom: 10px;
+}
+attendance-report .layout-creator .edit-layout-wrapper .edit-layout-label{
+    position: relative;
+    top: 10px;
+    padding-right: 10px;
+}
+attendance-report .layout-creator .edit-layout-wrapper .edit-layout-select{
+    width:30%;
+    padding: 0 10px;
+    display: inline-block;
+}
+
+attendance-report .layout-creator .layout-name{
+    display: flex;
+    padding-bottom: 10px;
+}
+attendance-report .layout-creator .panel-body{
+    height: 100%;
+}
+attendance-report .layout-creator .columns .selected-column{
+    cursor:move;
+}
+attendance-report .layout-creator .columns .selected-column,
+attendance-report .layout-creator .columns .available-column
+{
+    padding: 5px 10px;
+    border: rgba(255,255,255,0.4) 1px solid;
+    border-radius: 5px;
+    background: #f2f8fa;;
+}
+attendance-report .layout-creator .columns .selected-column:hover,
+attendance-report .layout-creator .columns .available-column:hover
+{
+    background: #e0eef3;
+}
+attendance-report .layout-creator .columns .available-column{
+
+}
+attendance-report .layout-creator .columns .column-header .col-checkbox,
+attendance-report .layout-creator .columns .selected-column .col-checkbox
+{
+    width: 20%;
+    padding: 0 10px;
+    display: inline-flex;
+}
+attendance-report .layout-creator .columns .selected-column .col-name{
+    width: 25%;
+    display: inline-flex;
+}
+attendance-report .layout-creator .columns .column-header .col-name{
+    padding-left:20px;
+    width: 30%;
+    display: inline-flex;
+}
+attendance-report .layout-creator .columns .selected-column .col-label,
+attendance-report .layout-creator .columns .column-header .col-label{
+    width: 45%;
+    padding: 0 10px;
+    display: inline-flex;
+}
+
+attendance-report .layout-creator .columns .column-header{
+    height:55px
+}
+attendance-report .layout-select{
+    padding: 15px 0;
+}
+attendance-report .layout-select .dropdown{
+    padding:0;
+    top: 4px;
+
+}
+attendance-report .align-right{
+    text-align: right;left: 54px;
+}
+
+attendance-report .date-format{
+    display: inline-flex;
+    margin-top: 10px;
+}
+attendance-report .date-format li{
+    cursor:move
+}
+attendance-report .date-format li:first-child{
+    margin-left:10px;
+}
+attendance-report .date-format .add-slash,
+attendance-report .date-format .add-dash{
+    margin-right: 12px;
+}
+attendance-report .date-format .add-slash::after,
+attendance-report .date-format .add-dash:after{
+
+    position: relative;
+    left: 15px;
+}
+attendance-report .date-format .add-slash::after{
+    content:"/";
+}
+attendance-report .date-format .add-dash:after{
+    content:"-";
+}
+attendance-report .date-format .center-vertically{
+    position: relative;
+    top: 8px;
+}
+.enter-missing-attendance-window .modal-dialog{
+    width: 90%;
+}
+
+attendance-report .share-layout{
+    margin-bottom:5px
+}
+attendance-table .absent-reason{
+    position: relative;
+    padding: 0;
+    height: 17px;
+    margin-top: 3px;
+    margin-left: 2px;
+}
+attendance-table .absent-reason .reason-text{
+    width: 130px;
+    display: inline-block;
+    padding-left: 3px;
+    font-size: 11px;
+    top: -3px;
+    position: relative;
+}
+attendance-table .absent-reason .fa{
+    right: 2px;
+    position: relative;
+}
+
+activity-report #chartjs-tooltip {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+activity-report .chartjs-tooltip-key{
+    display:inline-block;
+    width:10px;
+    height:10px;
+}
+activity-report .panel-filter{
+    padding: 0
+}
+activity-report .panel-filter .inner-panel-filter{
+    margin-bottom: 0
+}
+activity-report .chart-btn{
+    position: relative;
+    top: 16px;
+}
+activity-report .legend-box{
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    transform: translateY(25%);
+    margin-right: 10px;
+}
+send-progress-report .student-list{
+    max-height: 300px;
+    overflow: auto;
+}
+send-progress-report .student-list table{
+    width:100%;
+}
+send-progress-report .student-list td{
+    width:50%
+}
+progress-report .collapse-all{
+    margin-left: 20px;
+}
+
+.table.attendance-preview td{
+    width:14%;
+    text-align: center;
+}
+
+.missing-report-extra-info{
+    margin: 0 10px;
+
+}
+.text-red{
+    color:red;
+}

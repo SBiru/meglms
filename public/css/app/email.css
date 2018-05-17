@@ -1,0 +1,172 @@
+ul.ui-autocomplete{
+    z-index:50000
+}
+#selected-users li{
+    float: left;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 4px 4px 4px 11px;
+    border-radius: 3px;
+    margin-right: 7px;
+    margin-bottom: 5px;
+    margin-top: 3px;
+    background-color: #3dc0c8;
+    color: #ffffff;
+}
+#selected-users li.teacher{
+    background-color: #D4ABF5;
+}
+#selected-users li a:hover{
+    cursor: pointer;
+}
+#selected-users li a{
+    font-size: 14px;
+
+    display: inline-block;
+    color: #ffffff;
+    text-align: center;
+    width: 20px;
+}
+.full-width{
+    width: 100%;
+}
+.email-nav.nav > li > a:focus {
+    background-color: #428bca;
+}
+.preview{
+    font-size: 14px;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+.email-message{
+    word-wrap: break-word;
+    font-weight: 500;
+}
+.email-collapse-btn:hover{
+    cursor: pointer;
+
+}
+.email-modal-window .modal-dialog{
+    width:700px;
+}
+.received,.sent .list-group{
+    overflow: auto;
+    margin-bottom: 0;
+}
+
+.subject{
+    font-weight: 600;
+    padding: 10px;
+}
+.sent-arrow{
+    color:rgb(77, 179, 77);
+}
+.received-arrow{
+    color:rgb(129, 129, 213);
+}
+.new-emails-badge{
+    position: absolute;
+    top: 5px;
+    left: 9px;
+    background: beige;
+    font-size: 9px;
+    color: #147406;
+    padding: 3px;
+}
+.filterMessages li{
+    display: inline;
+    margin: 0 5px;
+}
+.notification:hover{
+    cursor:pointer;
+}
+.unread{
+    background-color:#f3f3f3;
+}
+.guardians{
+    padding:10px 0;
+}
+.student-feedback .notifications{
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 0px;
+    margin-top: 10px;
+}
+.student-feedback .notifications li {
+    padding: 5px;
+    list-style-type: none;
+}
+.student-feedback .notifications .notifbox {
+    max-height: 300px;
+    overflow: auto;
+
+}
+.student-feedback .notifications .notifbox li {
+    color: #666;
+}
+.student-feedback .notifications .notifbox li a {
+    color: #666;
+}
+.student-feedback .notifications .notifbox li.unread {
+    background: #f3f3f3;
+}
+.student-feedback .notifications .notifbox li.notification {
+    min-height: 50px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+.student-feedback .notifications .notifbox li.notification a{
+    text-decoration: none;
+}
+.student-feedback .notifications .notifbox li.notification:last-child {
+    border-bottom: none;
+}
+.student-feedback .notifications .notifbox li.notification .assignment-info-block {
+    width: 50%;
+    position: absolute;
+    left: 5px;
+    font-size: 11px;
+    transform: translateY(-50%);
+    top: 50%;
+    padding:0 5px
+}
+.student-feedback .notifications .notifbox li.notification .class-name{
+    font-size: 13px;
+    text-align: left;
+}
+.student-feedback .notifications .notifbox li.notification .message-block {
+    width: 50%;
+    position: relative;
+    left: 50%;
+    font-size: 11px;
+    padding: 0 5px;
+}
+
+.student-feedback .notifications .notifbox li.notification .message-block .message-info {
+    font-size: 10px;
+    color: #ABABAB;
+}
+.student-feedback .notifications .notifbox li.notification:hover{
+    cursor: auto;
+}
+.student-feedback .notifications .notifbox li.notification .open{
+    position: absolute;
+    width: 50px;
+    left: calc(100% - 50px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #DEDEDE;
+    height: 100%;
+    cursor: pointer;
+}
+.student-feedback .notifications .notifbox li.notification .open:hover{
+    background: #ccc;
+}
+.student-feedback .notifications .notifbox li.notification .open span{
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    left: 50%;
+
+}

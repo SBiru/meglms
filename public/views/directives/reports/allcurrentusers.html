@@ -1,0 +1,37 @@
+<div ng-if="error" data-ng-bind="error" class="alert alert-danger"></div>
+<div data-ng-show="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+<div data-ng-hide="loading" ng-init="limit=50">
+    <div class="filters margin-bottom-15">
+        <input data-ng-model="filterStudent" placeholder="Filter" >
+        <select ng-model="limit" ng-options="number for number in [20,50,100,200,300]"></select>
+        <span class="display-inline-block margin-bottom-15">
+            <input type="checkbox" data-ng-model="openAll" data-ng-change="toggleOpenAll()">
+            <span data-ng-bind="openAll?'Collapse all':'Expand all'"></span>
+        </span>
+        <br class="display-block" style="display: none">
+        <span ng-show="user.is_super_admin" class="margin-bottom-15">
+        <span class="margin-left-0" style="margin-left:50px">
+            Organization:
+        </span>
+        <select ng-model="filterOrganization" ng-options="org.id as org.name for org in organizations"></select>
+        </span>
+
+    </div>
+
+    <div data-ng-repeat="student in report | filter:filterOrg|filter:filterStudent |orderBy:'name'| limitTo:limit track by $index" class="panel panel-default">
+        <div class="panel-heading pointer"  data-ng-click="student.show=!student.show">
+            <span class="fa" data-ng-class="student.show?'fa-minus-square':'fa-plus-square'"></span>
+            <span data-ng-bind="student.name"></span>
+            <span data-ng-bind="'('+getClassesLength(student)+' classes)'"></span>
+        </div>
+        <div class="panel-body" ng-if="student.show" style="overflow-x: scroll">
+            <sortable-table
+                    header="tableHeader"
+                    rows="student.classes"
+                    table-height="250px"
+                    show-filter="false"
+                    >
+            </sortable-table>
+        </div>
+    </div>
+</div>

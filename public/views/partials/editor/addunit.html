@@ -1,0 +1,86 @@
+<div ng-controller="AddUnitController">
+	<h2>Add Unit</h2>
+	<table>
+		<tr ng-show="useSuperUnits">
+			<td style="padding-bottom:15px;"><label for="superUnit" class="control-label" style="font-size:1.4em">Super unit</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<select selectize
+						ng-options="unit.id as unit.name for unit in superUnit.units"
+						ng-model="superUnitId">
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="unitTitle" class="control-label" style="font-size:1.4em">Title</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitTitle"  name="unitTitle" ng-model="unit_title" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Unit Title" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="unitNumber" class="control-label" style="font-size:1.4em">Number</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="unitNumber" name="unitNumnber" data-ng-disabled="is_intro_unit" ng-model="unit_number" class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="tabName" class="control-label" style="font-size:1.4em">Tab name
+			</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="tabName" name="tabName"
+																	   data-ng-disabled="is_intro_unit"
+																	   ng-model="tabName"
+																	   class="form-control ng-pristine ng-valid ng-valid-required" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label class="control-label" style="font-size:1.4em">Image</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<ul class="logo-admin-container">
+					<li >
+
+						<img  ng-if="unitImageUrl && !unitImage" src="{{unitImageUrl}}">
+						<img id=preview ng-if="unitImage" src="data:{{unitImage.filetype}};base64,{{unitImage.base64}}">
+
+					</li>
+					<li >
+						<div class="btn btn-sm btn-default fa fa-folder-open" ng-click="selectFile($event)">
+							<input ng-hide="true" accept="image/*" type="file"  ng-model='unitImage' base-sixty-four-input>
+
+						</div>
+
+
+					</li>
+					<li>
+							<span class="btn btn-sm btn-danger" ng-click="removeImage()">
+								<i class="fa fa-remove"></i>
+							</span>
+					</li>
+					<li >
+						{{unitImage.filename}}
+					</li>
+				</ul>
+			</td>
+		</tr>
+
+		<tr>
+			<td style="padding-bottom:15px;" colspan="2">
+				<input type="checkbox" ng-model="is_intro_unit" ng-change="toggleIntroUnit(is_intro_unit)">
+				Is introduction unit
+			</td>
+		</tr>
+
+	</table>
+	<table ng-hide="import_unit">
+		<tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<table>
+					<tr>
+						<td>
+							<button type="button" class="btn btn-primary btn-sm" ng-click="addUnit()">Add Unit</button>
+						</td>
+						<td style="padding-left: 10px;">
+							<a ng-click="import_unit=true">Import content from another unit</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<div ng-if="import_unit" ng-include="'/public/views/partials/editor/clone_unit.html?v=2'"></div>
+
+</div>

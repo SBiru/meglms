@@ -1,0 +1,10 @@
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<div class="row-fluid">
+    <div class="col-sm-12 float-left" id="'+id+'" style="margin-bottom:10px" ng-repeat="option in question.wordmatchingInputs">
+        <div class="text-center">
+            <div ng-bind-html="trustAsHtml(option.value1.value)" style="float: left;width: 30%;margin-right: 10px;" class="ng-binding"></div>
+            <div ng-bind-html="trustAsHtml(option.value2.value)" style="float: left;width: 20%;margin-right: 10px;" class="ng-binding"></div>
+            <div ng-bind-html="trustAsHtml(option.value3.value)" style="float: left;width: 20%;" class="ng-binding" ng-show="question.enable_distractors"></div>
+        </div>
+    </div>
+</div>

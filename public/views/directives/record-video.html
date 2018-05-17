@@ -1,0 +1,65 @@
+<!-- Nav tabs -->
+<span ng-show="closeAction" ng-click="close()" class="fa fa-close close text-danger pointer "></span>
+<ul class="nav nav-tabs" role="tablist" data-ng-init="currentTab='video'" >
+    <li ><a role="tab" data-toggle="tab" ng-click="currentTab='video'">Record</a></li>
+    <li><a role="tab" data-toggle="tab" ng-click="currentTab='upload'">Upload</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div  ng-show="currentTab=='video'" id="video_reply_tab">
+
+        <!-- Beginning Of Flash Video Recorder -->
+        <div style="margin-top: 10px;">
+            <div align="center">
+                <div id="record-video" ng-bind-html="videoWidget" style="width: 272px; height:224px;"></div>
+
+                <br />
+                <div id="buttonsarea" align="center">
+                    <span ng-bind-html="videoRecordButton" ng-hide="showSaving"></span> &nbsp;&nbsp;
+                    <button ng-click="submitVideoAndClose()" id="videoButton" data-ng-disabled="saving" ng-show="showSubmit && !showSaving" id="submitted">
+                        <span class="fa fa-check" style="color:green" ></span>
+                        Submit <span class="fa fa-spinner fa-pulse" ng-show="saving" ></span>
+                    </button>
+                        <span ng-show="showSaving" style="font-weight:bold; font-size:x-large;">
+                            <img src="/public/img/ajax-loader.gif"  /> Please wait... your video is being processed
+                        </span>
+
+                </div>
+            </div>
+        </div>
+        <div ng-if="options.showComments" class="comments-wrapper">
+            <div class="video-comment">If necessary, add a text comment below.</div>
+            <textarea class="form-control" data-ng-model="$parent.video_comment"></textarea>
+        </div>
+    </div>
+    <div  ng-show="currentTab=='upload'" id="upload_reply_tab">
+        <div style="margin-top: 10px;">
+            <p>Max. file size allowed: 500 MB</p>
+            <input type="file" ng-file-select="onFileSelect($files)">
+            <br />
+            <div ng-show="uploading">
+                <span>Uploaded {{ progress_upload }}%</span>
+                <div class="file-upload-progress-container" style="width:300px;">
+                    <div  class="progress progress-striped active">
+                        <div id="upload-progress-bar" class="progress-bar upload" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="options.showComments" class="comments-wrapper">
+            <div class="video-comment">If necessary, add a text comment below.</div>
+            <textarea class="form-control" data-ng-model="$parent.video_comment"></textarea>
+        </div>
+        <br />
+        <div  align="center">
+
+            <button ng-click="uploadVideoAndClose()"  ng-show="canUpload()" data-ng-disabled="uploading || !canUpload()">
+                <span class="fa fa-check" style="color:green"></span>
+                Upload and submit <span class="fa fa-spinner fa-pulse" ng-show="uploading" ></span>
+            </button>
+
+        </div>
+    </div>
+</div>
+<!-- End Tab panes -->

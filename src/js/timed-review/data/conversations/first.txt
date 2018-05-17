@@ -1,0 +1,27 @@
+First Conversation
+> Hello, what is your name?
+< My name is Stephen.
+* what-name.wav
+~ myname.wav
+
+> How old are you?
+< I am 17 years old.
+* how-old.wav
+~ myage.wav
+
+> How many brothers and sisters do you have?
+< I have 2 brothers and 1 sister.
+* how-siblings.wav
+~ mysiblings.wav
+
+> Who do you work for?
+< I work for a school.
+* who-employer.wav
+~ myemployer.wav
+
+> What do you do in your job?
+< I teach math to third grade students.
+* what-job.wav
+~ myjob.wav
+
+

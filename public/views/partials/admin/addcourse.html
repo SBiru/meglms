@@ -1,0 +1,65 @@
+<div>
+
+	<ul id="courseTab" class="nav nav-tabs" ng-init="isAddView=true">
+		<li class="active">
+			<a data-toggle="tab" ng-click="isAddView=true">Add course</a>
+		</li>
+		<li >
+			<a data-toggle="tab" ng-click="isAddView=false">Clone course</a>
+		</li>
+
+	</ul>
+
+	<table style="margin-top: 30px" ng-show="isAddView">
+		<tr>
+			<td style="padding-bottom:15px;"><label for="courseName" class="control-label" style="font-size:1.4em">Name</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="courseName" name="courseName" ng-model="courseName" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Course Name" required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="courseDescription" class="control-label" style="font-size:1.4em">Description</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><input type="text" id="courseDescription" name="courseDescription" ng-model="courseDescription" class="form-control ng-pristine ng-valid ng-valid-required" placeholder='Course Description' required></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom:15px;"><label for="nativeLanguage" class="control-label" style="font-size:1.4em">Native Language</label></td>
+			<td style="padding-bottom:15px; padding-left:20px;">
+				<select id="nativeLanguage" name="nativeLanguage" ng-model="nativeLanguage" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="language.language_name for language in languages" required></select>
+			</td>
+		</tr>
+		  <tr>
+			<td style="padding-bottom:15px;"></td>
+			<td style="padding-bottom:15px; padding-left:20px;"><button type="button" class="btn btn-primary btn-sm" ng-click="addCourse()">Add Course</button></td>
+		</tr>
+	</table>
+	<div ng-hide="isAddView" style="margin-top: 30px">
+		<input type="text" placeholder="Search" ng-model="inputFilter">
+		<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+		<thead>
+			<tr>
+				<th data-halign="left">
+					<input type="checkbox" ng-click="checkAll()">
+					<span>Select All</span>
+				</th>
+				<th data-halign="left">Course Name</th>
+				<th data-halign="left">New Name</th>
+				<th data-halign="left">
+					<div class="btn btn-primary" ng-click="clone()">
+						Clone Selected
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="course in courses | filter:inputFilter" ng-init="course.new_name=course.name">
+				<td><input type="checkbox" ng-model="course.cloning"></td>
+				<td>{{course.name}}</td>
+				<td><input type="text" ng-model="course.new_name"> </td>
+				<td ng-show="course.cloning">
+					<div class="btn btn-primary" ng-click="clone(course)">
+						Clone
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+</div>

@@ -1,0 +1,11 @@
+customize-org-colors .minicolors{
+    width: 125px;
+    display: inline-block;
+}
+customize-org-colors .table{
+    width:initial;
+}
+customize-org-colors .table>tbody>tr>th{
+    vertical-align: middle;
+    width: 50%;
+}

@@ -1,0 +1,21 @@
+<div class="modal-header">
+    Save as
+</div>
+<div class="modal-body canvas-size">
+    <table style="margin: auto">
+        <tr>
+            <td>Name</td>
+            <td><input ng-model="file.name"></td>
+        </tr>
+        <tr>
+            <td>Class</td>
+            <td><select selectize data-ng-options="class.id as class.name for class in classes" ng-model="file.classid"></select></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right">
+                <button ng-click="$dismiss()">Cancel</button>
+                <button ng-click="save()">Save</button>
+            </td>
+        </tr>
+    </table>
+</div>

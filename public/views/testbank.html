@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <title ng-bind="'Test/Bank Editor '+$state.current.name">Test/Bank Editor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- @TODO: the scaffolding and css needs to be improved in a big way; that should be done with the new ui skin -->
+
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/public/css/bootstrap-3.3.1.min.css">-->
+    <!--<link rel="stylesheet" href="/public/css/bootstrap-theme-3.3.1.min.css">-->
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/css/bootstrap-select-1.6.3.min.css">
+    <link rel="stylesheet" href="/public/css/angular.css">
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <link rel="stylesheet" href="/public/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/public/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="/public/css/jquery-ui.theme.min.css">
+
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/css/app.css?ver=1.1.2">
+    <link rel="stylesheet" href="/public/css/app/email.css">
+    <link rel="stylesheet" href="/public/build/timed-review.css">
+    <link rel="stylesheet" href="/public/build/testbank.css">
+    <link rel="stylesheet" href="/public/css/meg2.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/public/css/responsive.css">
+    <link rel="stylesheet" href="/public/css/app/testbank.css">
+    <link rel="stylesheet" href="/public/css/app/rubrics.css">
+    <link rel="stylesheet" href="/public/css/app/quiz.css">
+    <link rel="stylesheet" href="/public/css/toastr.css">
+    <link rel="stylesheet" href="/public/css/app/edkey-custom.css">
+    <!-- library includes -->
+
+    <script src="/public/lib/jquery-1.11.0.min.js">
+    </script>
+    <script src="/public/lib/jquery-ui.min.js">
+    </script>
+    <script src="/public/lib/jquery.ui.touch-punch.min.js">
+    </script>
+
+
+    <script src="/public/lib/bootstrap.min.js">
+    </script>
+    <!--<script src="/public/lib/bootstrap-3.3.1.min.js"></script> SEE: https://github.com/angular-ui/bootstrap/issues/2925 -->
+    <script src="/public/lib/bootstrap-select-1.6.3.min.js"></script>
+    <script src="/public/lib/toastr.js"></script>
+
+    <script src="/public/lib/angular-1.3.2.js">
+    </script>
+
+    <script src="/public/lib/angular-ui-sortable.js"></script>
+
+    <script src="/public/lib/angular-resource.min.js">
+    </script>
+    <script src="/public/lib/angular-ui-router-0.2.12.min.js">
+    </script>
+
+    <script src="/public/lib/ui-bootstrap-custom-tpls-0.10.0.min.js">
+    </script>
+
+    <script src="/public/js/directives/audio-flashit.js"></script>
+
+    <script src="/public/build/timed-review.js"></script>
+    <script src="/public/js/directives/timed-editor.js"></script>
+
+    <script src="/public/js-util/ckeditor/ckeditor.js"></script>
+
+    <!--<script src="/public/lib/angular-file-upload-shim.min.js"></script>-->
+    <script src="/public/lib/angular-file-upload.min.js"></script>
+
+    <!-- app includes -->
+    <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js" type="text/javascript"></script>
+    <script src="/public/js-util/jsCropperUI-1.2.2/cropper/cropper.js" type="text/javascript"></script>
+    <script src="/public/js-util/jsCropperUI-1.2.2/cropper/config.js" type="text/javascript"></script>
+    <script src="/public/js-util/url-replacer.js" type="text/javascript"></script>
+    <script src="/public/lib/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="/public/build/testbank.js"></script>
+    <script src="/public/app/testbank/testbank.js?ver=1.1.8"></script>
+    <script src="/public/app/testbank/importtestbankmodal.js"></script>
+
+
+
+    <script src="/public/js/controllers/rubrics/routes.js"></script>
+    <script src="/public/js/controllers/rubrics/RubricsController.js"></script>
+    <script src="/public/js/controllers/rubrics/RubricsMenuController.js"></script>
+    <script src="/public/js/controllers/rubrics/RubricsCourseBuilderController.js"></script>
+    <script src="/public/js/controllers/rubrics/RubricsBaseController.js"></script>
+    <script src="/public/js/controllers/email/EmailController.js"></script>
+    <script src="/public/js/controllers/email/ModalEmailBaseController.js"></script>
+    <script src="/public/js/controllers/email/ModalEmailController.js"></script>
+    <script src="/public/js/controllers/email/ModalEmailSpecificController.js"></script>
+
+
+    <script src="/public/js/directives/quiz-editor/modals/createquestion.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/deletequestion.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/editquestion.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/selectquestion.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/movequestion.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/question.fromtags.modal.js"></script>
+    <script src="/public/js/directives/quiz-editor/modals/question.randomgroupfromtags.modal.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/question.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/default-question.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/drag_into_text.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/essay.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/calculated_simple.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/calculated_multi.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/equation_type.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/question.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/default-question.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/drag_into_text.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/calculated_simple.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/calculated_multi.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/essay.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/wordmatching.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/display/editor/equation_type.js"></script>
+    <script src="/public/js/directives/quiz-editor/quizHelper.js"></script>
+    <script src="/public/js/directives/quiz-editor/edit-question.js"></script>
+    <script src="/public/js/directives/quiz-editor/select-tags.js"></script>
+    <script src="/public/js/directives/quiz-editor/question-tags.js"></script>
+    <script src="/public/js/directives/async_input_search.js"></script>
+    <script src="/public/js/directives/e3-pagination-async.js"></script>
+
+
+    <script src="/public/js/controllers/file_folder/filefolder.js"></script>
+    <script src="/public/js/controllers/HelpController.js"></script>
+    <script src="/public/app/testbank/directives.js"></script>
+    <script src="/public/lib/underscore-min.js"></script>
+    <script src="/public/app/app-testbank.js">
+    </script>
+    <script src="/public/app/common/nav/nav.js">
+    </script>
+    <script src="/public/app/common/utils/utils.js">
+
+    </script>
+    <script src="/public/lib/moment.min.js"></script>
+    <!--<script src="/public/js/controllers/user.js"></script>-->
+    <!--<script src="/public/js/controllers/NotificationController.js"></script>-->
+    <!--<script src="/public/js/controllers/PreferenceController.js"></script>-->
+
+    <script src="/public/app/testbank/testbank-service.js?ver=1.1">
+    </script>
+    <script src="/public/js/services.js?ver=1.0"></script>
+    <script src="/public/js/services/rubrics.js"></script>
+    <script src="/public/js/services/gradebook.js"></script>
+    <script src="/public/js/services/email/Email.js"></script>
+    <script src="/public/js/services/posts.js"></script>
+    <script src="/public/js/services/organization.js"></script>
+    <script src="/public/js/services/department.js"></script>
+    <script src="/public/js/services/class.js"></script>
+    <script src="/public/js/services/user.js"></script>
+    <script src="/public/js/services/testbank.bank.js"></script>
+    <script src="/public/js/services/testbank.question.js"></script>
+    <script src="/public/js/services/testbank.test.js"></script>
+    <script src="/public/js/directives/quiz-editor/questions/create_or_edit/util/wordmatching.js"></script>
+
+    <script src="/public/js/directives/ckeditor.js"></script>
+    <script src="/public/js/directives/testbank-filters.js"></script>
+    <script src="/public/js/directives/async-button/async-button.js"></script>
+    <link rel="stylesheet" href="/public/lib/select2/selectize.default.css" />
+    <script src="/public/js-util/timer.js"></script>
+    <script src="/public/lib/selectize.js"></script>
+    <script src="/public/lib/select2/angular-selectize.js"></script>
+    <script src="/public/lib/angular-selectize2.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload-shim.min.js"></script>
+    <script src="/public/js-util/fileupload/ng-file-upload.min.js"></script>
+
+    <!--alerts Start-->
+    <script src="/public/js/services/alerts.js"></script>
+
+    <!--MathJax Start-->
+    <script src="http://cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script>
+        MathJax.Hub.Config({
+            skipStartupTypeset: true,
+            messageStyle: "none",
+            "HTML-CSS": {
+                showMathMenu: false
+            }
+        });
+        MathJax.Hub.Configured();
+    </script>
+    <!--MathJax End-->
+
+    <!-- MathQuill start -->
+    <link rel="stylesheet" href="/public/js-util/mathquill-0.10.1/mathquill.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/public/js-util/mathquill-0.10.1/mathquill.js"></script>
+    <script>
+        var MQ = MathQuill.getInterface(2);
+    </script>
+    <!-- MathQuill end -->
+
+    <!-- pre-cached templates -->
+    <!-- these will eventually be included these in the app-rollup file -->
+
+    <script type="text/ng-template" id="objective.add.modal.html">
+
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Add New Objective</h4>
+        </div>
+        <div class="modal-body">
+            <div ng-show="error" class="alert alert-danger" role="alert">{{ error }}</div>
+            <form role="form" ng-submit="ok()">
+                <div class="form-group">
+                    <label for="new-objective-name" class="control-label">Objective Name</label>
+                    <input type="text" class="form-control" id="new-objective-name" placeholder="Type in Name" ng-model="data.name" autofocus>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="ok()">Save</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="banks.add.modal.html">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Add New Bank</h4>
+        </div>
+        <div class="modal-body">
+            <div ng-show="error" class="alert alert-danger" role="alert">{{ error }}</div>
+            <form role="form" ng-submit="ok()">
+                <div class="form-group">
+                    <label for="new-bank-title" class="control-label">Title</label>
+                    <input type="text" class="form-control" id="new-bank-title" placeholder="Type in Title" ng-model="data.title" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="new-bank-objective" class="control-label">Default Objective/Standard:</label>
+                    <select id="new-bank-objective" class="selectpicker" selectpicker ng-model="data.objective_id" ng-change="detectNewObjectiveSelect()">
+                        <option value="0">None</option>
+                        <optgroup label="Course Objectives">
+                            <option ng-repeat="objective in course.objectives" ng-value="objective.id">{{objective.name}}</option>
+                        </optgroup>
+                        <option data-divider="true"></option>
+                        <option value="new" data-icon="glyphicon glyphicon-plus">New Objective</option>
+                    </select>
+                    <div>
+                        Class:
+                        <select selectize
+                                ng-options="class.courseId.toString() as class.name for class in classes"
+                                ng-model="selected.courseid"></select>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="ok()">Save</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="tests.clone.modal.html">
+        <style>
+            .clone-test-modal-window .modal-dialog {
+                width: 900px;
+            }
+        </style>
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Clone Existing Test</h4>
+        </div>
+        <div class="modal-body">
+            <div ng-show="error" class="alert alert-danger" role="alert">{{ error }}</div>
+            <div ng-show="!select_target" ng-include="'testsBanks.tests.modal.html'"></div>
+            <div ng-show="select_target" ng-include="'testsBanks.target.modal.html'"></div>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+    </script>
+    <script type="text/ng-template" id="testsBanks.target.modal.html">
+        <div class="small-heading">Target course</div>
+        <div>Do you want to clone tests into another course?</div>
+        <div class="btn-group" ng-init="changeTarget=0">
+            <label class="btn btn-default" ng-model="changeTarget" btn-radio="1">Yes</label>
+            <label class="btn btn-default" ng-model="changeTarget" btn-radio="0">No</label>
+        </div>
+        <div ng-if="changeTarget==1" ng-init="getCourses()">
+            <select selectize data-ng-model="data.targetCourse"
+                    data-ng-options="cl.courseid as cl.name for cl in classes">
+            </select>
+        </div>
+        <div class="modal-footer">
+            <div class="btn btn-default" ng-click="selectTarget(null,true)">Go Back</div>
+            <div class="btn btn-primary" ng-click="clone(selectedTest)">Clone</div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="testsBanks.tests.modal.html">
+        <input type="text" placeholder="Search quiz" ng-model="inputFilter">
+        <br>
+        <testbank-filters ng-model="data.filter"></testbank-filters>
+        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+            <thead>
+            <tr>
+                <th data-halign="left">
+                    <input type="checkbox" ng-click="checkAll()">
+                    <span>Select All</span>
+                </th>
+                <th data-halign="left">Title</th>
+                <th data-halign="left">Description</th>
+                <th data-halign="left">New Title</th>
+                <th data-halign="left">
+                    <div class="btn btn-primary" ng-click="selectTarget()">
+                        Clone Selected
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tr ng-repeat='test in data.tests | filter:inputFilter ' ng-init="test.new_title=test.title + ' CLONED'">
+                <td>
+                    <input type="checkbox" ng-model="test.cloning">
+                </td>
+                <td data-halign="left">{{ test.title }}</td>
+                <td data-halign="left">{{ test.description }}</td>
+                <td>
+                    <input type="text" ng-model="test.new_title"> </td>
+                <td ng-show="test.cloning">
+                    <div class="btn btn-primary" ng-click="selectTarget(test)">
+                        Clone
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </script>
+    <script type="text/ng-template" id="tests.add.modal.html">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Add New Test</h4>
+        </div>
+        <div class="modal-body">
+            <div ng-show="error" class="alert alert-danger" role="alert">{{ error }}</div>
+            <form role="form" ng-submit="ok()" ng-include="'testsBanks.form.modal.html'">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="ok()">Save</button>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="testsBanks.form.modal.html">
+        <div ng-if="values.selection != 'randomGroupQuestions'">
+            <label for="new-test-title" class="control-label">Title</label>
+            <input type="text" class="form-control" id="new-test-title" placeholder="Type in Title" ng-model="data.title" autofocus>
+            <label for="new-test-description" class="control-label">Description</label>
+            <textarea ckeditor="" allowed-content="true" custom-options="ckeditorOptions" class="form-control"
+                      data-ng-model="data.description" placeholder="Provide a test description"></textarea>
+            <div ng-show="organizations">
+                Organization:
+                <select selectize
+                        ng-options="org.id.toString() as org.name for org in organizations"
+                        ng-model="selected.orgId"></select>
+            </div>
+            <div>
+                Class:
+                <select selectize
+                        ng-options="class.courseId.toString() as class.name for class in classes"
+                        ng-model="selected.courseid"></select>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="banks.menu.html">
+        <div ng-show="$state.includes('banks')" style="margin-top:.6em">
+            <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li role="presentation" ng-controller="ModalAddBankController"><a ng-click="open()"><span class="glyphicon glyphicon-plus"></span> Add New Bank</a>
+                </li>
+                <li role="presentation" ng-show="org_id"><a ng-click="import(org_id)"><span class="glyphicon glyphicon-plus"></span> Import Banks</a>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation">
+                    Select the organization:
+                    <select selectize
+                            ng-model="org_id"
+                            ng-options="org.id.toString() as org.name for org in organizations | orderBy:'name'">
+                    </select>
+                </li>
+                <li role="presentation">
+                    Select the class:
+                    <select selectize
+                            ng-model="course_id"
+                            ng-options="class.courseId.toString() as class.name for class in classes | orderBy:'name'">
+                    </select>
+                </li>
+                <li role="presentation">
+                    <div style="width:60%;margin: auto">
+                        <input style="width: 100%" type="text" ng-model="inputFilter" placeholder="Search test">
+                    </div>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation" ng-repeat="item in data.banks | filter:inputFilter" ui-sref-active="active">
+                    <a ui-sref="banks.detail({bankId:item.id})">
+                        <div class="btn btn-sm btn-default" tooltip="Remove" tooltip-placement="right" ng-click="delete(item,$index)">
+                            <span class="fa fa-trash"></span>
+                        </div>
+
+
+                        {{item.title}}
+                        <span class="badge">{{item.count}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="tests.menu.html">
+        <div ng-show="$state.includes('tests')" style="margin-top:.6em">
+            <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li role="presentation" ng-controller="ModalAddTestController"><a ng-click="open()"><span class="glyphicon glyphicon-plus"></span> Add New Test</a>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation" ng-controller="ModalCloneTestController"><a ng-click="open()"><span class="glyphicon glyphicon-plus"></span> Clone existing test</a>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation">
+                    <testbank-filters ng-model="filter"></testbank-filters>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation">
+
+                    <div style="width:60%;margin: auto">
+                        <input style="width: 100%" type="text" ng-model="inputFilter" placeholder="Search test">
+                    </div>
+                </li>
+                <li role="presentation" class="nav-divider"></li>
+                <li role="presentation" ng-repeat="item in data.tests | filter:inputFilter" ui-sref-active="active">
+
+
+
+                    <a ui-sref="tests.detail({testId:item.id})" class="tooltip-relative">
+                        <div class="tools" style="left:0">
+                            <div class="tool">
+                                <div class="btn btn-sm btn-default" tooltip="Remove" tooltip-placement="right" ng-click="delete(item,$index)">
+                                    <span class="fa fa-trash"></span>
+                                </div>
+                            </div>
+                            <div class="tool">
+                                <div class="btn btn-sm btn-default" data-ng-controller="ModalAddTestController" tooltip="Edit" tooltip-placement="right" ng-click="edit(item)">
+                                    <span class="fa fa-edit"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <span style="padding: 10px;">{{item.title}}</span>
+                        <span class="badge">{{item.count}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+
+
+    <!--Golabs Select questions from banks Start -->
+
+    <!--Golabs Select questions from banks End -->
+
+    <!--Golabs Edit question Start -->
+
+
+
+
+    <!--Golabs Edit question End -->
+
+        <!--Golabs Delete question Start -->
+
+    <!--Golabs Delete question End -->
+
+<!--Golabs Move question to another Bank Start -->
+        <script type="text/ng-template" id="move.bank.modal.html">
+            <style>
+                .modal {
+                    overflow: hidden !important;
+                }
+                .modal-dialog {
+                    width: 45%;
+                }
+                .selectpicker{
+                    text-align:left;
+                }
+            </style>
+            <div class="modal-header" ng-mouseover="SetmatchedImage()">
+                <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Move Question do Differrent Bank</em></h4>
+            </div>
+            <form role="form" style="text-align:center">
+                <div>
+                    <div class="form-group">
+                       <Div ng-bind-html="question.htmlSafeprompt"></Div>
+                    </div>
+                </div>
+
+                <label for="modalBank">Bank:</label>
+
+                <select id="modalBank" class="selectpicker" selectpicker ng-required="true" ng-model="values.bank_id" ng-change="detectNewBankSelect()">
+                    <option ng-repeat="bank in allBanks" ng-selected="selected" ng-value="bank.id">{{bank.titleCounter}}</option>
+                    <option data-divider="true"></option>
+                </select>
+
+            </form>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+                <!--<button type="button" class="btn btn-success" ng-click="ok_Move()">Yes Move Question</button>-->
+            </div>
+        </script>
+        <!--Golabs Move question to another Bank End -->
+
+    <script type="text/ng-template" id="bank.details.html">
+
+        <h3>{{bank.title}}</h3>
+
+
+        <form>
+            <div class="form-group">
+                <label for="bank-objective" class="control-label">Default Objective/Standard:</label>
+                <select id="bank-objective" selectpicker ng-model="data.objective_id" ng-change="detectNewObjectiveSelectOrSave()">
+                    <option value="0">None</option>
+                    <optgroup label="Course Objectives">
+                        <option ng-repeat="objective in course.objectives" ng-value="objective.id">{{objective.name}}</option>
+                    </optgroup>
+                    <option data-divider="true"></option>
+                    <option value="new" data-icon="glyphicon glyphicon-plus">New Objective</option>
+                </select>
+                <button type="submit" class="btn btn-success" ng-click="saveObjective()" ng-hide="data.objective_id==data.original_objective_id">Save</button>
+            </div>
+        </form>
+
+
+        <div style="margin-top:2em">
+            <div style="margin:.5em 0" ng-controller="ModalCreateQuestionController"><a class="btn btn-primary" ng-click="create_New_Open('bank')"><span class="glyphicon glyphicon-plus"></span> Create New Question</a>
+            </div>
+        </div>
+
+        <div class="question-list" style="margin-top:3em" ng-init="example_questions = [
+      {id:0, type:'Multiple Choice', title:'Weight of Black Bear', prompt:'What is the weight of a large North American Black Bear?', options:['325 lbs', '450 lbs', '600 lbs', '900 lbs', '1500 lbs'], solution:'2'},
+      {id:0, type:'Multiple Choice', title:'Weight of Polar Bear', prompt:'What is the weight of a large Polar Bear?', options:['480 lbs', '680 lbs', '880 lbs', '1280 lbs'], solution:'1'},
+      {id:0, type:'Multiple Choice', title:'Weight of Brown Bear', prompt:'What is the weight of a large Brown Bear?', options:['450 lbs', '600 lbs', '900 lbs', '1500 lbs', '2000 lbs'], solution:'3'}
+      ]">
+
+            <div ng-show="!bank.questions || !bank.questions.length">
+                <div class="panel panel-default">
+                    <div class="panel-body"><em>There are no questions in this Bank yet.  Use the buttons above to create test questions.</em>
+                    </div>
+                </div>
+
+                <!-- the following div is only shown as a development sample -->
+                <div style="opacity:0.3;margin-top:2em" class="disabled">
+                    <div class="question question-display" ng-repeat="question in example_questions" ng-include="'question.display.html'"></div>
+                </div>
+            </div>
+
+            <div class="question-display" ng-repeat="question in bank.questions track by $index"
+                 scroll-to-question="selectedQuestion"
+                 question-id="question.id"
+                 ng-include="'question.display.html'"
+                 ng-class="{'selected':question.id==selectedQuestion}"></div>
+
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="test.details.html">
+
+    <span ng-show="editTotal" class="quiz-set-score">
+    Change total score for all questions (<em>Score will be spread accross all questions</em>): <input style="width:50px;height: 33px;" type="text" name="Max_points_Spread" id="Max_points_Spread" ng-model="Max_points_Spread" placeholder="{{getTotalPoints()}}">
+    <a class="btn btn-success" ng-click="question_Spread_Points()">Change</a>
+    <a class="btn btn-default" ng-click="editTotal = false">Cancel</a>
+    </span>
+
+
+        <span ng-show="getTotalPoints() && !editTotal && !test.is_survey" class="quiz-total-points">
+                Total points: {{getTotalPoints()}} 
+                <span title="Change total Score" ng-click="editTotal=1" style="cursor:pointer" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </span>
+
+        <h2>{{test.title}} <a ng-if="pageId" style="font-size: small;" href="../#/quiz/{{pageId}}" title="Experemental Feature" target="_blank">Do Quiz</a></h2>
+
+        <div class="objectives panel panel-default" ng-show="test.objectives.length">
+            <div class="panel-heading">
+                Objectives/Standards:
+            </div>
+            <div class="panel-body">
+                <div class="list">
+                    <div ng-repeat="o in test.objectives"
+                         ng-bind="o.name"></div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:2em">
+            <div class="row">
+                <div class="col-sm-3 nopadding nopadding nomargin ng-scope">
+                    <div style="margin:.5em 0" ng-controller="ModalCreateQuestionController"><a class="btn btn-primary quizbutton" ng-click="create_New_Open('test')"><span class="glyphicon glyphicon-plus "></span> Create New Question</a>
+                    </div>
+                </div>
+                <div class="col-sm-3 nopadding nopadding nomargin ng-scope">
+                    <div style="margin:.5em 0" ng-controller="ModalSelectRandomQuestionGroupController"><a class="btn btn-primary quizbutton" ng-click="open('randomGroupQuestions')" style="background-color: black;border-bottom-color: black;"><span class="glyphicon glyphicon-plus "></span> Random Question Group</a>
+                    </div>
+                </div>
+                <div class="col-sm-3 nopadding nopadding nomargin  ng-scope">
+                    <div style="margin:.5em 0" ng-controller="ModalSelectQuestionsTagsController"><a class="btn btn-success quizbutton" ng-click="open('selectQuestions')"><span class="glyphicon glyphicon-plus"></span> Select Questions from Tags</a>
+                    </div>
+                </div>
+                <div class="col-sm-3 nopadding nopadding nomargin  ng-scope">
+                    <!--
+                <div style="margin:.5em 0" ng-controller="ModalSelectQuestionsBanksController"><a class="btn btn-success quizbutton" ng-click="open('randomQuestions')"><span class="glyphicon glyphicon-plus"></span> Random Questions from Banks</a>
+                </div>
+                -->
+                </div>
+            </div>
+        </div>
+        <div ng-show="test.is_owner">
+            <input type="checkbox" id="make_private" ng-model="test.is_private" ng-click="change_privacy()">
+            <label for="make_private">Make this quiz private</label>
+        </div>
+        <div>
+            <input type="checkbox" id="make_survey" ng-model="test.is_survey" ng-click="change_survey()">
+            <label for="make_survey">This is a survey/pretest</label>
+        </div>
+        <div>
+            <input type="checkbox" id="keep_highest" ng-model="test.keep_highest_score" ng-click="set_keep_highest()">
+            <label for="keep_highest">Keep highest score</label>
+        </div>
+        <div>
+            <label>Sort questions</label>
+            <select ng-model="test.sort_mode" data-ng-change="set_sort_mode(test.sort_mode)">
+                <option selected value="in_order">In order</option>
+                <option  value="random">Randomly</option>
+            </select>
+        </div>
+        <div>
+            <label>Questions per page</label>
+            <select ng-model="test.questions_per_page" data-ng-change="set_questions_per_page()">
+                <option value="-1">Display all</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+
+        <div class="question-list" style="margin-top:3em" ng-init="example_questions = [
+      {id:0, type:'Multiple Choice', title:'Name', prompt:'What is your name?', options:['Sir Robin of Camelot', 'Sir Galahad of Camelot', 'Arthur, King of the Britons', 'Sir Lancelot of Camelot'], solution:'2'},
+      {id:0, type:'Multiple Choice', title:'Quest', prompt:'What is your quest?', options:['Ni!', 'To seek the Holy Grail', 'To explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.'], solution:'1'},
+      {id:0, type:'Multiple Choice', title:'Velocity', prompt:'What is the airspeed velocity of an unladen swallow?', options:['African', 'European'], solution:'1'},
+      ]">
+
+            <div ng-show="!test.questions || !test.questions.length">
+                <div class="panel panel-default">
+                    <div class="panel-body"><em>There are no questions in this Test yet.  To add a new question click the <strong>Create New Question</strong> button.</em>
+                    </div>
+                </div>
+
+                <!-- the following div is only shown as a development sample -->
+                <div style="opacity:0.3;margin-top:2em" class="disabled">
+                    <div class="question question-display" ng-repeat="question in example_questions" ng-include="'question.display.html'"></div>
+                </div>
+            </div>
+            <div class="move-to-top">
+                <ul class="list-inline move-here" ng-show="test.moving">
+                    <li class="btn btn-sm btn-primary"   ng-click="moveToPosition(-1)">Move here</li>
+                    <li class="btn btn-sm btn-default"   ng-click="cancelMoving()">Cancel</li>
+                </ul>
+            </div>
+            <div class="question-display" ng-repeat="question in test.questions" ng-include="'question.display.html'" ></div>
+        </div>
+
+    </script>
+
+
+    <!--question.select.html start-->
+    <script type="text/ng-template" id="question.select.html">
+        <div class="panel panel-default" style="margin-bottom:3em">
+
+            <div class="panel-heading">
+                <div class="row" style="padding:0 1em">
+                    <div style="float:left">
+                        <span style="font-size:1.5em"><!--<span class="label label-default">{{$index + 1}}</span>-->&nbsp;Question&nbsp;{{$index + 1}}</span> &nbsp;&nbsp;<span class="label label-info">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span>
+                    </div>
+                    <div style="float:right" ng-controller="ModalSelectQuestionController" ng-switch on="question.selected">
+                        <a ng-click="selectquestion({singlequestion:question })" class="btn btn-sm btn-default" ng-switch-default><span class="glyphicon glyphicon-off"></span>&nbsp;Select</a>
+                        <a ng-click="selectquestion({singlequestion:question })" class="btn btn-sm btn-success" ng-switch-when="1"><span class="glyphicon glyphicon-ok"></span>&nbsp;Selected</a>
+                    </div>
+                </div>
+            </div>
+
+                <div class="panel-body">
+                    <div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>hh
+                        <div ng-repeat="option in question.options track by $index">
+                            <span ng-class="($index == question.solution) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span><span class="label label-info">{{ ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'][$index] }}.</span><span ng-bind-html="trustAsHtml(option)" style="display: inline-block;"></span>
+                        </div>
+                </div>
+
+    </script>
+    <!--question.select.html end-->
+
+    <script type="text/ng-template" id="question.display.html">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row tooltip-relative" style="padding:0 1em">
+                    <div style="float:left" >
+                            <span ng-if="question.type !='pagebreak'" style="font-size:1.5em"><!--<span class="label label-default">{{$index+1}}</span> --> &nbsp;Question&nbsp;{{$index+1}}
+                            </span>
+                        <a class="pointer no-text-decoration" ng-show="question.type!='information'">
+                            <span ng-hide="question.editing || test.is_survey" data-ng-click="question.editing=true">
+                                <span> - {{ (question.max_points)}} point<span ng-show="question.max_points!=1">s</span></span>
+                                <span class="fa fa-question-circle" tooltip="Points per question" ng-show="question.random"></span>
+                            </span>
+                            <span ng-if="question.editing">
+                                <input type="text" ng-model="question.max_points">
+                                <button class="btn btn-sm btn-primary" data-ng-disabled="!canSaveQuestion(question)" ng-click="updateQuestionPoints(question)">Save</button>
+                            </span>
+                        </a>
+                        <span ng-show="question.type=='information'">
+                                <span> - {{ (question.max_points)}} points</span></span>
+                        </span>
+
+
+                        &nbsp;&nbsp;
+                        <em ng-if="question.ChangedBank" style="color: #808080"><span>Bank : <a style="color:#808080" href="../../testbank/#/bank:{{question.ChangedBank}}" target="_blank" title="View Bank in new Window"><span ng-bind="question.bankName"></span></a></span></em>
+                        &nbsp;&nbsp;
+                        <span class="label label-info " ng-class="(question.type !='pagebreak') ? 'label-info' : 'label-warning'">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span><span style="margin-left:10px;font-style:italic" ng-show="question.type=='oneword'">(Can be one or more words)</span>
+                    </div>
+                    <div class="pull-right" ng-controller="ModalDeleteQuestionController" style="margin-left:10px">
+                        <a ng-click="open({singlequestion:question,'delete':1 })" class="btn btn-sm btn-danger" title="Remove Question"><span class="glyphicon glyphicon-trash"></span>&nbsp;</a>
+                    </div>
+                    <div class="pull-right" ng-controller="ModalMoveBankController" ng-if="question.type !='Random' && question.type !='pagebreak' && bank.questions" style="margin-left:10px">
+                        <a ng-click="open({singlequestion:question,'delete':1 })" class="btn btn-sm btn-success" title="Move to Different Bank" tooltip="Move to Different Bank"><span class="glyphicon glyphicon-move"></span>&nbsp;</a>
+                    </div>
+                    <div class="pull-right" ng-controller="pagebreakQuestionController" ng-if="question.type !='Random' " style="margin-left:10px">
+                        <a ng-click="pagebreak({singlequestion:question})" class="btn btn-sm btn-warning" title="Add Page Break After Question"><span class="glyphicon glyphicon-adjust"></span>&nbsp;</a>
+                    </div>
+                    <div class="pull-right" ng-controller="ModalEditQuestionController" ng-if="question.type !='Random' && question.type !='pagebreak'" style="margin-left:10px">
+                        <a ng-click="open({singlequestion:question,'delete':1 },test||bank)" class="btn btn-sm btn-primary" title="Edit Question" tooltip="Edit Question"><span class="glyphicon glyphicon-edit"></span>&nbsp;</a>
+                    </div>
+                    <div class="pull-right" ng-hide="test.moving || !test">
+                        <a ng-click="startMoving(question)" class="btn btn-sm btn-primary" title="Move Question"><span class="fa fa-arrows"></span>&nbsp;</a>
+                    </div>
+                    <div class="pull-left" ng-if="question.type == 'Random'" style="margin-top: 8px;margin-left: 10px;">
+                        by {{question.random}} of {{question.totalBankQuestions}} questions
+                    </div>
+                    <div class="pull-left"  style="margin-top: 8px;margin-left: 10px;color:#808080;font-style: italic;">
+                        qid : {{question.id}}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div question-tags question="question" ng-if="question.type!='Random'"></div>
+            </div>
+
+            <div class="panel-body">
+                <display-question where="'editor'" question="question"></display-question>
+                <ul class="list-inline move-here" ng-show="test.moving">
+                    <li class="btn btn-sm btn-primary"   ng-click="moveToPosition($index)">Move here</li>
+                    <li class="btn btn-sm btn-default"   ng-click="cancelMoving()">Cancel</li>
+                </ul>
+
+
+            </div>
+        </div>
+
+        <div class="panel panel-default ng-scope"  ng-if="question.pagebreak > 0">
+            <div class="panel-heading">
+                <div class="row" style="padding:0 1em">
+                    PageBreak
+                    <div ng-controller="pagebreakQuestionController" ng-click="pagebreakremove({singlequestion:question})" style="cursor:pointer" class="label label-warning label-info  pull-right"> Remove Page Break</div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="nav-standard.html">
+        <nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header padding-right-20">
+                    <a data-ng-show="user.org.white_label" class="navbar-brand" href="/" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+                    <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+                    <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+                    <div class="dropdown" id="mobileMenu" style="display: none"
+                         ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+                    </div>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+                </div>
+            </div>
+        </nav>
+    </script>
+    <?php echo $customStyles->createStyleSheet(); ?>
+</head>
+<body ng-controller="PreferenceController">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+
+
+
+
+<!-- top navigation -->
+<!-- @TODO: clean up layout and fix html/css templating issues across screen sizes and devices  -->
+
+<div ui-view="nav"></div>
+
+
+
+
+
+
+
+<!-- testbank app layout -->
+<!-- @TODO: clean up layout and fix html/css templating issues across screen sizes and devices -->
+
+<div class="container-fluid" style="margin-top:20px;">
+    <div class="row" ng-controller="TestbankController">
+        <div class="col-sm-3 sidebar">
+            <!-- course selector dropdown -->
+            <!--<div class="dropdown course-dropdown" ui-view="course">-->
+            <!--<table>-->
+            <!--<tr>-->
+            <!--<td><span class="sidebar-fa-bars" ng-click="toggleSidebar()"><i class="fa fa-bars"></i></span>-->
+            <!--</td>-->
+            <!--<td rowspan="2"><a class="dropdown-toggle sidebar-course-title" data-toggle="dropdown">{{ nav.selected_course.name}} <span class="caret"></span></a>-->
+            <!--<ul class="dropdown-menu course-dropdown-menu">-->
+            <!--<li ng-repeat="course in nav.courses" ui-sref-active="active"><a ui-sref="nav.course({courseId:course.id})">{{ course.name}}</a></li>-->
+            <!--</ul>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+            <!--<td>ENG&nbsp;&nbsp;<input id="english-language-selector" type="checkbox"-->
+            <!--ng-click="isEnglishSelected()" checked/></td>-->
+            <!--</tr>-->
+            <!--</table>-->
+            <!--</div>-->
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li role="presentation" ng-class="{'active': $state.includes('banks')}"><a ui-sref="banks">Banks</a>
+                </li>
+                <li role="presentation" ng-class="{'active': $state.includes('tests')}"><a ui-sref="tests">Tests</a>
+                </li>
+                <li role="presentation" ng-class="{'active': $state.includes('vocabs')}">
+                    <a style="padding: 10px 2px; white-space: pre" ui-sref="vocabs">Vocab</a>
+                </li>
+                <li role="presentation" ng-class="{'active': $state.includes('rubrics')}">
+                    <a style="padding: 10px 2px; white-space: pre" ui-sref="rubrics">Rubrics</a>
+                </li>
+                <!--
+        <li role="presentation" ng-class="{'active': $state.includes('timedReviews')}">
+            <a style="padding: 10px 2px; white-space: pre"  ui-sref="timedReviews">T-Rev</a>
+        </li>-->
+            </ul>
+
+            <div ui-view="menu"></div>
+
+        </div>
+        <div ui-view="content" class="col-sm-9 col-sm-offset-3 main" style="padding-right:10px;padding-left:10px"></div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- debug information -->
+<!-- this will be removed when state router has been properly tested -->
+<!--
+
+<div style="margin:5em 0 3em 30%;font-size:.8em;color:#999">
+<hr/>
+<samp><strong>DEBUG:</strong></samp><br/>
+<samp>$state = {{$state.current.name}}</samp><br/>
+<samp>stateParams = {{$stateParams}}</samp><br/>
+<samp>$state full url = {{ $state.$current.url.source }}</samp>
+</div>
+
+-->
+
+
+
+
+<script>
+    angular.module('app.testbank').requires.push('ngCkeditor');
+</script>
+<script src="/public/js/custom-themes.js"></script>
+</div></div></body>
+
+</html>

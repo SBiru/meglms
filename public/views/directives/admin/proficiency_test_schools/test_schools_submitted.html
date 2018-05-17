@@ -1,0 +1,23 @@
+<div class="panel-title">
+    <div class="small-heading" style="display: inline-block">Tests taken</div>
+
+</div>
+
+
+<span class="fa fa-spinner fa-pulse" ng-show="loading.tests"></span>
+<div class="mobile-overflow-x-auto width-100">
+    <table class="table table-striped" ng-hide="loading.tests">
+        <tr>
+            <th>Name</th>
+            <th>Submitted on</th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="test in tests">
+            <td ng-bind="test.fname + ' ' + test.lname"></td>
+            <td ng-bind="test.submittedOn"></td>
+            <td>
+                <span class="fa fa-search pointer" ng-click="showTest(test)"></span>
+            </td>
+        </tr>
+    </table>
+</div>

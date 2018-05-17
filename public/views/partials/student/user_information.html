@@ -1,0 +1,45 @@
+<div>
+    <style>
+        .user-info-form .col-sm-12{
+            margin-bottom: 10px;
+        }
+
+    </style>
+    <div ng-bind-html="$root.trustAsHtml(pageData.content)"></div>
+    <form class="row user-info-form">
+        <div class="col-sm-12" ng-if="pageData.pageOptions.nationality">
+            <label>Nationality</label>
+            <select selectize ng-options="n.nationality as n.nationality for n in pageData.nationalities | orderBy:'nationality'" ng-model="pageData.nationality"></select>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.gender">
+            <label>Gender</label>
+
+            <select selectize ng-options="n for n in ['Male','Female']" ng-model="pageData.gender"></select>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.language">
+            <label>Native Language </label>
+            <select selectize ng-options="n.name as n.name for n in pageData.languages | orderBy:'name'" ng-model="pageData.language"></select>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.department">
+            <label>The Department at <span ng-bind="$root.user.org.name"></span> that you will be working with </label>
+            <input class="form-control" ng-model="pageData.department"/>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.department_contact">
+            <label>Primary Contact (the person we should send your interview results to) </label>
+            <input class="form-control" ng-model="pageData.department_contact"/>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.department_email">
+            <label>Primary Contact Email</label>
+            <input class="form-control" type="email" ng-model="pageData.department_email"/>
+        </div>
+        <div class="col-sm-12" ng-if="pageData.pageOptions.department_email">
+            <label>Primary Contact Email (Confirm)</label>
+            <input class="form-control" type="email" ng-model="pageData.department_email_confirm"/>
+        </div>
+        <div class="col-xs-12" style="margin-top: 20px">
+
+            <button type="submit" class="btn btn-big" ng-click="save()" ng-class="pageData.new_post_color" ng-bind="pageData.new_post_text" ng-disabled="saving"></button>
+        </div>
+    </form>
+
+</div>

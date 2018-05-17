@@ -1,0 +1,30 @@
+<div class="search-word">
+    <div class="form-group">
+        <input class="form-control" ng-model="selected.searchTerm">
+        <span class="right">
+            <button ng-click="search()" class="btn btn-primary">Search</button>
+        <input type="checkbox" ng-model="full_text"> Search full text
+        </span>
+
+    </div>
+
+</div>
+<span class="btn-group btn-group-justified">
+    <label class="btn btn-default" ng-model="filter.type" btn-radio="'alphabet'">By Alphabet</label>
+    <label class="btn btn-default" ng-model="filter.type" btn-radio="'tags'">By Tags</label>
+</span>
+<glossary-word-browse-by ng-if="callbacks && selected && loadedTags" selected="selected" search-term="selected.searchTerm"
+                         by="filter.type"
+                         callbacks="callbacks"
+                         pagination-config="pagination.paginationConfig"
+                         org-id="orgId"
+                         page-id="pageId"
+                         full-text="full_text"
+                         limit-to-page="true"
+></glossary-word-browse-by>
+<div ng-show="loading">Loading words <span class="fa fa-spinner fa-pulse"></span></div>
+<div ng-show="pagination.words.length==0">The glossary is empty.</div>
+<div ng-if="pagination.words.length">
+    <glossary-word-list words="pagination.words" callbacks="callbacks" read-only="true"
+                        pagination-config="pagination.paginationConfig" show-tags="true"></glossary-word-list>
+</div>

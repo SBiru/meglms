@@ -1,0 +1,172 @@
+<div class="panel panel-default no-bottom-margin">
+	<div class="panel-heading no-padding">
+		<div class="row">
+			<nav class="navbar navbar-default navbar-reports no-bottom-margin">
+				<div class="container-fluid">
+					<ul class="nav navbar-nav">
+						<li ng-show="loadingData.enabledReports">
+							<span class="fa fa-spinner fa-pulse"></span>
+						</li>
+					<!-- STUDENTS DROPDOWN -->
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Students <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#" ng-click="selectReport('all_students')" ng-show="user.is_advisor||user.is_super_admin||user.is_organization_admin">All <span  ng-show="user.is_advisor" data-ng-bind="'('+getAdvisees()+')'"></span></a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#" ng-click="selectReport('activity_report')" ng-show="enabledReports.enable_report_activity">Activity Report</a></li>
+								<li><a href="#" ng-click="selectReport('attendance')" ng-show="enabledReports.enable_report_attendance">Attendance</a></li>
+								<li><a href="#" ng-click="selectReport('different_pages')" ng-show="enabledReports.enable_report_different_pages">Different Pages</a></li>
+								<li><a href="#" ng-click="selectReport('not_logged_in')" ng-show="enabledReports.enable_report_not_logged_in">Not logged in</a></li>
+								<li><a href="#" ng-click="selectReport('posts_per_student')" ng-show="enabledReports.enable_report_posts_per_student">Posts</a></li>
+								<li><a href="#" ng-click="selectReport('students_by_progress')">By Progress (N/A yet)</a></li><!-- Report and graph -->
+								<li><a href="#" ng-click="selectReport('by_teacher')">By Teacher (N/A yet)</a></li>
+							</ul>
+						</li>
+					<!-- COURSES DROPDOWN -->
+						<li class="dropdown" ng-show="user.is_teacher">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Courses <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#" ng-click="selectReport('all_courses')">All <span data-ng-bind="'('+getClasses()+')'" data-ng-show="!amIAdmin()"></span></a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#" ng-click="selectReport('course_grades')" ng-show="enabledReports.enable_report_grades">Grades</a></li>
+								<li><a href="#" ng-click="selectReport('courses_by_progress')" ng-show="enabledReports.enable_report_progress">Progress</a></li><!-- Report and graph -->
+								<li><a href="#" ng-click="selectReport('courses_time_spent')" ng-show="enabledReports.enable_report_time_spent">Time Spent</a></li><!-- Report and graph -->
+								<li><a href="#" ng-click="selectReport('grading_queue')" ng-show="enabledReports.enable_report_grading_queue">Grading Queue</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div><!-- /.container-fluid -->
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="panel panel-info no-bottom-margin">
+	<div class="panel-heading" style="padding:1px 15px">
+		<h4>
+			<div ng-switch on="type">
+				<div ng-switch-when="alerts">Alerts</div>
+				<div ng-switch-when="all_students">Students - All</div>
+				<div ng-switch-when="different_pages">Students - Different pages</div>
+				<div ng-switch-when="posts_per_student">Students - Posts</div>
+				<div ng-switch-when="activity_report">Students - Activity report</div>
+				<div ng-switch-when="attendance">Students - Attendance</div>
+				<div ng-switch-when="not_logged_in">Students - Not logged in</div>
+				<div ng-switch-when="by_teacher">Students - By teacher</div>
+				<div ng-switch-when="all_courses">Courses - All</div>
+				<div ng-switch-when="course_grades">Courses - Grades</div>
+				<div ng-switch-when="courses_by_progress">Courses - Progress</div>
+				<div ng-switch-when="courses_time_spent">Courses - Time Spent</div>
+				<div ng-switch-when="grading_queue">Courses - Grading queue</div>
+			</div>
+		</h4>
+	</div>
+	<div class="panel-body">
+
+		<div ng-switch on="type">
+			<div ng-switch-when="alerts">
+
+				<div class="panel" data-ng-class="alert.class"  data-ng-repeat="(key,alert) in alerts">
+					<div class="panel-heading pointer" data-ng-click="alert.show=!alert.show">
+						<span class="fa" data-ng-class="alert.show?'fa-minus-square':'fa-plus-square'"></span>
+						<span data-ng-bind="alert.title"></span>
+						<span class="fa fa-spinner fa-pulse" data-ng-show="reportService.loadingReport[alert.id]"></span>
+						<span data-ng-show="alert.rows"  data-ng-bind="'('+alert.rows.length+')'"></span>
+					</div>
+					<div class="panel-body" data-ng-if="alert.show">
+						<div class="row">
+							<div class="col-sm-4 col-sm-offset-4">
+								<canvas ng-if="key==1 && alert.graph"
+										id="line" class="chart chart-line " chart-data="alert.graph.data"
+										chart-labels="alert.graph.labels"
+										chart-click="onClick" >
+								</canvas>
+
+							</div>
+
+						</div>
+
+						<sortable-table
+								ng-if="alert.header"
+								header="alert.header"
+								rows="alert.rows"
+								table-height="250px"
+								ng-hide="reportService.loadingReport[alert.id]"></sortable-table>
+					</div>
+				</div>
+
+
+			</div>
+			<div ng-switch-when="all_students">
+				<all-current-students></all-current-students>
+			</div>
+			<div ng-switch-when="different_pages">
+				<different-pages></different-pages>
+			</div>
+			<div ng-switch-when="posts_per_student">
+				<posts-per-student></posts-per-student>
+			</div>
+			<div ng-switch-when="not_logged_in">
+				<not-logged-in></not-logged-in>
+			</div>
+			<div ng-switch-when="activity_report">
+				<activity-report></activity-report>
+			</div>
+			<div ng-switch-when="attendance">
+				<attendance-report></attendance-report>
+			</div>
+			<div ng-switch-when="by_teacher">
+				<span class="fa fa-gears"></span> This feature is still not ready.
+			</div>
+
+			<!--COURSES-->
+			<div ng-switch-when="all_courses">
+				<div><i class="fa fa-spinner fa-pulse" ng-show="loading"></i></div>
+				<div data-ng-show="amIAdmin()" class="row">
+					<div class="col-xs-6 width-100">
+						<div data-ng-include="'public/views/directives/reports/components/select-teacher.html'"></div>
+					</div>
+				</div>
+				<sortable-table
+						ng-if="reports.allCourses"
+						header="reports.allCourses.header"
+						rows="reports.allCourses.rows"
+						data="reports.allCourses"
+						table-height="250px"
+						ng-hide="loading">
+				</sortable-table>
+			</div>
+			<div ng-switch-when="course_grades">
+				<course-grades></course-grades>
+			</div>
+			<div ng-switch-when="courses_by_progress">
+				<div data-ng-show="amIAdmin()" class="row">
+					<div class="col-xs-6 width-100">
+						<div data-ng-include="'public/views/directives/reports/components/select-teacher.html'"></div>
+					</div>
+				</div>
+				<tabset ng-init="selectedTab=0">
+					<tab heading="% Behind Distribution" data-select="selectedTab=0">
+						<perc-behind-dist ng-if="selectedTab==0"></perc-behind-dist>
+					</tab>
+					<tab heading="Completion Distribution" data-select="selectedTab=1">
+						<completion-dist ng-if="selectedTab==1"></completion-dist>
+					</tab>
+					<tab heading="Resubmissions" data-select="selectedTab=2">
+						<resubmissions ng-if="selectedTab==2"></resubmissions>
+					</tab>
+				</tabset>
+			</div>
+			<div ng-switch-when="courses_time_spent">
+				<time-spent></time-spent>
+			</div>
+			<div ng-switch-when="grading_queue">
+				<grading-queue></grading-queue>
+			</div>
+
+			<div ng-switch-default>
+				Please select a type of report to begin.
+			</div>
+
+		</div>
+	</div>
+</div>

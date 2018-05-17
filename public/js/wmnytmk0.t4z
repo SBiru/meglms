@@ -1,0 +1,4219 @@
+'use strict';
+
+var _global_chat_users = [];
+
+var appControllers = angular.module('app.controllers', ['ui.bootstrap','ui.keypress']);
+
+// Nav controller has been moved to ./controllers/nav.js
+
+// Grader nav controller has been moved to ./controllers/grader/gradernav.js
+/**
+ * format("some {thing}", {thing: 'dog'})
+ *    -> 'some dog'
+ */
+function format(str, dct) {
+    return str.replace(/{([^}]+)}/g, function (full, name) {
+        return dct[name]
+    })
+}
+
+// factory for making simple controllers that integrate with nimble knowledge
+function makeNimbleController(name, model, app, hasExtra) {
+  appControllers.controller(name, ['$rootScope', '$scope', model, 'User', '$sce',
+      function ($rootScope, $scope, ModelLoader, User, $sce) {
+
+      $scope.loading = true
+
+      User.get({userId: 'me'}, function (user) {
+          ModelLoader.get({pageId: $rootScope.$stateParams.contentId}, function (data) {
+              $scope.loading = false;
+              data.email = encodeURIComponent(user.email).replace(/\.com$/, '');
+              data.fname = encodeURIComponent(user.fname);
+              data.app   = app;
+              var template = 'http://dev.nimbleknowledge.com/english3/Login/{email}/{fname}/{nativeLang}/{targetLang}/{app}' +
+                (hasExtra ? '/{course}/{lesson}/{numEx}' : '');
+              $scope.src = $sce.trustAsResourceUrl(format(template, data))
+          })
+      })
+  }])
+}
+
+makeNimbleController('ListeningPracticeController', 'ListeningPractice', 'listening', false);
+makeNimbleController('ReadingPracticeController', 'ReadingPractice', 'reading', false);
+makeNimbleController('LessonListeningController', 'LessonListening', 'lessonListening', true);
+
+// Course Class Controller
+appControllers.controller('CourseClassController', ['$rootScope', '$scope', '$timeout', 'CurrentCourseId', 'CourseClass',
+    function($rootScope, $scope, $timeout, CurrentCourseId, CourseClass) {
+        $scope.courseName = '';
+        $scope.classes = new Array();
+
+        CourseClass.get({courseId: CurrentCourseId.getCourseId()}, function(classes){
+            console.log("Classes: " + angular.toJson(classes));
+
+            $scope.classes = classes.classes;
+
+            if(angular.isDefined($scope.classes) && angular.isDefined($scope.classes.length) && $scope.classes.length > 0) {
+                $scope.courseName = $scope.classes[0].course_name;
+            }
+        });
+    }
+]);
+
+// View Course Class Users Controller
+appControllers.controller('ViewCourseClassUsersController', ['$rootScope', '$scope', '$timeout', 'OrganizationUser',
+    function($rootScope, $scope, $timeout, OrganizationUser) {
+        $scope.className = '';
+        $scope.classId = 0;
+        $scope.users = new Array();
+
+        OrganizationUser.getclassusers({class_id: $rootScope.$stateParams.classId}, function(users){
+            console.log("User: " + angular.toJson(users));
+
+            $scope.users = users.users;
+
+            if(angular.isDefined($scope.users) && angular.isDefined($scope.users.length) && $scope.users.length > 0) {
+                $scope.className = $scope.users[0].class_name;
+                $scope.classId = $scope.users[0].class_id;
+            }
+        });
+    }
+]);
+
+
+// Organization User Controller
+appControllers.controller('OrganizationUsersController', ['$rootScope', '$scope', '$timeout', 'CurrentOrganizationId', 'OrganizationUser',
+    function($rootScope, $scope, $timeout, CurrentOrganizationId, OrganizationUser) {
+        $scope.organizationName = '';
+        $scope.users = new Array();
+
+        OrganizationUser.get({organizationId: CurrentOrganizationId.getOrganizationId()}, function(users){
+            console.log("User: " + angular.toJson(users));
+
+            $scope.users = users.users;
+
+            if(angular.isDefined($scope.users) && angular.isDefined($scope.users.length) && $scope.users.length > 0) {
+                $scope.organizationName = $scope.users[0].organization_name;
+            }
+        });
+    }
+]);
+
+// Add Course Class User Controller
+appControllers.controller('AddCourseClassUserController', ['$rootScope', '$scope', '$timeout', 'EditCourseClassUser',
+    function($rootScope, $scope, $timeout, EditCourseClassUser) {
+        $scope.className = "";
+        $scope.userToEnroll = {};
+        $scope.users = new Array();
+        $scope.types = new Array({name: 'student'}, {name: 'teacher'});
+
+        EditCourseClassUser.getavailableusers({class_id: $rootScope.$stateParams.classId}, function(users){
+            console.log("Available Users: " + angular.toJson(users));
+
+            if(angular.isDefined(users.users)) {
+                $scope.users = users.users;
+            }
+
+            if(angular.isDefined($scope.users.length) && $scope.users.length > 0) {
+                $scope.className = $scope.users[0].name;
+            }
+        });
+
+        $scope.addUser = function() {
+            if(angular.isDefined($scope.userToEnroll) && angular.isDefined($scope.userToEnroll.id) && $scope.userToEnroll.id > 0 && angular.isDefined($scope.userType) && angular.isDefined($scope.userType.name)) {
+                console.log("Class ID: " + $rootScope.$stateParams.classId);
+                console.log("User ID: " + $scope.userToEnroll.id);
+                console.log("Type: " + $scope.userType.name);
+
+                EditCourseClassUser.submit({class_id: $rootScope.$stateParams.classId, user_id: $scope.userToEnroll.id, type: $scope.userType.name}, function(courseclassuser) {
+                    console.log(angular.toJson(courseclassuser));
+
+                    if(courseclassuser.message=='successful') {
+                        alert('Enrolled User');
+                    } else {
+                        alert(courseclassuser.message);
+                    }
+                });
+            } else {
+                alert('Please Provide Both User And Type.');
+            }
+        }
+    }
+]);
+
+
+// Add Course Class Controller
+appControllers.controller('AddCourseClassController', ['$rootScope', '$scope', '$timeout', 'CurrentCourseId', 'EditCourseClass',
+    function($rootScope, $scope, $timeout, CurrentCourseId, EditCourseClass) {
+        $scope.courseId = CurrentCourseId.getCourseId();
+        $scope.className = '';
+
+        $scope.addClass = function() {
+            EditCourseClass.submit({course_id: CurrentCourseId.getCourseId(), name: $scope.className}, function(courseclass) {
+                console.log(angular.toJson(courseclass));
+
+                if(courseclass.message=='successful') {
+                    alert('Added Class');
+                } else {
+                    alert(courseclass.message);
+                }
+            });
+        }
+    }
+]);
+
+
+
+// Add Organization User Controller
+appControllers.controller('AddOrganizationUsersController', ['$rootScope', '$scope', '$timeout', 'CurrentOrganizationId', 'EditOrganizationUser',
+    function($rootScope, $scope, $timeout, CurrentOrganizationId, EditOrganizationUser) {
+        $scope.organizationId = CurrentOrganizationId.getOrganizationId();
+        $scope.userFirstName = '';
+        $scope.userLastName = '';
+        $scope.userEmail = '';
+        $scope.userPassword = '';
+        $scope.systemGeneratePassword = false;
+
+        $scope.addUser = function() {
+            var generate_password = 0;
+
+            if($scope.systemGeneratePassword) {
+                generate_password = 1;
+            }
+
+            EditOrganizationUser.submit({organization_id: CurrentOrganizationId.getOrganizationId(), fname: $scope.userFirstName, lname: $scope.userLastName, email: $scope.userEmail, password: $scope.userPassword, generate_password: generate_password}, function(user) {
+                console.log(angular.toJson(user));
+
+                if(user.message=='successful') {
+                    alert('Added User');
+                } else {
+                    alert(user.message);
+                }
+            });
+        }
+    }
+]);
+
+// Organization Controller
+appControllers.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', 'Organization', 'CurrentOrganizationId',
+    function($rootScope, $scope, $timeout, Organization, CurrentOrganizationId) {
+        $rootScope.$broadcast('ClassManagementMenu');
+        $scope.currentname = '';
+        Organization.get({userId: 'me'}, function(organizations){
+            console.log("Course: " + angular.toJson(organizations));
+
+            $scope.organizations = organizations.organizations;
+
+            if($scope.organizations.length > 0) {
+                CurrentOrganizationId.setOrganizationId($scope.organizations[0].id);
+                $scope.currentname = $scope.organizations[0].name;
+                console.log("Organization SERVICE CURRENT Organization ID: " + CurrentOrganizationId.getOrganizationId());
+
+                $rootScope.$broadcast('NavOrganizationUpdate');
+            }
+        });
+
+        $scope.$on('NavAddedOrganizationUpdate', function(event, data) {
+            Organization.get({userId: 'me'}, function(organizations){
+                console.log("Course: " + angular.toJson(organizations));
+
+                $scope.organizations = organizations.organizations;
+
+                if($scope.organizations.length > 0) {
+                    CurrentOrganizationId.setOrganizationId($scope.organizations[0].id);
+                    $scope.currentname = $scope.organizations[0].name;
+                    console.log("Organization SERVICE CURRENT Organization ID: " + CurrentOrganizationId.getOrganizationId());
+
+                    $rootScope.$broadcast('NavOrganizationUpdate');
+                }
+            });
+        });
+
+        $scope.changeOrganization = function(organizationId) {
+            console.log("Change To Organization ID: " + organizationId);
+
+            for(var i=0; i < $scope.organizations.length; i++) {
+                if($scope.organizations[i].id == organizationId) {
+                    CurrentOrganizationId.setOrganizationId($scope.organizations[i].id);
+                    $scope.currentname = $scope.organizations[i].name;
+                    console.log("Organization Change SERVICE CURRENT Organization ID: " + CurrentOrganizationId.getOrganizationId());
+
+                    $rootScope.$broadcast('NavOrganizationUpdate');
+                }
+            }
+        }
+    }
+]);
+
+// Department Controller
+appControllers.controller('DepartmentController', ['$rootScope', '$scope', '$timeout', 'Department', 'CurrentOrganizationId', 'CurrentDepartmentId',
+    function($rootScope, $scope, $timeout, Department,  CurrentOrganizationId, CurrentDepartmentId) {
+        $scope.currentname = '';
+        $scope.$on('NavOrganizationUpdate', function(event, data) {
+
+            Department.get({organizationId: CurrentOrganizationId.getOrganizationId()}, function(departments){
+                console.log("Department: " + angular.toJson(departments));
+
+                $scope.departments = departments.departments;
+
+                if($scope.departments.length > 0) {
+                    CurrentDepartmentId.setDepartmentId($scope.departments[0].id);
+                    $scope.currentname = $scope.departments[0].name;
+                    console.log("Department SERVICE CURRENT Department ID: " + CurrentDepartmentId.getDepartmentId());
+
+                    $rootScope.$broadcast('NavDepartmentUpdate');
+                } else {
+                    CurrentDepartmentId.setDepartmentId(0);
+                    $scope.currentname = '';
+                    console.log("Department SERVICE CURRENT Department ID: " + CurrentDepartmentId.getDepartmentId());
+
+                    $rootScope.$broadcast('NavDepartmentUpdate');
+                }
+            });
+        });
+
+        $scope.changeDepartment = function(departmentId) {
+            console.log("Change To Department ID: " + departmentId);
+
+            for(var i=0; i < $scope.departments.length; i++) {
+                if($scope.departments[i].id == departmentId) {
+                    CurrentDepartmentId.setDepartmentId($scope.departments[i].id);
+                    $scope.currentname = $scope.departments[i].name;
+                    console.log("Department Change SERVICE CURRENT Department ID: " + CurrentDepartmentId.getDepartmentId());
+
+                    $rootScope.$broadcast('NavDepartmentUpdate');
+                }
+            }
+        }
+    }
+]);
+
+//CourseAdmin Controller
+appControllers.controller('CourseAdminController', ['$rootScope', '$scope', '$timeout', 'CourseAdmin', 'CurrentDepartmentId', 'CurrentCourseId',
+    function($rootScope, $scope, $timeout, CourseAdmin, CurrentDepartmentId, CurrentCourseId) {
+        $scope.currentname = '';
+
+        $scope.$on('NavDepartmentUpdate', function(event, data) {
+            CourseAdmin.get({departmentId: CurrentDepartmentId.getDepartmentId()}, function(courses){
+                console.log("CourseAdmin: " + angular.toJson(courses));
+
+                $scope.courses = courses.courses;
+
+                if(angular.isDefined($scope.courses) && angular.isDefined($scope.courses.length) && $scope.courses.length > 0) {
+                    CurrentCourseId.setCourseId($scope.courses[0].id);
+                    $scope.currentname = $scope.courses[0].name;
+                    console.log("Course SERVICE CURRENT COURSE ID: " + CurrentCourseId.getCourseId());
+
+                    $rootScope.$broadcast('NavUpdate');
+                } else {
+                    CurrentCourseId.setCourseId(0);
+                    $scope.currentname = '';
+                    console.log("Course SERVICE CURRENT COURSE ID: " + CurrentCourseId.getCourseId());
+
+                    $rootScope.$broadcast('NavUpdate');
+
+                }
+            });
+        });
+
+        $scope.changeCourse = function(courseId) {
+            console.log("Change To Course ID: " + courseId);
+
+            for(var i=0; i < $scope.courses.length; i++) {
+                if($scope.courses[i].id == courseId) {
+                    CurrentCourseId.setCourseId($scope.courses[i].id);
+                    $scope.currentname = $scope.courses[i].name;
+                    console.log("Course Change SERVICE CURRENT COURSE ID: " + CurrentCourseId.getCourseId());
+
+                    $rootScope.$broadcast('NavUpdate');
+                }
+            }
+        }
+    }
+]);
+
+
+//Course Controller
+appControllers.controller('CourseController', ['$rootScope', '$scope', '$timeout', 'Course', 'CurrentCourseId', 'ShowDatesGrades', 
+    function($rootScope, $scope, $timeout, Course, CurrentCourseId, ShowDatesGrades) {
+        $scope.currentname = '';
+        /*
+        Golabs 16/01/2015:
+        This will select and set the show_dates_and_grades so that we can determine message feeback text
+        to the student in the message feedback box.
+        */
+        var SetDatesGrades = function(CurrentCourses,CurrentCourseId) {
+            for (var i = 0; i < CurrentCourses.length; i++) {
+                if (parseInt(CurrentCourses[i].id) === parseInt(CurrentCourseId.getCourseId())) {
+                    ShowDatesGrades.setDateGrades(parseInt(CurrentCourses[i].show_dates_and_grades));
+                }
+            }             
+        }
+        Course.get({userId: 'me'}, function(courses){
+            console.log("Course: " + angular.toJson(courses));
+            $scope.courses = courses.courses;
+            if($scope.courses.length > 0) {
+                CurrentCourseId.setCourseId($scope.courses[0].id);
+                $scope.currentname = $scope.courses[0].name;
+                $rootScope.currentCourseName = $scope.currentname;
+                $rootScope.currentCourse = $scope.courses[0];
+                console.log("Course SERVICE CURRENT COURSE ID: " + CurrentCourseId.getCourseId());
+                $rootScope.$broadcast('NavUpdate');
+                SetDatesGrades($scope.courses,CurrentCourseId);//calling SetDatesGrades
+            }
+        });
+
+        $scope.changeCourse = function(courseId) {
+            console.log("Change To Course ID: " + courseId);
+
+            for(var i=0; i < $scope.courses.length; i++) {
+                if($scope.courses[i].id == courseId) {
+                    CurrentCourseId.setCourseId($scope.courses[i].id);
+                    $scope.currentname = $scope.courses[i].name;
+                    $rootScope.currentCourseName = $scope.currentname;
+                    $rootScope.currentCourse = $scope.courses[i];
+                    console.log("Course Change SERVICE CURRENT COURSE ID: " + CurrentCourseId.getCourseId());
+                    $rootScope.$broadcast('NavUpdate');
+                    SetDatesGrades($scope.courses,CurrentCourseId);//calling SetDatesGrades
+                }
+            }
+        }
+    }
+]);
+
+appControllers.controller('UserController', ['$rootScope', '$scope', '$timeout', 'User',
+    function($rootScope, $scope, $timeout, User) {
+        User.get({userId: 'me'}, function(user){
+            console.log(angular.toJson(user));
+
+            $scope.user = user;
+        });
+    }
+]);
+
+// UtilityController moved to ./controllers/utility.js NOTE: It was broken code
+
+appControllers.controller('NotificationModalController', ['$scope', '$modalInstance', 'notification', function ($scope, $modalInstance, notification) {
+
+}]);
+
+appControllers.controller('NotificationController', ['$rootScope', '$scope', '$sce', '$timeout', 'Notification',
+ '$filter', '$modal', 'CurrentCourseId', 'ShowDatesGrades',
+    function($rootScope, $scope, $sce, $timeout, Notification, $filter, $modal, CurrentCourseId,ShowDatesGrades) {
+        $scope.notifications = new Array();
+        $scope.CurrentCourseId = CurrentCourseId;
+        $scope.ShowDatesGrades = ShowDatesGrades;
+
+
+        Notification.get({notificationId: 'me'}, function(notifications){
+            $scope.notificationCallback(notifications);
+            $scope.refreshTimer(2000);
+        });
+
+        $scope.refresh = function() {
+            Notification.get({notificationId: 'me'}, function(notifications){
+                $scope.notificationCallback(notifications);
+            });
+        }
+
+        $scope.refreshTimer = function(delay) {
+            $timeout(function() {
+                Notification.get({notificationId: 'me'}, function(notifications){
+                    $scope.notificationCallback(notifications);
+                    $scope.refreshTimer(delay);
+                });
+            }, delay);
+        }
+
+        $scope.open = function (notification) {
+            var modalInstance = $modal.open({
+                templateUrl: 'public/views/partials/notificationgradepost.html?cachesmash=5',
+                windowClass: 'feedback-modal',
+                controller: 'NotificationGradePostMessagesController',
+                resolve: {
+                    notification: function () {
+                        return notification;
+                    }
+                }
+            });
+        };
+
+        $scope.notificationCallback = function(notifications) {
+            // console.log("Notifications: " +  angular.toJson(notifications));
+            if(angular.isDefined(notifications.notifications)) {
+                $scope.notifications = notifications.notifications;
+                /*
+                Golabs 16/01/2015:
+                We get our ShowDatesGrades by the $scope.ShowDatesGrades found in services 'ShowDatesGrades' function
+                This is achieved when a call is made to the function SetDatesGrades found in the CourseController
+                ShowDatesGrades is set to scope in the NotificationController conroller which run this function.
+                */
+                for(var i=0; i <  $scope.notifications.length; i++) {
+                    if($scope.ShowDatesGrades.getDateGrades() === 0){
+                        $scope.notifications[i].htmlSafe  =  $sce.trustAsHtml('<a data-ng-click="open(notification)">' +
+                        $rootScope.preference.navs.notification_no_score_pre_name.translation + '<i>'+
+                        $scope.notifications[i].fname +' '+$scope.notifications[i].lname +
+                        $rootScope.preference.navs.notification_no_score_post_name.translation + '</i></a>');
+                    }
+                else{
+                        $scope.notifications[i].htmlSafe  =  $sce.trustAsHtml('<a data-ng-click="open(notification)">' +
+                        $rootScope.preference.navs.notification_with_score_pre_name.translation + '<i>'+
+                        $scope.notifications[i].fname+' '+$scope.notifications[i].lname+'</i>' +
+                        $rootScope.preference.navs.notification_with_score_post_name.translation + '<br/>' +
+                        $rootScope.preference.navs.notification_with_score_pre_score.translation + '<i>' +
+                        $scope.notifications[i].grade +
+                        $rootScope.preference.navs.notification_with_score_post_score.translation + '</i></a>');
+                    }
+                }
+                var count = $filter('filter')(notifications.notifications, {viewed: '0'}).length;
+                if(count > 0) {
+                    $scope.uncheckedNotifications = '(' + count + ')';
+                } else {
+                    $scope.uncheckedNotifications = '';
+                }
+            }
+        }
+    }
+]);
+
+appControllers.controller('NotificationMessagesController', ['$rootScope', '$scope', '$timeout', 'Notification',
+    function($rootScope, $scope, $timeout, Notification) {
+        console.log("Notification Messages");
+    }
+]);
+
+appControllers.controller('NotificationGradePostMessagesController', ['$rootScope', '$scope', '$timeout', '$sce', 'Notification', 'ShowDatesGrades', 'notification', '$modalInstance',
+    function($rootScope, $scope, $timeout, $sce, Notification, ShowDatesGrades, notification, $modalInstance) {
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+        $scope.show_dates_and_grades = ShowDatesGrades.getDateGrades() == 1;
+
+        console.log("NotificationGradePost Messages: " + notification.id);
+
+
+        Notification.getNotificationGradePost({notificationId: notification.id}, function(res){
+            console.log("Notifications: " +  angular.toJson(res));
+
+            if (!res.grade_post) { // failed to retrieve for some reason
+              return
+            }
+
+            $scope.grade_post = res.grade_post;
+            $scope.teacher_posts = res.teacher_posts;
+        });
+    }
+]);
+
+
+
+appControllers.controller('PreferenceController', ['$rootScope', '$scope', '$timeout', 'Preference',
+    function($rootScope, $scope, $timeout, Preference) {
+        $scope.preference = {};
+
+        Preference.get({userId: 'me'}, function(preference){
+            console.log(angular.toJson(preference));
+
+            $rootScope.preference = preference;
+            $scope.preference = preference;
+        });
+    }
+]);
+
+
+appControllers.controller('PostController', ['$rootScope', '$scope', '$timeout', '$sce', '$upload', 'Post',
+    function($rootScope, $scope, $timeout, $sce, $upload, Post) {
+        console.log('Post Controller');
+
+        console.log("current content id" + $scope.contentid);
+
+        $scope.reply_to_id = 0;
+        $scope.video_comment = '';
+        $scope.video_upload_comment = '';
+        $scope.file_upload_comment = '';
+        $scope.is_uploading = false;
+        $scope.progress_upload = 0;
+        $scope.check_is_private = 0;
+
+
+        $scope.$on('replyToId', function(event, data) {
+            console.log("Reply To ID EMITTER: " + data);
+
+            $(".modal").draggable({
+                handle: ".modal-header"
+            });
+
+            $scope.reply_to_id = data;
+            $scope.video_comment = '';
+            $scope.video_upload_comment = '';
+            $scope.file_upload_comment = '';
+            $scope.is_uploading = false;
+            $scope.progress_upload = 0;
+            $scope.check_is_private = 0;
+
+            $scope.post = Post.get({postId: 'new'}, function(post) {
+                $scope.videoWidget = $sce.trustAsHtml(post.video_widget);
+                $scope.videoRecordButton = $sce.trustAsHtml(post.button);
+                $scope.videoFileName = post.file_name;
+                console.log(post.video_widget);
+                console.log(post.button);
+                console.log(post.file_name);
+            });
+        });
+
+
+        $scope.$on('deleteId', function(event, data) {
+            console.log("DELETE ID EMITTER: " + data);
+
+            $scope.post = Post.delete({delete_id: data}, function(post) {
+                console.log(post.message);
+                if(post.message=='successful') {
+                    $scope.$broadcast('reloadPostedMessages', true);
+                } else {
+                    alert(post.message);
+                }
+            });
+        });
+
+        $scope.showNewPost = function() {
+            if($scope.allow_video_post == 1 || $scope.allow_text_post == 1 || $scope.allow_upload_post == 1) {
+                return true;
+            }
+
+
+            return false;
+        }
+
+        $scope.newPost = function(reply_to_id) {
+            if(!angular.isDefined(reply_to_id)) {
+                reply_to_id = 0;
+            }
+
+            $(".modal").draggable({
+                handle: ".modal-header"
+            });
+
+            $scope.reply_to_id = reply_to_id;
+            $scope.video_comment = '';
+            $scope.check_is_private = 0;
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+
+            $scope.post = Post.get({postId: 'new'}, function(post) {
+                $scope.videoWidget = $sce.trustAsHtml(post.video_widget);
+                $scope.videoRecordButton = $sce.trustAsHtml(post.button);
+                $scope.videoFileName = post.file_name;
+                console.log(post.video_widget);
+                console.log(post.button);
+                console.log(post.file_name);
+            });
+        }
+
+        $scope.submitPost = function() {
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.video_comment == 'Type Message Here') {
+                $scope.video_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post: ' + $scope.videoFileName);
+            console.log('submitting post comment: ' + $scope.video_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+
+
+            $scope.post.contentid = $scope.contentid;
+            $scope.post.videoFileName = $scope.videoFileName;
+            $scope.post.reply_to_id = $scope.reply_to_id;
+            $scope.post.video_comment = $scope.video_comment;
+            $scope.post.check_is_private = $scope.check_is_private;
+
+            $scope.post.$submit(function(post) {
+                console.log(post.message);
+                if(post.message=='successful') {
+                    $scope.$broadcast('reloadPostedMessages', true);
+
+                    $('#basicModal').modal('hide');
+                } else {
+                    alert(post.message);
+                }
+            });
+        }
+
+        $scope.onFileSelect = function($files) {
+            $scope.is_uploading = true;
+            $scope.progress_upload = 0;
+
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.video_upload_comment == 'Type Message Here') {
+                $scope.video_upload_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post comment: ' + $scope.video_upload_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+            if($scope.check_is_private){
+                $scope.check_is_private = 1;
+            }
+
+            //$files: an array of files selected, each file has name, size, and type.
+            for (var i = 0; i < $files.length; i++) {
+                var file = $files[i];
+
+                $scope.upload = $upload.upload({
+                    url: '/post/upload/', //upload.php script, node.js route, or servlet url
+                    //method: 'POST' or 'PUT',
+                    //headers: {'header-key': 'header-value'},
+                    //withCredentials: true,
+                    data: {contentid: $scope.contentid, reply_to_id: $scope.reply_to_id, video_upload_comment: $scope.video_upload_comment, check_is_private: $scope.check_is_private},
+                    file: file, // or list of files ($files) for html5 only
+                    //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
+                    // customize file formData name ('Content-Disposition'), server side file variable name.
+                    //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'
+                    // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
+                    //formDataAppender: function(formData, key, val){}
+                }).progress(function(evt) {
+                    console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    $scope.progress_upload = parseInt(100.0 * evt.loaded / evt.total);
+
+                    console.log("progress-bar width: " + $('.progress-bar').width());
+
+                    $('.progress-bar').width($scope.progress_upload + '%')
+                }).success(function(data, status, headers, config) {
+                    // file is uploaded successfully
+                    console.log(data);
+
+
+                    if(data.message=='successful') {
+                        $scope.$broadcast('reloadPostedMessages', true);
+
+                        $('#basicModal').modal('hide');
+                        $scope.is_uploading = false;
+                        $scope.progress_upload = 0;
+                    } else {
+                        alert(data.message);
+                    }
+
+                });
+                //.error(...)
+                //.then(success, error, progress);
+                // access or attach event listeners to the underlying XMLHttpRequest.
+                //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+            }
+            /* alternative way of uploading, send the file binary with the file's content-type.
+             Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+             It could also be used to monitor the progress of a normal http post/put request with large data*/
+            // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+        };
+
+        $scope.onFileUploadGenericSelect = function($files) {
+            $scope.is_uploading = true;
+            $scope.progress_upload = 0;
+
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.file_upload_comment == 'Type Message Here') {
+                $scope.file_upload_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post comment: ' + $scope.file_upload_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+            if($scope.check_is_private){
+                $scope.check_is_private = 1;
+            }
+
+            //$files: an array of files selected, each file has name, size, and type.
+            for (var i = 0; i < $files.length; i++) {
+                var file = $files[i];
+
+                $scope.upload = $upload.upload({
+                    url: '/post/fileupload/', //upload.php script, node.js route, or servlet url
+                    //method: 'POST' or 'PUT',
+                    //headers: {'header-key': 'header-value'},
+                    //withCredentials: true,
+                    data: {contentid: $scope.contentid, reply_to_id: $scope.reply_to_id, file_upload_comment: $scope.file_upload_comment, check_is_private: $scope.check_is_private},
+                    file: file, // or list of files ($files) for html5 only
+                    //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
+                    // customize file formData name ('Content-Disposition'), server side file variable name.
+                    //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'
+                    // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
+                    //formDataAppender: function(formData, key, val){}
+                }).progress(function(evt) {
+                    console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    $scope.progress_upload = parseInt(100.0 * evt.loaded / evt.total);
+
+                    console.log("progress-bar width: " + $('.progress-bar').width());
+
+                    $('.progress-bar').width($scope.progress_upload + '%')
+                }).success(function(data, status, headers, config) {
+                    // file is uploaded successfully
+                    console.log(data);
+
+
+                    if(data.message=='successful') {
+                        $scope.$broadcast('reloadPostedMessages', true);
+
+                        $('#basicFileUploadModal').modal('hide');
+                        $scope.is_uploading = false;
+                        $scope.progress_upload = 0;
+                    } else {
+                        alert(data.message);
+                    }
+
+                });
+                //.error(...)
+                //.then(success, error, progress);
+                // access or attach event listeners to the underlying XMLHttpRequest.
+                //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+            }
+            /* alternative way of uploading, send the file binary with the file's content-type.
+             Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+             It could also be used to monitor the progress of a normal http post/put request with large data*/
+            // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+        };
+
+    }
+
+
+]);
+
+appControllers.controller('PostedMessagesController', ['$rootScope', '$scope', '$timeout', '$sce', 'Post',
+    function($rootScope, $scope, $timeout, $sce, Post) {
+        console.log($scope.contentid);
+
+        $scope.current_video_player = '';
+
+        $scope.posted = Post.query({ postId: $scope.contentid }, function(messages) {
+            console.log(angular.toJson(messages));
+
+            $scope.postedMessages = messages.postmessages;
+        });
+
+        $scope.$on('reloadPostedMessages', function(event, data) {
+            $scope.posted = Post.query({ postId: $scope.contentid }, function(messages) {
+                console.log(angular.toJson(messages));
+
+                $scope.postedMessages = messages.postmessages;
+            });
+        });
+
+        $scope.replyTo = function(reply_to_id) {
+            if(!angular.isDefined(reply_to_id)) {
+                reply_to_id = 0;
+            }
+
+            $scope.reply_to_id = reply_to_id;
+
+            $scope.$emit('replyToId', $scope.reply_to_id);
+        }
+
+        $scope.deletePost = function(delete_id) {
+            if(!angular.isDefined(delete_id)) {
+                return;
+            }
+
+            if (confirm("Are You Sure You Want To Delete Post") == true) {
+                $scope.delete_id = delete_id;
+
+                $scope.$emit('deleteId', $scope.delete_id);
+            }
+        }
+
+
+        $scope.openVideoPlayer = function(video_message_id, modal_id) {
+            console.log('video message id: ' + video_message_id);
+
+            for(var i = 0; $scope.postedMessages.length; i++) {
+                if($scope.postedMessages[i].id == video_message_id) {
+                    $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                    break;
+                } else if($scope.postedMessages[i].children.length > 0) {
+                    var found_in_child = false;
+                    for(var j = 0; j < $scope.postedMessages[i].children.length; j++) {
+                        if($scope.postedMessages[i].children[j].id == video_message_id) {
+                            $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].children[j].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                            found_in_child = true;
+                        }
+                    }
+
+                    if(found_in_child) {
+                        break;
+                    }
+                }
+            }
+
+            console.log("current video url: " + $scope.current_video_player);
+
+            $('#' + modal_id).modal('show');
+            $('#' + modal_id).on('hide.bs.modal', function () {
+                document.getElementById('defaultVideoPlayer').pause();
+            })
+        }
+
+        $scope.indentClass = function(indent_count) {
+            return "indent-" + indent_count;
+        }
+    }
+]);
+
+
+/******************************************************************************
+ * Vocabulary Controller
+ *****************************************************************************/
+
+appControllers.controller('VocabController', ['$rootScope', '$scope', '$document', '$interval', '$timeout', 'Vocab', 'SeeIT',
+
+    function($rootScope, $scope, $document, $interval, $timeout, Vocab, SeeIT) {
+        $scope.currentItem = 0;
+        $scope.vocabAudios = new Array();
+        $scope.vocabItems;
+        $scope.totalItems;
+        //console.log(angular.toJson($rootScope.$state));
+
+        $document.bind('keydown', function(e){
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                $scope.$apply(function() { $scope.flip() });
+            } else if (e.keyCode == 37) {
+                console.log('Prev Item Shortcut: ' + $scope.currentItem);
+                $scope.$apply(function() { $scope.prevItem() });
+            } else if (e.keyCode == 39) {
+                console.log('Next Item Shortcut:' + $scope.currentItem);
+                $scope.$apply(function() { $scope.nextItem() });
+            }
+        });
+
+        var vocabArray = Vocab.get({vocabId: $rootScope.$stateParams.vocabId}, function(vocab) {
+            $scope.vocabAudios = new Array();
+
+            $scope.vocabItems = vocab.content;
+            $scope.totalItems = vocab.content.length;
+            
+            //console.log(angular.toJson(vocab.content));
+
+            for(var i = 0; i < vocab.content.length; i++) {
+                $scope.vocabAudios[i] = {id: vocab.content[i].id, howler: new Howl({ urls: vocab.content[i].urls }) };
+
+                //console.log("Vocab Audios ID: " + $scope.vocabAudios[i].id);
+            }
+        });
+        //console.log(angular.toJson($scope.vocabItems))
+        /* Star Filter */
+
+        $scope.starred = [];
+
+        $scope.setStarred = function() {
+            var id = this.vocab.id;
+            if (_.contains($scope.starred, id)) {
+                // Remove Star
+                $scope.starred = _.without($scope.starred, id);
+                if ($rootScope.enableFilter) {
+                    if ($scope.currentItem > $scope.starred.length - 1 && $scope.starred.length > 0) {
+                        $scope.currentItem = $scope.starred.length - 1;
+                    }
+                }
+            } else {
+                // Add Star
+                $scope.starred.push(id);
+            }
+            return false;
+        };
+
+        $scope.isStarred = function(id) {
+            if (_.contains($scope.starred, id)) {
+                return 'active';
+            }
+            return false;
+        };
+
+        $scope.enableStarFilter = function() {
+            if ($scope.starred.length > 0) {
+                $rootScope.enableFilter = true;
+                $scope.currentItem = 0;
+            }
+        }
+
+        $scope.disableStarFilter = function() {
+            $rootScope.enableFilter = false;
+        }
+
+        $scope.starFilter = function(vocab) {
+            if ($scope.starred.length > 0 && !_.contains($scope.starred, vocab.id) && $rootScope.enableFilter) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        /* Vocabulary Flashcards */
+
+        $scope.prevItem = function() {
+            $scope.currentItem = $scope.currentItem - 1;
+        }
+
+        $scope.nextItem = function() {
+            $scope.currentItem = $scope.currentItem + 1;
+        }
+
+        $scope.flip = function() {
+            $('.flip .card').toggleClass('flipped');
+            $('.flip .card .back').toggleClass('flipped');
+
+            for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                if($scope.vocabAudios[i].id == this.vocab.id) {
+                    $scope.vocabAudios[i].howler.play();
+                    console.log('found: ' + $scope.vocabAudios[i].id);
+                }
+            }
+        }
+
+        /* Audio Playback */
+
+        $scope.playAudio = function() {
+            for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                if($scope.vocabAudios[i].id == this.vocab.id) {
+                    $scope.vocabAudios[i].howler.play();
+                    console.log('found: ' + $scope.vocabAudios[i].id);
+                }
+            }
+        }
+
+        /* Audio Recording */
+
+        $scope.recording = false;
+
+        $scope.isRecording = function() {
+            if ($scope.recording) {
+                return 'active';
+            }
+            return false;
+        };
+
+        $scope.recordAudio = function() {
+            $scope.recording = !$scope.recording;
+            if ($scope.recording) {
+                Recorder.record({
+                    start: function() {
+                        console.log("Recording Started");
+                    },
+                    progress: function(milliseconds) {
+                        // TODO: show timer
+                    }
+                });
+            } else {
+                Recorder.stop();
+                console.log("Recording Stopped");
+                Recorder.play({
+                    progress: function(milliseconds) {
+                        // TODO: show timer
+                    }
+                });
+                // FIXME: deferred execution
+                for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                    if($scope.vocabAudios[i].id == this.vocab.id) {
+                        $scope.vocabAudios[i].howler.play();
+                        console.log('found: ' + $scope.vocabAudios[i].id);
+                    }
+                }
+            }
+        }
+
+		/* Begin See it and write it */
+        var beginSeeIt;
+        var seeAttempts = {};
+
+    	/* Keep track of correct and skipped answers */
+        $scope.seeAnswered = [];
+        $scope.seeSkipped = [];
+
+        vocabArray.$promise.then(function (result) {
+			/* Reset the activity */
+        	 beginSeeIt = function (updateCircleText) {
+        		/* Seeit activity */
+        		$scope.remainingQuestions = $scope.totalItems;
+        		$scope.vocabContentRandom = (function () {
+
+
+        			var newArray = []
+        			for (var key in $scope.vocabItems) {
+
+        				newArray.push($scope.vocabItems[key]);
+        			}
+        			for (var i = newArray.length - 1; i >= 0; i--) {
+
+        				var randomIndex = Math.floor(Math.random() * (i + 1));
+        				var itemAtIndex = newArray[randomIndex];
+        				newArray[randomIndex] = newArray[i];
+        				newArray[i] = itemAtIndex;
+        				seeAttempts[i] = 0;//use this loop set all the counts to zero
+        			}
+        			return newArray;
+        		})();
+        		//console.log($scope.vocabContentRandom);
+        		$scope.seeAnswerLocation = 0;
+        		$scope.seeCurrentQuestion = $scope.vocabContentRandom[$scope.seeAnswerLocation].translation;
+        		$scope.seeAnswer = $scope.vocabContentRandom[$scope.seeAnswerLocation].phrase;
+        		$scope.seeAnswerID = $scope.vocabContentRandom[$scope.seeAnswerLocation].id;
+        		$scope.seeIncomplete = true;
+        		$scope.seeResponse = '';
+        		$scope.correct = 0;
+        		$scope.incorrect = 0;
+        		
+        		$scope.seeItHighScoreText = 'Perfect! No Mistakes';
+        		$scope.seeitCurrentGameText = 'Current Game';
+        		setPieGraph(0, $scope.totalItems);
+        		$scope.seeAnswered = [];
+        		$scope.seeSkipped = [];
+        		$scope.seeNotStarted = false;
+        		if (updateCircleText) {
+        			
+					var svg = d3.select("svg");
+					var donut = svg.selectAll("g.nv-pie").filter(
+						function (d, i) {
+							return i == 1;
+						});
+	
+	
+					// Update the circle text
+					donut.select("text").text(0);
+					
+        		}
+        	}
+        	//beginSeeIt(false);
+        });
+
+        toastr.options = {
+        	positionClass: 'toast-bottom-right'
+        };
+
+    	
+        
+        $scope.seeGetQuestionCount = function (vocabID) {
+
+        	return seeAttempts[vocabID];
+
+        }
+
+    	/* Reset the activity */
+        $scope.startSeeOver = function () {
+        	beginSeeIt(true);
+        	
+        }
+		/* Determine if a question was correct or skipped */
+        $scope.checkAnswer = function (answerPosition) {
+        	
+        	var testArray = function (needle,array) {
+        		for (var i in array) {
+        			if (array[i] == needle) return true;
+        		}
+        		return false;
+        	}
+        	
+        	if (testArray(answerPosition, $scope.seeAnswered)) {
+        		return 'correct';
+        	}
+        	if (testArray(answerPosition, $scope.seeSkipped)) {
+        		return 'skipped';
+        	}
+
+        }
+		
+        $scope.skipQuestion = function () {
+        	seeAttempts[$scope.seeAnswerLocation]++;
+        	seeAttempts[$scope.seeAnswerLocation]++;
+        	$scope.incorrect++;
+        	$scope.seeSkipped.push($scope.seeAnswerLocation);
+        	$scope.seeAnswerLocation++;
+        	if ($scope.vocabContentRandom[$scope.seeAnswerLocation] != null) {
+        		
+        		$scope.seeCurrentQuestion = $scope.vocabContentRandom[$scope.seeAnswerLocation].translation;
+        		$scope.seeAnswer = $scope.vocabContentRandom[$scope.seeAnswerLocation].phrase;
+        		$scope.seeAnswerID = $scope.vocabContentRandom[$scope.seeAnswerLocation].id;
+        	}
+        	$scope.seeResponse = '';
+        	$scope.remainingQuestions--;
+        	toastr.info('You\'ll get it next time :)');
+
+        	if ($scope.seeAnswerLocation == $scope.vocabContentRandom.length) {
+        		$scope.seeIncomplete = false;
+        	}
+
+        	$scope.seeItHighScoreText = 'Number of Mistakes';
+
+        	$scope.exampleData = [
+					{ key: "One", y: $scope.incorrect },
+					{ key: "Two", y: parseInt((($scope.totalItems - $scope.incorrect) < 0) ? 0 : ($scope.totalItems - $scope.incorrect)) }
+
+        	];
+
+        	
+
+        	var svg = d3.select("svg");
+        	var donut = svg.selectAll("g.nv-pie").filter(
+				function (d, i) {
+					return i == 1;
+				});
+
+
+        	// Update the circle text
+        	donut.select("text").text($scope.incorrect);
+        	
+        	SeeIT.update(
+                {
+                	vocabID: $rootScope.$stateParams.vocabId
+                }, {
+                	correct: $scope.correct,
+                	incorrect: $scope.incorrect,
+                	remaining: $scope.remainingQuestions
+                });
+
+        }
+        
+        $scope.submitAnswer = function () {
+
+			seeAttempts[$scope.seeAnswerLocation]++;
+        	//check if the answer is correct
+        	if ($scope.seeResponse == $scope.seeAnswer) {
+        		
+        		//correct answer
+        		$scope.correct++;
+        		$scope.seeAnswered.push($scope.seeAnswerLocation);
+        		
+        		
+        		$scope.seeAnswerLocation++;
+        		
+        		if ($scope.vocabContentRandom[$scope.seeAnswerLocation] != null) {
+        			$scope.seeCurrentQuestion = $scope.vocabContentRandom[$scope.seeAnswerLocation].translation;
+        			$scope.seeAnswer = $scope.vocabContentRandom[$scope.seeAnswerLocation].phrase;
+        			$scope.seeAnswerID = $scope.vocabContentRandom[$scope.seeAnswerLocation].id;
+        			
+        		}
+        		$scope.seeResponse = '';
+        		toastr.success('Great Work!');
+        		$scope.remainingQuestions--;
+
+        		//deal with the circle score and oonly update if new score
+        		
+
+        		if ($scope.seeAnswerLocation == $scope.vocabContentRandom.length) {
+        			$scope.seeIncomplete = false;
+        		}
+
+        		
+        		
+        		
+        	} else {
+        		$scope.incorrect++;
+        		//if ($scope.seeExistingCorrect < $scope.correct) {
+        		$scope.seeItHighScoreText = 'Perfect! No Mistakes';
+        		
+        		$scope.seeItHighScoreText = 'Number of Mistakes';
+        		
+
+        		var svg = d3.select("svg");
+        		var donut = svg.selectAll("g.nv-pie").filter(
+					function (d, i) {
+						return i == 1;
+					});
+
+
+        		// Update the circle text
+        		donut.select("text").text($scope.incorrect);
+        		//}
+
+        		
+        		toastr.error('Try Again');
+        	}
+        	
+
+        	$scope.exampleData = [
+					{ key: "One", y: $scope.incorrect },
+					{ key: "Two", y: parseInt((($scope.totalItems - $scope.incorrect) < 0) ? 0 : ($scope.totalItems - $scope.incorrect)) }
+
+        	];
+
+        	//console.log(seeAttempts);
+			//update the database with the new score
+            SeeIT.update(
+                {
+                    vocabID: $rootScope.$stateParams.vocabId
+                }, {
+                	correct: $scope.correct,
+                	incorrect: $scope.incorrect,
+                	remaining: $scope.remainingQuestions
+                });
+			
+            return false;
+        }
+
+
+        var colorArray = ['#d9534f','#5cb85c' ];
+        $scope.colorFunction = function () {
+        	return function (d, i) {
+        		return colorArray[i];
+        	};
+        }
+
+        
+
+        $scope.yFunction = function () {
+        	return function (d) {
+        		return d.y;
+        	};
+        }
+
+        $scope.xFunction = function () {
+        	return function (d) {
+        		return d.key;
+        	};
+        }
+        function setPieGraph(first, second) {
+        	//console.log(first); console.log(second);
+        	$scope.exampleData = [
+				{ key: "One", y: first },
+				{ key: "Two", y: second }
+
+        	];
+        }
+        setPieGraph(0, 0);
+        $scope.seeItHighScoreText = 'Perfect! No Mistakes';
+        $scope.seeNotStarted = true;
+		//var vocabArray = Vocab.get({vocabId: $rootScope.$stateParams.vocabId}, function(vocab) {
+        var scoreArray = SeeIT.get({ vocabID: $rootScope.$stateParams.vocabId }, function (response) {
+        	//console.log(result);
+        	$scope.seeExistingCorrect = response.incorrectAnswers;
+        	
+        	vocabArray.$promise.then(function (result) {
+        		if (parseInt(response.incorrectAnswers) >= parseInt(result.content.length)) {
+        			var startTotal = 0;
+        		} else
+        		{
+        			var startTotal = parseInt(result.content.length);
+        		}
+        		
+        		$scope.seeitCurrentGameText = 'Previous Game';
+        		$scope.correct = response.correctAnswers;
+        		$scope.incorrect = response.incorrectAnswers;
+        		if (response.incorrectAnswers > 0)
+        		{
+        			$scope.seeItHighScoreText = 'Number of Mistakes';
+        		}
+        		$scope.remainingQuestions = response.remainingQuestions;
+
+        		setPieGraph(parseInt(response.incorrectAnswers), startTotal);
+				/*
+        		$scope.exampleData = [
+					{ key: "One", y: parseInt(response.correctAnswers) },
+					{ key: "Two", y: startTotal }
+
+        		];
+				*/
+					var svg = d3.select("svg");
+					var donut = svg.selectAll("g.nv-pie").filter(
+						function (d, i) {
+							return i == 1;
+						});
+
+
+					// Inserting text
+					donut.select("text").text(response.incorrectAnswers);
+        	});
+        	
+        });
+        
+       
+
+        $scope.callbackFunction = function () {
+        	return function (graph) {
+        		var svg = d3.select("svg");
+        		var donut = svg.selectAll("g.nv-pie").filter(
+					function (d, i) {
+						return i == 1;
+					});
+
+        		// Inserting text
+        		donut.insert("text", "g")
+					.text(0)
+					.attr("class", "css-label-class")
+					.attr("text-anchor", "middle")
+        		    .attr("dy", 20);
+        	}
+        };
+
+    	/* time see it */
+        /*
+        var slider = new Slider('#flashStartTimeSlider', {
+        	formatter: function (value) {
+        		return 'Current Speed: ' + value + ' Seconds';
+        	}
+        });
+		*/
+        $scope.flashitShowAnswerFeedback = true;
+        $scope.flashItGameStarted = false;
+        $scope.flashitCorrect = 0;
+        $scope.flashitHighScore = 0;
+
+        $scope.flashStartSpeedSlide = {
+        	min: 2,
+        	max: 15,
+        	step: 1
+        };
+
+        $scope.range = true;
+
+        $scope.flashStartTime = 10;
+
+   
+        $scope.flashLanguageFlip = false;
+        var flashPreviousRandomPick;
+        $scope.flashitCurrentGameText = 'Previous Game';
+        $scope.flashIncomplete = false;
+
+    	//array randomizer
+        $scope.flashitArrayRandomizer = function (arrayToRandomize) {
+        	//randomize our array
+        	for (var i = arrayToRandomize.length - 1; i >= 0; i--) {
+
+        		var randomIndex = Math.floor(Math.random() * (i + 1));
+        		var itemAtIndex = arrayToRandomize[randomIndex];
+        		arrayToRandomize[randomIndex] = arrayToRandomize[i];
+        		arrayToRandomize[i] = itemAtIndex;
+        		//seeAttempts[i] = 0;//use this loop set all the counts to zero
+        	}
+        	//console.log(arrayToRandomize);
+        	return arrayToRandomize;
+        };
+
+    	//pick a random question or phrase
+        $scope.flashRandomizer = function () {
+        	//console.log($scope.vocabItems);
+        	//convert our object to an array so we can work with it
+        	var newArray = [];
+        	for (var key in $scope.vocabItems) {
+
+        		newArray.push($scope.vocabItems[key]);
+        	}
+        	//console.log(newArray);
+        	return $scope.flashitArrayRandomizer(newArray);
+        };
+
+
+    	//convert our data to an array
+        vocabArray.$promise.then(function (result) {
+        	$scope.flashitContentRandom = $scope.flashRandomizer();
+        });
+        
+       
+
+    	//select a number of possible incorrect answers and insert the correct answer, then shuffle
+        $scope.flashitCreatePossibleAnswers = function (pickedAnswer) {
+
+        	if ($scope.flashitContentRandom.length > 5) {
+        		//select 4 randoms
+        		var pick;
+        		var newArray = [];
+        		for (var i = 0; i < 4; i++) {
+        			pick = Math.floor(Math.random() * $scope.flashitContentRandom.length);
+        			if (pick != pickedAnswer) {
+        				newArray.push($scope.flashitContentRandom[pick]);
+        			}
+        		}
+        		newArray.push($scope.flashitContentRandom[pickedAnswer]);
+        		return $scope.flashitArrayRandomizer(newArray);
+        	}
+        	return $scope.flashitArrayRandomizer($scope.flashitContentRandom);
+
+        };
+
+        $scope.refreshFlashItGame = function () {
+        	$scope.flashitGameTransitioning = false;
+        	$scope.flashItGameStarted = true;
+        	$scope.flashitCurrentGameText = 'Current Game';
+        	
+
+        	//pick a random question
+        	var flashRandomPicker = function (previousPick) {
+        		var pick;
+        		for (var i = 0; i < 10; i++) {
+        			pick = Math.floor(Math.random() * $scope.flashitContentRandom.length);
+        			//console.log(pick); console.log(previousPick);
+        			if (pick != previousPick) {
+        				return pick;
+        			}
+        		}
+        		
+        	};
+
+        	var flashRandomPick = flashRandomPicker(flashPreviousRandomPick);
+
+        	
+
+        	flashPreviousRandomPick = flashRandomPick;
+
+        	//console.log(flashRandomPick);
+        	$scope.flashitSelectedQuery = $scope.flashitContentRandom[flashRandomPick];
+
+        	$scope.flashitPossibleanswers = $scope.flashitCreatePossibleAnswers(flashRandomPick);
+
+        	$scope.random();
+        	//console.log($scope.flashitSelectedQuery);
+
+        	//console.log($scope.flashitContentRandom);
+        	//console.log($scope.flashStartTime);
+        	//console.log($scope.flashLanguageFlip);
+
+        }
+
+
+        $scope.callbackFunction2 = function () {
+        	return function (graph) {
+        		var svg = d3.select("svg#flashitSVG");
+        		var donut = svg.selectAll("g.nv-pie").filter(
+					function (d, i) {
+						return i == 1;
+					});
+
+        		// Inserting text
+        		donut.insert("text", "g")
+					.text(60)
+					.attr("class", "css-label-class")
+					.attr("text-anchor", "middle")
+        		    .attr("dy", 20);
+        	}
+        };
+
+        var colorArray2 = ['#d9534f','#5cb85c'];
+        $scope.colorFunction2 = function () {
+        	return function (d, i) {
+        		return colorArray2[i];
+        	};
+        }
+
+        function setflashitPieGraph(first, second) {
+        	//console.log(first); console.log(second);
+        	$scope.flashitPieData = [
+				{ key: "One", y: first },
+				{ key: "Two", y: second }
+
+        	];
+        }
+       
+
+        $scope.random = function () {
+        	
+        	//$scope.stacked = [];
+        	$scope.interval = 0;
+        	
+        	$scope.flashitCurrentInterval = $interval(function () {
+        		//console.log($scope.interval);
+        		$scope.interval = ($scope.interval + 1) % $scope.flashStartTime;
+        		//console.log($scope.interval);
+        		//console.log($scope.flashStartTime);
+        		var type;
+        		var value = ($scope.interval / $scope.flashStartTime) * 100;
+
+        		
+
+        		if (value == 0) {
+        			value = 100;
+        		}
+
+        		if (value <= 30) {
+        			type = 'success';
+					/*
+        			if (!(0 in $scope.stacked)) {
+        				$scope.stacked.push({
+        					value: 0,
+        					type: type
+        				});
+        			} else {
+        				$scope.stacked[0].value = value;
+        			}*/
+        		} else if (value <= 50) {
+        			type = 'info';
+					/*
+        			if (!(1 in $scope.stacked)) {
+        				$scope.stacked.push({
+        					value: 0,
+        					type: type
+        				});
+        			} else {
+        				$scope.stacked[1].value = value-30;
+        			}*/
+        		} else if (value <= 80) {
+        			type = 'warning';
+					/*
+        			if (!(2 in $scope.stacked)) {
+        				$scope.stacked.push({
+        					value: 0,
+        					type: type
+        				});
+        			} else {
+        				$scope.stacked[2].value = value-50;
+        			}*/
+        		} else {
+        			type = 'danger';
+					/*
+        			if (!(3 in $scope.stacked)) {
+        				$scope.stacked.push({
+        					value: 0,
+        					type: type
+        				});
+        			} else {
+        				$scope.stacked[3].value = value-80;
+        			}*/
+        			
+        		}
+        		//console.log(value);
+        		if (value == 100) {
+					//$scope.$apply();
+        			//$scope.stacked = [];
+        			//$scope.endFlashItGame();
+        			$scope.flashitAnswerFlashing = 'incorrect_icon_64_64.png';
+        			$scope.flashitShowAnswerFeedbackProcessor();
+        			$scope.resetFlashItGame();
+					
+        		}
+
+        		//console.log(value);
+        		$scope.flashitQuestionProgress = value;
+        		$scope.type = type;
+
+        		
+
+        	}, 1000);
+        };
+
+        $scope.beginFlashItGame = function () {
+        	$scope.flashitCorrect = 0;
+        	$scope.flashitCurrentGameText = 'Previous Game';
+        	$scope.flashitShowAnswerFeedback = true;
+        	$scope.refreshFlashItGame();
+        	$scope.flashitTimeLeft = 60;
+        	setflashitPieGraph(0, 0);
+        	$scope.flashitGameInterval = $interval(function () {
+        		$scope.flashitTimeLeft--;
+        		setflashitPieGraph((60 - $scope.flashitTimeLeft), $scope.flashitTimeLeft);
+
+
+        		var svg = d3.select("svg#flashitSVG");
+        		var donut = svg.selectAll("g.nv-pie").filter(
+					function (d, i) {
+						return i == 1;
+					});
+
+
+        		// Inserting text
+        		donut.select("text").text($scope.flashitTimeLeft);
+
+
+        		if ($scope.flashitTimeLeft == 0) {
+        			
+        			$interval.cancel($scope.flashitGameInterval);
+        			$scope.endFlashItGame();
+        		}
+        	}, 1000);
+        }
+
+        $scope.startFlashitOver = function () {
+        	$scope.flashitGameEnded = false;
+        	$scope.flashItGameStarted = false;
+        	$scope.flashitQuestionProgress = 0;
+
+
+        }
+
+        $scope.endFlashItGame = function () {
+        	$scope.flashitGameEnded = true;
+        	$interval.cancel($scope.flashitCurrentInterval);
+        	$interval.cancel($scope.flashitGameInterval);
+
+        }
+
+        $scope.resetFlashItGame = function () {
+        	$scope.flashitGameTransitioning = true;
+        	$scope.flashitQuestionProgress = 0;
+        	$scope.flashStartTime = (($scope.flashStartTime - 1) < 2) ? 2 : ($scope.flashStartTime - 1);
+        	//console.log($scope.flashStartTime);
+        	$interval.cancel($scope.flashitCurrentInterval);
+
+        	var start = new Date().getTime();
+        	for (var i = 0; i < 1e7; i++) {
+        		if ((new Date().getTime() - start) > 10) {
+        			break;
+        		}
+        	}
+
+        	$scope.refreshFlashItGame();
+        };
+
+        $scope.processQuestionBeforeNew = function (selectedAnswer) {
+        	for (var i in $scope.flashitPossibleanswers) {
+        		if ($scope.flashitPossibleanswers[i].phrase == selectedAnswer.phrase) {
+        			$scope.flashitPossibleanswers[i].incorrectAnswer = true;
+        		} else {
+        			$scope.flashitPossibleanswers[i].incorrectAnswer = false;
+        		}
+
+        		if ($scope.flashitPossibleanswers[i].phrase == $scope.flashitSelectedQuery.phrase) {
+        			$scope.flashitPossibleanswers[i].correctAnswer = true;
+        		} else {
+        			$scope.flashitPossibleanswers[i].correctAnswer = false;
+        		}
+
+        	}
+        };
+
+        $scope.flashitShowAnswerFeedbackProcessor = function () {
+        	$scope.flashitShowAnswerFeedback = false;
+        	$timeout(function () {
+        		$scope.flashitShowAnswerFeedback = true;
+        	}, 2000);
+        }
+
+        $scope.flashitProcessAnswer = function (selectedAnswer) {
+
+        	//console.log(selectedAnwer.phrase);
+        	//console.log($scope.flashitSelectedQuery.phrase);
+        	if (selectedAnswer.phrase == $scope.flashitSelectedQuery.phrase)
+        	{
+        		$scope.resetFlashItGame();
+        		$scope.flashitCorrect++;
+        		if ($scope.flashitCorrect > $scope.flashitHighScore) {
+        			$scope.flashitHighScore = $scope.flashitCorrect;
+        		}
+        		$scope.flashitAnswerFlashing = 'correct_icon_64_64.png';
+        		$scope.flashitShowAnswerFeedbackProcessor();
+
+        	}else
+        	{
+        		$scope.processQuestionBeforeNew(selectedAnswer);
+        		$scope.resetFlashItGame();
+        		$scope.flashitAnswerFlashing = 'incorrect_icon_64_64.png';
+        		$scope.flashitShowAnswerFeedbackProcessor();
+        		//$scope.endFlashItGame();
+        	}
+
+        };
+       
+
+
+
+    	//select local or native translation
+
+    	//create the random word list for this question... include one correct answer
+
+    	//take the starting speed, divide it by the number of vocan questions and each time something gets answered correctly, lower the speed to a max a quarter second
+
+		//if the answer is incorrect, the game ends
+
+
+
+    }
+]);
+
+
+
+/******************************************************************************
+ * Grader Vocabulary Controller
+ *****************************************************************************/
+
+
+appControllers.controller('GraderVocabController', ['$rootScope', '$scope', '$document','Vocab',
+    function($rootScope, $scope, $document, Vocab) {
+        $scope.currentItem = 0;
+        $scope.vocabAudios = new Array();
+
+        console.log(angular.toJson($rootScope.$state));
+
+        var vocabArray = Vocab.get({vocabId: $rootScope.$stateParams.vocabId}, function(vocab) {
+            $scope.vocabAudios = new Array();
+
+            $scope.vocabItems = vocab.content;
+            $scope.totalItems = vocab.content.length;
+            console.log(angular.toJson(vocab.content));
+
+            for(var i = 0; i < vocab.content.length; i++) {
+                $scope.vocabAudios[i] = {id: vocab.content[i].id, howler: new Howl({ urls: vocab.content[i].urls }) };
+
+                console.log("Vocab Audios ID: " + $scope.vocabAudios[i].id);
+            }
+        });
+
+        /* Star Filter */
+
+        $scope.starred = [];
+
+        $scope.setStarred = function() {
+            var id = this.vocab.id;
+            if (_.contains($scope.starred, id)) {
+                // Remove Star
+                $scope.starred = _.without($scope.starred, id);
+                if ($rootScope.enableFilter) {
+                    if ($scope.currentItem > $scope.starred.length - 1 && $scope.starred.length > 0) {
+                        $scope.currentItem = $scope.starred.length - 1;
+                    }
+                }
+            } else {
+                // Add Star
+                $scope.starred.push(id);
+            }
+            return false;
+        };
+
+        $scope.isStarred = function(id) {
+            if (_.contains($scope.starred, id)) {
+                return 'active';
+            }
+            return false;
+        };
+
+        $scope.enableStarFilter = function() {
+            if ($scope.starred.length > 0) {
+                $rootScope.enableFilter = true;
+                $scope.currentItem = 0;
+            }
+        }
+
+        $scope.disableStarFilter = function() {
+            $rootScope.enableFilter = false;
+        }
+
+        $scope.starFilter = function(vocab) {
+            if ($scope.starred.length > 0 && !_.contains($scope.starred, vocab.id) && $rootScope.enableFilter) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        /* Vocabulary Flashcards */
+
+        $scope.prevItem = function() {
+            $scope.currentItem = $scope.currentItem - 1;
+        }
+
+        $scope.nextItem = function() {
+            $scope.currentItem = $scope.currentItem + 1;
+        }
+
+        $scope.flip = function() {
+            $('.flip .card').toggleClass('flipped');
+            $('.flip .card .back').toggleClass('flipped');
+
+            for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                if($scope.vocabAudios[i].id == this.vocab.id) {
+                    $scope.vocabAudios[i].howler.play();
+                    console.log('found: ' + $scope.vocabAudios[i].id);
+                }
+            }
+        }
+
+        /* Audio Playback */
+
+        $scope.playAudio = function() {
+            for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                if($scope.vocabAudios[i].id == this.vocab.id) {
+                    $scope.vocabAudios[i].howler.play();
+                    console.log('found: ' + $scope.vocabAudios[i].id);
+                }
+            }
+        }
+
+        /* Audio Recording */
+
+        $scope.recording = false;
+
+        $scope.isRecording = function() {
+            if ($scope.recording) {
+                return 'active';
+            }
+            return false;
+        };
+
+        $scope.recordAudio = function() {
+            $scope.recording = !$scope.recording;
+            if ($scope.recording) {
+                Recorder.record({
+                    start: function() {
+                        console.log("Recording Started");
+                    },
+                    progress: function(milliseconds) {
+                        // TODO: show timer
+                    }
+                });
+            } else {
+                Recorder.stop();
+                console.log("Recording Stopped");
+                Recorder.play({
+                    progress: function(milliseconds) {
+                        // TODO: show timer
+                    }
+                });
+                // FIXME: deferred execution
+                for(var i = 0; i < $scope.vocabAudios.length; i++) {
+                    if($scope.vocabAudios[i].id == this.vocab.id) {
+                        $scope.vocabAudios[i].howler.play();
+                        console.log('found: ' + $scope.vocabAudios[i].id);
+                    }
+                }
+            }
+        }
+
+    }
+]);
+
+/******************************************************************************
+ * Chat Controller
+ *****************************************************************************/
+
+appControllers.controller('ChatController', ['$http', '$rootScope', '$scope', '$sce', 'Chat', 'CurrentCourseId', '$interval',
+    function($http, $rootScope, $scope, $sce, Chat, CurrentCourseId, $interval) {
+        $scope.users = new Array();
+
+        console.log("Chat Course ID: " + CurrentCourseId.getCourseId());
+
+        Chat.get({courseId: CurrentCourseId.getCourseId()}, function(chat) {
+            console.log("Chat: " + angular.toJson(chat));
+
+            $scope.users = chat.users;
+        });
+
+        $scope.notification = {
+            oscillator: false
+        };
+        var oscillator_promise = null;
+
+        $interval(function () {
+            $http.get('/notification?userid=me').then(function (response) {
+                var count = response.data.newChatMessagesCount;
+                if (count > 0) {
+                    oscillator_promise = $interval(function () {
+                        $scope.notification.oscillator = !$scope.notification.oscillator;
+                    }, 1000);
+                    $scope.uncheckedMessagesQuantityString = '('+count+')';
+                }
+            });
+        }, 5000);
+
+        $scope.$on('NavUpdate', function(event, data) {
+            console.log("Chat Course ID: " + CurrentCourseId.getCourseId());
+
+            Chat.get({courseId: CurrentCourseId.getCourseId()}, function(chat) {
+                console.log("Chat: " + angular.toJson(chat));
+
+                $scope.users = chat.users;
+            });
+
+        });
+
+        $scope.chatTo = function(user) {
+            $rootScope.$broadcast('ChatTo', user);
+        };
+
+        $scope.refresh = function() {
+            $interval.cancel(oscillator_promise);
+            $scope.notification.oscillator = false;
+            $scope.uncheckedMessagesQuantityString = '';
+            console.log("Chat Course ID: " + CurrentCourseId.getCourseId());
+
+
+
+            //$(function () {
+            //    $.get("/chat/" + CurrentCourseId.getCourseId(), function(data){
+            //        var usersArray = data.users;
+            //        var chatUsers = [];
+            //        if(usersArray) {
+            //            for (var i = 0; i < usersArray.length; i++) {
+            //                chatUsers.push({
+            //                    Id: usersArray[i].id,
+            //                    RoomId: DemoAdapterConstants.DEFAULT_ROOM_ID,
+            //                    Name: usersArray[i].fname + ' ' + usersArray[i].lname,
+            //                    Email: 'whatever@whatever.com',
+            //                    ProfilePictureUrl: "/public/img/chatuserdefault.png",
+            //                    Status: 1
+            //                })
+            //            }
+            //            _global_chat_users = chatUsers;
+            //        }
+            //        $.chat({
+            //            // your user information
+            //            userId: 1,
+            //            // id of the room. The friends list is based on the room Id
+            //            roomId: 1,
+            //            // text displayed when the other user is typing
+            //            typingText: ' is typing...',
+            //            // title for the rooms window
+            //            roomsTitleText: 'Rooms',
+            //            // title for the 'available rooms' rab
+            //            availableRoomsText: 'Available rooms',
+            //            // text displayed when there's no other users in the room
+            //            emptyRoomText: "There's no one around here. You can still open a session in another browser and chat with yourself :)",
+            //            // the adapter you are using
+            //            chatJsContentPath: '/basics/chatjs/',
+            //            friendsTitleText: 'Chat',
+            //            allowRoomSelection: false,
+            //            adapter: new MegLmsAdapter()
+            //        });
+            //    });
+            //});
+
+            Chat.get({courseId: CurrentCourseId.getCourseId()}, function(chat) {
+                console.log("Chat: " + angular.toJson(chat));
+
+                $scope.users = chat.users;
+            });
+        };
+
+        $scope.refreshTimer = function(delay) {
+            $timeout(function() {
+                Chat.getchat({chatter_id: $scope.chatter.id, course_id: CurrentCourseId.getCourseId()}, function(chat) {
+                    console.log("ChatBox: " + angular.toJson(chat));
+
+                    if($scope.previousMessagesLength != null){
+                        if($scope.previousMessagesLength < chat.chats.length){
+                            $rootScope.$broadcast('NewChatMessage', chat.chats[chat.chats.length - 1]);
+                        }
+                    }
+
+                    $scope.messages = chat.chats;
+                    $scope.previousMessagesLength = chat.chats.length;
+
+                    $scope.refreshTimer(delay);
+                });
+            }, delay);
+        }
+
+        $scope.uncheckedMessagesQuantityString = '';
+
+        $scope.$on('NewChatMessage', function(event, uncheckedNewMessage) {
+            $scope.refresh();
+        });
+    }
+]);
+
+/******************************************************************************
+ * ChatBox Controller
+ *****************************************************************************/
+
+appControllers.controller('ChatBoxController', ['$rootScope', '$scope', '$sce', '$timeout','Chat', 'CurrentCourseId',
+    function($rootScope, $scope, $sce, $timeout, Chat, CurrentCourseId) {
+        $scope.chatter = new Array();
+        $scope.chat_message = '';
+        $scope.messages = new Array();
+        $scope.previousMessagesLength = null;
+
+        $scope.refreshTimer = function(delay) {
+            $timeout(function() {
+                Chat.getchat({chatter_id: $scope.chatter.id, course_id: CurrentCourseId.getCourseId()}, function(chat) {
+                    console.log("ChatBox: " + angular.toJson(chat));
+
+                    if($scope.previousMessagesLength != null){
+                        if($scope.previousMessagesLength < chat.chats.length){
+                            $rootScope.$broadcast('NewChatMessage', chat.chats[chat.chats.length - 1]);
+                        }
+                    }
+
+                    $scope.messages = chat.chats;
+                    $scope.previousMessagesLength = chat.chats.length;
+
+                    $scope.refreshTimer(delay);
+                });
+            }, delay);
+        }
+
+
+        $scope.$on('ChatTo', function(event, data) {
+            console.log("ChatBox Course ID: " + angular.toJson(data));
+
+            $scope.chat_message = '';
+
+            $scope.chatter = data;
+
+            console.log("Chatter ID: " + $scope.chatter.id);
+            console.log("Course ID: " + CurrentCourseId.getCourseId());
+
+
+            Chat.getchat({chatter_id: $scope.chatter.id, course_id: CurrentCourseId.getCourseId()}, function(chat) {
+                console.log("ChatBox: " + angular.toJson(chat));
+
+                $scope.messages = chat.chats;
+            });
+
+            $scope.refreshTimer(5000);
+
+        });
+
+        $scope.send = function() {
+            Chat.send({chatter_id: $scope.chatter.id, course_id: CurrentCourseId.getCourseId(), message: $scope.chat_message}, function(chat) {
+                console.log("ChatBox Send: " + angular.toJson(chat));
+
+                $scope.chat_message = '';
+
+                console.log("Chatter ID: " + $scope.chatter.id);
+                console.log("Course ID: " + CurrentCourseId.getCourseId());
+
+                Chat.getchat({chatter_id: $scope.chatter.id, course_id: CurrentCourseId.getCourseId()}, function(chat) {
+                    console.log("ChatBox: " + angular.toJson(chat));
+
+                    $scope.messages = chat.chats;
+                });
+            });
+        }
+
+        $scope.chatCollapsed = false;
+
+        $scope.collapseToggle = function(){
+            $scope.chatCollapsed = !$scope.chatCollapsed;
+        };
+
+        $scope.hasClass = function(element, cls) {
+            return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+        }
+    }
+]);
+
+
+
+
+/******************************************************************************
+ * Quiz Controller
+ *****************************************************************************/
+
+appControllers.controller('QuizController', ['$rootScope', '$scope', '$sce', 'Quiz',
+    function($rootScope, $scope, $sce, Quiz) {
+        //console.log(angular.toJson($rootScope.$state));
+
+        $scope.quizid = $rootScope.$stateParams.quizId;
+        $scope.quizStarted = false;
+        $scope.quizEnded = false;
+        $scope.quizTitle = '';
+        $scope.quizScore = 0;
+        $scope.quizDescription = '';
+        $scope.isUnlimitedAttempts = true;
+        $scope.allowedTakes = null;
+        $scope.attemptsCompleted = 0;
+        $scope.hasMoreAttempts = true;
+        $scope.isTimed = false;
+        $scope.isQuizDescriptionAvailable = false;
+        $scope.timeLeftString = '';
+        $scope.isPasswordProtected = false;
+        $scope.password = null;
+        $scope.remainingAttempts = 0;
+
+
+        // Get the data for this quiz
+        Quiz.get({quizId: $rootScope.$stateParams.quizId}, function(quiz) {
+            //console.log(angular.toJson(quiz));
+            for(var i = 0; i < quiz.questions.length; i++){
+                quiz.questions[i].options = angular.fromJson(quiz.questions[i].options);
+                if(quiz.questions[i].is_correct == 1){
+                    quiz.questions[i].isCorrect = true;
+                }
+                if(quiz.questions[i].response != null){
+                    quiz.questions[i].optionSelected = quiz.questions[i].response;
+                }
+            }
+            $scope.radioModel = '';
+            $scope.questions = quiz.questions;
+            $scope.maxPoints = quiz.questions.length;
+            $scope.quizTitle = quiz.quizTitle;
+            if(quiz.quizDescription !== null) {
+                $scope.quizDescription = quiz.quizDescription;
+                $scope.isQuizDescriptionAvailable = true;
+            }
+            $scope.quizDataReady = true;
+            if(quiz.allowed_takes !== null) {
+                $scope.allowedTakes = parseInt(quiz.allowed_takes);
+                // If 0 takes was selected, this means unlimited takes.
+                if($scope.allowedTakes == 0){
+
+                } else {
+                    $scope.isUnlimitedAttempts = false;
+                    $scope.remainingAttempts = parseInt(quiz.allowed_takes);
+                    if (quiz['attempts_completed'] !== null) {
+                        $scope.attemptsCompleted = parseInt(quiz['attempts_completed']);
+                        $scope.remainingAttempts -= $scope.attemptsCompleted;
+                        if ($scope.attemptsCompleted >= $scope.allowedTakes) {
+                            $scope.hasMoreAttempts = false;
+                        }
+                    }
+                }
+            }
+            if(quiz.time_limit !== null) {
+                if(quiz.time_limit > 0) {
+                    $scope.timeLimit = quiz.time_limit;
+                    $scope.isTimed = true;
+                    $scope.quizTimer = 'Starting timer...';
+                }
+            }
+
+            if(quiz.password != null && quiz.password != ""){
+                $scope.password = quiz.password;
+                $scope.isPasswordProtected = true;
+            }
+
+            if(quiz.score != null){
+                $scope.quizScore = parseInt(quiz.score);
+            }
+
+            if(quiz.is_finished == 1){
+               // $scope.finishQuiz();
+                $scope.quizEnded = true;
+            }
+
+        });
+
+        $scope.sendResponse = function(response, question){
+            question.optionSelected = response;
+            var submitParams = {quiz_id: parseInt($scope.quizid), response: response, question_id: parseInt(question.question_id)};
+            Quiz.submit(submitParams, function(response){
+                if(response.newScore) {
+                    $scope.quizScore = response.newScore;
+                    question.isCorrect = true;
+                } else {
+                    question.isCorrect = false;
+                }
+            });
+        }
+
+        $scope.startQuiz = function(){
+            $scope.quizStarted = true;
+            if($scope.isTimed){
+                $scope.timeLeftObj = new Date(new Date().getTime() + parseInt($scope.timeLimit)*60000).getTime();
+                var minutes, seconds;
+
+
+                var quizCounter = setInterval(function () {
+                    var current_date = new Date().getTime();
+                    var seconds_left = ($scope.timeLeftObj - current_date) / 1000;
+
+                    seconds_left = seconds_left % 86400;
+                    seconds_left = seconds_left % 3600;
+                    minutes = parseInt(seconds_left / 60);
+                    seconds = parseInt(seconds_left % 60);
+
+                    $scope.quizTimer = minutes + ' minutes , ' + seconds + ' seconds left.';
+                    if(seconds_left < 0){
+                        clearInterval(quizCounter);
+                        $scope.finishQuiz();
+                        alert('Time is up.');
+                    }
+                }, 1000);
+            }
+        }
+
+        $scope.finishQuiz = function(){
+            $scope.quizStarted = false;
+            $scope.quizEnded = true;
+            Quiz.finalize({quiz_id: parseInt($scope.quizid)}, function(response){
+                $scope.attemptsCompleted = $scope.attemptsCompleted + 1;
+                $scope.remainingAttempts -= 1;
+                if($scope.attemptsCompleted >= $scope.allowedTakes && !$scope.isUnlimitedAttempts){
+                    $scope.hasMoreAttempts = false;
+                }
+            });
+        }
+
+        $scope.retakeQuiz = function(){
+            Quiz.retake({quiz_id: parseInt($scope.quizid)}, function(response){
+                // Clear all previous response choices.
+                for(var i = 0; i < $scope.questions.length; i++){
+                    var ele = document.getElementsByName($scope.questions[i].title);
+                    for(var j=0;j<ele.length;j++) {
+                        ele[j].checked = false;
+                    }
+                }
+                $scope.quizScore = 0;
+                $scope.quizEnded = false;
+                $scope.startQuiz();
+            });
+        }
+
+        $scope.isSelected = function(option, question){
+            return (question.optionSelected == option);
+        }
+
+        $scope.checkPassword = function(){
+            if(document.getElementById('quiz_password_field').value == $scope.password){
+                $scope.isPasswordProtected = false;
+            }
+        }
+
+        $scope.checkPasswordFailed = function(){
+            if(document.getElementById('quiz_password_field_failed').value == $scope.password){
+                $scope.isPasswordProtected = false;
+            }
+        }
+    }
+]);
+
+
+
+
+/******************************************************************************
+ * Content Controller
+ *****************************************************************************/
+
+appControllers.controller('ContentController', ['$rootScope', '$scope', '$sce', 'Content',
+    function($rootScope, $scope, $sce, Content) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        var contentArray = Content.get({contentId: $rootScope.$stateParams.contentId}, function(content) {
+            console.log(angular.toJson(content));
+            $scope.contenthtml = $sce.trustAsHtml(content.contenthtml);
+            $scope.pagename = content.pagename;
+            $scope.allow_video_post = content.allow_video_post;
+            $scope.allow_text_post = content.allow_text_post;
+            $scope.allow_upload_post = content.allow_upload_post;
+            $scope.page_is_private = content.page_is_private;
+            $scope.page_is_gradeable = content.page_is_gradeable;
+        });
+    }
+]);
+
+
+/******************************************************************************
+ * Grader Content Controller
+ *****************************************************************************/
+
+appControllers.controller('GraderAllController', ['$rootScope', '$scope', '$sce', 'Content',
+    function($rootScope, $scope, $sce, Content) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.courseid = $rootScope.$stateParams.courseId;
+
+    }
+]);
+
+
+
+
+appControllers.controller('GraderContentController', ['$rootScope', '$scope', '$sce', 'Content',
+    function($rootScope, $scope, $sce, Content) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        var contentArray = Content.get({contentId: $rootScope.$stateParams.contentId}, function(content) {
+            console.log(angular.toJson(content));
+            $scope.contenthtml = $sce.trustAsHtml(content.contenthtml);
+            $scope.pagename = content.pagename;
+            $scope.allow_video_post = content.allow_video_post;
+            $scope.allow_text_post = content.allow_text_post;
+            $scope.allow_upload_post = content.allow_upload_post;
+            $scope.page_is_private = content.page_is_private;
+            $scope.page_is_gradeable = content.page_is_gradeable;
+        });
+    }
+]);
+
+appControllers.controller('GraderArchiveContentController', ['$rootScope', '$scope', '$sce', 'Content',
+    function($rootScope, $scope, $sce, Content) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        var contentArray = Content.get({contentId: $rootScope.$stateParams.contentId}, function(content) {
+            console.log(angular.toJson(content));
+            $scope.contenthtml = $sce.trustAsHtml(content.contenthtml);
+            $scope.pagename = content.pagename;
+            $scope.allow_video_post = content.allow_video_post;
+            $scope.allow_text_post = content.allow_text_post;
+            $scope.allow_upload_post = content.allow_upload_post;
+            $scope.page_is_private = content.page_is_private;
+            $scope.page_is_gradeable = content.page_is_gradeable;
+        });
+    }
+]);
+
+
+appControllers.controller('ExternalLinkController', ['$rootScope', '$scope', '$sce', '$window', 'ExternalLink',
+    function($rootScope, $scope, $sce, $window, ExternalLink) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.contentid = $rootScope.$stateParams.externalLinkId;
+
+        var contentArray = ExternalLink.get({externalLinkId: $rootScope.$stateParams.externalLinkId}, function(content) {
+            console.log(angular.toJson(content));
+            //$window.open(content.contenthtml);
+            $scope.contenthtml = $sce.trustAsHtml(content.contenthtml);
+            $scope.pagename = content.pagename;
+            $scope.allow_video_post = content.allow_video_post;
+            $scope.allow_text_post = content.allow_text_post;
+            $scope.allow_upload_post = content.allow_upload_post;
+            $scope.page_is_private = content.page_is_private;
+            $scope.page_is_gradeable = content.page_is_gradeable;
+        });
+    }
+]);
+
+
+appControllers.controller('GraderExternalLinkController', ['$rootScope', '$scope', '$sce', '$window', 'ExternalLink',
+    function($rootScope, $scope, $sce, $window, ExternalLink) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.contentid = $rootScope.$stateParams.externalLinkId;
+
+        var contentArray = ExternalLink.get({externalLinkId: $rootScope.$stateParams.externalLinkId}, function(content) {
+            console.log(angular.toJson(content));
+            //$window.open(content.contenthtml);
+            $scope.contenthtml = $sce.trustAsHtml(content.contenthtml);
+            $scope.pagename = content.pagename;
+            $scope.allow_video_post = content.allow_video_post;
+            $scope.allow_text_post = content.allow_text_post;
+            $scope.allow_upload_post = content.allow_upload_post;
+            $scope.page_is_private = content.page_is_private;
+            $scope.page_is_gradeable = content.page_is_gradeable;
+        });
+    }
+]);
+
+
+
+/******************************************************************************
+ * EditUnit Controller
+ *****************************************************************************/
+
+appControllers.controller('EditUnitController', ['$rootScope', '$scope', '$sce', 'EditUnit',
+    function($rootScope, $scope, $sce, EditUnit) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.unitid = $rootScope.$stateParams.unitId;
+
+        console.log("Edit Unit ID: " + $scope.unitid);
+
+        EditUnit.get({unitId: $scope.unitid}, function(unit) {
+            console.log(angular.toJson(unit));
+
+            $scope.unitid = unit.unit.id;
+            $scope.unit_number = unit.unit.name;
+            $scope.unit_title = unit.unit.description;
+        });
+
+        $scope.updateUnit = function() {
+            EditUnit.update({unitid: $scope.unitid, unit_number: $scope.unit_number, unit_title: $scope.unit_title}, function(unit) {
+                console.log(angular.toJson(unit));
+
+                if(unit.message=='successful') {
+                    $rootScope.$broadcast('NavUpdate');
+                    alert('Updated Unit');
+                } else {
+                    alert(unit.message);
+                }
+            });
+        }
+
+        $scope.deleteUnit = function() {
+            if (confirm("Are You Sure You Want To Delete This Unit?") == true) {
+                EditUnit.delete({unitid: $scope.unitid}, function(unit) {
+                    console.log(angular.toJson(unit));
+
+                    if(unit.message=='successful') {
+                        $rootScope.$broadcast('NavUpdate');
+                        alert('Deleted Unit');
+                    } else {
+                        alert(unit.message);
+                    }
+                });
+            }
+        }
+
+
+    }
+]);
+
+
+/******************************************************************************
+ * EditOrganization Controller
+ *****************************************************************************/
+
+appControllers.controller('EditOrganizationController', ['$rootScope', '$scope', '$sce', '$location', 'EditOrganization',
+    function($rootScope, $scope, $sce, $location, EditOrganization) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.organizationid = $rootScope.$stateParams.organizationId;
+
+        console.log("Edit Organization ID: " + $scope.organizationid);
+
+        EditOrganization.get({organizationId: $scope.organizationid}, function(organization) {
+            console.log(angular.toJson(organization));
+
+            $scope.organizationName   = organization.organization.name;
+            $scope.organizationDomain = organization.organization.domain;
+            $scope.organizationEmail  = organization.organization.email;
+            $scope.organizationPhone  = organization.organization.phone;
+        });
+
+        $scope.updateOrganization = function() {
+            EditOrganization.update({id: $scope.organizationid, name: $scope.organizationName, domain: $scope.organizationDomain, email: $scope.organizationEmail, phone: $scope.organizationPhone}, function(organization) {
+                console.log(angular.toJson(organization));
+
+                if(organization.message=='successful') {
+                    $rootScope.$broadcast('NavAddedOrganizationUpdate');
+                    alert('Updated Organization');
+                } else {
+                    alert(organization.message);
+                }
+            });
+        }
+
+        $scope.deleteOrganization = function() {
+            if (confirm("Are You Sure You Want To Delete This Organization?") == true) {
+                EditOrganization.delete({id: $scope.organizationid}, function(organization) {
+                    console.log(angular.toJson(organization));
+
+                    if(organization.message=='successful') {
+                        $rootScope.$broadcast('NavAddedOrganizationUpdate');
+                        alert('Deleted Organization');
+                        $location.url('/superadmindash/');
+                    } else {
+                        alert(organization.message);
+                    }
+                });
+            }
+        }
+
+
+    }
+]);
+
+
+/******************************************************************************
+ * EditOrganization Controller
+ *****************************************************************************/
+
+appControllers.controller('EditDepartmentController', ['$rootScope', '$scope', '$sce', '$location', 'EditDepartment',
+    function($rootScope, $scope, $sce, $location, EditDepartment) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.departmentid = $rootScope.$stateParams.departmentId;
+
+        console.log("Edit Department ID: " + $scope.departmentid);
+
+        EditDepartment.get({departmentId: $scope.departmentid}, function(department) {
+            console.log(angular.toJson(department));
+
+            $scope.departmentName   = department.department.name;
+            $scope.departmentDomain = department.department.subdomain;
+        });
+
+        $scope.updateDepartment = function() {
+            EditDepartment.update({id: $scope.departmentid, name: $scope.departmentName, domain: $scope.departmentDomain}, function(department) {
+                console.log(angular.toJson(department));
+
+                if(department.message=='successful') {
+                    $rootScope.$broadcast('NavOrganizationUpdate');
+                    alert('Updated Department');
+                } else {
+                    alert(department.message);
+                }
+            });
+        }
+
+        $scope.deleteDepartment = function() {
+            if (confirm("Are You Sure You Want To Delete This Department?") == true) {
+                EditDepartment.delete({id: $scope.departmentid}, function(department) {
+                    console.log(angular.toJson(department));
+
+                    if(department.message=='successful') {
+                        $rootScope.$broadcast('NavOrganizationUpdate');
+                        alert('Deleted Department');
+                        $location.url('/superadmindash/');
+                    } else {
+                        alert(department.message);
+                    }
+                });
+            }
+        }
+
+
+    }
+]);
+
+/******************************************************************************
+ * EditCourse Controller
+ *****************************************************************************/
+
+appControllers.controller('EditCourseController', ['$rootScope', '$scope', '$sce', '$location', 'EditCourse',
+    function($rootScope, $scope, $sce, $location, EditCourse) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.courseid = $rootScope.$stateParams.courseId;
+
+        console.log("Edit Course ID: " + $scope.courseid);
+
+        EditCourse.get({courseId: $scope.courseid}, function(course) {
+            console.log(angular.toJson(course));
+
+            $scope.courseName   = course.course.name;
+            $scope.courseDescription = course.course.description;
+        });
+
+        $scope.updateCourse = function() {
+            EditCourse.update({id: $scope.courseid, name: $scope.courseName, description: $scope.courseDescription}, function(course) {
+                console.log(angular.toJson(course));
+
+                if(course.message=='successful') {
+                    $rootScope.$broadcast('NavDepartmentUpdate');
+                    alert('Updated Course');
+                } else {
+                    alert(course.message);
+                }
+            });
+        }
+
+        $scope.deleteCourse = function() {
+            if (confirm("Are You Sure You Want To Delete This Course?") == true) {
+                EditCourse.delete({id: $scope.courseid}, function(course) {
+                    console.log(angular.toJson(course));
+
+                    if(course.message=='successful') {
+                        $rootScope.$broadcast('NavDepartmentUpdate');
+                        alert('Deleted Course');
+                        $location.url('/superadmindash/');
+                    } else {
+                        alert(course.message);
+                    }
+                });
+            }
+        }
+
+
+    }
+]);
+
+
+
+/******************************************************************************
+ * AddOrganization Controller
+ *****************************************************************************/
+
+appControllers.controller('AddOrganizationController', ['$rootScope', '$scope', '$sce', '$location', 'CurrentOrganizationId', 'EditOrganization',
+    function($rootScope, $scope, $sce, $location, CurrentOrganizationId, EditOrganization) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.addOrganization = function() {
+            EditOrganization.submit({name: $scope.organizationName, domain: $scope.organizationDomain, email: $scope.organizationEmail, phone: $scope.organizationPhone}, function(organization) {
+                console.log(angular.toJson(organization));
+
+                if(organization.message=='successful') {
+                    $rootScope.$broadcast('NavAddedOrganizationUpdate');
+                    alert('Added Organization');
+                    $location.url('/superadmindash/');
+                } else {
+                    alert(organization.message);
+                }
+            });
+        }
+
+    }
+]);
+
+/******************************************************************************
+ * AddDepartment Controller
+ *****************************************************************************/
+
+appControllers.controller('AddDepartmentController', ['$rootScope', '$scope', '$sce', 'CurrentOrganizationId', 'EditDepartment',
+    function($rootScope, $scope, $sce, CurrentOrganizationId, EditDepartment) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.addDepartment = function() {
+            EditDepartment.submit({organization_id: CurrentOrganizationId.getOrganizationId(), name: $scope.departmentName, domain: $scope.departmentDomain}, function(department) {
+                console.log(angular.toJson(department));
+
+                if(department.message=='successful') {
+                    $rootScope.$broadcast('NavOrganizationUpdate');
+                    alert('Added Department');
+                } else {
+                    alert(department.message);
+                }
+            });
+        }
+
+    }
+]);
+
+
+/******************************************************************************
+ * AddCourse Controller
+ *****************************************************************************/
+
+appControllers.controller('AddCourseController', ['$rootScope', '$scope', '$sce', 'CurrentDepartmentId', 'EditCourse',
+    function($rootScope, $scope, $sce, CurrentDepartmentId, EditCourse) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.addCourse = function() {
+            EditCourse.submit({department_id: CurrentDepartmentId.getDepartmentId(), name: $scope.courseName, description: $scope.courseDescription}, function(course) {
+                console.log(angular.toJson(course));
+
+                if(course.message=='successful') {
+                    $rootScope.$broadcast('NavDepartmentUpdate');
+                    alert('Added Course');
+                } else {
+                    alert(course.message);
+                }
+            });
+        }
+
+    }
+]);
+
+
+
+
+
+/******************************************************************************
+ * AddUnit Controller
+ *****************************************************************************/
+
+appControllers.controller('AddUnitController', ['$rootScope', '$scope', '$sce', 'CurrentCourseId', 'EditUnit',
+    function($rootScope, $scope, $sce, CurrentCourseId, EditUnit) {
+        console.log(angular.toJson($rootScope.$state));
+
+        $scope.addUnit = function() {
+            console.log("Cousre ID: " + CurrentCourseId.getCourseId());
+
+            EditUnit.submit({course_id: CurrentCourseId.getCourseId(), unit_number: $scope.unit_number, unit_title: $scope.unit_title}, function(unit) {
+                console.log(angular.toJson(unit));
+
+                if(unit.message=='successful') {
+                    $rootScope.$broadcast('NavUpdate');
+                    alert('Added Unit!');
+                } else {
+                    alert(unit.message);
+                }
+            });
+        }
+
+    }
+]);
+
+/******************************************************************************
+ * AddPage Controller
+ *****************************************************************************/
+
+appControllers.controller('AddContentController', ['$rootScope', '$scope', '$sce', 'CurrentUnitId', 'EditPage',
+    function($rootScope, $scope, $sce, CurrentUnitId, EditPage) {
+        $scope.page_title = '';
+        $scope.page_sub_title = '';
+        $scope.page_type = '';
+        $scope.page_content = '';
+        $scope.external_link = '';
+        $scope.allow_video_post = false;
+        $scope.allow_text_post = false;
+        $scope.allow_upload_post = false;
+        $scope.is_private_post = true;
+        $scope.is_gradeable_post = false;
+        $scope.max_points = 0;
+        $scope.due_date = new Date().toLocaleString();
+        $scope.assignment_allowed_takes = 0;
+        $scope.page_group = {id: 0, name: ''};
+        $scope.subunits = new Array();
+        $scope.pageTypes = [
+          {name: 'Content', id: 'content'},
+          {name: 'Sub Unit', id: 'sub_unit'},
+          {name: 'External Link', id:'external_link'},
+          {name: 'Vocabulary', id: 'vocab'},
+          {name: 'Quiz/Test', id: 'quiz'},
+          {name: 'Lesson Specific Listening Activity', id: 'lesson_listening_activity'},
+          {name: 'General Listening Practice', id: 'listening_practice'},
+          {name: 'General Reading Practice', id: 'reading_practice'},
+        ];
+        $scope.quiz_select = '';
+        $scope.time_limit = 0;
+        $scope.allowed_takes = 0;
+        $scope.password = '';
+        
+        // for listening activity
+        $scope.listen_course = '';
+        $scope.listen_lesson = '';
+        $scope.listen_numEx = '';
+
+        // nimble knowledge things
+        $scope.native_lang = '';
+        $scope.target_lang = '';
+
+        EditPage.getsubunits({unit_id: CurrentUnitId.getUnitId()}, function(subunits){
+
+            $scope.subunits = subunits.subunits;
+            $scope.quizzes = subunits.quizzes;
+            console.log("SUBUNITS: " + angular.toJson($scope.subunits));
+        });
+
+        $scope.hasAssignment = function() {
+            if($scope.allow_video_post == true || $scope.allow_text_post == true || $scope.allow_upload_post == true) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $scope.isContent = function() {
+            if($scope.page_type.id=='content') {
+                return true;
+            }
+
+            return false;
+        }
+
+        $scope.isExternalLink = function() {
+            if($scope.page_type.id ==='external_link') {
+                return true;
+            }
+
+            return false;
+        }
+
+        $scope.isNimble = function () {
+            var nimbles = ['lesson_listening_activity', 'listening_practice', 'reading_practice']
+            return nimbles.indexOf($scope.page_type.id) !== -1;
+        }
+
+        $scope.isLessonListening = function() {
+            return $scope.page_type.id === 'lesson_listening_activity';
+        }
+
+        $scope.isQuizPageType = function() {
+            return ($scope.page_type.id==='quiz');
+        }
+
+        $scope.isShowQuizSelector = function() {
+            return ($scope.page_type.id==='quiz');
+        }
+
+        $scope.isShowPageTitleField = function() {
+            return ($scope.page_type);
+        }
+
+        $scope.isShowPageSubTitleField = function(){
+            return ($scope.page_type);
+        }
+
+        $scope.isShowSubmissionTypeCheckboxes = function(){
+            return ($scope.page_type) && ($scope.page_type.id!=='quiz') && ($scope.page_type.id!=='external_link');
+        }
+
+        $scope.isShowPageGroupingSelector = function(){
+            return ($scope.page_type);
+        }
+
+
+        $scope.addPage = function() {
+            if(angular.isDefined(CKEDITOR) && angular.isDefined(CKEDITOR.instances) && angular.isDefined(CKEDITOR.instances.editor1)) {
+                $scope.page_content = CKEDITOR.instances.editor1.getData();
+            }
+
+            console.log("Current UNIT ID: " + CurrentUnitId.getUnitId());
+            console.log("Page Title: " + $scope.page_title);
+            console.log("Sub Title: " + $scope.page_sub_title);
+            console.log("Page Type: " + $scope.page_type);
+            console.log("Page Content: " + $scope.page_content);
+            console.log("Allow Video Post: " + $scope.allow_video_post);
+            console.log("Allow Text Post: " + $scope.allow_text_post);
+            console.log("Allow Upload Post: " + $scope.allow_upload_post);
+            console.log("Is Private Post: " + $scope.is_private_post);
+            console.log("Is Gradeable Post: " + $scope.is_gradeable_post);
+            console.log("Due Date: " + $scope.due_date);
+            console.log("Page Group ID: " + angular.toJson($scope.page_group));
+
+
+            var page_group_id = 0;
+
+            if(angular.isDefined($scope.page_group.id) && $scope.page_group.id > 0) {
+                page_group_id = $scope.page_group.id;
+            }
+
+            var allow_video_post = 0;
+            var allow_text_post = 0;
+            var allow_upload_post = 0;
+            var is_private_post = 0;
+            var is_gradeable_post = 0;
+
+            if($scope.allow_video_post == true) {
+                allow_video_post = 1;
+            }
+
+            if($scope.allow_text_post == true) {
+                allow_text_post = 1;
+            }
+
+            if($scope.allow_upload_post == true) {
+                allow_upload_post = 1;
+            }
+
+            if($scope.is_private_post == true) {
+                is_private_post = 1;
+            }
+
+            if($scope.is_gradeable_post == true){
+                is_gradeable_post = 1;
+            }
+
+
+            if($scope.page_type=='external_link') {
+                $scope.page_content = $scope.external_link;
+            } else if($scope.page_type=='vocabulary') {
+                $scope.page_content = '';
+            }
+
+            var quizId = null;
+            if($scope.quiz_select){
+                quizId = parseInt($scope.quiz_select.id);
+            }
+
+            EditPage.submit(
+                {
+                    unit_id: CurrentUnitId.getUnitId(),
+                    page_title: $scope.page_title,
+                    page_sub_title: $scope.page_sub_title,
+                    page_group_id: page_group_id,
+                    page_type: $scope.page_type.id,
+                    page_content: $scope.page_content,
+                    allow_video_post: allow_video_post,
+                    allow_text_post: allow_text_post,
+                    allow_upload_post: allow_upload_post,
+                    is_private_post: is_private_post,
+                    is_gradeable_post: is_gradeable_post,
+                    due_date: $scope.due_date,
+                    max_points: $scope.max_points,
+                    assignment_allowed_takes: $scope.assignment_allowed_takes,
+                    quiz_id: quizId, time_limit: $scope.time_limit,
+                    allowed_takes: $scope.allowed_takes,
+                    password: $scope.password,
+
+                    // listening activity
+                    listen_course: $scope.listen_course,
+                    listen_lesson: $scope.listen_lesson,
+                    listen_numEx: $scope.listen_numEx,
+
+                    // nimble knowledge things
+                    native_lang: $scope.native_lang,
+                    target_lang: $scope.target_lang,
+
+                }, function(page) {
+                console.log(angular.toJson(page));
+
+                if(page.message=='successful') {
+                    $rootScope.$broadcast('NavUpdateMenu');
+                    alert('Added Page');
+                } else {
+                    alert(unit.message);
+                }
+            });
+        }
+    }
+]);
+
+
+/******************************************************************************
+ * EditPage Controller
+ *****************************************************************************/
+
+appControllers.controller('EditContentController', ['$rootScope', '$scope', '$sce', '$timeout', 'CurrentUnitId', 'EditPage',
+    function($rootScope, $scope, $sce, $timeout, CurrentUnitId, EditPage) {
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        $scope.page_title = '';
+        $scope.page_sub_title = '';
+        $scope.page_type = '';
+        $scope.page_content = '';
+        $scope.allow_video_post = false;
+        $scope.allow_text_post = false;
+        $scope.allow_upload_post = false;
+        $scope.is_private_post = false;
+        $scope.is_gradeable_post = false;
+        $scope.max_points = 0;
+        $scope.page_group = {id: 0, name: ''};
+        $scope.page_group_id = 0;
+        $scope.subunits = new Array();
+        $scope.allowed_takes = 0;
+        $scope.time_limit = 0;
+        $scope.password = '';
+
+        // for listening activity
+        $scope.listen_course = '';
+        $scope.listen_lesson = '';
+        $scope.listen_numEx = '';
+
+        // nimble knowledge things
+        $scope.native_lang = '';
+        $scope.target_lang = '';
+
+        EditPage.get({pageId: $scope.contentid}, function(page) {
+            console.log(angular.toJson(page));
+
+            $scope.page_title = page.pagename;
+            $scope.page_sub_title = page.subtitle;
+            $scope.page_content = page.contenthtml;
+            $scope.allow_video_post = page.allow_video_post;
+            $scope.allow_text_post = page.allow_text_post;
+            $scope.allow_upload_post = page.allow_upload_post;
+            $scope.is_private_post = page.page_is_private;
+            $scope.is_gradeable_post = page.page_is_gradeable;
+            $scope.max_points = page.max_points;
+            $scope.page_type = page.page_type;
+
+            // listening activity
+            $scope.listen_course = page.listen_course;
+            $scope.listen_lesson = page.listen_lesson;
+            $scope.listen_numEx = page.listen_numEx;
+
+            // nimble knowledge things
+            $scope.native_lang = page.native_lang;
+            $scope.target_lang = page.target_lang;
+
+            if(page.allowed_takes) {
+                $scope.allowed_takes = parseInt(page.allowed_takes);
+            }
+            if(page.time_limit){
+                $scope.time_limit = parseInt(page.time_limit);
+            }
+            if(page.password) {
+                $scope.password = page.password;
+            }
+
+            if(page.due_date){
+                // Split timestamp into [ Y, M, D, h, m, s ]
+                var t = page.due_date.split(/[- :]/);
+
+                // Apply each element to the Date function
+                $scope.due_date = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]).toLocaleDateString();;
+            }
+            $scope.class_id = page.class_id;
+            $scope.page_group_id = page.pagegroupid;
+
+            // convert "1" and "0" to true and false for these attrs.
+            var bool_ints = [
+                'allow_video_post',
+                'allow_text_post',
+                'allow_upload_post',
+                'is_private_post',
+                'is_gradeable_post'
+            ];
+
+            bool_ints.forEach(function (name) {
+                $scope[name] = $scope[name] == 1;
+            })
+
+            $timeout(function() {
+                if(angular.isDefined(CKEDITOR) && angular.isDefined(CKEDITOR.instances) && angular.isDefined(CKEDITOR.instances.editor1)) {
+                    CKEDITOR.instances.editor1.setData($scope.page_content);
+                }
+            }, 1300);
+
+
+            EditPage.getsubunits({unit_id: CurrentUnitId.getUnitId()}, function(subunits){
+
+                $scope.subunits = subunits.subunits;
+                console.log("SUBUNITS: " + angular.toJson($scope.subunits));
+
+                for(var i=0; i < $scope.subunits.length; i++) {
+                    if($scope.subunits[i].id == $scope.page_group_id) {
+                        $scope.page_group = $scope.subunits[i];
+                        break;
+                    }
+                }
+            });
+        });
+
+        $scope.editPage = function() {
+            if(angular.isDefined(CKEDITOR) && angular.isDefined(CKEDITOR.instances) && angular.isDefined(CKEDITOR.instances.editor1)) {
+                $scope.page_content = CKEDITOR.instances.editor1.getData();
+            }
+
+            console.log("Page ID: " + $scope.contentid);
+            console.log("Page Title: " + $scope.page_title);
+            console.log("Sub Title: " + $scope.page_sub_title);
+            console.log("Page Content: " + $scope.page_content);
+            console.log("Allow Video Post: " + $scope.allow_video_post);
+            console.log("Allow Text Post: " + $scope.allow_text_post);
+            console.log("Allow Upload Post: " + $scope.allow_upload_post);
+            console.log("Is Private Post: " + $scope.is_private_post);
+            console.log("Is Gradeable Post: " + $scope.is_gradeable_post);
+            console.log("Max Points: " + $scope.max_points);
+            console.log("Due Date: " + $scope.due_date);
+            console.log("Class ID" + $scope.class_id);
+
+            var page_group_id = 0;
+
+            if(angular.isDefined($scope.page_group) && angular.isDefined($scope.page_group.id) && $scope.page_group.id > 0) {
+                page_group_id = $scope.page_group.id;
+            }
+
+
+            var allow_video_post = 0;
+            var allow_text_post = 0;
+            var allow_upload_post = 0;
+            var is_private_post = 0;
+            var is_gradeable_post = 0;
+
+            if($scope.allow_video_post == true) {
+                allow_video_post = 1;
+            }
+
+            if($scope.allow_text_post == true) {
+                allow_text_post = 1;
+            }
+
+            if($scope.allow_upload_post == true) {
+                allow_upload_post = 1;
+            }
+
+            if($scope.is_private_post == true) {
+                is_private_post = 1;
+            }
+
+            if($scope.is_gradeable_post == true){
+                is_gradeable_post = 1;
+            }
+
+            EditPage.update({page_id: $scope.contentid,
+                page_title: $scope.page_title,
+                page_sub_title: $scope.page_sub_title,
+                page_group_id: page_group_id,
+                page_content: $scope.page_content,
+                allow_video_post: allow_video_post,
+                allow_text_post: allow_text_post,
+                allow_upload_post: allow_upload_post,
+                is_private_post: is_private_post,
+                is_gradeable_post: is_gradeable_post,
+                max_points: $scope.max_points,
+                due_date: $scope.due_date,
+                class_id: $scope.class_id,
+                allowed_takes: $scope.allowed_takes,
+                password: $scope.password,
+                time_limit: $scope.time_limit,
+
+                // listening activity
+                listen_course: $scope.listen_course,
+                listen_lesson: $scope.listen_lesson,
+                listen_numEx: $scope.listen_numEx,
+
+                // nimble knowledge things
+                native_lang: $scope.native_lang,
+                target_lang: $scope.target_lang,
+            }, function(page) {
+                console.log(angular.toJson(page));
+
+                if(page.message=='successful') {
+                    $rootScope.$broadcast('NavUpdateMenu');
+                    alert("Updated Page");
+                } else {
+                    alert(page.message);
+                }
+            });
+
+        }
+
+        $scope.deletePage = function() {
+            console.log("Page ID: " + $scope.contentid);
+
+            if (confirm("Are You Sure You Want To Delete This Page") == true) {
+                EditPage.del({page_id: $scope.contentid}, function(page) {
+                    console.log(angular.toJson(page));
+
+                    if(page.message=='successful') {
+                        $rootScope.$broadcast('NavUpdateMenu');
+                        alert("Deleted Page");
+                    } else {
+                        alert(page.message);
+                    }
+                });
+            }
+        }
+
+        $scope.hasAssignment = function() {
+            if($scope.allow_video_post == true || $scope.allow_text_post == true || $scope.allow_upload_post == true) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $scope.isQuiz = function() {
+            return ($scope.page_type.toLowerCase() =='quiz');
+        }
+
+        $scope.isNimble = function () {
+            var nimbles = ['lesson_listening', 'listening_practice', 'reading_practice']
+            return nimbles.indexOf($scope.page_type.toLowerCase()) !== -1;
+        }
+
+        $scope.isLessonListening = function () {
+            return $scope.page_type.toLowerCase() =='lesson_listening';
+        }
+
+        $scope.isContent = function() {
+            if($scope.page_type.toLowerCase() =='content') {
+                return true;
+            }
+
+            return false;
+        }
+
+        $scope.isShowSubmissionTypeCheckboxes = function(){
+            return ($scope.page_type.toLowerCase() !=='quiz') && ($scope.page_type.toLowerCase() !=='external_link');
+        }
+
+    }
+]);
+
+
+/******************************************************************************
+ * Edit External Link Controller
+ *****************************************************************************/
+
+appControllers.controller('EditExternalLinkController', ['$rootScope', '$scope', '$sce', '$timeout', 'CurrentUnitId', 'EditPage',
+    function($rootScope, $scope, $sce, $timeout, CurrentUnitId, EditPage) {
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        $scope.page_title = '';
+        $scope.page_sub_title = '';
+        $scope.page_type = '';
+        $scope.page_content = '';
+        $scope.external_link = '';
+        $scope.allow_video_post = false;
+        $scope.allow_text_post = false;
+        $scope.allow_upload_post = false;
+        $scope.is_private_post = false;
+        $scope.is_gradeable_post = false;
+        $scope.page_group = {id: 0, name: ''};
+        $scope.page_group_id = 0;
+        $scope.subunits = new Array();
+
+        EditPage.get({pageId: $scope.contentid}, function(page) {
+            console.log(angular.toJson(page));
+
+            $scope.page_title = page.pagename;
+            $scope.page_sub_title = page.subtitle;
+            $scope.page_content = page.contenthtml;
+            $scope.external_link = page.contenthtml;
+            $scope.allow_video_post = page.allow_video_post;
+            $scope.allow_text_post = page.allow_text_post;
+            $scope.allow_upload_post = page.allow_upload_post;
+            $scope.is_private_post = page.page_is_private;
+            $scope.is_gradeable_post = page.page_is_gradeable;
+            $scope.page_group_id = page.pagegroupid;
+
+            if($scope.allow_video_post == 1) {
+                $scope.allow_video_post = true;
+            } else {
+                $scope.allow_video_post = false;
+            }
+
+            if($scope.allow_text_post == 1) {
+                $scope.allow_text_post = true;
+            } else {
+                $scope.allow_text_post = false;
+            }
+
+            if($scope.allow_upload_post == 1) {
+                $scope.allow_upload_post = true;
+            } else {
+                $scope.allow_upload_post = false;
+            }
+
+            if($scope.is_private_post == 1) {
+                $scope.is_private_post = true;
+            } else {
+                $scope.is_private_post = false;
+            }
+
+            if($scope.is_gradeable_post == 1) {
+                $scope.is_gradeable_post = true;
+            } else {
+                $scope.is_gradeable_post = false;
+            }
+
+            $timeout(function() {
+                if(angular.isDefined(CKEDITOR) && angular.isDefined(CKEDITOR.instances) && angular.isDefined(CKEDITOR.instances.editor1)) {
+                    CKEDITOR.instances.editor1.setData($scope.page_content);
+                }
+            }, 1300);
+
+
+            EditPage.getsubunits({unit_id: CurrentUnitId.getUnitId()}, function(subunits){
+
+                $scope.subunits = subunits.subunits;
+                console.log("SUBUNITS: " + angular.toJson($scope.subunits));
+
+                for(var i=0; i < $scope.subunits.length; i++) {
+                    if($scope.subunits[i].id == $scope.page_group_id) {
+                        $scope.page_group = $scope.subunits[i];
+                        break;
+                    }
+                }
+            });
+        });
+
+        $scope.editPage = function() {
+            $scope.page_content = $scope.external_link;
+
+            console.log("Page ID: " + $scope.contentid);
+            console.log("Page Title: " + $scope.page_title);
+            console.log("Sub Title: " + $scope.page_sub_title);
+            console.log("Page Content: " + $scope.page_content);
+            console.log("Allow Video Post: " + $scope.allow_video_post);
+            console.log("Allow Text Post: " + $scope.allow_text_post);
+            console.log("Allow Upload Post: " + $scope.allow_upload_post);
+            console.log("Is Private Post: " + $scope.is_private_post);
+            console.log("Is Gradeable Post: " + $scope.is_gradeable_post);
+
+            var page_group_id = 0;
+
+            if(angular.isDefined($scope.page_group) && angular.isDefined($scope.page_group.id) && $scope.page_group.id > 0) {
+                page_group_id = $scope.page_group.id;
+            }
+
+
+            var allow_video_post = 0;
+            var allow_text_post = 0;
+            var allow_upload_post = 0;
+            var is_private_post = 0;
+            var is_gradeable_post = 0;
+
+            if($scope.allow_video_post == true) {
+                allow_video_post = 1;
+            }
+
+            if($scope.allow_text_post == true) {
+                allow_text_post = 1;
+            }
+
+            if($scope.allow_upload_post == true) {
+                allow_upload_post = 1;
+            }
+
+            if($scope.is_private_post == true) {
+                is_private_post = 1;
+            }
+
+            if($scope.is_gradeable_post == true){
+                is_gradeable_post = 1;
+            }
+
+            EditPage.update({page_id: $scope.contentid, page_title: $scope.page_title, page_sub_title: $scope.page_sub_title, page_group_id: page_group_id, page_content: $scope.page_content, allow_video_post: allow_video_post, allow_text_post: allow_text_post, allow_upload_post: allow_upload_post, is_private_post: is_private_post, is_gradeable_post:is_gradeable_post}, function(page) {
+                console.log(angular.toJson(page));
+
+                if(page.message=='successful') {
+                    $rootScope.$broadcast('NavUpdateMenu');
+                    alert("Updated Page");
+                } else {
+                    alert(page.message);
+                }
+            });
+
+        }
+    }
+]);
+
+/******************************************************************************
+ * Edit Header Controller
+ *****************************************************************************/
+
+appControllers.controller('EditHeaderController', ['$rootScope', '$scope', '$sce', '$timeout', 'CurrentUnitId', 'EditPage',
+    function($rootScope, $scope, $sce, $timeout, CurrentUnitId, EditPage) {
+        $scope.contentid = $rootScope.$stateParams.contentId;
+
+        $scope.page_title = '';
+        $scope.page_sub_title = '';
+        $scope.page_type = '';
+        $scope.page_content = '';
+        $scope.external_link = '';
+        $scope.allow_video_post = false;
+        $scope.allow_text_post = false;
+        $scope.allow_upload_post = false;
+        $scope.is_private_post = false;
+        $scope.is_gradeable_post = false;
+        $scope.max_points = 0;
+        $scope.page_group = {id: 0, name: ''};
+        $scope.page_group_id = 0;
+        $scope.subunits = new Array();
+
+        EditPage.get({pageId: $scope.contentid}, function(page) {
+            console.log(angular.toJson(page));
+
+            $scope.page_title = page.pagename;
+            $scope.page_sub_title = page.subtitle;
+            $scope.page_content = page.contenthtml;
+            $scope.external_link = page.contenthtml;
+            $scope.allow_video_post = page.allow_video_post;
+            $scope.allow_text_post = page.allow_text_post;
+            $scope.allow_upload_post = page.allow_upload_post;
+            $scope.is_private_post = page.page_is_private;
+            $scope.is_gradeable_post = page.page_is_gradeable;
+            $scope.max_points = page.max_points;
+            $scope.page_group_id = page.pagegroupid;
+
+            if($scope.allow_video_post == 1) {
+                $scope.allow_video_post = true;
+            } else {
+                $scope.allow_video_post = false;
+            }
+
+            if($scope.allow_text_post == 1) {
+                $scope.allow_text_post = true;
+            } else {
+                $scope.allow_text_post = false;
+            }
+
+            if($scope.allow_upload_post == 1) {
+                $scope.allow_upload_post = true;
+            } else {
+                $scope.allow_upload_post = false;
+            }
+
+            if($scope.is_private_post == 1) {
+                $scope.is_private_post = true;
+            } else {
+                $scope.is_private_post = false;
+            }
+
+            if($scope.is_gradeable_post == 1) {
+                $scope.is_gradeable_post = true;
+            } else {
+                $scope.is_gradeable_post = false;
+            }
+
+            $timeout(function() {
+                if(angular.isDefined(CKEDITOR) && angular.isDefined(CKEDITOR.instances) && angular.isDefined(CKEDITOR.instances.editor1)) {
+                    CKEDITOR.instances.editor1.setData($scope.page_content);
+                }
+            }, 1300);
+
+
+            EditPage.getsubunits({unit_id: CurrentUnitId.getUnitId()}, function(subunits){
+
+                $scope.subunits = subunits.subunits;
+                console.log("SUBUNITS: " + angular.toJson($scope.subunits));
+
+                for(var i=0; i < $scope.subunits.length; i++) {
+                    if($scope.subunits[i].id == $scope.page_group_id) {
+                        $scope.page_group = $scope.subunits[i];
+                        break;
+                    }
+                }
+            });
+        });
+
+        $scope.editPage = function() {
+            console.log("Page ID: " + $scope.contentid);
+            console.log("Page Title: " + $scope.page_title);
+            console.log("Sub Title: " + $scope.page_sub_title);
+            console.log("Page Content: " + $scope.page_content);
+            console.log("Allow Video Post: " + $scope.allow_video_post);
+            console.log("Allow Text Post: " + $scope.allow_text_post);
+            console.log("Allow Upload Post: " + $scope.allow_upload_post);
+            console.log("Is Private Post: " + $scope.is_private_post);
+            console.log("Is Gradeable Post: " + $scope.is_gradeable_post);
+            console.log("Max points: " + $scope.max_points);
+
+            var page_group_id = 0;
+
+            if(angular.isDefined($scope.page_group) && angular.isDefined($scope.page_group.id) && $scope.page_group.id > 0) {
+                page_group_id = $scope.page_group.id;
+            }
+
+
+            var allow_video_post = 0;
+            var allow_text_post = 0;
+            var allow_upload_post = 0;
+            var is_private_post = 0;
+            var is_gradeable_post = 0;
+
+            if($scope.allow_video_post == true) {
+                allow_video_post = 1;
+            }
+
+            if($scope.allow_text_post == true) {
+                allow_text_post = 1;
+            }
+
+            if($scope.allow_upload_post == true) {
+                allow_upload_post = 1;
+            }
+
+            if($scope.is_private_post == true) {
+                is_private_post = 1;
+            }
+
+            if($scope.is_gradeable_post == true) {
+                is_gradeable_post = 1;
+            }
+
+            debugger;
+
+            EditPage.update({page_id: $scope.contentid, page_title: $scope.page_title, page_sub_title: $scope.page_sub_title, page_group_id: page_group_id, page_content: $scope.page_content, allow_video_post: allow_video_post, allow_text_post: allow_text_post, allow_upload_post: allow_upload_post, is_private_post: is_private_post, is_gradeable_post: is_gradeable_post, max_points: $scope.max_points}, function(page) {
+                console.log(angular.toJson(page));
+
+                if(page.message=='successful') {
+                    $rootScope.$broadcast('NavUpdateMenu');
+                    alert("Updated Page");
+                } else {
+                    alert(page.message);
+                }
+            });
+
+        }
+    }
+]);
+
+
+
+
+// GraderPostController has been moved to /public/js/controllers/graderpost.js
+
+
+// GraderPostedMessagesController has been moved to ./controllers/grader/gradermessages.js
+
+
+appControllers.controller('GraderArchivePostedMessagesController', ['$rootScope', '$scope', '$timeout', '$sce', 'GraderPost',
+    function($rootScope, $scope, $timeout, $sce, GraderPost) {
+        if($scope.courseid > 0) {
+            console.log("Course ID TO LOAD MESSAGES: " + $scope.courseid);
+
+            $scope.current_video_player = '';
+
+            $scope.posted = GraderPost.archive({ courseid: $scope.courseid }, function(messages) {
+                console.log("All Messages: " + angular.toJson(messages));
+
+                $scope.postedMessages = messages.postmessages;
+            });
+        } else {
+            console.log($scope.contentid);
+
+            $scope.current_video_player = '';
+
+            $scope.posted = GraderPost.pageArchive({ postId: $scope.contentid }, function(messages) {
+                console.log(angular.toJson(messages));
+
+                $scope.postedMessages = messages.postmessages;
+            });
+        }
+
+
+        $scope.$on('reloadPostedMessages', function(event, data) {
+            if($scope.courseid > 0) {
+                $scope.posted = GraderPost.archive({ courseid: $scope.courseid }, function(messages) {
+                    console.log("All Messages: " + angular.toJson(messages));
+
+                    $scope.postedMessages = messages.postmessages;
+                });
+
+            } else {
+                $scope.posted = GraderPost.pageArchive({ postId: $scope.contentid }, function(messages) {
+                    console.log(angular.toJson(messages));
+
+                    $scope.postedMessages = messages.postmessages;
+                });
+            }
+        });
+
+        $scope.replyTo = function(reply_to_id) {
+            if(!angular.isDefined(reply_to_id)) {
+                reply_to_id = 0;
+            }
+
+            $scope.reply_to_id = reply_to_id;
+
+            $scope.$emit('replyToId', $scope.reply_to_id);
+        }
+
+        $scope.deletePost = function(delete_id) {
+            if(!angular.isDefined(delete_id)) {
+                return;
+            }
+
+            if (confirm("Are You Sure You Want To Delete Post") == true) {
+                $scope.delete_id = delete_id;
+
+                $scope.$emit('deleteId', $scope.delete_id);
+            }
+        }
+
+
+        $scope.openVideoPlayer = function(video_message_id, modal_id) {
+            console.log('video message id: ' + video_message_id);
+
+            for(var i = 0; $scope.postedMessages.length; i++) {
+                if($scope.postedMessages[i].id == video_message_id) {
+                    $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                    break;
+                } else if($scope.postedMessages[i].children.length > 0) {
+                    var found_in_child = false;
+                    for(var j = 0; j < $scope.postedMessages[i].children.length; j++) {
+                        if($scope.postedMessages[i].children[j].id == video_message_id) {
+                            $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].children[j].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                            found_in_child = true;
+                        }
+                    }
+
+                    if(found_in_child) {
+                        break;
+                    }
+                }
+            }
+
+            console.log("current video url: " + $scope.current_video_player);
+
+            $('#' + modal_id).modal('show');
+            $('#' + modal_id).on('hide.bs.modal', function () {
+                document.getElementById('defaultVideoPlayer').pause();
+            })
+        }
+
+        $scope.indentClass = function(indent_count) {
+            return "indent-" + indent_count;
+        }
+    }
+]);
+
+
+appControllers.controller('GraderArchiveController', ['$rootScope', '$scope', '$timeout', '$sce', 'GraderPost',
+    function($rootScope, $scope, $timeout, $sce, GraderPost) {
+        if($scope.courseid > 0) {
+            console.log("Course ID TO LOAD MESSAGES: " + $scope.courseid);
+
+            $scope.current_video_player = '';
+
+            $scope.posted = GraderPost.archive({ courseid: $scope.courseid }, function(messages) {
+                console.log("All Messages: " + angular.toJson(messages));
+
+                $scope.postedMessages = messages.postmessages;
+            });
+
+            $rootScope.$broadcast('GraderArchiveMenu');
+        } else {
+            console.log($scope.contentid);
+
+            $scope.current_video_player = '';
+
+            $scope.posted = GraderPost.pageArchive({ postId: $scope.contentid }, function(messages) {
+                console.log(angular.toJson(messages));
+
+                $scope.postedMessages = messages.postmessages;
+            });
+        }
+
+
+        $scope.$on('reloadPostedMessages', function(event, data) {
+            if($scope.courseid > 0) {
+                $scope.posted = GraderPost.all({ courseid: $scope.courseid }, function(messages) {
+                    console.log("All Messages: " + angular.toJson(messages));
+
+                    $scope.postedMessages = messages.postmessages;
+                });
+
+            } else {
+                $scope.posted = GraderPost.query({ postId: $scope.contentid }, function(messages) {
+                    console.log(angular.toJson(messages));
+
+                    $scope.postedMessages = messages.postmessages;
+                });
+            }
+        });
+
+        $scope.replyTo = function(reply_to_id) {
+            if(!angular.isDefined(reply_to_id)) {
+                reply_to_id = 0;
+            }
+
+            $scope.reply_to_id = reply_to_id;
+
+            $scope.$emit('replyToId', $scope.reply_to_id);
+        }
+
+        $scope.deletePost = function(delete_id) {
+            if(!angular.isDefined(delete_id)) {
+                return;
+            }
+
+            if (confirm("Are You Sure You Want To Delete Post") == true) {
+                $scope.delete_id = delete_id;
+
+                $scope.$emit('deleteId', $scope.delete_id);
+            }
+        }
+
+
+        $scope.openVideoPlayer = function(video_message_id, modal_id) {
+            console.log('video message id: ' + video_message_id);
+
+            for(var i = 0; $scope.postedMessages.length; i++) {
+                if($scope.postedMessages[i].id == video_message_id) {
+                    $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                    break;
+                } else if($scope.postedMessages[i].children.length > 0) {
+                    var found_in_child = false;
+                    for(var j = 0; j < $scope.postedMessages[i].children.length; j++) {
+                        if($scope.postedMessages[i].children[j].id == video_message_id) {
+                            $scope.current_video_player = $sce.trustAsHtml('<video id="defaultVideoPlayer" width="320" height="240" controls><source src="' + $scope.postedMessages[i].children[j].video_url + '" type="video/mp4">Your browser does not support the video tag!</video>');
+
+                            found_in_child = true;
+                        }
+                    }
+
+                    if(found_in_child) {
+                        break;
+                    }
+                }
+            }
+
+            console.log("current video url: " + $scope.current_video_player);
+
+            $('#' + modal_id).modal('show');
+            $('#' + modal_id).on('hide.bs.modal', function () {
+                document.getElementById('defaultVideoPlayer').pause();
+            })
+        }
+
+        $scope.indentClass = function(indent_count) {
+            return "indent-" + indent_count;
+        }
+    }
+]);
+
+
+
+
+
+
+
+appControllers.controller('GraderHelperController', ['$rootScope', '$scope', '$timeout', '$sce', '$upload', 'GraderPost',
+    function($rootScope, $scope, $timeout, $sce, $upload, GraderPost) {
+        console.log('GraderPost Controller');
+
+        console.log("current content id" + $scope.contentid);
+
+        $scope.reply_to_id = 0;
+        $scope.video_comment = '';
+        $scope.video_upload_comment = '';
+        $scope.file_upload_comment = '';
+        $scope.is_uploading = false;
+        $scope.progress_upload = 0;
+        $scope.check_is_private = 0;
+
+
+        $scope.$on('replyToId', function(event, data) {
+            console.log("Reply To ID EMITTER: " + data);
+
+            $(".modal").draggable({
+                handle: ".modal-header"
+            });
+
+            $scope.reply_to_id = data;
+            $scope.video_comment = '';
+            $scope.video_upload_comment = '';
+            $scope.file_upload_comment = '';
+            $scope.is_uploading = false;
+            $scope.progress_upload = 0;
+            $scope.check_is_private = 0;
+
+            $scope.post = GraderPost.get({postId: 'new'}, function(post) {
+                $scope.videoWidget = $sce.trustAsHtml(post.video_widget);
+                $scope.videoRecordButton = $sce.trustAsHtml(post.button);
+                $scope.videoFileName = post.file_name;
+                console.log(post.video_widget);
+                console.log(post.button);
+                console.log(post.file_name);
+            });
+        });
+
+
+        $scope.$on('deleteId', function(event, data) {
+            console.log("DELETE ID EMITTER: " + data);
+
+            $scope.post = GraderPost.delete({delete_id: data}, function(post) {
+                console.log(post.message);
+                if(post.message=='successful') {
+                    $scope.$broadcast('reloadPostedMessages', true);
+                } else {
+                    alert(post.message);
+                }
+            });
+        });
+
+        $scope.showNewPost = function() {
+            if($scope.allow_video_post == 1 || $scope.allow_text_post == 1 || $scope.allow_upload_post == 1) {
+                return true;
+            }
+
+
+            return false;
+        }
+
+        $scope.applyGradeTo = function(post_id) {
+            if(!angular.isDefined(post_id)) {
+                return;
+            }
+
+            console.log("Grade: " + $scope.grade);
+            console.log("Grade Comments: " + $scope.grade_comments);
+            console.log("Grade Teacher Notes: " + $scope.teacher_notes);
+
+            GraderPost.grade({post_id: post_id, grade: $scope.grade, feedback: $scope.grade_comments, notes: $scope.teacher_notes}, function(post) {
+                console.log(post.message);
+                if(post.message=='successful') {
+                    $scope.$emit('reloadPostedMessages', true);
+                    $rootScope.$broadcast('NavUpdateMenuStatic', true);
+                } else {
+                    alert(post.message);
+                }
+            });
+
+        }
+
+        $scope.videoFeedBackTo = function(post_id) {
+            if(!angular.isDefined(post_id)) {
+                return;
+            }
+            console.log("Grade: " + $scope.grade);
+            console.log("Grade Comments: " + $scope.grade_comments);
+            console.log("Grade Teacher Notes: " + $scope.teacher_notes);
+            $rootScope.$broadcast('videoGradeModal', {post_id: post_id, grade: $scope.grade, grade_comments: $scope.grade_comments, teacher_notes: $scope.teacher_notes});
+        }
+
+
+        $scope.newPost = function(reply_to_id) {
+            if(!angular.isDefined(reply_to_id)) {
+                reply_to_id = 0;
+            }
+
+            $(".modal").draggable({
+                handle: ".modal-header"
+            });
+
+            $scope.reply_to_id = reply_to_id;
+            $scope.video_comment = '';
+            $scope.check_is_private = 0;
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+
+            $scope.post = GraderPost.get({postId: 'new'}, function(post) {
+                $scope.videoWidget = $sce.trustAsHtml(post.video_widget);
+                $scope.videoRecordButton = $sce.trustAsHtml(post.button);
+                $scope.videoFileName = post.file_name;
+                console.log(post.video_widget);
+                console.log(post.button);
+                console.log(post.file_name);
+            });
+        }
+
+        $scope.submitPost = function() {
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.video_comment == 'Type Message Here') {
+                $scope.video_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post: ' + $scope.videoFileName);
+            console.log('submitting post comment: ' + $scope.video_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+
+
+            $scope.post.contentid = $scope.contentid;
+            $scope.post.videoFileName = $scope.videoFileName;
+            $scope.post.reply_to_id = $scope.reply_to_id;
+            $scope.post.video_comment = $scope.video_comment;
+            $scope.post.check_is_private = $scope.check_is_private;
+
+            $scope.post.$submit(function(post) {
+                console.log(post.message);
+                if(post.message=='successful') {
+                    $scope.$broadcast('reloadPostedMessages', true);
+
+                    $('#basicModal').modal('hide');
+                } else {
+                    alert(post.message);
+                }
+            });
+        }
+
+        $scope.onFileSelect = function($files) {
+            $scope.is_uploading = true;
+            $scope.progress_upload = 0;
+
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.video_upload_comment == 'Type Message Here') {
+                $scope.video_upload_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post comment: ' + $scope.video_upload_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+            if($scope.check_is_private){
+                $scope.check_is_private = 1;
+            }
+
+            //$files: an array of files selected, each file has name, size, and type.
+            for (var i = 0; i < $files.length; i++) {
+                var file = $files[i];
+
+                $scope.upload = $upload.upload({
+                    url: '/graderpost/upload/', //upload.php script, node.js route, or servlet url
+                    //method: 'POST' or 'PUT',
+                    //headers: {'header-key': 'header-value'},
+                    //withCredentials: true,
+                    data: {contentid: $scope.contentid, reply_to_id: $scope.reply_to_id, video_upload_comment: $scope.video_upload_comment, check_is_private: $scope.check_is_private},
+                    file: file, // or list of files ($files) for html5 only
+                    //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
+                    // customize file formData name ('Content-Disposition'), server side file variable name.
+                    //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'
+                    // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
+                    //formDataAppender: function(formData, key, val){}
+                }).progress(function(evt) {
+                    console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    $scope.progress_upload = parseInt(100.0 * evt.loaded / evt.total);
+
+                    console.log("progress-bar width: " + $('.progress-bar').width());
+
+                    $('.progress-bar').width($scope.progress_upload + '%')
+                }).success(function(data, status, headers, config) {
+                    // file is uploaded successfully
+                    console.log(data);
+
+
+                    if(data.message=='successful') {
+                        $scope.$broadcast('reloadPostedMessages', true);
+
+                        $('#basicModal').modal('hide');
+                        $scope.is_uploading = false;
+                        $scope.progress_upload = 0;
+                    } else {
+                        alert(data.message);
+                    }
+
+                });
+                //.error(...)
+                //.then(success, error, progress);
+                // access or attach event listeners to the underlying XMLHttpRequest.
+                //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+            }
+            /* alternative way of uploading, send the file binary with the file's content-type.
+             Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+             It could also be used to monitor the progress of a normal http post/put request with large data*/
+            // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+        };
+
+        $scope.onFileUploadGenericSelect = function($files) {
+            $scope.is_uploading = true;
+            $scope.progress_upload = 0;
+
+            if(!angular.isDefined($scope.reply_to_id)) {
+                $scope.reply_to_id = 0;
+            }
+
+            if($scope.file_upload_comment == 'Type Message Here') {
+                $scope.file_upload_comment = '';
+            }
+
+            console.log("Reply To Id: " + $scope.reply_to_id);
+            console.log('submitting post with contentid: ' + $scope.contentid);
+            console.log('submitting post comment: ' + $scope.file_upload_comment);
+            console.log('submitting check is private: ' + $scope.check_is_private);
+
+            if($scope.check_is_private){
+                $scope.check_is_private = 1;
+            }
+
+            //$files: an array of files selected, each file has name, size, and type.
+            for (var i = 0; i < $files.length; i++) {
+                var file = $files[i];
+
+                $scope.upload = $upload.upload({
+                    url: '/graderpost/fileupload/', //upload.php script, node.js route, or servlet url
+                    //method: 'POST' or 'PUT',
+                    //headers: {'header-key': 'header-value'},
+                    //withCredentials: true,
+                    data: {contentid: $scope.contentid, reply_to_id: $scope.reply_to_id, file_upload_comment: $scope.file_upload_comment, check_is_private: $scope.check_is_private},
+                    file: file, // or list of files ($files) for html5 only
+                    //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
+                    // customize file formData name ('Content-Disposition'), server side file variable name.
+                    //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'
+                    // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
+                    //formDataAppender: function(formData, key, val){}
+                }).progress(function(evt) {
+                    console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    $scope.progress_upload = parseInt(100.0 * evt.loaded / evt.total);
+
+                    console.log("progress-bar width: " + $('.progress-bar').width());
+
+                    $('.progress-bar').width($scope.progress_upload + '%')
+                }).success(function(data, status, headers, config) {
+                    // file is uploaded successfully
+                    console.log(data);
+
+
+                    if(data.message=='successful') {
+                        $scope.$broadcast('reloadPostedMessages', true);
+
+                        $('#basicFileUploadModal').modal('hide');
+                        $scope.is_uploading = false;
+                        $scope.progress_upload = 0;
+                    } else {
+                        alert(data.message);
+                    }
+
+                });
+                //.error(...)
+                //.then(success, error, progress);
+                // access or attach event listeners to the underlying XMLHttpRequest.
+                //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+            }
+            /* alternative way of uploading, send the file binary with the file's content-type.
+             Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+             It could also be used to monitor the progress of a normal http post/put request with large data*/
+            // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+        };
+
+    }
+]);
+appControllers.controller('GradesController', function($scope, $filter, $http, CurrentCourseId) {
+    $scope.classes = [];
+    $http.get('/course/me').then(function(response) {
+        $scope.classes = response.data.courses;
+        $scope.menu = {
+            selected:  $scope.classes[0]
+        };
+    });
+    $scope.assignments = [];
+    $http.get('/assignments?userid=me').then(function (response) {
+        $scope.assignments = response.data;
+    });
+    $scope.$watch('menu.selected', function (selected_course) {
+        CurrentCourseId.setCourseId(selected_course.id);
+    });
+    $scope.scale = {
+        A: 93,
+        A_minus: 90,
+        B_plus: 87,
+        B: 83,
+        B_minus: 80,
+        C_plus: 77,
+        C: 73,
+        C_minus: 70,
+        D_plus: 67,
+        D: 63,
+        D_minus: 60,
+        F: 0
+    };
+    $scope.getLetterGrade = function (percent) {
+        var letterGrade = '--';
+        var diff = 100;
+        angular.forEach($scope.scale, function (value, key) {
+            if (percent > value && (percent - value) < diff) {
+                diff = percent - value;
+                letterGrade = key;
+            }
+        });
+        return letterGrade
+    };
+    $scope.now = moment().format();
+    $scope.moment = moment;
+    $scope.getGraded = function (sclass) {
+        var assignments = $scope.getAssignmentsForClass(sclass);
+        return $filter('filter')(assignments, $scope.hasScore);
+    };
+    $scope.getAssignmentsForClass = function (sclass) {
+        if (!sclass) {
+            return [];
+        }
+        return $filter('filter')($scope.assignments, {classId: sclass.class_id});
+    };
+    $scope.hasScore = function (assignment) {
+        return assignment.score;
+    };
+    $scope.isSubmitted = function (assignment) {
+        return assignment.submitted;
+    };
+    $scope.getPointsGained = function (assignments) {
+        var pointsGained = 0;
+        angular.forEach(assignments, function (assignment) {
+            pointsGained += parseInt(assignment.score || 0);
+        });
+        return pointsGained;
+    };
+
+    $scope.getTotalPoints= function (assignments) {
+        var total = 0;
+        angular.forEach(assignments, function (assignment) {
+            total += parseInt(assignment.total);
+        });
+        return total;
+    };
+    $scope.getSmiley = function (percent) {
+        if (percent > 80) {
+            return 'fa-smile-o';
+        } else if (percent > 50) {
+            return 'fa-meh-o';
+        } else if ($scope.getLetterGrade(percent) == '--') {
+            return 'fa-meh-o';
+        } else {
+            return 'fa-frown-o';
+        }
+    };
+
+    $scope.getWaitingForGrade = function (assignments) {
+        var submitted = $filter('filter')(assignments, $scope.isSubmitted);
+        var graded = $filter('filter')(assignments, $scope.hasScore);
+        return submitted.length - graded.length;
+    };
+
+    $scope.getPercent = function (assignments) {
+        var graded = $filter('filter')(assignments, $scope.hasScore);
+        return $scope.getPointsGained(graded)/$scope.getTotalPoints(graded) * 100;
+    };
+
+    $scope.late = function (assignment) {
+        return $scope.now > assignment.due && !$scope.isSubmitted(assignment);
+    };
+
+    $scope.passDue = function (assignment) {
+        return $scope.now > assignment.due;
+    };
+
+    $scope.getExpectedPercentComplete = function (sclass, mode) {
+        var allAssignments = $scope.getAssignmentsForClass(sclass);
+        var postDue = $filter('filter')(allAssignments, $scope.passDue);
+        if (mode == 'assignments') {
+            return 100 * (postDue.length/allAssignments.length);
+        } else if (mode == 'score') {
+            var postDueScore = 0;
+            angular.forEach(postDue, function (assignment) {
+                postDueScore += assignment.total;
+            });
+            var allScore = 0;
+            angular.forEach(allAssignments, function (assignment) {
+                allScore += assignment.total;
+            });
+            return 100 * (postDueScore/allScore);
+        }
+    };
+
+    $scope.getPercentComplete = function (sclass, mode) {
+        var allAssignments = $scope.getAssignmentsForClass(sclass);
+        var graded = $filter('filter')(allAssignments, $scope.hasScore);
+
+        if (mode == 'assignments') {
+            return 100 * (graded.length/allAssignments.length);
+        } else if (mode == 'score') {
+            var gradedScore = 0;
+            angular.forEach(graded, function (assignment) {
+                gradedScore += assignment.total;
+            });
+            var allScore = 0;
+            angular.forEach(allAssignments, function (assignment) {
+                allScore += assignment.total;
+            });
+            return 100 * (gradedScore/allScore);
+        } else if (mode == 'date') {
+            var sortedByDueDate = $filter('orderBy')(allAssignments, 'due');
+            if (sortedByDueDate.length < 2) {
+                return 1;
+            }
+            var firstDueDate = sortedByDueDate.shift().due;
+            var lastDueDate = sortedByDueDate.pop().due;
+            var normalizeDate = function (date) {
+                return moment(date).unix() - moment(firstDueDate).unix();
+            };
+            return normalizeDate($scope.now)/normalizeDate(lastDueDate) * 100;
+        }
+    };
+
+    $scope.getCurrentScore = function (sclass) {
+        var allAssignments = $scope.getAssignmentsForClass(sclass);
+        var graded = $filter('filter')(allAssignments, $scope.hasScore);
+        var gradedScore = 0;
+        angular.forEach(graded, function (assignment) {
+            gradedScore += parseInt(assignment.score);
+        });
+        return gradedScore;
+    };
+
+    $scope.getCurrentPossibleScore = function (sclass) {
+        var allAssignments = $scope.getAssignmentsForClass(sclass);
+        var graded = $filter('filter')(allAssignments, $scope.hasScore);
+        var allScore = 0;
+        angular.forEach(graded, function (assignment) {
+            allScore += parseInt(assignment.total);
+        });
+        return allScore;
+    };
+
+    $scope.getTotalPossibleScore = function (sclass) {
+        var allAssignments = $scope.getAssignmentsForClass(sclass);
+        var allScore = 0;
+        angular.forEach(allAssignments, function (assignment) {
+            allScore += parseInt(assignment.total);
+        });
+        return allScore;
+    };
+
+    $scope.getCurrentIndexForProgress = function (now, assignments) {
+        var assignments = $filter('orderBy')(assignments, '+due');
+        var i = 0;
+        angular.forEach(assignments, function (assignment, key) {
+            if (now > assignment.due) {
+                i++;
+            }
+            if (now <= assignment.due) {
+                return key;
+            }
+        });
+        return i;
+    };
+
+    $scope.getCurrentScorePercent = function (sclass, mode) {
+        var total = 0;
+        if (mode == 'final') {
+            total = $scope.getTotalPossibleScore(sclass);
+        } else if (mode == 'current') {
+            total = $scope.getCurrentPossibleScore(sclass);
+            if (total == 0) {
+                return 0;
+            }
+        }
+        return (100 * ($scope.getCurrentScore(sclass)/total));
+    };
+});
+
+
+

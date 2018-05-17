@@ -1,0 +1,23 @@
+
+
+<div ng-class="{'width-1000':isGraderView}">
+
+    <table class="rubric-modal-grid">
+        <tr ng-show="rubricData.grid.header" class="header">
+           <td></td>
+           <td ng-repeat="col in rubricData.grid.header track by $index">
+               <div>{{col.text}}</div>
+           </td>
+        </tr>
+        <tr ng-repeat="row in rubricData.grid.items track by $index">
+            <td>
+               <div>{{rubricData.grid.rubric_descriptions[$index].text}}</div>
+                <div ng-hide="isStudentView">Score: {{getScore($index)}}  <span ng-show="getMaxRowScore($index)">/ {{getMaxRowScore($index)}}</span></div>
+            </td>
+            <td ng-repeat="col in row" class="btn btn-sm btn-default" ng-class="{active:rubricData.selectedScore[$parent.$index].index==$index}" ng-click="selectScore($parent.$index,col,$index)">
+                <div ng-bind-html="trustAsHtml(col.text)"></div>
+                <div class="rubric-score-percentage">{{col.score}}%</div>
+            </td>
+        </tr>
+    </table>
+</div>

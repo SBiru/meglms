@@ -1,0 +1,13 @@
+<ul ng-show="pagInfo.showNav" class="pagination">
+    <li ng-class="{disabled: pagInfo.currentPage == 0}">
+        <a href ng-click="previousPage()">« Prev</a>
+    </li>
+    <li ng-repeat="n in pageNumberButtons"
+        ng-class="{active: n == pagInfo.currentPage}"
+        ng-click="pagInfo.currentPage=n">
+        <a href ng-bind="n + 1"></a>
+    </li>
+    <li ng-class="{disabled: pagInfo.currentPage == pagedItems - 1}" clas="next-page">
+        <a href ng-click="nextPage()">Next »</a>
+    </li>
+</ul>

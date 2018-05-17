@@ -1,0 +1,26 @@
+<form method="post" action="/signin/" class="form-signin" role="form" >
+    <div class="form-signin-heading" style="">
+        <img src="/public/img/green-logo.png" class="logo">
+        <div class="right">
+            <div>Need new account?</div>
+            <a ng-href="{{commercial_site_url}}/studentCheckout.php">Click here</a>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <label for="username">Email</label>
+    <input type="email" id="username" name="username"  ng-model="user.email" class="form-control"  autofocus>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password"  class="form-control" >
+    <p class="alert-warning" ng-show='isCapsLockOn'>Caps lock is on</p>
+    <!-- <a ng-click="resetPassword()" style="cursor:pointer">Forgot password?</a> -->
+
+    <div>
+
+        <button type="submit" class="btn btn-success">Log in</button>
+        <div class="forgot-password"><a ng-click="resetPassword()">Forgot password?</a></div>
+    </div>
+
+    <!--<a class="btn btn-lg btn-primary btn-block" href="/new-license" ng-show="showRegisterWithLicenseButton()">Register with a license code</a>-->
+    <p class="msgError">{{msgError}}</p>
+</form>

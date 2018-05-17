@@ -1,0 +1,259 @@
+.multi-choice p{
+    display: inline;
+}
+.quiz-option{
+    margin-left:15px
+}
+.btn-wordmatch{
+    white-space: initial !important;
+}
+.btn-wordmatch .matched{
+    width:50%;
+    float:left;
+    white-space: initial !important;
+    cursor:initial;
+}
+
+.quiz-set-score:not(.page-editor),.quiz-total-points:not(.page-editor){
+    color: #191919;
+    padding: 10px;
+    position: fixed;
+    top: 60px;
+
+}
+
+.quiz-total-points{
+    background-color: #D7FFED;
+    border: 1px dashed #005D33;
+    left: 80%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 400;
+}
+edit-dragintotext-in-modal .choices{
+    padding:5px;
+}
+edit-dragintotext-in-modal .choice{
+    line-height: 2.5;
+
+}
+edit-dragintotext-in-modal .answer{
+    display: table;
+}
+edit-dragintotext-in-modal .answer-label,edit-dragintotext-in-modal .answer-input,edit-dragintotext-in-modal .remove-answer{
+    display: table-cell;
+}
+edit-dragintotext-in-modal .remove-answer{
+    padding-left: 10px;
+}
+
+display-dragintotext-editor .option,display-dragintotext-student .option{
+    margin-right: 10px;
+    white-space: pre-line;
+}
+display-dragintotext-student .option-text{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    white-space: pre-line;
+}
+display-dragintotext-student .empty-box,display-dragintotext-review .empty-box,quiz-response .empty-box{
+    height: 20px;
+    border:1px solid black;
+    display: inline-block;
+    position: relative;
+    min-width: 15px;
+    line-height: 1.5;
+}
+quiz-response .empty-box{
+    height:100%;
+    min-height: 20px;
+
+}
+display-dragintotext-review .empty-box{
+    padding:3px;
+}
+display-dragintotext-student .empty-box:not([drop-channel="closed"]),
+display-dragintotext-review .empty-box:not(.answered)  {
+    top: 6px;
+}
+display-dragintotext-student .empty-box[drop-channel="closed"] {
+    padding: 0 3px;
+}
+
+display-dragintotext-student .empty-box.on-drag-hover.on-drag-enter{
+    box-shadow: 0 0 5px rgb(235, 238, 0);
+    border: 1px solid rgb(218, 238, 0);
+}
+display-dragintotext-student .unmatch-btn{
+    position: absolute;
+    left: 0px;
+    top: -1px;
+    padding: 0 3px;
+}
+display-dragintotext-student .dropped-text {
+    padding-left: 18px;
+}
+edit-calculatedsimple-in-modal .tolerance-input,edit-calculatedmulti-in-modal  .tolerance-input {
+    width:70px !important;
+}
+edit-calculatedsimple-in-modal .tolerance-type,edit-calculatedmulti-in-modal  .tolerance-type {
+    padding-right: 10px;
+}
+edit-calculatedsimple-in-modal .wild-card-heading,edit-calculatedmulti-in-modal  .wild-card-heading {
+    margin:0;
+    margin-bottom:10px;
+}
+edit-calculatedsimple-in-modal .wildcardparameters .form-group,edit-calculatedmulti-in-modal  .wildcardparameters .form-group {
+    margin-bottom: 0;
+}
+edit-calculatedsimple-in-modal .generate-sets,edit-calculatedmulti-in-modal  .generate-sets {
+    padding-left: 10px;
+}
+edit-calculatedsimple-in-modal .set-controls,edit-calculatedmulti-in-modal  .set-controls {
+    position: absolute;
+    right: 18px;
+    top: 2px;
+}
+edit-calculatedsimple-in-modal .set-controls .btn-xs,edit-calculatedmulti-in-modal  .set-controls .btn-xs {
+    padding: 0 3px;
+    font-size: 10px;
+}
+edit-calculatedsimple-in-modal .table,edit-calculatedmulti-in-modal  .table {
+
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    background-color: rgba(239, 239, 239, 0.04);
+}
+edit-calculatedsimple-in-modal .table .small-column,edit-calculatedmulti-in-modal  .table .small-column {
+    width: 30px;
+}
+edit-calculatedsimple-in-modal .table .small-heading,edit-calculatedmulti-in-modal  .table .small-heading {
+    font-size: 14px;
+}
+.thead-default th {
+    color: #55595c;
+    background-color: #eceeef;
+}
+.table-danger th{
+    background-color: #f2dede;
+}
+edit-calculatedsimple-in-modal .form-inline .form-group ,edit-calculatedmulti-in-modal  .form-inline .form-group  {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+edit-calculatedsimple-in-modal .form-inline .input-group ,edit-calculatedmulti-in-modal  .form-inline .input-group  {
+    display: inline-table;
+    vertical-align: middle;
+}
+edit-calculatedsimple-in-modal .form-inline,edit-calculatedmulti-in-modal  .form-inline {
+    display: inline-table;
+}
+edit-calculatedsimple-in-modal .edit-param,edit-calculatedmulti-in-modal  .edit-param {
+    margin-right: 5px;
+}
+.edit-param .addon{
+    padding: 0 3px;
+    font-size: 12px;
+}
+
+.edit-param .addon {
+    padding: 3px 3px;
+    font-size: 12px;
+}
+.edit-param .addon-value {
+    background: #fff;
+}
+edit-calculatedmulti-in-modal  .show-param {
+    margin-bottom: 0;
+    display: inline-block;
+}
+edit-calculatedsimple-in-modal .edit-param input,edit-calculatedmulti-in-modal  .edit-param input {
+    font-size: 12px;
+    padding: 4px;
+
+}
+edit-calculatedsimple-in-modal .edit-params-container,edit-calculatedmulti-in-modal  .edit-params-container {
+    width: calc(100% - 90px);
+}
+edit-calculatedsimple-in-modal .finish-edit-param,edit-calculatedmulti-in-modal  .finish-edit-param {
+
+}
+resize-tables-when-change-set{
+    display: block;
+}
+.help{
+    cursor: help;
+}
+.displaymatching img{
+    width: calc(100% - 33px);
+    height: 30px;
+}
+testbank-filters .filter{
+    padding: 0 10px;
+}
+
+/*Equation Type*/
+edit-equation-in-modal .response-items-container, display-equation-editor .response-items-container, display-equation-student .response-items-container {
+    border:2px solid #e1e1e1;
+    width : auto;
+    margin : 0 19%;
+}
+edit-equation-in-modal .response-items,  display-equation-editor .response-items{
+    display:inline-block;
+    opacity : 0.30;
+    border:2px solid #91d5f7;
+    border-radius:5px;
+    vertical-align: middle;
+}
+display-equation-editor .response-items{
+    opacity : 1;
+}
+edit-equation-in-modal .row, display-equation-editor .row{
+    margin: auto;
+}
+edit-equation-in-modal .mq-root-block sup, display-equation-student .mq-root-block sup, display-equation-editor .mq-root-block sup, display-equation-grader .mq-root-block sup, display-equation-review .mq-root-block sup{
+    top:0;
+}
+display-equation-student .eq-navigation-buttons, display-equation-editor .eq-navigation-buttons, edit-equation-in-modal .eq-navigation-buttons{
+    border:2px solid #e1e1e1;
+    display:inline-block;
+    background-color: #f5f5f5;
+    width: 98%;
+}
+display-equation-student .eq-button, display-equation-editor .eq-button, edit-equation-in-modal .eq-button,edit-equation-in-modal .eq-solution-button{
+    background-color: white;
+    border: 1px solid #808080;
+    width: inherit;
+    min-width: 30px;
+    height: 37px;
+    margin: 1px 1px;
+    border-radius: 2px;
+    vertical-align: middle;
+}
+edit-equation-in-modal .eq-button{
+    opacity: 0.3;
+}
+display-equation-editor .eq-button, display-equation-editor .eq-nav-button{
+    pointer-events: none;
+}
+display-equation-student .eq-nav-button, display-equation-editor .eq-nav-button, edit-equation-in-modal .eq-nav-button{
+    border-radius: 50%;
+    border : 1px solid grey;
+    margin: 3px 2px;
+    background-color: #f5f5f5;
+}
+display-equation-student .eq-numbers {
+}
+display-equation-student .mq-editable-field .mq-cursor, edit-equation-in-modal .mq-editable-field .mq-cursor{
+    margin-right: 1px;
+}
+display-equation-student .mq-root-block, edit-equation-in-modal .mq-root-block{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+display-equation-student .equation-holder, edit-equation-in-modal .equation-holder{
+    border: 1px solid #e1e1e1;
+    margin: 4px;
+    width: 98%;
+}

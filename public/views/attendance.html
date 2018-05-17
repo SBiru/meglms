@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8">
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <!-- inject:css -->
+
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+
+<!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+
+    <?php echo $customStyles->createStyleSheet(); ?>
+</head>
+<style>
+    .modal.in {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+</style>
+<body ng-controller='PreferenceController' ng-attr-dir="{{ language_direction }}" style="padding-top:0;">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+<!-- bootstrap modal -->
+<div id="basicChatModal" class="chat-window chat-fade" style="right: 10px" aria-labelledby="basicChatModal"
+     aria-hidden="true" ng-controller="ChatBoxController">
+    <div class="chat-window-title" ng-click="collapseToggle()">
+        <div class="close" data-dismiss="modal" aria-hidden="true"></div>
+                <span class="fa fa-comments-o fa-fw chat-window-title-icon">
+                </span>
+        <span class="text">{{ preference.navs.chatting_to_pre_name.translation }} {{ chatter.fname }} {{ chatter.lname }} {{ preference.navs.chatting_to_post_name.translation }}</span>
+    </div>
+    <div id="chatWindowContent" ng-hide="chatCollapsed" class="chat-window-content"
+         style="height: 300px; display: none;">
+        <div class="chat-window-inner-content message-board pm-window">
+            <div class="messages-wrapper" style="height: 240px">
+                <div class="chat-message" ng-repeat="message in messages">
+                    <div class="chat-gravatar-wrapper">
+                        <img class="profile-picture" src="/public/img/chatuserdefault.png">
+                    </div>
+                    <div class="chat-text-wrapper">
+                        <p>{{ message.fname }} {{ message.lname }}<br/>{{ message.created }}</p>
+                        <p>{{ message.message }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window-text-box-wrapper">
+                <textarea ui-keypress="{'enter':'send()'}" class="chat-window-text-box" ng-model="chat_message"
+                          style="overflow: hidden; word-wrap: break-word;height:100%;" rows="3"
+                          placeholder="{{ preference.navs.chat_textbox_placeholder.translation }}"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->
+
+
+
+
+
+
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a ng-if="user.org.white_label && user.org.logo" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img ng-if="user.org.logo" style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img ng-src="/public/img/e3-green-logo.png"/> </a>
+            <a ng-if="user.org.white_label==false && user.org.logo" class="navbar-brand org-logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+
+        </div>
+        <div class="navbar-collapse collapse" id="main-navbar">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+
+<div id="attendanceDiv" class="container-fluid" style="margin-top:51px;">
+    <div id="attendancePanel" class="panel panel-body">
+        <attendance-report></attendance-report>
+    </div>
+
+</div>
+<script>
+    angular.module('app').requires.push('selectize2');
+    angular.module('app').requires.push('ui.sortable');
+</script>
+</div></div></body>
+</html>
+
+

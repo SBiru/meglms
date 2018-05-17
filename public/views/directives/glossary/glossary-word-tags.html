@@ -1,0 +1,5 @@
+<span class="label label-info pointer" ng-click="addTag()" ng-hide="readOnly">+ Add Tag</span>
+<span class="label label-primary custom-tags" data-ng-repeat="tag in word.tags">
+    {{tag.name}}
+    <i class="fa fa-remove" ng-click="removeTag($index)" ng-hide="readOnly"></i>
+</span>

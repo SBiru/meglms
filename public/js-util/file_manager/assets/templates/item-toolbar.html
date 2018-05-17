@@ -1,0 +1,14 @@
+<div data-ng-show="!item.inprocess">
+<!--    <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#rename" data-ng-click="touch(item)" title="{{'rename' | translate}}">
+        <i class="glyphicon glyphicon-edit"></i>
+    </button>-->
+    <button  class="btn btn-sm btn-default" data-toggle="modal" data-target="#extract" data-ng-show="item.isExtractable()" data-ng-click="touch(item); item.tempModel.name=''" title="{{'extract' | translate}}">
+        <i class="glyphicon glyphicon-export"></i>
+    </button>
+    <button ng-if="!item.tempModel.noShow" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete" data-ng-click="touch(item)" title="{{'remove' | translate}}">
+        <i class="glyphicon glyphicon-trash"></i>
+    </button>
+</div>
+<div data-ng-show="item.inprocess">
+    <button class="btn btn-sm" style="visibility: hidden">&nbsp;</button><span class="label label-warning">{{"wait" | translate}} ...</span>
+</div>

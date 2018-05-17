@@ -1,0 +1,20 @@
+<div e3-pagination-async update="callbacks.changePage" config="paginationConfig"
+     ng-class="showSelect?'show-select':''" >
+
+    <div class="clearfix"></div>
+    <glossary-word-list-item
+            ng-repeat="word in words" edit="callbacks.edit" word="word" delete="callbacks.delete"
+            delete-definition="callbacks.deleteDefinition"
+            edit-definition="callbacks.editDefinition"
+            create-definition="callbacks.createDefinition"
+            show-select="showSelect"
+            can-select-definition="callbacks.canSelectDefinition"
+            toggle-definition="callbacks.toggleDefinition"
+            show-edit="showEdit"
+            show-delete="showDelete"
+            show-tags="showTags"
+            read-only="readOnly"
+            pagination-config="paginationConfig"
+    ></glossary-word-list-item>
+    <h4 ng-show="!words.length" class="text-center">No entries were found</h4>
+</div>

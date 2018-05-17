@@ -1,0 +1,469 @@
+/* GRADEBOOK */
+.gradebook-wrapper {
+	background: #fff;
+}
+
+.gradebook-wrapper .loading {
+	background: rgba(255,255,255,0.3);
+	display: block;
+	top: 50px;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	position: fixed;
+	z-index: 10;
+}
+.gradebook-wrapper .loading > div {
+	top: 50%;
+	left: 45%;
+	position: absolute;
+	text-align: center;
+}
+.gradebook-wrapper .loading .text {
+	max-width: 150px;
+}
+.gradebook-wrapper .loading .error {
+	color: red;
+}
+
+.table-gradebook-static-left.student{
+	float:left;
+	text-align: left;
+}
+.table-gradebook-static-left.header {
+	float: left;
+	left: 0;
+	position: absolute;
+	z-index: 10;
+	background-color: #fff;
+	border-bottom: 2px solid #aaa;
+}
+
+.table-gradebook-static-left {
+	left: 0;
+
+	width: 200px;
+	max-width: 200px;
+
+}
+.average-static-bottom{
+	position: fixed !important;
+	bottom: 0;
+	height: 30px;
+	padding-top: 5px;
+}
+.average-static-bottom.with-history{
+	height: 50px;
+}
+
+.table-gradebook-static-right {
+	right: 0;
+	position: absolute;
+	max-width: 560px;
+	transition: max-width .3s ease-out;
+}
+
+.table-gradebook-container {
+	left: 200px;
+	right: 560px;
+	position: absolute;
+	overflow-x: auto;
+	transition: right .3s ease-out;
+}
+.table-gradebook{
+	margin-bottom: 0 !important;
+}
+
+.table-gradebook-container td,
+.table-gradebook-container th {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+.table-gradebook-container .inner-cell input{
+	width:35px;
+	height: 17px;
+}
+.table-gradebook-container .inner-cell {
+	max-width: 100px;
+	min-width: 100px;
+	overflow: hidden;
+	padding: 0px 8px !important;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+}
+.totals-body .inner-cell{
+	border-bottom: 1px solid #ccc !important;
+}
+
+table.pagegroup-table {
+	height: 75px;
+	display: block;
+}
+
+table.page-table {
+	height: 55px;
+	display: block;
+}
+
+.gradebook-header {
+	border-bottom: 2px solid #aaa;
+}
+.gradebook-header,
+.gradebook-header > * {
+	height: 95px;
+}
+.gradebook-header .table-gradebook-static-right,
+.gradebook-header .table-gradebook-static-left {
+	width: 100%;
+}
+.gradebook-header .table-gradebook-static-container {
+	overflow: hidden;
+}
+.gradebook-header .table-gradebook-container *{
+	font-size: 12px;
+}
+#gradebook-grades-header{
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+#gradebook-grades-header:hover,#gradebook-grades-header.show-scrollbar{
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.gradebook-body {
+	background: #fff;
+	bottom: 0px;
+	left: 0px;
+	overflow-y: scroll;
+	position: absolute;
+	right: 0px;
+	top: 175px;
+	margin-bottom: 30px;
+	border-bottom: 2px solid #aaa;
+}
+.gradebook-body.with-history{
+	margin-bottom: 50px;
+}
+#gradebook-grades-footer{
+	overflow: hidden;
+}
+
+.gradebook-wrapper .student .course-name {
+	font-size: 12px;
+	padding: 2px 5px;
+	margin-top: -4px;
+	z-index: 11;
+	white-space: nowrap;
+	width: 250px;
+}
+.gradebook-wrapper .student .course-name .selectize-input{
+	padding: 0;
+}
+
+.gradebook-wrapper .student .groups {
+	bottom: 1px;
+	position: absolute;
+}
+
+.gradebook-wrapper .student .groups * {
+	border: 1px solid transparent;
+	border-radius: 3px;
+	color: #777;
+	font-size: 11px;
+	letter-spacing: 1px;
+	margin: -1px;
+	padding: 0px 3px;
+}
+
+.gradebook-wrapper .student .groups .active {
+	background: #fe0d00;
+	border: 1px solid #444;
+	color: #fff;
+}
+
+.gradebook-wrapper .student .groups *:not(.active):hover {
+	background: #ddd;
+	cursor: pointer;
+}
+
+.gradebook-wrapper .student-name {
+	overflow: hidden;
+	max-height: 17px;
+}
+
+.gradebook-wrapper .student-name:hover,
+
+
+.gradebook-wrapper .pagegroup-title,
+.gradebook-wrapper .unit-name {
+	border-bottom: 1px solid #888;
+	color: #888;
+	height: 20px;
+	overflow: hidden;
+	padding: 2px 0px;
+}
+
+.gradebook-wrapper .totals .complete,
+.gradebook-wrapper .totals .total,
+.gradebook-wrapper .totals .final-grade,
+.gradebook-wrapper .totals .grade {
+	display: table-cell;
+	text-align: center;
+	overflow: hidden;
+	width: 80px !important;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.totals-body{
+	background-color: #F1F1F1;
+}
+.gradebook-wrapper .totals.totals-headers .wrapper {
+	bottom: 1px;
+	position: absolute;
+}
+
+.gradebook-wrapper .btn-extra-attempt.selected {
+	background: #d58512;
+}
+
+.gradebook-wrapper .navigator.navigator-left {
+	left: 10px;
+}
+
+.gradebook-wrapper .navigator.navigator-right {
+	right: 10px;
+}
+
+.gradebook-wrapper .navigator {
+	background: #62c354;
+	border: 2px solid #222;
+	border-radius: 60px;
+	opacity: 0.35;
+	padding: 5px 8px;
+	position: fixed;
+	top: 100px;
+}
+
+.gradebook-wrapper .navigator:hover {
+	box-shadow: 0px 0px 2px 2px #999;
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+
+.gradebook-modal.student {
+	font-weight: normal;
+}
+
+.gradebook-modal.student .override input,
+.gradebook-modal.student .override textarea {
+	background: #fef7e1;
+}
+
+.gradebook-modal.student .override input {
+	border: 1px solid #a9a9a9;
+	width: 70px;
+}
+
+.gradebook-modal.student .override textarea {
+	height: 100px;
+	resize: none;
+	width: 100%;
+}
+
+.gradebook-modal .centered-btn {
+	text-align: center;
+	width: 100%;
+}
+
+.gradebook-modal .loading-anim {
+	bottom: 0px;
+	left: 0px;
+	position: relative;
+	padding: 20px;
+	right: 0px;
+	text-align: center;
+	top: 0px;
+}
+
+.gradebook-modal .modal-header h4 {
+	display: inline;
+}
+
+.gradebook-modal .modal-header .email {
+	color: #888;
+	font-size: 14px;
+}
+
+.gradebook-modal .normal {
+	font-weight: normal;
+}
+
+.gradebook-modal .exempt-highlight {
+	background: #fe0d00;
+	color: #fff;
+	padding: 0px 5px;
+}
+
+.gradebook-modal .exempt-comments > textarea{
+	height: 80px;
+	resize: none;
+	width: 100%;
+}
+
+.gradebook-modal .edit-score {
+	background: #fffcb7;
+	border: 1px solid #aaa;
+	font-weight: 700;
+	height: 20px;
+	text-align: center;
+	width: 40px;
+}
+
+.gradebook-wrapper .gradebook-menu {
+	border-bottom: 1px solid #ccc;
+	height: 30px;
+	width: 100%;
+	text-align: right;
+	padding: 4px;
+}
+
+.gradebook-menu * {
+	font-size: 12px;
+	padding: 2px 5px;
+	position: relative;
+}
+.gradebook-menu .tooltip-inner{
+	white-space: normal;
+}
+.finalscore{
+	display:flex
+}
+.finalscore .finalscoretype{
+	width:200px;
+}
+quiz-summary{
+	display: block;
+	overflow: auto;
+}
+.tooltip-inner{
+	position:relative !important;
+	width: auto !important;
+	left: auto !important;
+}
+.table-duedates{
+	margin-bottom: 0;
+}
+.table-duedates th, .table-duedates td{
+	width: 25%;
+}
+.duedate-pagename{
+	width: 25%;
+}
+.filter-student{
+	padding: 5px;
+	bottom: 0;
+	position: absolute;
+}
+
+.gradebook-categories .width50perc{
+	width: 50%;
+	float: left;
+	padding: 0 15px;
+}
+.gradebook-categories .sub-title{
+	font-size: 25px;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+.gradebook-categories .assignment-list{
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	min-height: 20px;
+}
+
+.gradebook-categories .assignment-list,.gradebook-categories .category-list{
+	padding:0;
+}
+.gradebook-categories .assignment-list li,.gradebook-categories .category-list li{
+	list-style: none;
+}
+.gradebook-categories .assignment-list li,.gradebook-categories .category-list .category-info{
+	padding: 10px;
+	border-radius: 4px;
+}
+.gradebook-categories .assignment-list li{
+	background: #e0dfdf;
+	margin-bottom: 5px;
+}
+.gradebook-categories .assignment-list li.selected{
+	background-color: #dff0d8;
+	color: #3c763d;
+}
+
+.gradebook-categories .category-list > li{
+	margin-bottom: 10px;
+}
+
+.gradebook-categories .category-list .category-info{
+	border: 1px blue solid;
+}
+.gradebook-categories .category-list .assignment-list{
+	padding-left: 20px;
+}
+.gradebook-categories .category-list .assignment-list li{
+	margin-bottom: 5px;
+}
+.gradebook-categories ul[dnd-list] .dndPlaceholder {
+	background-color: #ddd;
+	display: block;
+	min-height: 42px;
+}
+.gradebook-categories input{
+	border: 1px solid transparent;
+	cursor: pointer;
+}
+.gradebook-categories input:focus{
+	border: 1px solid #ccc;
+	outline: none;
+	cursor: text;
+}
+.gradebook-categories input:hover:not(:focus){
+	background-color: #ddd;
+}
+.gradebook-categories .category-name{
+	width: 40%;
+}
+.gradebook-categories .category-points{
+	width: 30px;
+}
+.gradebook_body .toast-error{
+	font-size: 20px !important;
+}
+.gradebook-categories .loading-categories{
+	position: absolute;
+	width: calc(100% - 20px);
+	height: 100%;
+	background: rgba(255,255,255,0.7);
+}
+.gradebook-categories .loading-categories .loading-text{
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	font-size: 20px;
+}
+#score-to-perc{
+	cursor: pointer;
+	float: left;
+	font-size: 25px;
+	margin-left: 10px
+}
+.score-to-perc-tip .tooltip{
+	left: 15px !important;
+}

@@ -1,0 +1,51 @@
+<!--!!!!!!!!!!!!!!!!!!!!!-->
+<!--this file is temporary. should move the questions to its own directives-->
+<!--!!!!!!!!!!!!!!!!!!!!!-->
+<style>
+    body {
+        overflow: initial !important;
+    }
+</style>
+<div >
+    <!--If we have Mathjax in content-->
+    <div  ng-if="question.contentPlusMathjac">
+<span ng-repeat="obj in question.contentPlusMathjac">
+<span ng-if="obj.html"dynamic="obj.html"></span>
+<span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+</span>
+    </div>
+    <div style="margin-bottom:1em" bind-html-compile="question.prompt" ng-if="question.type!=='blank' && !question.contentPlusMathjac"></div>
+    <div style="margin-bottom:1em" my-blank ng-if="question.type==='blank'"></div>
+    <div compile="html"></div>
+</div>
+<div  class="radio quiz-option" >
+    <div style="margin-bottom: 20px" ng-if="question.extra.allow_file_upload">
+        <div class="btn btn-primary" ng-click="getFile($event)" ng-hide="question.files">Upload file</div>
+        <input type="file" ng-file-select="fileSelected($files,$event)" ng-show="false">
+        <span ng-show="question.files" style="margin-left: 15px">
+            <span ng-repeat="file in question.files">
+                <span ng-bind="file.name"></span>
+                <span ng-bind="humanFileSize(file.size)" ng-show="size"></span>
+            </span>
+            <span ng-show="question.files && !uploading && !uploaded">
+                <button class="btn btn-primary" ng-click="upload()">Upload</button>
+                <button class="btn btn-default" ng-click="question.files = null" >Cancel</button>
+            </span>
+            <span ng-show="uploading" ng-bind="progress_upload + '%'"></span>
+            <span class="fa fa-check" style="color:green" ng-show="uploaded"></span>
+        </span>
+
+    </div>
+    <div ng-if="question.extra.hide_advanced_editor && question.extra.allow_text_response">
+        <textarea type="text" id="essay{{question.id}}" ng-keyup="sendResponse(question.text, question)" name="grade_comments" ng-model="question.text" class="form-control grade_comments" rows="6"></textarea>
+    </div>
+    <div ng-if="!question.extra.hide_advanced_editor && question.extra.allow_text_response" class="text_area" style="position: relative" ng-init="addCK(question)">
+        <!--<div class="btn btn-default btn-xs advanced-essay" style="position: absolute;right: 5px;top: 5px;text-decoration: underline;font-weight: bold;"-->
+             <!--data-toggle="modal"-->
+             <!--ng-click="question.ck = !question.ck">-->
+            <!--<i >A</i>-->
+        <!--</div>-->
+        <!--<div  ng-if='question.ck==0' id="essay{{question.id}}" style="cursor: text;padding: 10px;border: 1px solid #ccc;min-height: 50px" ng-bind-html="uCanTrust(question.text)">{{question.text}}</div>-->
+        <textarea  ng-if='question.ck==1' class="form-control" id="essay{{question.id}}"  type="text" ckeditor="" custom-options="ckeditorOptions" ng-model="question.text" ng-id="{{question.id}}">{{question.text}}</textarea>
+    </div>
+</div>

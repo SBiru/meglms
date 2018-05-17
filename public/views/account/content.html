@@ -1,0 +1,83 @@
+<div style="  position: relative;">
+    <div class='editor'>
+        <div class="photo_container float-none">
+            <img width="200px" height="200px" src="{{user.data.profile_picture.meta_value}}" ng-if="user.data.profile_picture.meta_value">
+            <div class="no-photo" ng-hide="user.data.profile_picture.meta_value">
+                <span class="fa fa-camera"></span>
+            </div>
+            <div class="top" ng-click="open()" ng-show="canEdit()">
+                Change profile photo
+            </div>
+        </div>
+        <div class="info-form margin-top">
+            <div class="row">
+                <div class="col-sm-8">
+                    <form autocomplete="false">
+                            <div class="input-group input-group-md">
+                            <span class="input-group-addon"><i class=" fa fa-user"></i></span>
+                            <input type="text" id="userFirstName" name="userFirstName" ng-model="user.fname" data-ng-disabled="!canEdit()" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="First Name" required>
+                        </div>
+                        <div class="input-group input-group-md">
+                            <span class="input-group-addon"><i class=" fa fa-user"></i></span>
+                            <input type="text" id="userLastName" name="userLastName" ng-model="user.lname" data-ng-disabled="!canEdit()" class="form-control ng-pristine ng-valid ng-valid-required" placeholder="Last Name" required>
+                        </div>
+                        <div class="input-group input-group-md" >
+                            <span class="input-group-addon"><i class=" fa fa-envelope"></i></span>
+                            <input placeholder="Email" type="email" id="userEmail" name="user.email" data-ng-disabled="!canEdit()" ng-model="user.email" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-phone"></i></span>
+                            <input placeholder="Phone" type="text" id="userPhone" name="user.phone" data-ng-disabled="!canEdit()" ng-model="user.phone" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-map-marker"></i></span>
+                            <input placeholder="Address" type="text" id="userAddress" name="user.address" data-ng-disabled="!canEdit()" ng-model="user.address" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-map-marker"></i></span>
+                            <input placeholder="City" type="text" id="userCity" name="user.city" data-ng-disabled="!canEdit()" ng-model="user.city" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-map-marker"></i></span>
+                            <input placeholder="State" type="text" id="userState" name="user.state" data-ng-disabled="!canEdit()" ng-model="user.state" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+
+
+                        <div class="input-group input-group-md">
+                            <span class="input-group-addon"><i class=" fa fa-globe"></i></span>
+                            <input placeholder="Country" type="text" id="country" name="country"
+                                   data-ng-disabled="!canEdit()" ng-model="user.country"
+                                   class="form-control ng-pristine ng-valid ng-valid-required"
+                                   x-autocompletetype="country"
+                                   autocomplete="false" required>
+                        </div>
+
+                        <div class="input-group input-group-md" ng-show="canEdit()">
+                            <span class="input-group-addon"><i class=" fa fa-lock"></i></span>
+                            <input type="password" name="password" id="password_fake" class="hidden" autocomplete="off" style="display: none;">
+                            <input placeholder="Type new password here or leave blank to keep old password"
+                                   type="password" id="userPassword" ng-model="user.password" autocomplete="new-password"
+                                   class="form-control ng-pristine ng-valid ng-valid-required">
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-clock-o"></i></span>
+                            <input placeholder="Virtual Classroom Hours" type="text" id="vOfficeHours" ng-model="user.data.v_office_hours.meta_value" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-clock-o"></i></span>
+                            <input placeholder="Classroom Hours" type="text" id="OfficeHours" ng-model="user.data.office_hours.meta_value" class="form-control ng-pristine ng-valid ng-valid-required" required>
+                        </div>
+                        <div class="input-group input-group-md" ng-hide="isObserver && !checkRole(['teacher'])">
+                            <span class="input-group-addon"><i class=" fa fa-lock"></i></span>
+                            <input placeholder="Virtual classroom url" type="text" id="officeUrl" name="officeUrl" ng-model="user.data.v_office_url.meta_value" class="form-control ng-pristine ng-valid ng-valid-required">
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>

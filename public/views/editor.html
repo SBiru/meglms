@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+
+
+    <!--<script src="http://cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML"></script>-->
+    <script>
+        MathJax.Hub.Config({
+            skipStartupTypeset: true,
+            messageStyle: "none",
+            "HTML-CSS": {
+                showMathMenu: false
+            }
+        });
+        MathJax.Hub.Configured();
+    </script>
+
+    <!-- MathQuill start -->
+    <link rel="stylesheet" href="/public/js-util/mathquill-0.10.1/mathquill.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/public/js-util/mathquill-0.10.1/mathquill.js"></script>
+    <script>
+        var MQ = MathQuill.getInterface(2);
+    </script>
+    <!-- MathQuill end -->
+
+    <script src="/public/js-util/ckeditor/ckeditor.js?ver=1.0"></script>
+
+    <!-- inject:css -->
+
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+
+<!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+<?php echo $customStyles->createStyleSheet(); ?>
+</head>
+<body ng-controller='PreferenceController' class="editor-body" data-ng-style="{'background-image':backgroundImage()}">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+<!-- bootstrap modal -->
+<div id="basicChatModal" class="chat-window chat-fade" style="right: 10px" aria-labelledby="basicChatModal"
+     aria-hidden="true" ng-controller="ChatBoxController">
+    <div class="chat-window-title" ng-click="collapseToggle()">
+        <div class="close" data-dismiss="modal" aria-hidden="true"></div>
+                <span class="fa fa-comments-o fa-fw chat-window-title-icon">
+                </span>
+        <span class="text">Chatting To {{ chatter.fname }} {{ chatter.lname }}</span>
+    </div>
+    <div id="chatWindowContent" ng-hide="chatCollapsed" class="chat-window-content"
+         style="height: 300px; display: block;">
+        <div class="chat-window-inner-content message-board pm-window">
+            <div class="messages-wrapper" style="height: 240px">
+                <div class="chat-message" ng-repeat="message in messages">
+                    <div class="chat-gravatar-wrapper">
+                        <img class="profile-picture" src="/public/img/chatuserdefault.png">
+                    </div>
+                    <div class="chat-text-wrapper">
+                        <p>{{ message.fname }} {{ message.lname }}<br/>{{ message.created }}</p>
+                        <p>{{ message.message }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window-text-box-wrapper">
+                <textarea ui-keypress="{'enter':'send()'}" class="chat-window-text-box" ng-model="chat_message"
+                          style="overflow: hidden; word-wrap: break-word;height:100%;" rows="3"
+                          placeholder="Type message here and press 'Enter'"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->
+
+
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header margin-left-40">
+            <a data-ng-show="user.org.white_label" class="navbar-brand" href="/" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="margin-top:20px;" data-ng-controller="MoveToUnitController">
+    <div class="row"  ng-controller="NavController">
+
+        <!-- ************************************************************** -->
+        <!-- ************************* SIDEBAR **************************** -->
+        <!-- ************************************************************** -->
+
+        <div id="sidebarofeditor" class="col-sm-3 sidebar" ng-cloak>
+            <div class="row-fluid">
+                <div class="col-xs-12">
+                    <div ng-hide="sidebarCollapsed || $root.windowWidth<768" class="collapse-menu-icon" style="top: -1px;">
+                        <span class="fa fa-list-ul" ng-click="toggleSidebar()" style="cursor:pointer"> </span>
+                    </div>
+                    <div class="dropdown course-dropdown" ng-controller="CourseController" ng-class="{'with-edit-class':showEditClassButton()}">
+
+                        <table style="margin: auto;">
+                            <tr>
+                                <td>
+                                    <select selectize ng-model="currentCourseID"
+                                            style="width:100%"
+                                            ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                                            ng-change="changeCourse(currentCourseID);currentCourseID && $root.windowWidth<768 ?toggleSidebar():''">
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+
+                    <div>
+                        <div ng-show="showEditClassButton()" class="edit-class-icon">
+                            <span class="fa fa-edit" ng-click="openClassEdit();$root.windowWidth<768 ?toggleSidebar():''"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="col-xs-12" ng-if="useSuperUnits" ng-controller="SuperUnitController">
+                    <div class="dropdown course-dropdown with-edit-class" style="padding-top:0" >
+                        <table style="margin: auto;">
+                            <tr>
+                                <td>
+                                    <select selectize ng-model="superUnit.currentUnit"
+                                            style="width:100%"
+                                            ng-options="unit as unit.name for unit in superUnit.units">
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <div ng-show="showEditClassButton()" class="edit-class-icon" style="right:0;padding-top:0 ">
+                            <span><a class="fa fa-plus" href="#/addsuperunit" ng-click="$root.windowWidth<768 ?toggleSidebar():''"></a></span>
+                            <span><a class="fa fa-edit" href="#/editsuperunit/{{superUnit.currentUnit.id}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''"></a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div ng-controller="TeacherInfoMenuController">
+                <?php include(__DIR__ . "/partials/teacher_info.html") ?>
+            </div>
+            <ul class="nav nav-pills course-units-nav"  ng-show="courseInfo.data.unitCount || navData.units.length">
+                <li ng-repeat="unit in navData.units" ng-class="getUnitButtonClass(unit.id)"><a href="#/editunit/{{unit.id}}" ng-click="changeToUnit(unit);$root.windowWidth<768 ?toggleSidebar():''">{{unit.name=='-1'?'Introduction':(unit.tab_name || unit.name)}}</a></li>
+                <li><a href="#/addunit/" ng-click="$root.windowWidth<768 ?toggleSidebar():''"><i class="fa fa-plus"></i></a></li>
+            </ul>
+            <div ng-show="courseInfo.data.unitCount || navData.units.length" ng-if="current_unit_title.length>30" data-toggle="tooltip" data-placement='right' class="sidebar-unit-title"  tooltip="{{current_unit_title}}" >{{current_unit_title}}</div>
+            <div ng-show="courseInfo.data.unitCount || navData.units.length" ng-if="current_unit_title.length<=30"
+                 class="sidebar-unit-title">{{current_unit_title}}</div>
+            <!-- <h5><i>General English Level 3</i></h5> -->
+            <div ng-show="courseInfo.data.unitCount || navData.units.length">
+                <!-- <abn-tree tree-data="navData" expand-level="2"></abn-tree> -->
+                <ul class="nav nav-list nav-pills nav-stacked sidebar-nav">
+                    <li ng-show="current_unit_name==-1 && !hasCourseDescription" style="text-align: center;border-bottom: 1px solid #a1a1a2;">
+                        <a href="#/addcourse_description/{{current_unit_id}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Add Course Description</a>
+                    </li>
+                    <li ng-show="current_unit_id" style="text-align: center;border-bottom: 1px solid #a1a1a2;">
+                        <a href="#/addcontent/{{current_unit_id}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">Add Page</a>
+                        <ul class="list-inline move-here">
+                            <li class="btn btn-sm btn-default"  ng-show="isMoving() " ng-click="moveToPosition(1)">Move here</li>
+                            <li class="btn btn-sm btn-default"  ng-show="isMoving() " ng-click="cancelMoving()">Cancel</li>
+                        </ul>
+                    </li>
+
+                    <li ng-show="current_unit_image_url">
+                        <div style="    max-width: 80%;margin: auto;padding: 15px 0; text-align: center;">
+                            <img src="{{current_unit_image_url}}">
+                        </div>
+                    </li>
+
+                    <li ng-repeat="nav in getPages()" ng-class="editItemClasses(nav)">
+
+                            <div class="tools editor tooltip-relative">
+                                <div class="tool">
+                                    <div class="btn btn-sm btn-default" tooltip="Clone" tooltip-append-to-body="true" tooltip-placement="right" ng-click="clonePage(nav)">
+                                        <span class="fa fa-copy"></span>
+                                    </div>
+                                </div>
+                                <div class="tool">
+                                    <div class="btn btn-sm btn-default" tooltip="Remove" tooltip-append-to-body="true" tooltip-placement="right" ng-click="deletePage(nav.id)">
+                                        <span class="fa fa-trash"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<span class="fa fa-trash" ng-click="deletePage(nav.id)"></span>-->
+                            <a href="#/edit{{nav.layout}}/{{nav.id}}" ng-click="$root.windowWidth<768 ?toggleSidebar():''">
+
+                                <span ng-show="isHeader(nav.id)">
+                                    <i class="fa">&#xf067;</i>&nbsp;
+                                </span>{{nav.label}}<br>{{nav.subtitle}}
+
+                            </a>
+                            <span class="move-arrows" data-ng-click="startMoving(nav.id)" ng-hide="isMoving()">
+                                <i class="fa fa-arrows"></i>
+                            </span>
+                        <div style="clear:both"></div>
+                        <ul class="list-inline move-here">
+                            <li class="btn btn-sm btn-default"  ng-show="isMoving() " ng-click="moveToPosition($index+2)">Move here</li>
+                            <li class="btn btn-sm btn-default"  ng-show="isMoving() " ng-click="cancelMoving()">Cancel</li>
+                        </ul>
+
+                    </li>
+                </ul>
+            </div>
+            <div ng-show="!courseInfo.data.unitCount && !navData.units.length">
+                <ul class="nav nav-list nav-pills nav-stacked">
+                    <li style="text-align: center;">
+                        <a href="#/addunit/">Add Unit</a>
+                    </li>
+                    <li style="text-align: center;">
+                        <a ng-href="#/importCourse/{{courseInfo.course_id}}">Import from file</a>
+                    </li>
+                    <li style="text-align: center;">
+                        <a ng-href="#/cloneCourse/{{courseInfo.course_id}}">Clone course</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- ************************************************************** -->
+        <!-- *********************** MAIN CONTENT ************************* -->
+        <!-- ************************************************************** -->
+        <div class="hide-menu-icon" style="margin-top: 62px;">
+            <div class="collapsed btn btn-xs btn-default" ng-show="sidebarCollapsed || $root.windowWidth<768" ng-click="toggleSidebar()">
+                <span class="fa fa-list-ul" style="cursor:pointer; font-size: 20px;"> </span>
+            </div>
+        </div>
+        <div ng-show="!sidebarCollapsed " ng-click="toggleSidebar()" class="emptydiv"></div>
+        <div ui-view class="col-sm-9 col-sm-offset-3 main" id="main-content-app"></div>
+
+    </div>
+</div>
+
+<!-- TODO: Load Scripts Here -->
+<script>
+    angular.module('app').requires.push('ngCkeditor');
+    angular.module('app').requires.push('selectize2');
+
+</script>
+</div></div></body>
+</html>

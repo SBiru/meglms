@@ -1,0 +1,7 @@
+<nav class="navbar navbar-default" ng-if="!hideToolbar">
+    <div class="container-fluid">
+        <div id="navbar" class="navbar-collapse collapse">
+            <div data-ng-repeat="(tool,toolDirective) in tools" fabric-tool="toolDirective" instance-id="instanceId"></div>
+        </div>
+    </div>
+</nav>

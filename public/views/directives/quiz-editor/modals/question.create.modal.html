@@ -1,0 +1,68 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title"><em>Create New Question in <em>'{{parent_title}}'</em></h4>
+</div>
+<div class="modal-body modallist create-question-div" style="clear: both;">
+    <form role="form">
+
+        <div class="form-group" style="display:none">
+            <label for="modalTitle">Title:</label>
+            <input id="modalTitle" type="text" class="form-control" placeholder="Enter title" ng-model="values.title"
+                   autofocus>
+        </div>
+
+        <div class="form-group pull-left" ng-if="from!='bank'">
+            <label for="modalBank">Create in Bank:</label>
+
+            <select
+                    id="modalBank" class="selectpicker width-100"
+                    style="height: 35px;border-radius: 5px;border-color:#ccc;"
+                    ng-disabled="from=='bank'"
+                    ng-required="true"
+                    ng-model="values.bank_id"
+                    ng-change="detectNewBankSelect()"
+                    ng-options="value.id as value.titleCounter for value in allBanks">
+            </select>
+        </div>
+
+        <div class="form-group pull-left">
+            <label for="modalType" style="margin-left:10px">Type:</label>
+            <select id="modalType"
+                    ng-options="key as questionType.label for (key,questionType) in questionTypes | orderBy:'label'"
+                    ng-model="values.type" ng-change="changeType()">
+
+            </select>
+
+        </div>
+        <div class="clearfix"></div>
+        <hr ng-show="!noshowprompt"/>
+        <edit-question-in-modal type="values.type" ng-if="values.type"></edit-question-in-modal>
+        <div class="form-group" ng-show="!noshowfeedback">
+            <label for="modalFeedback">Feedback:</label>
+            <input type="text" class="form-control" id="modalFeedback" placeholder="Enter feedback"
+                   ng-model="values.feedback">
+            <p class="help-block"><em>*Feedback is optional and will only ever be displayed if activated in the Course
+                Builder</em>
+            </p>
+        </div>
+        <div class="alert alert-danger" role="alert" ng-if="values.error"><strong
+                style="color: red;font-style: italic;">ERROR</strong><span data-ng-bind="values.error"></span></div>
+        <div class="modal-footer" ng-show="values.type!=='matching'">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="ok_Create()" ng-show="values.type !== 'pagebreak'"
+                    data-ng-disabled="!canSave()">Save Question
+            </button>
+            <button type="button" class="btn btn-warning" ng-click="ok_Create()" ng-show="values.type === 'pagebreak'">
+                Add Page Break
+            </button>
+        </div>
+    </form>
+</div>
+
+<script ng-if="values.type!=='matching'">
+    CKEDITOR.config.allowedContent = true;
+    CKEDITOR.config.disableNativeSpellChecker = false;
+</script>
+

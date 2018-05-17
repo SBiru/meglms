@@ -1,0 +1,37 @@
+<table class="tasks">
+    <tr>
+        <td class="task"
+            data-ng-repeat="assignment in getAssignmentsForUnit(unit) track by $index"
+            tooltip-html-unsafe="<p>{{assignment.name}}</p>{{assignment.submittedOn?'<p><b>Submitted:</b> ' + assignment.submittedOn + '</p>': '' }} {{isWaitingGrade(assignment)?'<p>Waiting to be graded</p>':''}}">
+            <div >{{assignment.name}}</div>
+            <table style="font-size:12px ;margin:auto" ng-show="!assignment.isExempt">
+                <tr>
+                    <!--<td ng-show="assignment.show_dates!='0'">-->
+                    <td ng-if="assignment.due_date && !isWaitingGrade(assignment)">
+                        {{moment(assignment.due_date).format('D MMM')}}
+                    </td>
+
+                    <!--<td ng-show="assignment.show_grades!='0'">-->
+                    <td>
+                        <strong ng-bind="getScore(assignment)" ng-hide="isWaitingGrade(assignment)" class="pointer" ng-click="openGradeModal(assignment,unit)"></strong>
+                    </td>
+                    <td >
+                        <span class="fa fa-comment" ng-show="assignment.score && (assignment.hasQuizFeedback || assignment.postFeedbackId) " style="margin-left:5px;float:right;cursor:pointer" ng-click="openFeedback(assignment)"></span>
+                    </td>
+                    <td >
+                        <span class="fa fa-table" ng-show="assignment.rubricId" style="margin-left:5px;float:right;cursor:pointer" ng-click="openRubric(assignment)"></span>
+                    </td>
+                </tr>
+            </table>
+            <div ng-show="assignment.isExempt">
+                <i class="fa fa-flag"></i>
+                <span ng-bind="assignment.isCredited?'('+assignment.defaultExemptPoints+'%)':'Exempt'"></span>
+            </div>
+            <div ng-show="isWaitingGrade(assignment)">
+                <i class="fa fa-hourglass"></i> Waiting to be graded
+            </div>
+
+        </td>
+
+    </tr>
+</table>

@@ -1,0 +1,73 @@
+<div ng-show="student.courseLength!==undefined" style="margin: 20px 0">
+    Current Course Length in School Days:
+    <input type="text" data-ng-model="student.courseLength" ng-change="student.editingCourseLength=true" class="ng-pristine ng-valid ng-valid-number" style="text-align: center;width: 50px;">
+    <button class="btn btn-primary btn-sm" ng-disabled="student.savingCourseLength" ng-click="updateCourseDuration()" style="padding: 3px 10px;margin-top: -3px;">
+        <i class="fa fa-spinner fa-pulse" ng-show="student.savingCourseLength"></i> Save
+    </button>
+</div>
+<div class="col-xs-12">
+    <div class="panel panel-warning units" data-ng-repeat="unit in units | orderBy:orderPages" ng-if="unit.pagegroups">
+        <div class="panel-heading pointer" ng-click="toggleUnit(unit)">
+            <span class="fa" ng-class="unit.opened?'fa-minus-square':'fa-plus-square'"></span>
+            {{unit.description}} - Total: <span>{{totalForUnit(unit)}}</span>
+            <span class="fa fa-spinner fa-pulse" ng-show="unit.loading"></span>
+        </div>
+        <div class="panel-body" ng-if="unit.opened">
+            <div data-ng-repeat="group in unit.pagegroups" ng-init="finishLoadingUnit($last,unit)">
+                <table class="table table-duedates" data-ng-if="$first && !group.id">
+                    <tr>
+                        <th class="duedate-pagename"></th>
+                        <th>Duration</th>
+                        <th>Calculated due date</th>
+                        <th>Manual due date</th>
+                    </tr>
+                </table>
+                <div ng-if="group.id">
+                    <div class="panel panel-default pageGroup" >
+                        <div class="panel-heading page">
+                            <div class="col-xs-6 pagename">{{group.name}} - Total: <span>{{totalForGroup(group)}}</span></div>
+                        </div>
+                        <table class="table table-duedates">
+                            <tr>
+                                <th></th>
+                                <th>Duration</th>
+                                <th>Calculated due date</th>
+                                <th>Manual due date</th>
+                            </tr>
+                            <tbody data-ng-include="'/pages.html'"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div ng-if="!group.id">
+                    <table class="table table-duedates">
+                        <tbody data-ng-include="'/pages.html'"></tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <async-button color-style="primary" text="Save" flash-text="Saved!" loading="saving" ng-click="save()" disabled="!canSave()"></async-button>
+</div>
+
+<script type="text/ng-template" id="/pages.html">
+        <tr data-ng-repeat="page in group.pages">
+            <td ng-bind="page.name" class="duedate-pagename"></td>
+            <td><input style="width: 50px" type="number" data-ng-model="page.lesson_duration" ng-change="page.editing=true;recalculate(unit)"></td>
+            <td ng-bind="formatedDueDate(page)"></td>
+            <td ng-controller="DueDatesDatepickerController">
+                <p class="input-group">
+                    <input  ng-change="page.editing=true" type="text" class="form-control pull-left" datepicker-popup="{{ format }}" ng-model="page.manual_due_date" is-open="opened" ng-required="true" close-text="Close"  datepicker-options="dateOptions"/>
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default pull-right" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
+            </td>
+            <td ng-show="page.editing">
+                <async-button color-style="primary" text="Save" flash-text="Saved!" loading="saving" ng-click="save()" disabled="!canSave()"></async-button>
+            </td>
+        </tr>
+</script>

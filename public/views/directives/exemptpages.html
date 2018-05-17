@@ -1,0 +1,53 @@
+<div class="alert alert-danger" ng-show="error" ng-bind="error"></div>
+<div ng-show="!error">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3><small>Click on the names of the pages to exempt or unexempt the student from it. Then click Save to commit the changes</small></h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="heading">Assignments in this class</div>
+			<div class="filter-box">
+				<input ng-model="pageFilter" placeholder="Filter by ..." autofocus />
+				<i class="fa fa-search"></i>
+			</div>
+			<div class="students-list">
+				<div ng-repeat="page in pages | filter:pageFilter" >
+					<div ng-bind="page.name" ng-click="exempt(page)" ng-class="{'disabled':isExempt(page),'pagegroup':page.isPageGroup}" class="pagename"></div>
+					<div ng-repeat="page in page.pages | filter:pageFilter" ng-click="exempt(page)" ng-class="{'disabled':isExempt(page)}" class="child-page">
+						<div ng-bind="page.name" style="padding-left: 20px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="heading">
+				<span ng-bind="credit?'Credited activities':'Exempt pages'"></span>
+			</div>
+			<div class="filter-box">
+				<input ng-model="exemptFilter" placeholder="Filter by ..." />
+				<i class="fa fa-search"></i>
+			</div>
+			<div class="students-list exempt-list">
+				<div ng-repeat="page in exemptPages | filter:exemptFilter" >
+					<div  ng-click="unexempt(page)" ng-class="{'pagegroup':page.isPageGroup}" class="pagename">
+						<span ng-bind="page.name"></span>
+					</div>
+					<div ng-repeat="page in page.pages | filter:exemptFilter" ng-click="unexempt(page)" class="child-page">
+						<div ng-bind="page.name" style="padding-left: 20px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<button class="btn btn-warning btn-sm" ng-click="exemptAll()">All</button>
+			<button class="btn btn-warning btn-sm" ng-click="unexemptAll()">None</button>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button class="btn btn-info btn-sm" ng-click="save()" ng-disabled="!canSave"><i class="fa fa-spinner fa-pulse" ng-show="saving"></i> Save</button>
+		</div>
+	</div>
+</div>

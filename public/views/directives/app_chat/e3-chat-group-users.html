@@ -1,0 +1,16 @@
+<div ng-show="group.users.length">
+    <div class="collapsable-header" ng-click="closed=!closed">
+        <span class="fa" style="color:#1975c0" ng-class="closed?'fa-plus-square-o':'fa-minus-square-o'"></span>
+        {{group.title}} ({{group.users.length}})
+    </div>
+    <div ng-hide="closed">
+        <div data-ng-repeat="user in group.users|filter:filterUser|orderBy:['lastName','firstName']|orderByActive track by $index" ng-if="!hideUser(user)" ng-class="{hovered:parent.hoveredUser==user,'has-picture':!hidePicture}" class="pointer user-online" ng-click="parent.openChatBoxWith(user)" ng-mouseover="parent.hoverUser(user,group.hideDetails)" ng-mouseleave="parent.leaveUser(user)">
+            <img style="width: 32px;height: 32px;" src="{{user.profilePicture}}" ng-hide="hidePicture">
+            <span ng-class="{'text-red':isMissingAttendance(user.id)}"
+                    ng-style="{'font-weight':isActive(user)==1?'bold':''}">{{user.lastName}}<span ng-if="user.lastName">, </span>{{user.firstName}}</span>
+            <span class="fa fa-circle online-icon" ng-hide="threads.unreadThreads[user.room] || group.title=='Groups' || !parent.users.onlineStatus[user.id].isOnline"></span>
+            <span class="fa fa-circle offline-icon" ng-show="!threads.unreadThreads[user.room]  && !parent.users.onlineStatus[user.id].isOnline && group.title!='Groups' "></span>
+            <span class="unread-messages-user-count" ng-show="threads.unreadThreads[user.room]" ng-bind="threads.unreadThreads[user.room]"></span>
+        </div>
+    </div>
+</div>

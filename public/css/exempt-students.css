@@ -1,0 +1,74 @@
+exempt-students .heading , exempt-pages .heading {
+	color: #888;
+	font-variant: small-caps;
+	font-size: 1.25em;
+}
+exempt-students .filter-box , exempt-pages .filter-box {
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	padding-left: 10px;
+	padding-right: 25px;
+	position: relative;
+}
+exempt-students .filter-box i , exempt-pages .filter-box i {
+	padding: 3px 6px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+exempt-students .filter-box input , exempt-pages .filter-box input {
+	border: 0px;
+	font-style: italic;
+	font-weight: normal;
+	outline: none;
+	width: 100%;
+}
+exempt-students .students-list , exempt-pages .students-list {
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	font-weight: normal;
+	max-height: 300px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	overflow-y: auto;
+	padding: 10px;
+}
+exempt-students .students-list > div , exempt-pages .students-list .child-page,exempt-pages .students-list .pagename  {
+	background: #f2f8fa;
+	cursor: pointer;
+	margin: 1px 0px;
+	padding: 5px;
+}
+exempt-students .students-list > div.disabled , exempt-pages .students-list .child-page.disabled,exempt-pages .students-list .pagename.disabled  {
+	background: #f9f9f9 !important;
+	color: #aaa !important;
+	cursor: auto;
+}
+exempt-pages .students-list .pagegroup{
+	font-weight: 900;
+}
+exempt-pages .students-list .pagegroup .child-page{
+	font-weight: 500;
+}
+exempt-students .students-list > div:not(.disabled):hover , exempt-pages .students-list  .child-page:not(.disabled):hover {
+	background: #e0eef3;
+}
+exempt-pages .students-list  .pagename:not(.disabled):hover {
+	background: #e0eef3;
+}
+exempt-pages .students-list  .pagegroup:not(.disabled):hover ~ .child-page{
+	background: #e0eef3;
+}
+exempt-pages .exempt-list  .pagegroup{
+	display: table;
+	padding: 5px;
+	width: 100%;
+}
+exempt-pages .exempt-list  .pagegroup span{
+	display: table-cell;
+}
+exempt-pages .exempt-list  .pagegroup span.all-pages-box{
+	padding: 5px;
+	width: 90px;
+	vertical-align: middle;
+}

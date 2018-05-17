@@ -1,0 +1,11 @@
+<div ng-switch="by">
+    <div ng-switch-when="alphabet">
+        <alphabet-filter ng-model="selected.filter"></alphabet-filter>
+    </div>
+    <div ng-switch-when="author">
+        <glossary-tags-author-filter ng-model="selected.filter" org-id="orgId"></glossary-tags-author-filter>
+    </div>
+    <div ng-switch-when="date">
+        <glossary-tags-date-filter ng-model="selected.filter" org-id="orgId"></glossary-tags-date-filter>
+    </div>
+</div>

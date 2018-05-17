@@ -1,0 +1,35 @@
+<div class="forum-actions">
+    <a ui-sref="forum.topics({pageId:$state.params.contentId})">Back to topics</a>
+    <div class="forum-topic-search search-wrapper" >
+        <input placeholder="Search" ng-model="vc.searchTerm">
+        <i class="fa fa-search"></i>
+    </div>
+</div>
+<table class="table forum-table">
+    <tr class="forum-table-header">
+        <td>
+            NAME
+        </td>
+        <td>
+            POSTS
+        </td>
+        <td >
+            REPLIES
+        </td>
+        <td>
+            LAST POST
+        </td>
+    </tr>
+    <tr class="forum-table-item " data-ng-repeat="user in vc.participants|filter:vc.searchTerm"
+        ng-click="vc.openUserDetailsModal(user)"
+    >
+        <td ng-bind="user.userName" style="font-weight: normal !important;" class="forum-table-item-title"></td>
+        <td ng-bind="user.posts" class="forum-table-item-bold "></td>
+        <td ng-bind="user.replies" class="forum-table-item-bold "></td>
+        <td ng-bind="user.last_post"></td>
+    </tr>
+</table>
+<script type="text/ng-template" id="forum-user-details-modal.html">
+    <forum-student-box ng-if="student" dismiss="$dismiss" student="student" page-info="pageInfo" is-archive="true"
+                       student-view="true"/>
+</script>

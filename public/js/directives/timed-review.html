@@ -1,0 +1,249 @@
+﻿﻿<script type="text/javascript">
+	$(document).ready(function () {
+
+		/*--------- Begin Modal Opacity Control ---------*/
+
+		$('body').on('show.bs.modal', '.modal', function () {
+			$('body').addClass('modal-backdrop-' + $(this).data('opacity'));
+		});
+
+		$('body').on('hidden.bs.modal', '.modal', function () {
+			$('body').removeClass('modal-backdrop-' + $(this).data('opacity'));
+		});
+
+		/*--------- End Modal Opacity Control ---------*/
+	});
+</script>
+<style>
+	.timed-review-container
+	{
+		display:table;
+		height:100%;
+		width: 100%;
+		margin-top: -50px;
+		padding-top: 50px;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+	.timed-review-row
+	{
+		height: 100%;
+		display: table-row;
+	}
+	.no-float {
+		float: none; /* thanks baxabbit */
+	}
+	.timed-review-col{
+		display: table-cell !important;
+	}
+
+</style>
+<!--<button type="button" ng-hide="allow_upload_post" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#basicModal" ng-click="newPost()">{{ preference.navs.new_post.translation }}</button>-->
+
+ <!-- bootstrap modal -->
+<div class="modal-header">
+	<!--<button type="button" class="close" ng-click="close()">&times;</button> -->
+	<button type="button" style="margin-top: -24px" class="close" ng-click="closeActivePrompt()">&times;</button>
+	<h4 class="modal-title" id="myModalLabel"></h4>
+</div>
+<div class="modal-body">
+	<!-- Nav tabs -->
+	<ul class="nav nav-tabs" role="tablist" ng-show="allow_video_post">
+		<li class="active" ng-hide="is_mobile"><a href="#video_reply_tab" role="tab" data-toggle="tab">{{ preference.navs.webcam.translation }}</a></li>
+		<li ng-class="{'active': is_mobile}" ng-show="allow_video_post">
+			<a href="#upload_reply_tab" role="tab" data-toggle="tab">{{ preference.navs.uploadvideo.translation }}</a>
+		</li>
+		<li ng-show="allow_upload_post" ng-class="{active: allow_upload_post}" class='active'>
+			<a href="#file_upload_reply_tab" role="tab" data-toggle="tab" onclick="$('#file_upload_reply_tab').tab('show');;">Upload File</a>
+		</li>
+	</ul>
+
+	<!-- Tab panes -->
+	<div class="tab-content" ng-class="{mobile:isMobile}">
+		<div class="tab-pane active" ng-hide="is_mobile" id="video_reply_tab">
+
+			<!-- Beginning Of Flash Video Recorder -->
+			<div style="margin-top: 10px;">
+				<div align="center">
+					<div class="panel panel-default">
+						<div class="panel-heading" ng-show="started&&currentType!='end'" style="text-align: left">
+
+							<h5 style="display:inline;" ng-show="started&&currentType!='end' && !isInformation">Question {{currentQuestionPromptPosition}} out of {{totalQuestionPrompts}} </h5>
+							<!--<h5 style="display:inline;" ng-show="started&&currentType=='end'">All Done! </h5>
+							<span class="label label-info" ng-show="currentType=='break'&&started">Break</span>
+							<span class="label label-default" ng-show="currentType=='text'&&started">Text</span>
+							<span class="label label-primary" ng-show="currentType=='audio'&&started">Audio</span>
+							<span class="label label-primary" ng-show="currentType=='video'&&started">Video</span>
+							<span class="label label-success" ng-show="currentType=='end'&&started">Completed</span>-->
+						</div>
+						<div class="panel-body">
+							<div ng-bind-html="videoWidget" id="videoWidget"
+								 style="position: absolute;z-index:10000;width: 272px; height:224px;"
+								 ng-style="videoWidgetStyle()"></div>
+							<div id="splash" class="row" ng-show="currentType=='validateWebcam'">
+								<div class="col-xs-12 col-md-5 vcenter timed-review-inst" style="padding: 0">
+									<p ng-show="double_check_cam_audio" style="font-size:22px;text-align: justify">
+										First we need to make sure your webcam and microphone are working.
+										Please click on "Record" to record a demo video.
+									</p>
+									<p ng-show="!double_check_cam_audio" style="font-size:22px;text-align: justify">
+										First we need to make sure your webcam is working
+										It might take a few seconds for your picture to appear.
+									</p>
+								</div>
+								<div class="col-xs-12 col-md-5 vcenter">
+									<div ng-show="recordingType==='webrtc' && !videoObject.isStreamReady" style="font-size: 16px" class="loading-stream">Preparing your webcam <span class="fa fa-spinner fa-pulse"></span></div>
+									<div ng-show="recordingType!=='webrtc' || videoObject.isStreamReady" style="position: relative">
+										<div id="videoWidgetContainer" style="width: 272px; height:224px;"></div>
+										<flash-widget file-name="validateCamId" ng-if="currentType=='validateWebcam' && recordingType!=='webrtc' && double_check_cam_audio"></flash-widget>
+										<div class="row" style="margin-top:20px">
+											<div class="col-xs-12">
+												<!--<div>Time left:</div>-->
+												<!--<div style="font-size: 25px">{{validateCamTimeLeft || 0}} seconds</div>-->
+												<div ng-click="recordWebcam()" ng-if="double_check_cam_audio" ng-bind-html="validateCamBtn"></div>
+												<span font-size="17px"  ng-show="!double_check_cam_audio">Do you see your picture? <br></span>
+												<span font-size="17px" ng-show="double_check_cam_audio && !validateCamRecording">Can you see your picture and hear your voice?</span>
+												<button class="btn btn-success btn-post" ng-click="confirmWebcamIsWorking()"
+														ng-show="!double_check_cam_audio || (double_check_cam_audio && !validateCamRecording)">Yes</button>
+												<!--<button class="btn btn-primary" ng-click="confirmWebcamIsWorking()" ng-show="double_check_cam_audio && !validateCamRecording">Yes</button>-->
+												<button class="btn btn-default" ng-click="notWorking()" ng-show="!double_check_cam_audio || (double_check_cam_audio && !validateCamRecording)">No</button>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div id="instructions" class="time row" ng-show="currentType=='instructions'">
+								<div class="col-xs-12">
+									<div class="panel">
+										<div class="panel-body">
+											<div bind-html-compile="instructions"></div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12">
+									<span style="font-size: 20px;margin-right: 10%;">When you are ready, click START</span>
+									<button class="btn btn-lg btn-success btn-post" ng-click="beginTimedReview()"
+											ng-show="!started" ng-disabled="!canBegin()">Start</button>
+								</div>
+							</div>
+							<div id="prompt"class="timed-review-container" ng-show="started">
+								<div  class="timed-review-row">
+									<div class="timed-review-col col-xs-9 no-float" style="vertical-align: top">
+										<div ng-show="loadingAudio" style="font-size: 16px;margin-top: 30px"> Loading audio...</div>
+										<div class="" ng-show="(currentText || currentType=='video') && !loadingAudio">
+											<div class="">
+												<div ng-show="currentType=='audio' || currentType=='text' || currentType=='break'" style="text-align: left;"><p data-ng-bind-html="trustAsHtml(currentText)"></p></div>
+												<div  ng-if="currentType=='video'">
+													<p data-ng-bind-html="trustAsHtml(currentText)" ng-show="currentText"></p>
+													<timed-review-video current-video-file="currentVideoFile" position="currentPromptPosition"
+																		id="prompt-video"
+																		on-load-done="resolveVideoLoadingPromise"></timed-review-video>
+												</div>
+
+											</div>
+										</div>
+									</div>
+									<div class="timed-review-col col-xs-3 no-float" style="height: 100%;position: relative">
+
+										<div class="timed-review-row">
+											<div id="videoWidgetContainer2" style="width: 272px; height:224px;"></div>
+										</div>
+										<div class="timed-review-container">
+											<div class="timed-review-row">
+												<div class="" style="margin-top: 20px;font-size: 17px;" ng-hide="loadingVideo || loadingAudio">
+													<span ng-show="recordingTimer == true" >
+															<div style="color: red">Recording: </div>
+															 <span class="fa fa-circle blink" ></span><span>  {{recordingTime}}</span>
+														</span>
+													<span ng-show="prepareTimeLeft > 0 && currentType!='end'" >
+															<div ng-show="!isInformation">Begin response in:</div>
+															<div ng-show="isInformation">Next activity beings in:</div>
+															<div style="font-size: 25px">{{prepareTimeLeft}} seconds</div>
+														</span>
+														<span ng-show="timerActive&&(timeLimitActive==true) && currentType!='break' && (prepareTimeLeft==0 || prepareTimeLeft==null ) ">
+															<div style="color: red">Recording: </div>
+															<span  class="fa fa-circle blink" ></span>  <span ng-bind="secondsToTimeString(answerTimeLeft)"></span>
+														</span>
+														<span ng-show="currentType=='break'&&started">
+															<div>Time to next question:</div>
+															<div style="font-size: 25px">{{pauseTimeLeft}} seconds</div>
+														</span>
+													<div
+															style="position: absolute;text-align: center;left: 50%;transform: translateX(-50%);margin-top: 20px" class="next-button">
+														<button
+																class="btn btn-success btn-lg btn-post" ng-show="started&&(currentType!='break'&&currentType!='end' ) && (!isInformation || prepareTimeLeft==0 )" ng-click="nextQuestion()">
+															<span id="buttonspan" data-ng-bind="getButtonName()" ></span>
+															<span class="glyphicon glyphicon-chevron-right"></span>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row" ng-show="currentType=='break'&&started">
+								<!--<div class="col-md-2">Pause</div>-->
+							</div>
+							<div class="vcenter" style="margin-top: -400px;" ng-show="currentType=='end'&&started && !submitted && !error">
+								<i class="fa fa-cloud-upload" style="font-size: 110px; opacity: 0.2"></i><br>
+								<label style="font-size: 20px">Please Wait</label><br><br><br>
+								<p style="text-align: left;font-size: 16px">We're uploading your video responses now.<br>
+								Please do not leave this page.....</p>
+							</div>
+							<div class="row" ng-show="error">Sorry, something went wrong</div>
+							<div class="row" ng-show="currentType=='end'&&started && submitted">
+								<div class="col-md-8"><blockquote><p> Your Post has been saved! </p></blockquote></div>
+								<!--<button class="btn btn-info" ng-click="play()">Play</button>-->
+							</div>
+						</div>
+					</div>
+
+
+
+
+				</div>
+
+			</div>
+			<!-- End Of Flash Video Recorder -->
+
+
+		</div>
+		<div ng-class="{'tab-pane': true, 'active': is_mobile}" id="upload_reply_tab">
+			<div style="margin-top: 10px;">
+				<input type="file" ng-file-select="onFileSelect($files)">
+				<br />
+				<div ng-show="is_uploading">
+					<span>Uploaded {{ progress_upload }}%</span>
+					<div class="file-upload-progress-container" style="width:300px;">
+						<div class="progress progress-striped active">
+							<div class="progress-bar" style="width: 0%;"></div>
+						</div>
+					</div>
+				</div>
+				<div id="bottompart">
+					<!--<div align="center">
+                            <input id="private_video_file" type="checkbox" ng-model="check_is_private" />&nbsp;<label for="private_video_file">Make Private</label>
+                    </div>-->
+					<p align="center">If necessary, add a text comment below. <br>Click submit when you are finished.</p>
+				</div>
+				<div align="center">
+					<textarea ng-disabled="is_uploading" id="upload_comments" name="upload_comments" ng-model="video_upload_comment" cols="35" rows="6" placeholder="Type Message Here"></textarea>
+					<button ng-disabled="is_uploading" ng-click="uploadPost()">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- End Tab panes -->
+
+
+
+
+</div>
+
+<!--End Basic Boot Strap Modal-->
+
+
+

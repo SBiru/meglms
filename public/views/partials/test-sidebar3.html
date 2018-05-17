@@ -1,0 +1,200 @@
+<style>
+    .unit-button-inactive,.sidebar-nav-item {
+        background-color: #f3f3f4;
+        color: #428bca !important;
+    }
+    .unit-button-active a,.sidebar-nav-item.active {
+        color: #fff;
+        background-color: #428bca !important;
+        position: relative;
+    }
+
+    .sidebar-nav-item.active a{
+        text-decoration: none;
+        color: #fff;
+    }
+
+
+    .menu-table{
+        margin-bottom: 15px;
+        border-spacing: 4px 0;
+    }
+    .menu-table td{
+        width: 25%;
+    }
+    .top-nav-menu .table-bordered{
+        border: none;
+        border-collapse: separate;
+    }
+    .top-nav-menu td{
+        border-radius: 4px;
+        border:none !important;
+    }
+
+</style>
+<script>
+    window.calculateWidth = function(numberOfCols){
+        return 100/numberOfCols + '%'
+    }
+</script>
+<div class="row-fluid" style="padding-top: 15px;">
+    <div class="col-xs-4">
+        <div class="dropdown course-dropdown" ng-controller="CourseController" ng-class="{'with-edit-class':showEditClassButton()}">
+            <table style="margin: auto;" >
+                <tr>
+                    <td>
+                        <select selectize ng-model="currentCourseID"
+                                style="width:100%"
+                                ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                                ng-change="changeCourse(currentCourseID)">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div  ng-if="useSuperUnits" ng-hide="hideFromStudent" ng-controller="SuperUnitController">
+                <div class="dropdown course-dropdown" style="padding-top:0">
+                    <table style="margin: auto;">
+                        <tr>
+                            <td>
+                                <select selectize ng-model="superUnit.currentUnit"
+                                        style="width:100%"
+                                        ng-options="unit as unit.name for unit in superUnit.units | orderBy:'position'">
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xs-4">
+        <div class="progress progressV2" ng-controller="ProgressBarController" ng-show="ProgressBarControllerNo === false">
+        <span class="avg-grade-wrapper" ng-show="class.show_grades==1">
+            <span class="grade-text" ng-bind="gradeText()"></span>
+            <span class="avg-grade" ng-bind="formatGrade()"></span>
+            <span class="grade-text secondary" ng-show="showSecondaryGrade()"> Current grade: <span style="font-weight:300" ng-bind="secondaryGrade()"></span></span>
+        </span>
+        <span class="progress-val-wrapper" ng-class="{'full-width':class.show_grades==0}">
+            <span class="progress-val">Completed: {{progress_perc}}%</span>
+        </span>
+        <span class="progress-bar" ng-class="{'full-width':class.show_grades==0}">
+
+            <span class="progress-in" ng-style="{width: progress_perc+'%',background: barBackground()}"></span>
+            <span class="expected-tasks"  ng-show="shouldUseCustomProgressBar()" ng-style="{left: progressReport.percExpectedTasks+'%'}"></span>
+        </span>
+        <span class="expected-current-progress" ng-show="shouldUseCustomProgressBar()">
+            <span class="expected-progress">Expected: {{progressReport.percExpectedTasks}}%</span>
+            <span class="current-progress"> <span ng-class="currentProgressVsExpected()<0?'text-danger':'text-success'" ng-bind="currentProgressText()"></span></span>
+        </span>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div ng-controller="TeacherInfoMenuController">
+            <div  ng-if="me.data.show_for_student.meta_value">
+                <div data-ng-include="'/public/views/partials/teacher_info_horizontal.html?v=2'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="row-fluid" style="padding: 0 20px;">
+        <div class="col-sm-4">
+            <ul class="nav nav-list nav-pills nav-stacked sidebar-nav">
+                <li ng-repeat="unit in navData.units track by $index"
+                    class="tooltip-relative"
+                    ng-class="getUnitButtonClass(unit.id)"
+                        >
+                    <a
+                            style="float:left; width:100%; border-radius: 0px;"
+                            ng-click="changeToUnit(unit.id)"
+                            >
+                        {{unit.description}}
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <ul class="nav nav-list nav-pills nav-stacked sidebar-nav">
+                <li ng-repeat="nav in getPages() track by $index"
+                    ng-switch="isExternalLink(nav.id)"
+                    ng-class="navItemClasses(nav,$index)"
+                    ng-show="nav.header_id==0 && !isActivityHidden(nav.id)"
+                    class="tooltip-relative"
+                        >
+                    <a ng-href="{{getHref(nav,$index)}}"
+                       style="float:left; width:100%; border-radius: 0px;"
+                       ng-click="expandHeader2(nav.id, $event,$index)"
+                       ng-switch-when="false"
+                       ng-class="sidebarItemClass(nav.id)" ng-attr-id="header-{{nav.id}}">
+                        <!--<span ng-hide="isItemHeader(nav)" style="margin-right: 8px; float: left;">-->
+                        <!--<img ng-src="/public/img/{{nav.icon}}" height="18px" width="18px"/>-->
+                        <!--</span>-->
+                    <span ng-show="isItemHeader(nav)" ng-switch="isCurrentHeader(nav.id)"  style="margin-right: 8px; margin-left: -25px; float: left;">
+                        <i ng-switch-when="true" class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf147;</i>
+                        <i ng-switch-default class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf196;</i>
+                    </span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="isEnglishSelected()">{{nav.label}}</span>
+
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="nav.isExempt" class="exempt">(Exempt)</span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-hide="isEnglishSelected()">{{nav.subtitle}}</span>
+                    <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox" ng-hide="hideBox(nav)">
+                        <span ng-show="showCheckMark(nav)" style=""><i class="fa fa-check sidebar-checkbox-icon" ng-class="{'exempt':nav.isExempt}"></i></span>
+                        <span ng-show="showGoldenStar(nav)" ><i class="fa fa-star sidebar-checkbox-icon" style="color:gold"></i></span>
+                        <span ng-if="showWaitingGrade(nav)" tooltip="Waiting for feedback" tooltip-append-to-body="true" tooltip-placement="bottom" class="sidebar-checkbox-icon submitted-icon">--</span>
+                    </span>
+                    <span ng-hide="isItemHeader(nav)" ng-class="taskStatusTextWrapperClass">
+                        <span class="grade" ng-click="openFeedback(nav)" ng-if="showGrade(nav)" ng-bind="formatGrade(nav)" ng-class="getGradeOverall(nav)" tooltip="{{nav.hasFeedback?'Show feedback':''}}"></span>
+                        <span ng-if="showDate(nav)" ng-bind="formatDate(nav)" tooltip="Due Date" tooltip-append-to-body="true" tooltip-placement="bottom"></span>
+
+                    </span>
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <ul class="nav nav-list nav-pills nav-stacked sidebar-nav">
+                <li ng-repeat="nav in subPages track by $index"
+                    ng-switch="isExternalLink(nav.id)"
+                    ng-class="navItemClasses(nav,$index)"
+                    ng-show="isItemExpanded(nav) && !isActivityHidden(nav.id)"
+                    class="tooltip-relative"
+                        >
+                    <a ng-href="{{getHref(nav,$index)}}"
+                       style="float:left; width:100%; border-radius: 0px;"
+                       ng-click="expandHeader(nav.id, $event,$index)"
+                       ng-switch-when="false"
+                       ng-class="sidebarItemClass(nav.id)" ng-attr-id="header-{{nav.id}}">
+                        <!--<span ng-hide="isItemHeader(nav)" style="margin-right: 8px; float: left;">-->
+                        <!--<img ng-src="/public/img/{{nav.icon}}" height="18px" width="18px"/>-->
+                        <!--</span>-->
+                    <span ng-show="isItemHeader(nav)" ng-switch="isCurrentHeader(nav.id)"  style="margin-right: 8px; margin-left: -25px; float: left;">
+                        <i ng-switch-when="true" class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf147;</i>
+                        <i ng-switch-default class="fa" ng-attr-id="header-symbol-{{nav.id}}">&#xf196;</i>
+                    </span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="isEnglishSelected()">{{nav.label}}</span>
+
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-show="nav.isExempt" class="exempt">(Exempt)</span>
+                        <span ng-class="{'text-with-edit':showEditButton()}" ng-hide="isEnglishSelected()">{{nav.subtitle}}</span>
+                    <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox" ng-hide="hideBox(nav)">
+                        <span ng-show="showCheckMark(nav)" style=""><i class="fa fa-check sidebar-checkbox-icon" ng-class="{'exempt':nav.isExempt}"></i></span>
+                        <span ng-show="showGoldenStar(nav)" ><i class="fa fa-star sidebar-checkbox-icon" style="color:gold"></i></span>
+                        <span ng-if="showWaitingGrade(nav)" tooltip="Waiting for feedback" tooltip-append-to-body="true" tooltip-placement="bottom" class="sidebar-checkbox-icon submitted-icon">--</span>
+                    </span>
+                    <span ng-hide="isItemHeader(nav)" ng-class="taskStatusTextWrapperClass">
+                        <span class="grade" ng-click="openFeedback(nav)" ng-if="showGrade(nav)" ng-bind="formatGrade(nav)" ng-class="getGradeOverall(nav)" tooltip="{{nav.hasFeedback?'Show feedback':''}}"></span>
+                        <span ng-if="showDate(nav)" ng-bind="formatDate(nav)" tooltip="Due Date" tooltip-append-to-body="true" tooltip-placement="bottom"></span>
+
+                    </span>
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
+</div>

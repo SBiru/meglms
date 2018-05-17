@@ -1,0 +1,140 @@
+﻿<h3 class="text-center" ng-bind="$root.preference.navs.flashitaudio_instruction.translation"><!--<a href=""><span class="pull-right"><i class="fa fa-cog"></i> option</span></a> --> </h3>
+<div class="test-skill-main">
+	<div class="row">
+		<form class="seeitandwrite" novalidate="novalidate" id="speedflash ">
+
+
+			<div class="col-md-8">
+				<div class="modal-content col-md-12" ng-show="!flashItGameStarted">
+					<div class="row">
+						<!--<div class="col-md-4">Game Speed:</div>-->
+						<!--<div class="col-md-4 text-center" ng-bind="$root.preference.navs.flashit_gametype.translation"></div>-->
+					</div>
+					<div class="row">
+						<!--
+							<div class="col-md-4">
+
+								<span class="label label-default">Fast</span>
+								<input id="flashitModelValue" type="range" ng-model="flashStartTime" min="{{flashStartSpeedSlide.min}}" step="{{flashStartSpeedSlide.step}}" max="{{flashStartSpeedSlide.max}}" tooltip="{{flashStartSpeedSlide.tooltip}}" formater="formaterFn(flashStartTime)" />
+								<span class="label label-default">Slow</span>
+								<span id="flashitSecondsDisplay" class="center-block">{{flashStartTime}} Seconds</span>
+
+							</div>
+						-->
+						<div class="col-md-4">
+
+							<!--
+							<toggle-switch ng-model="flashLanguageFlip"
+										   on-label={{$root.preference.navs.flashit_english.translation}}
+										   off-label={{$root.preference.navs.flashit_mylanguage.translation}}>
+								<toggle-switch>
+								-->
+
+						</div>
+
+
+					</div>
+					<button id="flashitStartOverFinished" class="btn btn-success pull-right center-block" ng-click="beginFlashItGame(this)">{{$root.preference.navs.writeit_begingame.translation}}</button>
+				</div>
+
+				<div class="modal-content col-md-12 flashitHeaderWord" ng-show="flashItGameStarted">
+					<div class="row">
+						<!--
+						<div class="col-md-12">
+							<progressbar value="flashitQuestionProgress" type="{{type}}"></progressbar>
+							-->
+						<!--<span ng-hide="(bar.value <= 30)&&($index!=0)">{{$index}}%</span><-->
+						<!--<progress><bar ng-repeat="bar in stacked track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>-->
+						<!--</div>-->
+
+					</div>
+					<div class="row">
+						<div class="text-center col-md-12">
+							<div ng-hide="flashitShowAnswerFeedback" class="hide-fade ">
+								<img id="flashitAnswerFeedbackImage" class="img-responsive" ng-src="/public/img/{{flashitAnswerFlashing}}" />
+							</div>
+
+							<h1 ng-click="playAudio(flashitSelectedQuery.id)"><span class="fa fa-2x fa-play fa-fw"></span></h1>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="modal-content col-md-12 text-center" ng-show="flashItGameStarted">
+					<!--class="btn-group-vertical col-md-12" role="group"-->
+					<div class="col-md-12 text-center" ng-show="flashItGameStarted&&!flashitGameEnded">
+						<button type="button" class="animate-repeat btn btn-default flashItAnswerButton" ng-repeat="vocab in flashitPossibleanswers track by $index" ng-click="flashitProcessAnswer(vocab)">{{(!flashLanguageFlip) ? vocab.translation : vocab.phrase}}</button> <br /><br />
+					</div>
+					<div class=" col-md-12 text-center" ng-show="flashItGameStarted&&(flashitGameEnded||flashitGameTransitioning)">
+						<button ng-disabled="true" ng-class="{'btn-success' : (vocab.correctAnswer)}" type="button" class="animate-repeat btn btn-default flashItAnswerButton" ng-repeat="vocab in flashitPossibleanswers track by $index" ng-click="flashitProcessAnswer(vocab)">{{(!flashLanguageFlip) ? vocab.translation : vocab.phrase}}</button><br /><br />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div id="flashitScoreKeeping" class="row modal-content  scoreKeeping">
+
+					<!--<label class="control-label">{{flashitCurrentGameText}}</label>-->
+
+
+					<div class="text-center" ng-bind="$root.preference.navs.flashit_currentscore.translation"></div>
+					<div class="btn-success btn-pd text-center">{{flashitCorrect}}</div>
+
+					<div class="text-center" ng-bind="$root.preference.navs.writeit_incorrect.translation"></div>
+					<div class="btn-danger btn-pd text-center">{{flashitIncorrectScore}}</div>
+
+
+					<div class="text-center" ng-bind="$root.preference.navs.flashit_highscore.translation"></div>
+					<div class="btn-info btn-pd text-center">{{flashitHighScore}}</div>
+
+
+
+					<div ng-show="flashItGameStarted&&!flashitGameEnded">
+
+						<label class="control-label">{{flashitHighScoreText}}</label>
+						<nvd3-pie-chart data="flashitPieData"
+										id="donutExample3"
+										width="550"
+										height="350"
+										x="xFunction()"
+										y="yFunction()"
+										donut="true"
+										color="colorFunction2()"
+										callback="callbackFunction2()"
+										margin="{left:0,top:0,bottom:0,right:0}">
+
+							<svg height="250" id="audioFlashitSVG"></svg>
+						</nvd3-pie-chart>
+
+					</div>
+
+					<div class="start-over">
+						<button class="btn btn-info" ng-click="startFlashitOver(this)" ng-show="flashitGameEnded">{{$root.preference.navs.flashit_startagain.translation}}</button>
+					</div>
+
+
+
+				</div>
+				<!--
+				<div class="row">
+
+					<div ng-hide="flashitShowAnswerFeedback" class="hide-fade ">
+						<img id="flashitAnswerFeedbackImage" class="img-responsive" ng-src="/public/img/{{flashitAnswerFlashing}}" />
+					</div>
+
+				</div>
+					-->
+			</div>
+
+
+
+
+
+
+
+		</form>
+
+
+
+	</div>
+</div>

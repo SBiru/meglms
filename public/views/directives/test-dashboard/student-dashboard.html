@@ -1,0 +1,194 @@
+<style>
+    .test-dashboard-container {
+        background: inherit !important;
+    }
+    [test-student-dashboard]{
+        display: block;
+        transform: initial;
+        left:initial;
+    }
+
+</style>
+<div class="flat-dashboard-container">
+    <div class="content-e3pt student-dashboard">
+        <div class="section body" style="position: relative">
+            <div class="section-heading j1-text-right">
+                Profile
+            </div>
+            <a class="btn btn-success" ng-hide="testAgain.action=='redirects'" style="position: absolute;right: 10px; top: 10px" ng-bind="testAgain.text"
+               ng-class="{disabled:lastTest.hasFinishedSubmitting || lastTest.finishedGradeClass}"
+               ng-click="testAgainBtnClicked()" ng-show="showStartTest()"
+               href="{{testAgain.action=='redirects'?testAgain.url:''}}"></a>
+            <div class="margin-top-10">
+                <div class="col-sm-6">
+                    <div class="section-label">
+                        Name
+                    </div>
+                    <div class="j1-text-right" ng-bind="studentName"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="section-label">
+                        Email
+                    </div>
+                    <div class="j1-text-right" ng-bind="email"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+
+        </div>
+        <div class="section body">
+            <div class="section-heading j1-text-right" style="position: relative;">
+                Scores
+                <div style="color:#757575;cursor: pointer;position: absolute;right: 0;top: 0;font-size: 15px"
+                    ng-click="viewReport()">
+                    View score report
+                </div>
+            </div>
+            <div class="score-table-wrapper">
+                <table class="score-table student">
+                    <tr ng-repeat="test in tests">
+                        <td>
+                            <div class="score-title">
+                                Date
+                            </div>
+                            <div ng-bind="test.submittedOn"></div>
+                        </td>
+                        <td class="bold">
+                            <div class="score-title">
+                                Overall Score
+                            </div>
+                            <div ng-bind="test.actualTotalScore" class="pg-score"></div>
+                        </td>
+                        <td ng-repeat="pg in test.pageGroups ">
+                            <div ng-bind="pg.name" class="score-title"></div>
+                            <div ng-bind="pg.actualScore"  class="pg-score"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div><div class="section body">
+            <div class="section-heading j1-text-right">
+                What's next
+            </div>
+            <div class="margin-top-10 container-table">
+                <div class="row">
+                    <div class="col-xs-12" style="margin-bottom: 10px">
+                        <div class="section-small-title">
+                            Review
+                        </div>
+                    </div>
+                    <div class="row" style=" height: 105px;">
+                        <div class="col-sm-6 no-float" >
+
+                            <div style="">
+                                Forward a Score Report to the schools of your choice.
+                                <div class="btn-wrapper">
+
+                                    <div class="btn btn-success" ng-click="openSubmitModal(highestTest)">
+                                        Send Score Report <i class="fa fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 no-float" >
+                            <div >
+                                You are able to retake the E3PT every 14 days, up to 5 times
+                                each year. Begin your next attempt by clicking below.
+                                <div class="btn-wrapper">
+                                    <a class="btn btn-success" ng-href="{{testAgainUrl}}">
+                                        Retake E3PT <i class="fa fa-chevron-right"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="section-small-title"  style="margin-top:20px;margin-bottom: 10px">
+                            Prepare
+                        </div>
+                    </div>
+                    <div class="row prepare-section" style=" height: 130px;" >
+                        <div class="col-sm-6 no-float" >
+
+                            <div style="">
+                                Applicants who want to improve their scores can meet
+                                with English3 instructors to receive feedback on each test section.
+                                You will also receive guidance on how to prepare for you next
+                                E3PT.
+                                <div class="btn-wrapper">
+
+                                    <a class="btn btn-success" ng-href="{{feedbackUrl}}" target="_blank">Review Your Score <i class="fa fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 no-float" >
+                            <div >
+                                English3 provides targeted English training through online ESL
+                                courses and through one-on- one tutoring. See what options are
+                                available by clicking below.
+                                <div class="btn-wrapper">
+                                    <a class="btn btn-success" ng-href="{{eslURL}}" target="_blank">
+                                        Improve Your English <i class="fa fa-chevron-right"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--<div class="body">-->
+    <!--<div>-->
+        <!--<div class="student-dashboard-buttons">-->
+            <!--<a class="btn-flat-full btn-flat-full-success btn-test-again" ng-bind="testAgain.text"-->
+               <!--ng-class="{disabled:lastTest.hasFinishedSubmitting || lastTest.finishedGradeClass}"-->
+               <!--ng-click="testAgainBtnClicked()" ng-show="showStartTest()"-->
+               <!--href="{{testAgain.action=='redirects'?testAgain.url:''}}"></a>-->
+            <!--&lt;!&ndash;<div class="btn-flat-full btn-flat-full-primary" ng-hide="isJ1">Prep Courses</div>&ndash;&gt;-->
+            <!--<div class="btn-flat-full btn-flat-full-primary" ng-show="practiceTest"-->
+                 <!--ng-class="{disabled:practiceTest.hasFinishedSubmitting || practiceTest.finishedGradeClass}"-->
+                 <!--ng-click="startPracticeInterview()">Start-->
+                <!--Practice-->
+                <!--Interview</div>-->
+        <!--</div>-->
+
+        <!--<div class="org-name test_dashboard_font_color" ng-bind="studentName"></div>-->
+    <!--</div>-->
+
+    <!--<div class="tests-container">-->
+        <!--<table class="table table-striped">-->
+            <!--<thead>-->
+            <!--<tr class="scores-title-row" ng-hide="isJ1">-->
+                <!--<td colspan="1"></td>-->
+                <!--<td colspan="5" class="scores-title test_dashboard_font_color">Scores</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="static-header-column pointer test_dashboard_font_color" ng-click="orderStudents.orderBy('date')">Date</td>-->
+                <!--<td ng-if="pageGroups.length>1" data-ng-repeat="pg in pageGroups" ng-bind="pg.name" class="test_dashboard_font_color"></td>-->
+                <!--<td class="test_dashboard_font_color" ng-bind="isJ1?'Score':'Total'"></td>-->
+                <!--<td class="static-header-column test_dashboard_font_color" style="text-align: center" ng-hide="isJ1">Report</td>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tr data-ng-repeat="test in tests | orderBy:orderStudents.selected">-->
+                <!--<td ng-bind="test.submittedOn"></td>-->
+                <!--<td ng-if="pageGroups.length>1" class="test-score" data-ng-repeat="pg in test.pageGroups" ng-bind="pg.finishedGrade?pg.actualScore + '/' + pg.maxScore:'-'" ng-style="{width:scoreColumnWidth}">-->
+                <!--<td class="test-score total-score test_dashboard_font_color" ng-bind="test.finishedGradeClass?test.actualTotalScore + '/' + test.maxTotalScore:'-'"></td>-->
+                <!--<td class="test-score" ng-hide="isJ1">-->
+                    <!--<a class="btn-flat" ng-class="{'disabled':!test.finishedGradeClass || !test.pageGroups.length}" ng-hide="hideSubmitButton(test)" ng-click="openSubmitModal(test)">-->
+                        <!--Submit-->
+                    <!--</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    <!--</div>-->
+<!--</div>-->

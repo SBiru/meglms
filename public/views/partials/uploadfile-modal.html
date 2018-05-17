@@ -1,0 +1,60 @@
+
+<style>
+.drop-box {
+  background: #ddd;
+  border: 5px dashed #ccc;
+  width: 85%;
+  height: 200px;
+  text-align: center;
+  margin: auto;
+  padding-top:75px;
+}
+
+.drop-box.dragover {
+    border: 5px dashed #4cae4c;
+    }
+
+.drop-box.dragover-err {
+    border: 5px dashed red;
+    background: #ddd;
+}
+.modal-lg{
+  padding-top:10%;
+}
+.modal{
+  overflow: hidden
+}
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Upload files</h4>
+</div>
+
+<div class="modal-body">
+
+    <div ng-app="ngFileUpload" ng-controller="FileUpload" ng-if="fileupload.progress === 0" >
+        <div ngf-drop ng-model="filesdropped" class="drop-box" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-drop-available="dropAvailable" ngf-select="" ngf-drop="">
+            <span style="cursor:pointer">Drag files or click to here to upload</span>
+        </div>
+        <div ng-hide="dropAvailable" class="ng-hide">File Drop not available</div>
+        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+    </div>
+    <div class="progress" ng-if="fileupload.progress>0" style="width:90%" ng-if="fileupload.progress > 0">
+        <span class="progress-val ">{{fileupload.progress}}%</span>
+        <span class="progress-bar" style="width:100%">
+        <span class="progress-in" ng-style="{width: {{fileupload.progress}}+'%'}" style="width: {{fileupload.progress}}%;">
+        </span>
+        </span>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <!--<button type="button" class="btn btn-default" ng-click="cancel()">Close</button>-->
+    <button type="button" class="btn btn-primary" ng-click="ok()" ng-show="currentMode=='new'">Send</button>
+</div>

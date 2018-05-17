@@ -1,0 +1,93 @@
+<h4>
+    <b data-ng-bind="data.page.unit.name + ' -'"></b>
+    <span data-ng-bind="data.page.name"></span>
+</h4>
+<div class="panel panel-default" data-ng-repeat="student in data.students" ng-if="(isArchive && !student.needingGrade) || (!isArchive && student.needingGrade)">
+    <div class="panel-heading">
+        <b data-ng-bind="student.fname + ' ' + student.lname"></b>
+        <span ng-show="student.journal.grade"
+              data-ng-bind="'Journal grade: ' + student.journal.grade + ' out of ' + data.page.maxPoints + ' ('+student.journal.percGrade+'%)'">
+        </span>
+        <span data-ng-show="canSaveChanges(student)">
+            <button class="btn btn-sm btn-default"
+                    data-ng-click="saveChanges(student)">Save changes
+            </button>
+        </span>
+        <span data-ng-show="data.page.gradingType==1">
+            <span ng-show="!student.journal.gradeForWholeJournal.feedback.id">
+                <button class="btn btn-sm btn-default"
+                        data-ng-click="student.journal.grading=true">Grade
+                </button>
+            </span>
+            <span ng-hide="!student.journal.gradeForWholeJournal.feedback.id">
+                <span>(graded on:<span data-ng-bind="student.journal.gradeForWholeJournal.feedback.submitted"></span>)</span>
+                </span>
+                <button class="btn btn-sm btn-default"
+                    data-ng-click="student.journal.grading=true"
+                    ng-hide="!student.journal.gradeForWholeJournal.feedback.id">Edit grade
+                </button>
+            </span>
+        </span>
+        <div ng-if="student.journal.grading">
+            <rubric-grader ng-if="data.page.rubricId!=0"
+                           rubric-id="data.page.rubricId"
+                           user-id="student.id"
+                           post-id="student.journal.gradeForWholeJournal.id"
+                           score="student.journal.gradeForWholeJournal.feedback.grade"
+                           style="padding: 5px;overflow-x:scroll">
+            </rubric-grader>
+            <div>
+                Grade: <input data-ng-readonly="data.page.rubricId" data-ng-model="student.journal.gradeForWholeJournal.feedback.grade">
+            </div>
+            <textarea ckeditor="" custom-options="ckeditorOptions" data-ng-model="student.journal.gradeForWholeJournal.feedback.message"></textarea>
+            <div>
+                <async-button class="center" color-style="primary" text="Save all my changes for this student" flash-text="Saved!" loading="isSaving" ng-click="saveAll(student)" disabled="!canSave(student)"></async-button>
+            </div>
+
+        </div>
+
+        <div ng-show="data.page.gradingType!=1">
+            <span>
+                <input type="checkbox" data-ng-model="student.showOnlyNeedingGrade"> Show only needing grade
+            </span>
+            <span>
+                <input type="checkbox" data-ng-model="student.openAll" data-ng-change="openAll(student)"> Open all feedback boxes
+            </span>
+        </div>
+    </div>
+    <div class="panel-body journal">
+        <div class="posts">
+            <div class="post-wrapper" data-ng-repeat="post in student.journal.posts | filter:filterPosts(student.showOnlyNeedingGrade)">
+                <div class="edit-button" ng-if="data.page.gradingType!=1">
+                    <span class="btn btn-sm btn-default" data-ng-click="post.grading=post.grading?false:true;">Grade</span>
+                </div>
+                <div class="post" data-ng-class="{'needing-grade':needingGrade(post,student.journal.gradeForWholeJournal),'with-grade-button':data.page.gradingType!=1}">
+                    <div class="post-header" >
+                        <span data-ng-bind="post.submitted"></span>
+                        <span data-ng-show="post.feedback.id && !data.page.gradingType==1"><b>Grade</b> - <span data-ng-bind="post.feedback.grade"></span></span>
+                        <span data-ng-show="post.lastGrade && !post.feedback.grade && data.page.gradingType!=1">Waiting for new grade (last grade: <span data-ng-bind="post.lastGrade"></span>)</span>
+                    </div>
+                    <div data-ng-bind-html="trustAsHtml(post.message)"></div>
+
+                    <div class="grade-post" data-ng-if="post.grading">
+                        <rubric-grader ng-if="data.page.rubricId!=0"
+                                       rubric-id="data.page.rubricId"
+                                       user-id="student.id"
+                                       post-id="post.id"
+                                       score="post.feedback.grade"
+                             style="  padding: 5px;overflow-x:scroll">
+                        </rubric-grader>
+                        <div>
+                            Grade: <input data-ng-readonly="data.page.rubricId!=0" data-ng-model="post.feedback.grade">
+                        </div>
+                        <textarea ckeditor="" custom-options="ckeditorOptions" data-ng-model="post.feedback.message"></textarea>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div>
+            <async-button ng-hide="data.page.gradingType==1" class="center" color-style="primary" text="Save all my changes for this student" flash-text="Saved!" loading="isSaving" ng-click="saveAll(student)" disabled="!canSave(student)"></async-button>
+        </div>
+    </div>
+</div>

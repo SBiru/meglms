@@ -1,0 +1,71 @@
+<div class="container-fluid">
+
+    <div class="row editorg-buttons" >
+        <div class="pull-left btn btn-danger btn-sm"
+             ng-click="delete()">
+            Delete
+        </div>
+        <div class="pull-left btn btn-info btn-sm">
+            <div  data-ng-controller="ClassDetailsButtonController" ng-click="open()"
+                  id="details">Details</div>
+        </div>
+
+    </div>
+    <div class="panel panel-default" ng-init="show_groups=false" ng-controller="GroupController">
+        <div class="panel-heading" ng-click="show_groups=!show_groups">
+            <a>Groups</a>
+        </div>
+        <div class="panel-body" ng-show="show_groups" ng-init="show_add_group=false">
+            <div>
+                <a ng-click="show_add_group=!show_add_group">+Add group</a>
+            </div>
+
+            <div class="panel panel-default panel-body" ng-show="show_add_group">
+                <div class="input-group input-group-md">
+                    <input class="form-control" ng-model="newGroup.name" placeholder="Group name">
+                    <span class="input-group-addon" style="cursor: pointer;" ng-click="add()">
+                        Add
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <select selectize ng-options="group.id as group.name + ' - ID: ' + group.id for group in groups" ng-model="currentGroup.group_id"></select>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group input-group-md">
+                        <input ng-model="group.name" class="form-control">
+                    <span class="input-group-addon" style="cursor: pointer;">
+                        <span ng-click="updateGroup(group)">Update</span>
+                    </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                    <div class="btn btn-sm btn-danger" ng-click="remove()"><i class="fa fa-remove"></i></div>
+                </div>
+
+                <div class="col-md-12" >
+                <span style="float: left;line-height: 3;">
+                    <input type="checkbox" ng-model="group.useStartDate" ng-change="unsetStartDate(group)"> Set start date
+                    <span class="fa fa-question-circle" tooltip="The start date will be applied to all students enrolled in this group"></span>
+                </span>
+                    <div class="" ng-show="group.useStartDate" style="    float: left;width: calc(50% - 120px);padding: 0 20px;">
+                        <div class="input-group input-group-md">
+                            <input jqdatepicker ng-model="group.start_date" class="form-control">
+                            <span class="input-group-addon" style="cursor: pointer;">
+                                <span ng-click="setStartDate(group)">Save <span class="fa fa-spinner fa-pulse" ng-show="group.savingStartDate"></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <div ng-include="'/public/views/partials/admin/courseclassuser.html'" ng-controller="CourseClassUsersController"></div>
+
+</div>

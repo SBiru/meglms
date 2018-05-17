@@ -1,0 +1,32 @@
+<style>
+    @media (max-width: 767px){
+        .modal-dialog{
+            width:auto !important;
+        }
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title" ng-bind="isObserver?'User Profile':'My account'"></h4>
+</div>
+<div class="modal-body">
+    <tabset ng-if="me.useProfileSettings && !isObserver">
+        <tab heading="User Profile">
+            <div ng-include="'/public/views/account/content.html'"></div>
+        </tab>
+        <tab heading="Account Settings">
+            <div ng-include="'/public/views/account/settings.html'"></div>
+        </tab>
+    </tabset>
+
+    <div ng-include="'/public/views/account/content.html'" ng-if="!me.useProfileSettings || isObserver"></div>
+    <button class="margin-top" ng-click="save()" style="float: right;" ng-show="canEdit()">
+        <span ng-hide="saving">Save</span>
+        <span ng-show="saving">Saving..</span>
+    </button>
+    <div class="clearfix"></div>
+</div>

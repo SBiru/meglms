@@ -1,0 +1,26 @@
+<div ng-if="values.type==='blank'">
+    Student must fill in the blanks provide answer in question use _(answer)_.
+    <br/> Example : In 1969 _(Neil)_ Armstrong was the first man to land on the _(moon)_
+</div>
+<div style="margin-top: 15px;" ng-if="values.type==='editingtask'">
+    <span>To add a phrase/word with replacement choices in a drop-down use _(answer)_. You will see three text fields below to enter the choices.</span>
+    <br>
+    <span>To add a  phrase/word with short answer replacement use _[answer]_.</span>
+    <br>
+    <span>Example : In 1969 Neil Armstrong _(was)_ the first man to land on the _[moon]_.</span>
+</div>
+
+<style>
+    .promptsize .cke_contents {min-height:250px!important;}
+</style>
+<div question-tags question="values" class="question-tags-wrapper"></div>
+<div class="form-group promptsize" ng-show="!noshowprompt">
+    <label for="modalPrompt">Question/Prompt:</label>
+    <textarea id="modalPrompt" class="form-control" rows="3" placeholder="Enter the question here" ng-model="values.prompt" ckeditor="" custom-options="ckeditorOptions"></textarea>
+</div>
+<div class="tooltip-relative">
+    <div ng-show="values.instructions" class="alert alert-info" >
+        <span class="help" tooltip="{{values.instructions}}" tooltip-placement="right">Instructions <span class="fa fa-question-circle"></span></span>
+    </div>
+</div>
+

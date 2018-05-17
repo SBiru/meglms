@@ -1,0 +1,123 @@
+alert-page{
+    background: white;
+    display: block;
+    position: relative;
+}
+alert-page-menu{
+    position: absolute;
+    width: 40px;
+    height: 100%;
+    background: #f5f5f5;
+    display: block;
+    z-index: 100;
+    left: 0;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+alert-page-menu.expanded{
+    width: inherit;
+}
+alert-page-menu > ul{
+    list-style: none;
+    color: #428DCE;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+alert-page-menu > ul > li{
+    cursor: pointer;
+    position: relative;
+    margin: 0 -10px;
+    padding: 0 10px
+}
+alert-page-menu > ul > li.active {
+    background:#E9F3FC;
+}
+alert-page-menu > ul > li > .fa:hover{
+    color: #28567E;
+}
+alert-page-menu ul.menu-items{
+    position: relative;
+    padding: 0;
+    font-size: 12px;
+    list-style: none;
+    margin-top: -25px;
+    margin-left: 25px;
+}
+alert-page-menu ul.menu-items > li {
+    padding: 2px 5px;
+    border-bottom: 1px solid #ccc;
+}
+alert-page-menu ul.menu-items > li > div.active,alert-page-menu ul.menu-items > li > div:hover{
+    font-weight: bold;
+}
+alert-page-menu ul.menu-items .add-alert {
+    list-style: none;
+    padding: 0;
+    position: relative;
+    margin-left: 10px;
+}
+alert-page-menu ul.menu-items .add-alert > li {
+    padding: 1px 3px;
+    border-bottom: 1px solid #ccc;
+    font-size: 11px;
+    color:black
+}
+alert-page-menu ul.menu-items .add-alert > li.disabled {
+    cursor:not-allowed;
+    color: #888888;
+}
+
+alert-page-menu ul.menu-items .add-alert > li:hover {
+    font-weight: bold;
+}
+alert-page-menu .menu-loading{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    z-index: 100;
+    opacity: 0.7;
+}
+alert-page .content{
+    position: absolute;
+    left: 45px;
+    width: calc(100% - 45px);
+}
+alert-page .alert-box-container{
+    padding: 0;
+}
+alert-page .alert-box{
+    height: 300px;
+    background: white;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+alert-page .alert-box > .panel-heading{
+    cursor: move;
+    display: flex;
+}
+alert-page .alert-box > .panel-heading .alert-title{
+    width: calc(100% - 55px);
+    float: left;
+}
+alert-page .menu-items .fa:hover{
+    font-weight: bolder;
+}
+alert-page .content .content-body{
+    max-height: 260px;overflow: auto;
+}
+alert-page .working-status{
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    background: beige;
+    padding: 0 3px;
+    box-shadow: 0 0 5px hsla(64, 98%, 23%, 0.8);
+    border-radius: 2px;
+    color: darkgoldenrod;
+}
+alert-page .small-font{
+    font-size: 12px;
+}
+alert-page .config-ok-btn{
+    margin-left:5px;
+}

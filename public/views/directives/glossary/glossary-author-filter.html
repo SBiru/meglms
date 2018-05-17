@@ -1,0 +1,6 @@
+<select selectize
+     ng-options="author.id as author.name + ' ('+author.count+')' for author in authors"
+     ng-change="setAuthor(authorId)"
+        placeholder="Select an author"
+     ng-model="authorId"
+></select>

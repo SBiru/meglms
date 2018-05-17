@@ -1,0 +1,47 @@
+
+.feedback-modal .modal-dialog {
+    width: 800px;
+    max-height: 500px !important;
+    overflow-y: auto;
+}
+
+.feedback-modal .modal-header {
+    min-width: 200px;
+}
+
+.feedback-modal .close-btn {
+    background-color: transparent;
+    border: none;
+    line-height: 20px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 10000;
+    cursor: pointer;
+    font-size: 50px;
+    color: rgb(145, 145, 145);
+    padding: 10px;
+}
+
+.feedback-modal .close-btn:hover {
+    color: black;
+}
+
+.feedback-modal table {
+    border-collapse: collapse;
+}
+
+.feedback-modal table td {
+}
+
+.feedback-modal .section {
+    padding: 20px;
+}
+
+/*
+.feedback-modal video {
+    width: 192px;
+    height: 144px;
+}
+*/
+

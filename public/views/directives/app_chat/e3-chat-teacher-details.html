@@ -1,0 +1,40 @@
+<div class="teacher_info">
+    <div class="teacher_contact_wrapper">
+        <div class="photo_container">
+            <img style="width: 50px; height: 50px" src="{{userData.profilePicture}}" ng-if="userData.profilePicture">
+            <div class="no-photo" ng-hide="userData.profilePicture">
+                <span class="fa fa-camera"></span>
+            </div>
+        </div>
+        <div class="teacher_contact">
+            <div class="teacher_name">
+                {{userData.firstName}} {{userData.lastName}}
+            </div>
+            <div>
+                <span class="btn-email icon"><span class="fa fa-envelope" ng-init="specificUser=true"></span></span>
+                <span class="teacher-email">{{userData.email}}</span>
+            </div>
+            <div class="phone">
+                <span class="btn-email icon"><span class="fa fa-phone"></span></span>
+                {{userData.phone}}
+            </div>
+            <div data-ng-repeat="class in classes">
+                <b>{{class.name}}</b>
+                <div class="phone" ng-if="class.meta.office_hours">
+                    <span class="btn-email icon"><span class="fa fa-clock-o"></span></span>
+                    {{class.meta.office_hours}}
+                </div>
+                <div class="phone" ng-if="class.meta.v_office_hours" >
+                    <span class="btn-email icon">
+                        <a href="{{class.meta.v_office_url}}" target="_blank" style="color: #62c354;text-decoration: none">
+                            <span class="fa fa-tablet"></span>
+                        </a>
+                    </span>
+                    {{class.meta.v_office_hours}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

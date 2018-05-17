@@ -1,0 +1,79 @@
+<div class="modal-header">
+    <span class="header-text" ng-bind="selectedTest.name || 'Proficiency tests'">
+
+    </span>
+
+    <span aria-hidden="true" ng-click="cancel()" class="fa fa-times close" style="font-size:15px"></span><span class="sr-only">Close</span>
+</div>
+
+<div ng-show="nav.location=='tests'">
+    <div class="available-classes-wrapper">
+        <div class="available-classes">
+            <select selectize ng-model="class" data-ng-options="class as class.name for class in availableClasses | orderBy:'name'"></select>
+        </div>
+        <div class="add-btn">
+            <div class="btn btn-sm btn-success" ng-click="addClass()">Add test</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="panel panel-default" data-ng-repeat="class in classes | orderBy:'name'">
+            <div class="test-class-name panel-heading">
+                <div>
+                    <span  ng-bind="class.name"></span>
+                    <span class="badge tooltip-relative pointer" ng-click="class.editing=true" ng-hide="class.editing">
+                        <span ng-bind="class.tag || 'Add tag'"></span>
+                        <span class="fa fa-question-circle" tooltip="The tag is used to indicate the class a user will be enrolled in after a new payment is completed"></span>
+                    </span>
+                    <span ng-show="class.editing">
+                        <div class="input-group input-group-sm edit-tag">
+                            <input type="text" class="form-control" ng-model="class.tag" placeholder="Tag">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" ng-click="saveTag(class)" type="button"><i class="fa fa-check"></i></button>
+                            </span>
+                        </div>
+                    </span>
+                    <span class="fa fa-pulse fa-spinner" ng-show="class.loading"></span>
+                </div>
+                <div class="remove-class">
+
+                    <div class="btn btn-sm btn-info" ng-click="editScoreRange(class)"> Manage score ranges</div>
+                    <span class="btn btn-sm btn-danger" ng-click="removeClass(class)">Remove class</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="class_groups table table-striped" ng-if="class.groups">
+                    <tr data-ng-repeat="group in class.groups">
+                        <td ng-bind="group.name" class="group-name"></td>
+                        <td class="edit-admins">
+                            <span class="btn btn-sm btn-success" ng-click="openAddUsers(group)">Add test admin</span>
+                        </td>
+                        <td>
+                            <span data-ng-repeat="admin in group.admins">
+                                <span  class="admin-address">
+                                    <span ng-bind="admin.fullAddress"></span>
+                                    <span class="pointer" ng-click="removeAdmin(group,admin.id)">x</span>
+                                </span>
+
+                            </span>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div ng-if="nav.location=='scores'&&  selectedTest.id" >
+    <manage-score-ranges test-id="selectedTest.id"></manage-score-ranges>
+    <div class="modal-footer">
+        <div class="btn btn-primary" ng-show="nav.location=='scores'" ng-click="nav.location='tests';selectedTest = {}">
+            Back
+        </div>
+    </div>
+
+</div>
+
+
+

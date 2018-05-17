@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <button type="button" class="close " ng-click="cancel()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+    <h4 class="modal-title">Organization colors and styles</h4>
+</div>
+<div class="modal-body">
+    <div class="small-heading">Styles</div>
+    <table class="table table-striped">
+        <tr>
+            <th>Due date format</th>
+            <td>
+                <div data-ng-repeat="format in availableDateFormats">
+                    <input type="radio" ng-model="styleSettings.due_date_format" name="due_date_format" value="{{format}}"> <span ng-bind="todayInGivenFormat(format)"></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="small-heading">Colors
+        <div class="btn btn-sm btn-primary" ng-click="reset()">Reset all</div>
+        <input ng-model="search_color" placeholder="Search for a setting" data-ng-change="onSearchChange()">
+    </div>
+    <table class="table table-striped  display-none" style="width: 100%">
+
+        <tbody data-ng-repeat="colorGroup in filteredAvailableColorGroups" data-ng-include="'colorTree.html'"></tbody>
+
+    </table>
+</div>
+<script type="text/ng-template" id="colorGroup.html">
+    <th ng-bind="colorGroup.label"></th>
+    <td>
+        <div>
+            <input minicolors="{format:'hex'}" ng-model="styleSettings[colorGroup.id]" class="form-control" type="text">
+        </div>
+    </td>
+    <td>
+        <div class="btn btn-sm btn-primary" ng-click="reset(colorGroup.id)">Reset</div>
+    </td>
+</script>
+<script type="text/ng-template" id="colorTree.html">
+    <tr ng-if="!colorGroup.group"
+        data-ng-include="'colorGroup.html'">
+    </tr>
+    <tr ng-if="colorGroup.group">
+        <td colspan="3">
+            <div class="small-heading pointer" ng-click="colorGroup.show = !colorGroup.show">
+                <span class="fa"
+                      ng-class="colorGroup.show||(!vc.startFiltering && search_color)?'fa-minus-square':'fa-plus-square'"></span>
+                <span ng-bind="colorGroup.title" ></span>
+            </div>
+            <table class="table table-striped" ng-show="colorGroup.show||(!vc.startFiltering && search_color)"
+                   style="width: 100%">
+                <tbody data-ng-repeat="colorGroup in colorGroup.availableColorGroups"
+                       data-ng-include="'colorTree.html'"></tbody>
+            </table>
+        </td>
+    </tr>
+</script>

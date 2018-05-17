@@ -1,0 +1,15 @@
+<div data-ng-repeat="class in data | orderBy:'name'" class="panel panel-default">
+        <div class="panel-heading pointer" ng-click="class.opened = !class.opened">
+                <span class="fa" ng-class="class.opened?'fa-minus-square':'fa-plus-square'"></span>
+                <span ng-bind="class.name"></span>
+                <span ng-bind="'('+class.assignmentCount+')'"></span>
+        </div>
+        <div class="panel-body" ng-if="class.opened">
+                <sortable-table
+                        header="tableHeader"
+                        rows="class.assignments"
+                        perPage="20"
+                        table-height="150px">
+                </sortable-table>
+        </div>
+</div>

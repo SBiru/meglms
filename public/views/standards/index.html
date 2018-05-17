@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" ng-app="app">
+    <head>
+        <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta charset="utf-8">
+        <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+        <!-- inject:css -->
+<link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+<!-- endinject -->
+        <!-- inject:js -->
+        <script src="/public/build/meglms.2018.04.05.min.js"></script>
+        <!-- endinject -->
+
+</head>
+<body ng-controller='PreferenceController' ng-attr-dir="{{ language_direction }}">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'">
+
+            </div>
+        </div>
+        <div class="navbar-collapse collapse" id="main-navbar">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" ng-include="'/public/views/partials/topleft-menu.html'"></table>-->
+            <table style="float: right" ng-include="'/public/views/partials/topright-menu.html?v=3'" dir="ltr"></table>
+        </div>
+    </div>
+</nav>
+
+        <div class="container-fluid" style="margin-top:80px;">
+
+            <div class="row">
+                <div ui-view="menu" class="col-sm-3 sidebar"></div>
+                <div ui-view="content" class="col-sm-9 col-sm-offset-3"></div>
+            </div>
+        </div>
+    </div></div></body>
+</html>

@@ -1,0 +1,45 @@
+<div class="edit-sites-modal">
+	<div class="modal-header">
+		<!-- close button -->
+		<button type="button" class="close " ng-click="cancel()">
+			<div class="btn btn-danger btn-sm">
+				<span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span>
+				<span class="sr-only">Close</span>
+			</div>
+		</button>
+		<h4 class="modal-title">Powerschool Import</h4>
+	</div>
+	<div class="modal-body" ng-show="!finished">
+		<h5>Select a file and click Import to upload users, classes, and enrollments from Powerschool</h5>
+		<span ng-show="filename">file to import : <em>{{filename}} {{filesize}}</em> mbs</span>
+		<div>
+			<div class="btn btn-default btn-sm" ngf-select ngf-change="select($files)" ng-disabled="importing">Select File</div>
+			<div class="btn btn-primary btn-sm" ng-disabled="importing || !ready" ng-click="import()">
+				<div ng-hide="importing">Upload and Import</div>
+				<div ng-show="importing">Importing <i class="fa fa-spin fa-spinner"></i></div>
+			</div>
+		</div>
+		<h6><b>Important: This upload could take several minutes to complete. The server will attempt to continue importing even if you navigate away from this page after the upload is finished, but it is HIGHLY recommended to not navigate away or close this modal.<br>The page will auto-refresh when the process is complete.</b></h6>
+		<div ng-show="error">
+			<hr>
+			<div class="alert alert-danger" ng-bind="error"></div>
+		</div>
+	</div>
+	<div class="modal-body" ng-show="finished">
+		<div class="alert alert-success" role="alert">All Done Refresh page to view changes</div>
+		<span>Students processed: </span><span class="badge" style="background-color:#62c354;margin-bottom:10px">{{dataFinished.students.length}}</span><br>
+		<span>Classes Added: </span><span class="badge" style="background-color:#62c354;margin-bottom:10px">{{dataFinished.classes.length}}</span><br>
+		<span>Errors: </span><span class="badge" style="background-color:red;margin-bottom:10px">{{dataFinished.errors.length}}</span><br>
+<div class="btn-group" ng-if="dataFinished.errors.length > 0" style="width:100%;margin-bottom:10px">
+  <button style="width:100%" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    View Errors <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+   <li data-ng-repeat="x in dataFinished.errors">
+      {{ x }}
+    </li>
+  </ul>
+</div>		
+		<div class="alert alert-warning" role="alert">Note: some Classes may already be added..</div>
+	</div>
+</div>

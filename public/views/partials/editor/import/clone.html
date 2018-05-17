@@ -1,0 +1,21 @@
+<div ng-show="courseId != 0">
+	<div class="loading" ng-show="!courseId || !courses" style="margin:50px"><i class="fa fa-spin fa-spinner"></i></div>
+	<div class="import-course" ng-show="courseId && courses && !courseInfo.data.unitCount">
+		<!-- FORM -->
+		<h2>Clone Course</h2>
+		<h2><small>Select the course to clone from the dropdown menu</small></h2>
+		<div class="row">
+			<div class="col-sm-4">
+				<select selectize ng-model="course" ng-options="c.id as c.name for c in courses | orderBy:'name' | filter:hasUnits()"></select>
+			</div>
+		</div>
+		<div>
+			<div class="btn btn-info btn-sm" ng-click="clone()" ng-disabled="!course || message">Clone Course</div>
+		</div>
+	</div>
+	<div ng-show="courseInfo.data.unitCount">Course already has content.</div>
+	<div ng-show="message">
+		<hr />
+		<div ng-bind="message"></div>
+	</div>
+</div>

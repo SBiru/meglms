@@ -1,0 +1,82 @@
+<div class="editor">
+    <h1 ng-if="vocabId==0">
+       New Vocabulary Group
+    </h1>
+    <h1 class="editor_title">
+        <input ng-model="data.title" placeholder="Title" class="ng-pristine ng-valid ng-touched">
+    </h1>
+    <textarea ng-model="data.description" class="editor_description ng-pristine ng-valid ng-touched" placeholder="Description"></textarea>
+    <table class = 'languages'>
+        <tr>
+            <th>Course</th>
+            <td>
+                <select selectize
+                        ng-model="data.courseId"
+                        ng-options="class.courseid as class.name for class in classes"></select>
+            </td>
+        </tr>
+        <tr>
+            <th>Base Language</th>
+            <td>
+                <select selectize
+                        ng-model="data.base_language"
+                        ng-options="lang.language_id as lang.language_name for lang in languages"></select>
+            </td>
+            <th>Target Language</th>
+            <td>
+                <select selectize
+                        ng-model="data.target_language"
+                        ng-options="lang.language_id as lang.language_name for lang in languages"></select>
+            </td>
+        </tr>
+    </table>
+    <ul ui-sortable="sortableOptions" ng-model="data.vocabs" class="editor_dialog tooltip-relative">
+        <li style="font-weight: bold">
+            <span class="editor_handle" style="width: 37px"></span>
+            <span class="vocab_phrase">Phrase</span>
+            <span class="vocab_audio"></span>
+            <span class="vocab_phrase">Translation</span>
+            <span class="vocab_audio">.mp3</span>
+            <span class="vocab_audio">.ogg</span>
+            <span style="width: 45px"></span>
+        </li>
+        <li ng-repeat="item in data.vocabs track by $index">
+            <span class="editor_handle ui-sortable-handle">|||</span>
+            <input type="text" ng-model="item.info.phrase" placeholder="Phrase" class="ng-pristine ng-valid ng-touched">
+            <div class="fa fa-file-image-o" ng-style="{color:item.image?'green':'dodgerblue'}" style="  line-height: 2;cursor:pointer;padding-left:2px" ng-click="upload($event,item)" tooltip-html-unsafe="{{vocabImageTooltip(item)}}">
+                <input ng-hide="true" accept="image/*" type="file" ng-file-select="onFileSelect($files,'image')">
+            </div>
+            <input type="text" ng-model="item.info.translation" placeholder="Translation" class="ng-pristine ng-untouched ng-valid">
+
+            <div class="vocab_audio">
+                <div  ng-if="item.audio[0]" class="fa" ng-class="audioClassControl(item,0)"   style=" line-height: 2;cursor:pointer" ng-click="toggleAudio(item,0,$event)">
+                    <audio controls="controls" ng-if="item.audiostate[0]" ng-hide="true">
+                        <source ng-src="{{item.audio[0]}}" type="audio/mp3"/>
+                        Your browser does not support the HTML5 audio tag.
+                    </audio>
+                </div>
+                <div class="fa fa-upload"  ng-style="{color:item.audio[0]?'green':'dodgerblue'}"  tooltip-html-unsafe="{{vocabMp3Tooltip(item)}}" style="line-height: 2;cursor:pointer;padding-left:2px" ng-click="upload($event,item)">
+                    <input ng-hide="true" accept=".mp3" type="file" ng-file-select="onFileSelect($files)">
+                </div>
+            </div>
+            <div class="vocab_audio">
+                <div ng-if="item.audio[1]&&item.audio[1]"    class="fa" ng-class="audioClassControl(item,1)" style=" line-height: 2;cursor:pointer" ng-click="toggleAudio(item,1,$event)">
+                    <audio controls="" ng-if="item.audiostate[1]" ng-hide="true" autoplay>
+                        <source ng-src="{{item.audio[1]}}" type="audio/ogg"/>
+                        Your browser does not support the HTML5 audio tag.
+                    </audio>
+                </div>
+                <div class="fa fa-upload" tooltip-html-unsafe="{{vocabOggTooltip(item)}}" ng-style="{color:item.audio[1]?'green':'dodgerblue'}"  style="line-height: 2;cursor:pointer;padding-left:2px" ng-click="upload($event,item)">
+                    <input ng-hide="true" accept=".ogg" type="file" ng-file-select="onFileSelect($files)">
+                </div>
+
+            </div>
+
+
+            <button ng-click="remove($index)" class="editor_remove">×</button>
+        </li>
+    </ul>
+    <button class="editor_btn btn-primary" ng-click="addNew()">Add new item</button>
+    <button class="editor_btn btn-primary" ng-disabled="isInvalid()" ng-click="save()">Save</button>
+    <button class="editor_btn btn-danger" ng-hide="really_remove" ng-click="removeReview()">Delete</button>
+</div>

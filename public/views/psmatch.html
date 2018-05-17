@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <?php echo '<title>'. \English3\Util\CustomDomain::pageTitle() .'</title>'; include($_SERVER['DOCUMENT_ROOT']. '/analytics.html')?>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <?php echo '<link rel="shortcut icon" href="'. \English3\Util\CustomDomain::favicon() .'" />'; ?>
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/public/build/meglms.2018.04.05.min.css">
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="/public/build/meglms.2018.04.05.min.js"></script>
+    <!-- endinject -->
+    <?php echo $customStyles->createStyleSheet(); ?>
+
+</head>
+<body ng-controller='PreferenceController' ng-class="{uploadusers:uploadUsers}">
+<div ng-controller="UtilityController">
+<div ng-controller="UserController">
+<?php include(__DIR__ . '/timeout/index.html')?>
+<!-- bootstrap modal -->
+<div id="basicChatModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="basicChatModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 380px;">
+        <div class="modal-content" ng-controller="ChatBoxController">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Chatting To {{ chatter.fname }} {{ chatter.lname }}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div ng-repeat="message in messages">
+                        <p>{{ message.fname }} {{ message.lname }}<br />{{ message.created }}</p>
+                        <p>{{ message.message }}</p>
+                    </div>
+
+                    <textarea ng-model="chat_message" cols="35" rows="6" placeholder="Type Message Here"></textarea><br />
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="send()">Send</button>
+
+                </div>
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--End Basic Boot Strap Modal-->
+
+<nav id="siteMenu" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a data-ng-show="user.org.white_label" class="navbar-brand" href="/" ng-if="user.org.logo"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img src="/public/img/e3-green-logo.png"/> </a>
+            <a data-ng-show="user.org.white_label==false" class="navbar-brand org-logo"ng-if="user.org.logo"  ng-href="{{user.hasOnlyProficiencyClasses?'/home/':'/'}}"><img style="height: 48px" ng-src="{{user.org.logo}}"/> </a>
+
+            <div class="dropdown" id="mobileMenu" style="display: none"
+                 ng-include="'/public/views/partials/mobile-topright-menu.html?v=3'" >
+
+            </div>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <!--DSerejo 2015-02-02-->
+            <!--Moving topleft-menu to template file for easier maintenance.-->
+            <!--<table style="float: left;" >-->
+            <!--<?php include(__DIR__ . "/partials/topleft-menu.html") ?>-->
+            <!--</table>-->
+            <table style="float: right">
+                <?php include(__DIR__ . "/partials/topright-menu.html") ?>
+            </table>
+        </div>
+    </div>
+</nav>
+
+
+        <!-- ************************************************************** -->
+        <!-- *********************** MAIN CONTENT ************************* -->
+        <!-- ************************************************************** -->
+        <div class="container-fluid ps-div" ng-controller="UtilityController">
+            <div class="psmatch-body" ng-controller="psMatchController" ng-init="checkIfReady()">
+                <div id="select-match" style="display:none" class="modal modal-course-menu">
+                    <div class="modal-content">
+                        <div class="pending-prompt">Selecting a Match For:<br>{{rows.ps_courses[pending].course_name}}</div>
+                        <div class="ps-search-wrapper"><input type="text" placeholder="Search..." ng-model="filter.elms_search"/><i class="fa fa-search"></i></div>
+                        <div class="elms_wrapper">
+                            <div class="pointer set-match" ng-repeat="x in elms_filter(rows.elms_courses)" ng-click="setMatch(x.LMS_id,x.name)">
+                                {{x.LMS_id}}: {{x.name}}
+                            </div>
+                        </div>
+                        <div class="btn btn-danger cancel-match" onclick="$('#select-match').toggle()">Cancel</div>
+                    </div>
+                    <div id="select-prompt" class="select-prompt hidden">
+                        <div>Would you like to select a match now?</div>
+                        <div><button class="btn-success">Yes</button><button class="btn-warning">No</button></div>
+                    </div>
+                </div>
+                <div class="psmatch-title">Match Maker</div>
+                <div class="format-wrapper">
+                    <div class="title">Format:</div>
+                    <div class="line-1">PS id: PS Course Name</div>
+                    <div class="line-2">Attendance Only: <button class="btn btn-info">Yes</button><button class="btn btn-info selected">No</button></div>
+                    <div class="line-3"><i class="fa fa-link"></i> ELMS id: ELMS Course Name</div>
+                </div>
+                <div class="filter-wrapper">
+                    Type:
+                    <label class="radio-inline"><input type="radio" value="all" ng-model="filter.type">All</label>
+                    <label class="radio-inline"><input type="radio" value="att_u" ng-model="filter.type">Unset</label>
+                    <label class="radio-inline"><input type="radio" value="att_y" ng-model="filter.type">Attendance Only</label>
+                    <label class="radio-inline"><input type="radio" value="att_n" ng-model="filter.type">Not Attendance Only</label>
+                    <label class="radio-inline"><input type="radio" value="mat_y" ng-model="filter.type">Matched</label>
+                    <label class="radio-inline"><input type="radio" value="mat_n" ng-model="filter.type">Not Matched</label>
+                </div>
+                <div class="range-select">
+                    Count:
+                    <label class="radio-inline"><input type="radio" value="50" ng-model="filter.range">50</label>
+                    <label class="radio-inline"><input type="radio" value="100" ng-model="filter.range" checked="checked">100</label>
+                    <label class="radio-inline"><input type="radio" value="500" ng-model="filter.range">500</label>
+                    <label class="radio-inline"><input type="radio" value="getNumRows()" ng-model="filter.range">No Limit</label>
+                </div>
+                <div ng-if="userdata.is_organization_admin" ng-init="fillAdminOpts()">
+                    <div class="dropdown ps-admin-dropdown">
+                        (Admins Only)
+                        <table style="width:100%">
+                            <tbody><tr>
+                                <td rowspan="2"><a class="dropdown-toggle sidebar-dropdown-title" style="padding-left:0px" data-toggle="dropdown">{{admin_opt}} <span class="caret"></span></a>
+                                    <ul class="dropdown-menu course-dropdown-menu ps-dropdown">
+                                        <li ng-repeat="opt in admin_opts"><a ng-click="loadCourses(opt.id);setAdminOpt(opt.fname,opt.lname)">{{opt.fname}} {{opt.lname}}</a></li>
+                                    </ul>
+                                </td>
+                            </tr></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="ps-search-wrapper"><input type="text" placeholder="Search..." ng-model="filter.ps_search"/><i class="fa fa-search"></i></div>
+                <div class="row-wrapper" ng-repeat="x in ps_filter()">
+                    <div ng-class="{'saved' : x.saved, 'no-match' : x.attendance_only == 0 && !x.LMS_id}">
+                        <div class="line-1">{{x.sectionid}}: {{x.course_name}}</div>
+                        <div class="line-2">Attendance Only: <button ng-click="setFlag(x.index,1)" ng-class="{ selected: x.attendance_only == 1 }" class="btn btn-info">Yes</button><button ng-click="setFlag(x.index,0)"  ng-class="{ selected: x.attendance_only == 0 }" class="btn btn-info">No</button></div>
+                        <div class="line-3" ng-if="x.attendance_only == 0">
+                            <div ng-if="!x.lmsid"><i class="fa fa-chain-broken"></i> No Match <button ng-click="selectMatch(x.index)" class="btn btn-danger">Select</button></div>
+                            <div ng-if="x.lmsid" ng-click="unlink(x)"><i class="fa fa-link" style="cursor:pointer"></i> {{x.lmsid}}: {{x.name}} <button ng-click="selectMatch(x.index)" class="btn btn-default">Change</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div></div></body>
+</html>

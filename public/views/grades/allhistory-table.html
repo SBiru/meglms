@@ -1,0 +1,34 @@
+<div class="task-progress" data-ng-if="contentMode=='allClasses_activity'">
+    <label for="timeFilter"> Show history from</label>
+    <div ng-model="range.start" e3-datepicker2="" style="width: 150px;display: inline-block;top:12px"></div>
+    <b>to</b>
+    <div ng-model="range.end" e3-datepicker2="" style="width: 150px;display: inline-block;top:12px"></div>
+    <button class="btn btn-primary" style="position: relative;top: -2px;margin-left: 15px" ng-click="getClassHistory(null,-1)">Get Report</button>
+    <!--<select id="timeFilter" name="timeFilter" ng-model="timeFilter" class="form-control ng-pristine ng-valid ng-valid-required" ng-options="timeFilter.label for timeFilter in historyTimeFilters" required></select>-->
+    <div ng-show="loadingHistory" class="loading-history">
+        Loading <i class="fa fa-spinner fa-spin"></i>
+    </div>
+    <div class="panel panel-default" style="padding:10px;margin-top: 15px" ng-hide="loading-history || !classesHistory.length">
+        <h2>Total time: <span ng-bind="formatDuration(totalTimeForPeriod)"></span></h2>
+        <table>
+            <tr ng-repeat="class in classesHistory">
+                <td ng-bind="class.name + ''" style="padding: 0 10px;font-size: 15px"></td>
+                <td style=";font-size: 15px" ng-bind="'Time: ' + formatDuration(class.totalTime)"></td>
+            </tr>
+        </table>
+    </div>
+    <h3 ng-show="!allClassesHistory.length && !loadingHistory">
+        No activity history found
+    </h3>
+    <div class="panel panel-default" ng-hide="loading-history">
+        <p style="margin-left:10px" class="list-group-item-text" ng-repeat="page in allClassesHistory  | orderBy:'-time_in' track by $index" ng-if="page.time_in != null">
+            <span style="font-size: 15px;color:#428bca">{{page.class_name}} -  {{page.name}}</span>
+            <b>{{types[page.type]}}:</b>{{moment(page.time_in).format('lll')}}
+            <span ng-if="page.type=='history'">
+                <b>Duration: </b>
+                <span ng-show="page.time_out">{{formatDuration(moment(page.time_out).diff(moment(page.time_in))/1000)}}</span>
+                <span ng-hide="page.time_out">{{formatDuration(60)}}</span>
+            </span>
+        </p>
+    </div>
+</div>

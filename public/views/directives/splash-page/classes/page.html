@@ -1,0 +1,17 @@
+<div ng-if="getHref(page)==''" class="pull-left col-xs-8 pagename inactive">{{page.label}} <span style="font-weight:bold" ng-show="page.isExempt==1"> (Exempt)</span></div>
+
+<a  ng-if="getHref(page)!=''"class="pull-left col-xs-8 pagename" ng-href="{{getHref(page)}}" ng-click="goToCourse(class,unit)">{{page.label}}</a>
+<div class="pull-right icons">
+        <span ng-bind="gradeText(class,page)" class="grade" data-ng-class="gradeOverall(page)"
+              ng-if="class.showGrades==1" ng-hide="page.isExempt"></span>
+
+        <span ng-bind="formatDate(page)" class="grade"
+              ng-if="showDueDate(class,page)"></span>
+
+        <span ng-class="taskStatusTextWrapperClass" class="sidebar-checkbox"
+              ng-if="showBox(class,page)">
+            <i ng-show="(page.isGraded && !page.mastery && !page.minimumNotAchieved) || (!requires_submission(page) && page.isViewed) || page.isExempt==1" data-ng-class="{'gray':page.isExempt==1}" class="fa fa-check sidebar-checkbox-icon"></i>
+            <i ng-show="(page.mastery && page.isExempt!=1)" class="fa fa-star sidebar-checkbox-icon" style="color:gold"></i>
+            <i ng-show="page.isSubmitted && !page.isGraded" class="fa sidebar-checkbox-icon" style="left: -2px;">--</i>
+        </span>
+</div>

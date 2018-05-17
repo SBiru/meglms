@@ -1,0 +1,21 @@
+<!-- heading -->
+<div>
+	<h3 ng-bind="page.name"></h3>
+</div>
+<div ng-show="page.content" ng-bind-html="page.content"></div>
+<!-- preview mode message -->
+<div ng-show="options.preview && !options.hidePreviewAlert" class="alert alert-info">You are in preview mode. Questions are disabled.</div>
+<!-- Error -->
+<div class="alert alert-warning" ng-show="!page.quiz">This quiz is not ready yet. Please contact your teacher.</div>
+<!-- quiz details -->
+<div class="panel panel-primary" ng-if="page.quiz">
+	<div class="panel-heading" ng-bind="page.quiz.name"></div>
+	<div class="panel-body">
+		<div ng-show="page.quiz.description">Description: <span ng-bind-html="page.quiz.description"></span></div>
+		<div>Number of Questions: <strong><span ng-bind="page.quiz.questions.length"></span></strong></div>
+		<div>You can take this test <strong><span ng-bind="getAllowedTakes()"></span></strong> time(s)</div>
+		<div class="text-center">
+			<div class="btn btn-primary" ng-disabled="options.preview">Begin Quiz</div>
+		</div>
+	</div>
+</div>

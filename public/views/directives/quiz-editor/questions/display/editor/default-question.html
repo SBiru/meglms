@@ -1,0 +1,135 @@
+<!--this file is temporary. should move the questions to its own directives-->
+<!--If we have Mathjax in content-->
+<div  ng-if="question.contentPlusMathjac">
+            <span ng-repeat="obj in question.contentPlusMathjac">
+            <span ng-if="obj.html" dynamic="obj.html"></span>
+            <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+            </span>
+</div>
+
+<div ng-if="question.type !='pagebreak' && !question.contentPlusMathjac" style="margin-bottom:1em" ng-bind-html="trustAsHtml(question.prompt)"></div>
+
+<div ng-repeat="option in question.options track by $index" ng-if="question.type === 'single'" ng-init="isCorrect = ($index == question.solution)">
+    <e3-radio label="option"
+              size="test.advancedSettings.font_size"
+              type="checkbox" name="{{question.question_id}}"
+              ng-model="isCorrect"
+              ng-disabled="true"
+              value="$index"
+              box-style="test.advancedSettings.checkbox_style"
+              ng-if="!question.optionsMathJax"
+    >
+    <!--<span ng-class="($index == question.solution) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span>&nbsp;&nbsp;<span class="label label-info">{{ ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'][$index] }}.</span>&nbsp;-->
+    <!--<span ng-if="question.ready" ng-bind-html="trustAsHtml(option)" style="display: inline-block;" ng-if="!question.optionsMathJax"></span>-->
+                <!--<span ng-repeat="obj in question.optionsMathJax[$index] track by $index" ng-if="question.optionsMathJax">-->
+                        <!--<span ng-if="obj.html" dynamic="obj.html"></span>-->
+                        <!--<span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>-->
+                    <!--</span>-->
+</div>
+
+<div ng-if="question.type === 'oneword'">
+    Answer : {{question.options[0]}}
+</div>
+
+<!--<div ng-if="question.type === 'essay'" ng-bind-html="question.htmlSafeoption"></div>-->
+
+<!--matching View Display start-->
+<div ng-if="question.type === 'matching'" style="position:relative">
+    <img src="{{question.imgdata.matching.matchedImage.baselocation}}" alt="" class="pull-left">
+
+    <div id="{{corods.name}}" ng-repeat="corods in question.imgdata.matching.imagesCordinates" style="top:{{corods.y1}}px;left:{{corods.x1}}px;height:{{corods.matchedImageheight}}px;width:{{corods.matchedImagewidth}}px;position:absolute" ng-class="{
+                displaymatching:question.imgdata.matching.imagesCordinates,
+                'glyfborder glyfbgw':question.imgdata.matching.matchedImage.selectedtick == 'blank',
+                'glyfborder opacity50 glyfbgw':question.imgdata.matching.matchedImage.selectedtick == 'transparentw',
+                'glyfborder opacity50 glyfbgb':question.imgdata.matching.matchedImage.selectedtick == 'transparentb',
+            }">
+
+                        <span class="glyphicon" aria-hidden="true" ng-class="{
+                    glyficonmatching :question.imgdata.matching.imagesCordinates,
+                    'glyfred glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starr',
+                    'glyfblue glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starb',
+                    'glyfgreen glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starg',
+
+                    'glyfred glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropr',
+                    'glyfblue glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropb',
+                    'glyfgreen glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropg',
+
+                    'glyfred glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushpinr',
+                    'glyfblue glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushpinb',
+                    'glyfgreen glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushping',
+
+                    'glyfred glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetr',
+                    'glyfblue glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetb',
+                    'glyfgreen glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetg',
+                 }">
+
+                </span>
+
+    </div>
+
+    <div style="margin-left:10px" class="pull-left">
+        <!--Dragable elements start-->
+        <div ng-repeat="c in question.imgdata.matching.imagesCordinates" style="margin-bottom:5px;border: 1px solid black;padding:1px" ng-if="c.dropped!=1">
+            <img ng-if="c.matchedImagewidth" src="../quiz/crop?img={{c.img}}&width={{c.matchedImagewidth}}&height={{c.matchedImageheight}}&x={{c.x1}}&y={{c.y1}}&show={{c.show}}&text={{c.textvalue}}&imgtext={{question.imgdata.matching.matchedImage.imgtext}}&selectcolortext={{question.imgdata.matching.matchedImage.selectcolortext}}">
+        </div>
+        <!--Dragable elements end-->
+    </div>
+</div>
+<!--matching View Display end-->
+
+<!-- wordmatching View Display Start-->
+<div style="margin-left:2em" ng-if="question.type === 'wordmatching'">
+    <div class="row-fluid">
+        <div class="col-sm-12" id="'+id+'" style="margin-bottom:10px" ng-repeat="option in question.wordmatchingInputs">
+            <div class="text-center">
+                <div ng-bind-html="trustAsHtml(option.value1.value)" style="float: left;width: 30%;margin-right: 10px;" class="ng-binding"></div>
+                <div ng-bind-html="trustAsHtml(option.value2.value)" style="float: left;width: 20%;margin-right: 10px;" class="ng-binding"></div>
+                <div ng-bind-html="trustAsHtml(option.value3.value)" style="float: left;width: 20%;" class="ng-binding" ng-show="question.enable_distractors"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- wordmatching View Display End-->
+
+<!--klosequestions View Display  start-->
+<div ng-if="question.type === 'klosequestions'" ng-bind-html="question.htmlSafeoption"></div>
+<!--klosequestions View Display start-->
+
+<!--multipartquestion View Display  start-->
+<div ng-if="question.type === 'multipart'" ng-bind-html="question.htmlSafeoption"></div>
+<!--multipartquestion View Display start-->
+
+<div ng-repeat="option in question.options track by $index" ng-if="question.type === 'multiple'">
+
+    <e3-radio label="option" ng-init="isCorrect = question.optionsmatch[$index]"
+              size="test.advancedSettings.font_size"
+              type="checkbox" name="{{question.question_id}}"
+              ng-model="isCorrect"
+              ng-disabled="true"
+              value="$index"
+              box-style="test.advancedSettings.checkbox_style"
+              ng-if="!question.optionsMathJax && question.ready"
+    >
+
+    <!--<span ng-class="(question.optionsmatch[$index]) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span>&nbsp;&nbsp;<span class="label label-info">{{ ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'][$index] }}.</span>&nbsp;-->
+    <!--<span ng-if="question.ready" ng-bind-html="trustAsHtml(option)" style="display: inline-block;" ng-if="!question.optionsMathJax"></span>-->
+                <!--<span ng-repeat="obj in question.optionsMathJax[$index] track by $index" ng-if="question.optionsMathJax">-->
+                        <!--<span ng-if="obj.html" dynamic="obj.html"></span>-->
+                        <!--<span ng-if="obj.maths" mathjax-bind="obj.maths"></span>-->
+                    <!--</span>-->
+</div>
+
+<div ng-repeat="option in question.options track by $index" ng-if="question.type === 'truefalse'" >
+    <e3-radio label="['True','False'][$index]" ng-init="isCorrect = ($index == question.solution)"
+              size="question.size"
+              ng-style="{'font-family':question.extra.font.family,'font-size':question.extra.font.size}"
+              type="checkbox" name="{{question.question_id}}"
+              ng-model="isCorrect"
+              ng-disabled="true"
+              value="$index"
+              box-style="test.advancedSettings.checkbox_style"
+              ng-if="!question.optionsMathJax && question.ready"
+    >
+    <!--<span ng-class="($index == question.solution) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span>&nbsp;&nbsp;<span ng-style="{'font-family':question.extra.font.family,'font-size':question.extra.font.size}">{{ ['True','False'][$index] }}.</span>-->
+</div>

@@ -1,0 +1,225 @@
+.progress.progressV2{
+    padding:0;
+    position: relative;
+
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border-radius: 0;
+    margin: 15px auto 20px auto;
+    width:95%;
+    height:45px;
+}
+.splash-body .progress.progressV2{
+    width:100%;
+}
+.progress.progressV2 .progress-bar {
+    display: block;
+    height: 15px;
+    width: calc(100% - 130px);
+    background: #E9E9E9;;
+    border-radius: 4px;
+    background-image: none !important;
+    position: relative;
+}
+
+.progress.progressV2 .progress-bar.full-width {
+    width:100%;
+}
+.progress.progressV2 .progress-bar .progress-in {
+    display: block;
+    height: 15px;
+    background: #2FA108;
+    background-image: none !important;
+    border-radius: 4px;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.progress.progressV2 .progress-bar .expected-tasks {
+    position: absolute;
+    border: 1px solid #428bca;
+    top: 0;
+    height: 15px;
+}
+
+.progress.progressV2 .avg-grade-wrapper{
+    transform: none;
+}
+.progress.progressV2 .grade-text{
+    width: 100%;
+    font-weight: 900;
+}
+.progress.progressV2 .grade-text.secondary{
+    top: 19px;
+}
+.progress {
+
+    margin: 15px auto;
+    padding: 0 15px;
+    width: 80%;
+    min-width: 150px;
+    height: 34px;
+    background: #d3d5d9;
+    border-radius: 17px;
+    background-image: -webkit-linear-gradient(top, #ebecef, #bfc3c7);
+    background-image: -moz-linear-gradient(top, #ebecef, #bfc3c7);
+    background-image: -o-linear-gradient(top, #ebecef, #bfc3c7);
+    background-image: linear-gradient(to bottom, #ebecef, #bfc3c7);
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 6px #b6babe, 0 7px rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 6px #b6babe, 0 7px rgba(255, 255, 255, 0.1);
+}
+
+.avg-grade-wrapper {
+
+    font: 15px/34px Verdana, Geneva, sans-serif;
+    color: #333;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.6);
+    position: absolute;
+    /* margin: auto; */
+    left: calc(100% - 125px);
+    min-width: 75px;
+    width: 125px;
+    display: flex;
+}
+.avg-grade{
+    position: absolute;
+    top: 4px;
+    font-size: 9px;
+    display: inline-table;
+}
+.grade-text{
+    position: absolute;
+    top: -7px;
+    font-size: 8.5px;
+    transform: translateX(-50%);
+    left: 50%;
+}
+.progress-val{
+    position: absolute;
+    left: 50%;
+    font-size: 10px;
+    transform: translateX(-50%);
+    display: table;
+}
+.progress-val-wrapper{
+    /* left:0; */
+    width: calc(100% - 115px);
+    min-width: 1px;
+    position: relative;
+    min-height: 0px;
+    display: block;
+}
+.progress-val-wrapper.full-width {
+    width:100%;
+}
+
+.progress-bar {
+    display: block;
+    overflow: hidden;
+    height: 8px;
+    margin: 13px 0;
+    width: 70%;
+    background: #b8b8b8;
+    border-radius: 4px;
+    background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.2), transparent 60%);
+    background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.2), transparent 60%);
+    background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.2), transparent 60%);
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent 60%);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.progress-in {
+    display: block;
+    min-width: 8px;
+    height: 8px;
+    background: #1997e6;
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(0, 0, 0, 0) 61%, rgba(0, 0, 0, 0.2)), -webkit-linear-gradient(left,  #185E00, #30BD00);
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(0, 0, 0, 0) 61%, rgba(0, 0, 0, 0.2)), -moz-linear-gradient(left,  #185E00, #30BD00);
+    background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(0, 0, 0, 0) 61%, rgba(0, 0, 0, 0.2)), -o-linear-gradient(left,  #185E00, #30BD00);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(0, 0, 0, 0) 61%, rgba(0, 0, 0, 0.2)), linear-gradient(to right,  #185E00, #30BD00);
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.expected-current-progress{
+    position: absolute;
+    left: 0;
+    top: 30px;
+    font-size: 9px;
+    width: 100%;
+}
+.splash-body .expected-current-progress{
+    top:22px;
+}
+
+.expected-current-progress .current-progress{
+    margin-left:10px;
+}
+.expected-current-progress .current-progress span{
+    background: transparent;
+    font-size: 9px;
+}
+@media(max-width: 1275px) and (min-width: 1185px){
+    .splash-body .expected-progress{
+        width: 100%;
+    }
+    .splash-body .progress.progressV2{
+        height: 58px;
+    }
+}
+@media(max-width: 1275px) and (min-width: 753px){
+    .expected-progress{
+        width: 100%;
+    }
+    .progress.progressV2{
+        height: 58px;
+    }
+}
+
+.expected-progress{
+    float: left;
+}
+
+@media(min-width: 1400px){
+    .avg-grade-wrapper {
+        left: calc(100% - 140px);
+        width: 140px;
+    }
+    .progress-val-wrapper{
+        width: calc(100% - 130px);
+    }
+    .progress.progressV2 .progress-bar {
+        width: calc(100% - 145px);
+    }
+}
+@media(min-width: 1800px){
+    .avg-grade-wrapper {
+        left: calc(100% - 160px);
+        width: 160px;
+
+    }
+    .progress-val-wrapper{
+        width: calc(100% - 150px);
+    }
+    .progress.progressV2 .progress-bar {
+        width: calc(100% - 165px);
+    }
+}
+
+.progress.progressV2.progressV3 .progress-bar{
+    width: 100%;
+}
+.progress.progressV2.progressV3 .expected-current-progress{
+    top: 0;
+}
+.progress.progressV2.progressV3 .avg-grade-wrapper{
+    width: 100% !important;
+    position: absolute;
+    top:30px;
+    display: block;
+    left: 0;
+}
+
+

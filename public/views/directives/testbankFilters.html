@@ -1,0 +1,65 @@
+<div class="testbank-filters" >
+    <div>
+        Filter by:
+    </div>
+    <ul class="list-inline ">
+        <li data-ng-repeat="filter in allowedFilters">
+            <button class="btn btn-sm btn-default" btn-checkbox data-ng-model="filters[filter.id]">{{filter.name}}</button>
+        </li>
+    </ul>
+    <div class="dropdowns">
+        <div class="filter row" ng-if="filters.org">
+            <div class="filterlabel col-xs-4" ng-init="reloadOrg()">Organization:</div>
+            <div class="select col-xs-8">
+                <select
+                        style = "  width: 100%;padding: 5px;"
+                        selectize
+                        ng-model="selected.orgId"
+                        ng-options="org.id as org.name for org in organizations | orderBy:'name'"
+                        >
+                </select>
+            </div>
+
+        </div>
+        <div class="filter row" ng-if="filters.dept">
+            <div class="filterlabel col-xs-4" ng-init="reloadDepartments()">Department:</div>
+            <div class="select col-xs-8">
+                <select
+                        style = "  width: 100%;padding: 5px;"
+                        selectize
+                        ng-model="selected.deptId"
+                        ng-options="dept.id as dept.name for dept in departments | orderBy:'name'"
+                        >
+                </select>
+            </div>
+
+        </div>
+        <div class="filter row" ng-if="filters.class">
+            <div class="filterlabel col-xs-4" ng-init="reloadClasses()">Class:</div>
+            <div class="select col-xs-8">
+                <select
+                        style = "  width: 100%;padding: 5px;"
+                        selectize
+                        ng-model="selected.classId"
+                        ng-options="class.id as class.name for class in classes | orderBy:'name'"
+                        >
+                </select>
+            </div>
+
+        </div>
+        <div class="filter row" ng-if="filters.user">
+            <div class="filterlabel col-xs-4" ng-init="reloadUsers()">User:</div>
+            <div class="select col-xs-8">
+                <select
+                        style = "  width: 100%;padding: 5px;"
+                        selectize
+                        ng-model="selected.userId"
+                        ng-options="user.id as user.name for user in users"
+                        >
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <button style="width:103%;margin-top:10px;margin-bottom:10px" class="btn btn-sm btn-info" data-ng-click="setModel()" ng-show="canFinish() && !hideViewBtn">View</button>
+</div>

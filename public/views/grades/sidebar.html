@@ -1,0 +1,104 @@
+
+<!-- ************************************************************** -->
+<!-- ************************* SIDEBAR **************************** -->
+<!-- ************************************************************** -->
+<!-- controller = GradesController -->
+
+
+<div class="class-sidebar" ng-show="!classes">
+        <h3 >Loading...</h3>
+</div>
+<div id="sidebarofGrades" class="class-sidebar" ng-cloak>
+    <div ng-hide="sidebarCollapsed || $root.windowWidth<768" class="collapse-menu-icon" style="top: 5px;">
+        <span class="fa fa-list-ul" ng-click="toggleSidebar()" style="cursor:pointer"> </span>
+    </div>
+    <div class="list-group admin-group" ng-show="modes.length > 1">
+        <ul class="nav nav-pills course-units-nav" style="margin-left: 35px;">
+            <li ng-repeat="mode in modes" ng-class="mode.type == currentMode ?  'active' : ''">
+                <a href="#" ng-click="changeToMode(mode.type)">{{mode.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="btn btn-sm btn-info btn-time-engagement" ng-show="currentMode=='parent' || currentMode=='student'" ng-click="openTimeEngagement()"><span class="fa fa-bar-chart"></span> Show time engagement chart</div>
+    <div class="list-group">
+        <div ng-show="currentMode == 'admin'">
+            Select a student in your organization:
+            <select
+                    selectize
+                    ng-model="menu.student"
+                    ng-options="student.id as student.lname + ', ' + student.fname for student in students.org | orderBy:'lname'">
+            </select>
+        </div>
+
+        <div ng-show="currentMode == 'parent'">
+            Select a child
+            <select
+                    selectize
+                    ng-model="menu.student"
+                    ng-options="student.id as student.lname + ', ' + student.fname for student in students.children | orderBy:'lname'">
+            </select>
+        </div>
+
+        <div class="row" ng-show="currentMode == 'teacher'">
+            <div class="col-xs-7">
+                Select a class
+                <select
+                        selectize
+                        ng-model="menu.classid"
+                        ng-options="cls.id as cls.group_id?cls.name+' - '+cls.group_name:cls.name for cls in students.classes | orderBy:'name'">
+                </select>
+            </div>
+            <div class="col-xs-2">
+                <br />
+                <a class="btn btn-info" target="_blank" href="/gradebook/#/gradebook/{{menu.classid}}">Gradebook</a>
+            </div>
+        </div>
+        <div ng-show="!loading && (currentMode == 'admin' || currentMode == 'teacher')" style="margin-top: 10px">
+            <select ng-model="nav.showUsersType" ng-options="type.id as type.label for type in nav.showUsersTypes" data-ng-change="changeActiveType()"></select>
+
+        </div>
+
+    </div>
+    <div>
+        <input class="grades-sidebar-search" ng-keyup="onSearchKeyUp()" ng-model="filterClasses.name"
+               placeholder="Search for a {{currentMode == 'teacher' ? 'student' : 'course'}}">
+    </div>
+    <div
+            ng-show="!loading && currentMode=='teacher' && studentAssignments.totalPages && studentAssignments.totalPages>1"
+         ng-cloak="">
+        {{(page-1)*limit+1}}-{{maxShown}} of {{studentAssignments.total}}
+        <span class="btn-group">
+                <label class="btn btn-default btn-sm" data-ng-disabled="page==1"
+                       ng-click="prevPage();$root.windowWidth<768?toggleSidebar():''"><span class="fa fa-angle-left"></span></label>
+                <label class="btn btn-default btn-sm" data-ng-disabled="page==studentAssignments.totalPages"
+                       ng-click="nextPage();$root.windowWidth<768?toggleSidebar():''"><span class="fa fa-angle-right"></span></label>
+            </span>
+    </div>
+    <div class="list-group classes-list">
+        <h3 ng-show="loading">Loading...</h3>
+        <h3 ng-show="classes && !classes.length">No {{currentMode == 'teacher' ? 'students' : 'classes'}}</h3>
+
+        <a href="#" class="list-group-item"
+           ng-class="{'user-suspended':class.is_suspended==1,active: menu.selected == class,has_final_score: getFinalScore(class)}"
+           ng-repeat="class in classes | filter:filterClasses:strict | orderBy:'name'"
+           ng-click="menu.selected = class;$root.windowWidth<768?toggleSidebar():''">
+            <h4 class="list-group-item-heading" ng-class="{'text-red':currentMode == 'teacher'&&$root.isMissingAttendance(class.student_id)}">{{class.name}}</h4>
+
+            <table style="font-size:0.8em; font-weight:normal; width: 100%" ng-if="!getClassAssignment(class).units.length">
+                <th>No data was found</th>
+                <td></td>
+            </table>
+            <table style="font-size:0.8em; font-weight:normal; width: 100%" ng-if="getClassAssignment(class).units.length">
+
+                <th>Completed:</th>
+                <td>{{ getPercentComplete(class, 'assignments')|number:'0' }}%</td>
+
+
+                <th>Time:</th>
+                <td> {{getTotalTimeV2(class,['h'])}}</td>
+
+            </table>
+        </a>
+    </div>
+</div>
+

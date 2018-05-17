@@ -1,0 +1,67 @@
+<button class="btn btn-default btn-sm" ng-click="goBack()">
+    <i class="fa fa-arrow-left"></i>
+    Go Back
+</button>
+<h2>Enroll Users</h2>
+<h4> {{classInfo.name}} Class <span ng-show="groupInfo"> - {{groupInfo.name}}</span></h4>
+<div class="input-group" style="width: 300px; margin-bottom:20px">
+    <input type="text" placeholder="Search for an user" ng-model="inputFilter" class="form-control">
+    <span class="input-group-addon"><i class=" fa fa-search"></i></span>
+</div>
+
+<div ng-hide="users">Loading..</div>
+<div ng-show="isAdmin"><input type="checkbox" ng-model="show_all_users" > Show all users</div>
+<table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+
+    <thead>
+    <tr>
+        <th data-halign="left" ng-show="show_all_users">Org</th>
+        <th data-halign="left">Last Name</th>
+        <th data-halign="left">First Name</th>
+        <th data-halign="left">Email</th>
+        <th data-halign="left">Student</th>
+        <th data-halign="left">Teacher</th>
+        <th data-halign="left">Content Editor</th>
+        <th data-halign="left">Observer</th>
+        <th data-halign="left"></th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    <ul id="enrollingTab" class="nav nav-tabs" ng-init="enrollingStatus=''">
+        <li class="active">
+            <a data-toggle="tab" ng-click="enrollingStatus=''">All</a>
+        </li>
+        <li >
+            <a data-toggle="tab" ng-click="enrollingStatus='1'">Enrolled</a>
+        </li>
+        <li >
+            <a data-toggle="tab" ng-click="enrollingStatus='0'">Not enrolled</a>
+        </li>
+    </ul>
+    <tr ng-repeat='user in users | filter:inputFilter | filter:{is_enrolled:enrollingStatus} | limitTo:70 |orderBy:user.org.sort_users_by '
+        ng-init="user.fullName=user.fname + ' ' + user.lname"
+        ng-class="{'enrolled': user.is_enrolled=='1'}">
+        <td data-halign="left" ng-show="show_all_users">{{ user.org_name }}</td>
+        <td data-halign="left">{{ user.lname }}</td>
+        <td data-halign="left">{{ user.fname }}</td>
+        <td data-halign="left">{{ user.email }}</td>
+        <td data-halign="left" ><input type="checkbox" ng-model="user.is_student" ng-change="toggleEditing(user,'is_student')"></td>
+        <td data-halign="left" ><input type="checkbox" ng-model="user.is_teacher" ng-change="toggleEditing(user,'is_teacher')"></td>
+        <td data-halign="left" ><input type="checkbox" ng-model="user.is_edit_teacher" ng-change="toggleEditing(user,'is_edit_teacher')"></td>
+        <td data-halign="left" ><input type="checkbox" ng-model="user.is_observer" ng-change="toggleEditing(user,'is_observer')"></td>
+        <td data-halign="left" >
+            <button class="btn btn-primary btn-sm" ng-show="user.editing_is_student||user.editing_is_teacher||user.editing_is_edit_teacher||user.editing_is_observer" ng-click="updateUser(user)">
+            Update
+            </button>
+        </td>
+
+    </tr>
+    </tbody>
+
+</table>
+<button class="btn btn-default btn-sm" ng-click="goBack()">
+    <i class="fa fa-arrow-left"></i>
+    Go Back
+</button>

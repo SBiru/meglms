@@ -1,0 +1,152 @@
+<div class="filters">
+    <div class="small-heading">Filter by</div>
+    <ul class="list-inline list-btn">
+        <li data-ng-repeat="filter in filters" >
+            <button class="btn btn-default btn-sm" data-ng-model="selectedFilters[filter.name]" ng-change="toggleFilter(filter)"
+                    btn-checkbox>
+                {{filter.name}}</button>
+        </li>
+        <li><input ng-model="selected.includeInactive" ng-change="changeSelectInactive(selected.includeInactive)" type="checkbox"> Include
+            withdrawn students/classes </li>
+    </ul>
+    <div class="row">
+
+        <div class="col-xs-6">
+            <div data-ng-repeat="filter in selected.filters">
+                <strong>Select {{filter.name}}</strong>
+                <select selectize
+                ng-options="option.name for option in filterOptions[filter.name]"
+                ng-model="filter.value"
+                ng-change="filterHasChanged(filter,true)"
+                ></select>
+            </div>
+
+        </div>
+        <div class="col-xs-6"     style="top: 23px;">
+            <button class="btn btn-primary btn-sm" data-ng-click="getUsers()">Get report</button>
+            <a  ng-if="(classes.length || users.length)" class="btn btn-info btn-sm" ng-click="downloadAsCsv()"><i class="fa fa-cloud-download"></i> .CSV</a>
+            <button class="btn btn-info btn-sm" data-ng-click="openSendReport()" data-ng-disabled="!canSendReport()" ng-hide="showSendReport || !hasAdvisorAbilities()">Send report</button>
+        </div>
+    </div>
+</div>
+
+
+<hr/>
+<div class="text-danger" ng-show="filterBy.name=='Advisee' && filterOptions.length==1">
+    You have no advisees
+</div>
+<div ng-show="loading.users">LOADING.. <span data-ng-show="loading.percentage">{{loading.percentage}}%</span></div>
+<div>
+    <p ng-show="hasAdvisorAbilities() && canSendReport()">
+        <span>
+            <input type="checkbox" ng-model="selectAll" data-ng-change="selectOrUnselectAll(selectAll)">
+            Select All
+        </span>
+        <span class="btn btn-default btn-xs collapse-all" ng-click="collapseAll=!collapseAll;collapseOrExpandAll(collapseAll)">
+            <span ng-bind="collapseAll?'Expand':'Collapse'"></span> All
+        </span>
+    </p>
+</div>
+<div ng-hide="loading.users" data-ng-repeat="user in users | orderBy:'lastName'" ng-if="users && user.classes">
+    <p class="pointer" ng-click="user.collapse=!user.collapse">
+        <input type="checkbox" ng-model="user.selected" ng-show="hasAdvisorAbilities()" ng-click="stopPropagation($event)">
+        <span class="fa" ng-class="user.collapse?'fa-plus':'fa-minus'"></span>
+        <span ng-class="{'text-red':$root.isMissingAttendance(user.id)}">{{user.lastName}}, {{user.firstName}}</span>
+    </p>
+    <div class="div-table">
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table"
+           ng-init="user.sort = {by:'lastName',reverse:false}" ng-hide="user.collapse">
+        <thead>
+            <tr>
+                <th class="fixed-column no-border margin-top-15" data-ng-click="sortBy(user,'name')"><a>Course</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'percCompletedScore')"><a>Grade on Completed work</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'percTotalScore')"><a>Current overall grade</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'percExpectedTasks')"><a>Expected so far</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'percCompletedTasks')"><a>Completed so far</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'enrollmentDate')" ><a>Course start</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'expectedEndDate')"><a>Course end</a></th>
+                <th class="no-border" data-ng-click="sortBy(user,'projectedEndDate')"><a>Projected end date</a></th>
+            </tr>
+        </thead>
+            <tr data-ng-repeat="class in user.classes | orderBy:user.sort.by:user.sort.reverse">
+            <td class="fixed-column">{{class.name}}</td>
+            <td>
+                <span ng-hide="class.hasNotLoggedIn">
+                    {{class.percCompletedScore}}% <span ng-show="class.showGradesAsLetter==1">({{class.letterCompletedScore}})</span>
+                </span>
+                <span ng-show="class.hasNotLoggedIn">Hasn't logged in</span>
+            </td>
+
+            <td>
+                <span ng-hide="class.hasNotLoggedIn">
+                    {{class.percExpectedOrCompletedScore}}%
+                    <span ng-show="class.showGradesAsLetter==1">({{class.letterExpectedOrCompletedScore}})</span>
+                    <span ng-bind="preparePercBehind(class)"></span>
+                </span>
+
+                <span ng-show="class.hasNotLoggedIn">Hasn't logged in</span>
+            </td>
+            <td>{{class.percExpectedTasks}}%</td>
+            <td data-ng-class="{
+                'text-danger':(class.percentExpectedTasks - class.percentWorkedTasks)>20
+                }">{{class.percCompletedTasks}}%</td>
+            <td >{{formatDate(class.enrollmentDate)}}</td>
+            <td ng-show="class.expectedEndDate">{{formatDate(class.expectedEndDate)}}</td>
+            <td ng-show="class.expectedEndDate">{{formatDate(class.projectedEndDate)}}</td>
+        </tr>
+    </table>
+    </div>
+
+</div>
+<div ng-hide="loading.users" data-ng-repeat="class in classes" ng-if="classes">
+    <p class="pointer" ng-click="class.collapse=!class.collapse">
+
+        <span class="fa" ng-class="class.collapse?'fa-plus':'fa-minus'"></span>
+        {{class.name}}
+    </p>
+    <div class="div-table">
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table"
+            ng-init="class.sort = {by:'lastName',reverse:false}" ng-hide="class.collapse">
+        <thead>
+        <tr>
+            <th class="fixed-column no-border margin-top-15" data-ng-click="sortBy(class,'lastName')"><a>Student</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'percCompletedScore')"><a>Grade on Completed work</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'percTotalScore')"><a>Current overall grade</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'percExpectedTasks')"><a>Expected so far</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'percCompletedTasks')"><a>Completed so far</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'enrollmentDate')" ><a>Course start</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'expectedEndDate')"><a>Course end</a></th>
+            <th class="no-border" data-ng-click="sortBy(class,'projectedEndDate')"><a>Projected end date</a></th>
+        </tr>
+        </thead>
+        <tr data-ng-repeat="user in class.users.students | orderBy:class.sort.by:class.sort.reverse">
+            <td  class="fixed-column" ng-class="{'text-red':$root.isMissingAttendance(user.id)}">{{user.lastName}}, {{user.firstName}}</td>
+            <td>
+                <span ng-hide="user.hasNotLoggedIn">
+                    {{user.percCompletedScore}}% <span ng-show="user.showGradesAsLetter==1">({{user.letterCompletedScore}})</span>
+                </span>
+                <span ng-show="user.hasNotLoggedIn">Hasn't logged in</span>
+
+            </td>
+            <td>
+                <span ng-hide="user.hasNotLoggedIn">
+                    {{user.percExpectedOrCompletedScore}}%
+                    <span ng-show="user.showGradesAsLetter==1">({{user.letterExpectedOrCompletedScore}})</span>
+                    <span ng-bind="preparePercBehind(user)"></span>
+                </span>
+
+
+                <span ng-show="user.hasNotLoggedIn">Hasn't logged in</span>
+            </td>
+            <td>{{user.percExpectedTasks}}%</td>
+            <td data-ng-class="{
+                'text-danger':(user.percentExpectedTasks - user.percentWorkedTasks)>20
+                }">{{user.percCompletedTasks}}%</td>
+            <td >{{formatDate(user.enrollmentDate)}}</td>
+            <td ng-show="user.expectedEndDate">{{formatDate(user.expectedEndDate)}}</td>
+            <td ng-show="user.expectedEndDate">{{formatDate(user.projectedEndDate)}}</td>
+        </tr>
+    </table>
+    </div>
+
+</div>

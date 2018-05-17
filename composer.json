@@ -1,0 +1,42 @@
+{
+    "name": "english3/meglms",
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.org/"
+        }
+    ],
+    "autoload": {
+        "psr-0": {"": "src"}
+    },
+    "authors": [
+        {
+            "name": "Vance Cagle",
+            "email": "vance@vancerver.com"
+        },
+        {
+            "name": "Brian Payne",
+            "email": "bpayne@uci.edu"
+        }
+    ],
+    "require": {
+        "silex/silex": "2.0.*@dev",
+        "robmorgan/phinx": "~0.3",
+        "doctrine/dbal": "~2.5",
+        
+        "react/stomp": "^0.2.0",
+        "phpoffice/phpexcel": "^1.8",
+        "symfony/serializer": "~2.6",
+        "phpmailer/phpmailer": "^5.2",
+        "phpseclib/phpseclib": "^2.0",
+        "yzalis/crontab": "^1.0",
+        "dompdf/dompdf": "^0.8.2"
+        
+    },
+    "require-dev": {
+        "crysalead/kahlan": "^2.4"
+    }
+}

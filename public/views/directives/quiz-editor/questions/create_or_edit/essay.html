@@ -1,0 +1,16 @@
+
+<div style="margin-bottom: 30px">
+    <div>
+        <input ng-model="question.extra.hide_advanced_editor" type="checkbox" > Hide advance text editor by default
+    </div>
+    <div>
+        <input ng-model="question.extra.allow_text_response" type="checkbox" > Allow text response
+    </div>
+    <div>
+        <input ng-model="question.extra.allow_file_upload" type="checkbox" > Allow file upload
+    </div>
+
+    <input ng-model="useRubric" type="checkbox" ng-change="question.extra.useRubric = useRubric;use_rubric = useRubric?1:0;"> Use Rubric
+    <div ng-if="useRubric" ng-include="'/public/views/partials/editor/rubric_table.html'" style="clear:both" ng-init="$parent.course && $parent.course.id  && (courseId = $parent.course.id)"></div>
+
+</div>

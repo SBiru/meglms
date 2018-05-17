@@ -1,0 +1,111 @@
+
+<div ng-class="hideHelper?'col-sm-12':'col-sm-6'">
+    <div class="btn btn-sm btn-default btn-helper" ng-show="hideHelper" ng-click="hideHelper=!hideHelper">
+        <span class="fa fa-question"></span>
+    </div>
+    <div class="small-heading">Forum Settings</div>
+    <table class="table">
+        <tr data-ng-mouseover="helperContext='type_helper.html'">
+            <td>
+                Forum type:
+            </td>
+            <td>
+                <select class="form-control" ng-model="settings.type">
+                    <option value="standard">Standard forum for general use</option>
+                    <option value="one_post">Each person posts one discussion</option>
+                    <option value="q_a">Q and A Forum</option>
+                </select>
+            </td>
+        </tr>
+        <tr data-ng-mouseover="helperContext='subscription_helper.html'">
+            <td>
+                Subscription mode:
+            </td>
+            <td>
+                <select class="form-control" ng-model="settings.subscription_mode">
+                    <option value="optional">Optional subscription</option>
+                    <option value="forced">Forced subscription</option>
+                    <option value="auto">Auto subscription</option>
+                    <option value="disabled">Subscription disabled</option>
+                </select>
+            </td>
+        </tr>
+        <tr data-ng-mouseover="helperContext='reading_track_helper.html'">
+            <td>
+                Read tracking:
+            </td>
+            <td>
+                <select class="form-control" ng-model="settings.track_reading">
+                    <option value="optional">Optional</option>
+                    <option value="on">On</option>
+                    <option value="off">Off</option>
+                </select>
+            </td>
+        </tr>
+        <tr data-ng-mouseover="helperContext='limit_editing_time.html'">
+            <td>Limit editing time:</td>
+            <td>
+                <div class="minutes_wrapper">
+                    <input ng-model="settings.limit_editing_time" class="form-control ">
+                    <span>minutes</span>
+                </div>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div class="col-sm-6" ng-hide="hideHelper">
+    <div class="small-heading">Help</div>
+    <div class="btn btn-sm btn-default btn-helper" ng-click="hideHelper=!hideHelper">
+        <span class="fa fa-question"></span>
+    </div>
+
+    <div data-ng-include="helperContext"></div>
+</div>
+<div class="clearfix"></div>
+<div class="col-xs-12">
+    <div class="small-heading">
+        Forum introduction
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="type_helper.html">
+    <p><b>Type  (IN DEVELOPEMNT)</b></p>
+    <p>
+        - <u>Standard forum for general use</u>: An open forum where anyone can start a new topic at any time; this is
+        the
+        best general-purpose forum<br>
+        - <u>Each person posts one discussion</u>: Each person can post exactly one new discussion topic (everyone can
+            reply
+        to them though); this is useful when you want each student to start a discussion about, say, their
+        reflections on the week's topic, and everyone else responds to these<br>
+        - <u>Q and A Forum</u>: Instead of initiating discussions teacher poses a question in the initial post of a
+        discussion. Students may reply with an answer, but they will not see the replies of other Students to the
+        question, until they have themselves replied to it.<br>
+    </p>
+</script>
+<script type="text/ng-template" id="subscription_helper.html">
+    <p><b>Subscription mode  (IN DEVELOPEMNT)</b></p>
+    <p>
+        - <u>Optional subscription</u>: Participants can choose whether to be subscribed <br>
+        - <u>Forced subscription</u>: Everyone is subscribed and cannot unsubscribe<br>
+        - <u>Auto subscription</u>: Everyone is subscribed initially but can choose to unsubscribe at any time<br>
+        - <u>Subscription disabled</u>: Subscriptions are not allowed.<br>
+    </p>
+</script>
+<script type="text/ng-template" id="reading_track_helper.html">
+    <p><b>Reading track (IN DEVELOPEMNT)</b></p>
+    <p>
+        - <u>Optional</u>: Students can turn tracking on or off for the forum<br>
+        - <u>On</u>: Tracking is always on in this forum<br>
+        - <u>Off</u>: It is not possible to track unread forum posts<br>
+    </p>
+</script>
+<script type="text/ng-template" id="limit_editing_time.html">
+    <p><b>Limit editing time (IN DEVELOPEMNT)</b></p>
+    <p>
+        Amount of time during which students can edit after their first post. "0" means no restriction
+    </p>
+</script>

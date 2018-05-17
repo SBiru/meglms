@@ -1,0 +1,66 @@
+
+<style>
+    .edit-question.modal {
+        overflow: hidden !important;
+    }
+    .edit-question .modal-dialog {
+        width: 98%;
+        height: 100%;
+        margin-top: 1%;
+    }
+    .edit-question .modal-content {
+        height: 97%;
+    }
+    .edit-question .modal-body {
+        height: calc(100% - 75px)!important;
+    }
+    .cke_contents {
+        height: 100px!important;
+    }htmlSafeprompt
+     .btn-group {
+         display: inline-block!important;
+     }
+</style>
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">Edit Question</em></h4>
+</div>
+<div class="modal-body modallist" style="{{modallistoverflow()}}" ng-init="values=question" ng-if="question">
+    <form role="form">
+        <div class="alert alert-info" role="alert" ng-show="question.bankChanged">
+            <strong style="color: red;font-style: italic;">Hint</strong> : You need to save the Question before change bank takes effect.
+        </div>
+        <div class="question_max_points" style="float:left">
+            <label >Change Bank:</label>
+            <select class="width-100"
+                    ng-model="question.bank_id"
+                    ng-change="BankChanged()"
+                    ng-options="value.id as value.title for value in allBanks">
+            </select>
+        </div>
+        <div class="question_max_points">
+            <label for="question_max_points">Max Points:</label>
+            <input id="question_max_points" type="text" ng-model="question.max_points" ng-disabled="question.type=='information' || question.extra.useRubric">
+        </div>
+        <div class="form-group" style="display:none">
+            <label for="modalTitle">Title:</label>
+            <input id="modalTitle" type="text" class="form-control" placeholder="Enter title" ng-model="question.title" autofocus>
+        </div>
+        <div>
+            <edit-question-in-modal type="values.type"></edit-question-in-modal>
+            <div class="form-group" ng-show="question.type !== 'matching'" style="clear:both">
+                <label for="modalFeedback">Feedback:</label>
+                <input type="text" class="form-control" id="modalFeedback" placeholder="Enter feedback" ng-model="question.feedback">
+                <p class="help-block"><em>*Feedback is optional and will only ever be displayed if activated in the Course Builder</em>
+                </p>
+            </div>
+
+        </div>
+        <div class="alert alert-danger" role="alert" ng-if="question.error"><strong style="color: red;font-style: italic;">ERROR </strong><span data-ng-bind="question.error"></span> </div>
+        <div class="modal-footer" ng-show="question.type !== 'matching'">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="ok_Edit()"  data-ng-disabled="!canSave()">Save Question</button>
+        </div>
+    </form>
+</div>

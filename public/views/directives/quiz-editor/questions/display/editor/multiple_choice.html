@@ -1,0 +1,5 @@
+<div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt"></div>
+<div ng-repeat="option in question.options track by $index">
+    <span ng-class="($index == question.solution) ? 'glyphicon-ok' : 'glyphicon-unchecked'" class="glyphicon "></span>&nbsp;&nbsp;<span class="label label-info">{{ ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'][$index] }}.</span>&nbsp;
+    <span ng-bind-html="trustAsHtml(option)" style="display: inline-block;"></span>
+</div>

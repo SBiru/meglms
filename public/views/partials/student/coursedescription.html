@@ -1,0 +1,45 @@
+<div>
+    <div class="clearfix">
+        <div class="course_description_image">
+            <img ng-if="pageData.imageUrl" src="{{pageData.imageUrl}}">
+        </div>
+        <div class="course_description_title " ng-bind="pageData.welcome" style="display: block;"></div>
+        <div class="course_description_body" ng-style="{display:pageData.editingDescription?'flex':'block'}" >
+            <div ng-bind="pageData.description"></div>
+
+        </div>
+    </div>
+    <table style="width: 100%;margin-top: 30px" class="course_description_table editor">
+        <tr>
+            <td>
+                <div >
+                    <b>Satisfies:</b>
+                    <span ng-bind="pageData.satisfies"></span>
+                </div>
+
+            </td>
+            <td>
+                <b>Credit:</b>
+                <span ng-bind="pageData.credit"></span>
+            </td>
+            <td >
+                <div >
+                    <b>Prerequisite:</b>
+                    <span ng-bind="pageData.prerequisite"></span>
+                </div>
+            </td>
+            <td >
+                <div >
+                    <b>Designer:</b>
+                    <span ng-bind="pageData.designer"></span>
+                </div>
+            </td>
+
+            <td>
+                <b>Badges:</b>
+                <span></span>
+            </td>
+        </tr>
+    </table>
+
+</div>

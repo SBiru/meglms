@@ -1,0 +1,36 @@
+<div ng-controller="CloneUnitController">
+    <div class="row">
+        <div class="col-sm-6">
+            Select a course:<span class="fa fa-spinner fa-pulse" ng-show="loading_courses"></span>
+            <select selectize ng-model="course"
+                    ng-options="c.id as c.name for c in courses | orderBy:'name'"></select>
+
+        </div>
+        <div class="col-sm-6">
+            Select a unit: <span class="fa fa-spinner fa-pulse" ng-show="loading_units"></span>
+            <select selectize ng-model="unit"
+                    ng-options="u.id as u.description for u in units | orderBy:'name'"></select>
+        </div>
+
+    </div>
+    <div class="row" ng-show="pages">
+        <div ng-show="loading_pages">Loading pages..</div>
+        <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+            <thead>
+            <tr>
+                <th data-halign="left"><input type="checkbox" ng-model="select_all"> Select all</th>
+                <th data-halign="left">Page name</th>
+                <th data-halign="left">Cloned name</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="page in pages | orderBy:'position'" ng-init="page.cloned_name=page.name">
+                <td data-halign="left"><input type="checkbox" ng-model="page.clone"></td>
+                <td data-halign="left">{{page.name}}</td>
+                <td data-halign="left"><input type="text" ng-model="page.cloned_name"></td>
+            </tr>
+        </table>
+        <button class="btn btn-default" ng-click="finish()">Clone unit!</button>
+        <div ng-show="cloning">Cloning..</div>
+    </div>
+
+</div>

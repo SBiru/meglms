@@ -1,0 +1,81 @@
+<div class="autograde panel panel-default row" style="margin: 10px -11px -11px -11px;" ">
+    <div class="box col-sm-6">
+        <div class="panel-heading">
+            Main posts
+        </div>
+        <div >
+            <table style="font-size: 13px;">
+                <thead>
+                <tr>
+
+                    <th >
+                        Points per post:
+                    </th>
+                    <th >
+                        Max Points:
+                    </th>
+                </tr>
+                </thead>
+                <tr>
+                    <td >
+                        <div class="input-group spinner" ng-if="rubricService.data.selected==0 || use_rubric=='0'">
+                            <input type="text" ng-model="$parent.$parent.points_main" class="form-control" value="50" >
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" ng-click="incrementMaxpoints('points_main')"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" ng-click="decrementMaxpoints('points_main')"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="input-group spinner" ng-if="rubricService.data.selected==0 || use_rubric=='0'">
+                            <input type="text" ng-model="$parent.$parent.max_points_main" class="form-control" value="50" >
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" ng-click="incrementMaxpoints('max_points_main')"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" ng-click="decrementMaxpoints('max_points_main')"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="box col-sm-6">
+        <div class="panel-heading">
+            Replies to other students
+        </div>
+        <div >
+            <table style=" font-size: 13px;">
+                <thead>
+                <tr>
+                    <th >
+                        Points per post:
+                    </th>
+                    <th >
+                        Max points:
+                    </th>
+                </tr>
+                </thead>
+                <tr>
+                    <td >
+                        <div class="input-group spinner" ng-if="rubricService.data.selected==0 || use_rubric=='0'">
+                            <input type="text" ng-model="$parent.$parent.points_reply" class="form-control" value="50" >
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" ng-click="incrementMaxpoints('points_reply')"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" ng-click="decrementMaxpoints('points_reply')"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="input-group spinner" ng-if="rubricService.data.selected==0 || use_rubric=='0'">
+                            <input type="text" ng-model="$parent.$parent.max_points_reply" class="form-control" value="50" >
+                            <div class="input-group-btn-vertical" >
+                                <button class="btn btn-default" ng-click="incrementMaxpoints('max_points_reply')"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" ng-click="decrementMaxpoints('max_points_reply')"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

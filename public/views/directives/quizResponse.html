@@ -1,0 +1,92 @@
+<div class="grader_outline" data-ng-if="quiz">
+    <div data-ng-if="graderView" class = "grader_top_heading" style="font-size: larger;ont-weight: bold"><span ng-if="quiz.unit_name"><em>{{ quiz.unit_name}} - {{quiz.page_name}} </em> :</span> <span style="font-weight:bold">Student : <em>{{ $root.prepareUserName($root.user.org.sort_users_by,quiz.user.fname,quiz.user.lname)}}</em></span>  <span class="btn btn-sm btn-default preview-button" ng-show="pageInfo" data-ng-click="openPreview(postedMessages)">View assignment page</span>
+    <span class="btn-email" ng-controller="EmailController" ng-click="open(quiz.user)" ng-init="specificUser=true">
+          <span class="fa fa-envelope"> </span>
+        </span>
+    <div style="margin-top:10px;margin-bottom:10px;font-weight: bold">
+        E3 Student ID: <em>{{ quiz.user.user_id}}</em>
+        <span ng-show="isGraderAll"> - {{quiz.user.page_name}}</span>
+    </div>
+    </div>
+    <tabset>
+        <tab ng-repeat="attempt in quiz.attempts | orderBy:-attempt.submitted"
+             heading="{{attempt.submitted}}"
+             active="attempt.active"
+             select="getAttempt(attempt)"
+             class="{{attempt.highest?'highest_attempt':''}}" >
+        </tab>
+    </tabset>
+    <div class="quiz-score">
+        <span ng-show="isArchive" style="font-weight:bold;font-size: larger;margin-left: 15px;">
+            Quiz total score: <span style="color:green;">{{getTotalScore(quiz)}}</span>
+        </span>
+        <span ng-if="graderView" class="btn btn-default btn-sm" ng-click="deleteAttempt()">Delete this attempt <i class="text-danger fa fa-times-circle"></i></span>
+    </div>
+
+    <div class="div-tabs"  >
+        <div class="grader_PostedMessage" >
+            <!--message by Student start-->
+            <div  class="grader_box"  >
+                <div   class="grader_GraderHelperController">
+                    <!--Posted message by Student-->
+                    <div class="grader_block " ng-class="{true:'grader_only_pre', false:''}[quiz.===false]">
+                        <ul class="pager main-nav-pager" style="margin-top:0">
+                            <li class="previous"><span data-ng-click="addToIndex(quiz,-1)" style="margin-left: 0px;"><span class="fa fa-angle-left"></span></span></li>
+                            <li><h2 class="inlineContentHeader ng-binding">Question {{quiz.current_index + 1}}/{{quiz.questions.length}}</h2></li>
+                            <li class="next"><span data-ng-click="addToIndex(quiz,1)"><span class="fa fa-angle-right"></span></span></li>
+                        </ul>
+                        <span ng-show="errors[quiz.current_index]" class="alert alert-danger" ng-bind="errors[quiz.current_index]"></span>
+                        <div class="question" style="margin: 10px">
+
+                            <div>
+                                Question ID:
+                                <span  ng-if="!canEdit() && graderView" ng-bind="getQuestionType(quiz)"></span>
+                                <a ng-href="/testbank/#/bank:{{getQuestion(quiz).bank_id}}?question={{getQuestion(quiz).id}}"
+                                   target="_blank"
+                                   ng-bind="getQuestion(quiz).id"
+                                   ng-if="canEdit() && graderView">
+                                </a>
+                            </div>
+                            <span class="label label-info" ng-bind="getQuestionType(quiz)"></span>
+                            <display-question where="'grader'" question="getQuestion(quiz)"></display-question>
+                            <div ng-hide="getQuestion(quiz).type=='information'">
+                                <div ng-cloak="">Max Score: {{getQuestion(quiz).max_points}}</div>
+                                <div ng-cloak="" ng-hide="graderView">Score:
+                                    <span ng-hide="getQuestion(quiz).is_correct==-1">{{getQuestion(quiz).is_correct}}</span>
+                                    <span ng-show="getQuestion(quiz).is_correct==-1">Waiting for grade</span>
+                                </div>
+                                <div ng-cloak="" ng-show="graderView">Current Score:
+                                    <a ng-show="getQuestion(quiz).is_correct==-1 && !getQuestion(quiz).editing" ng-click="editScore(quiz)">
+                                        Needing Grade
+                                    </a>
+                                    <input class="score" type="text"
+                                           ng-show="getQuestion(quiz).is_correct!=-1 || getQuestion(quiz).editing"
+                                           ng-disabled="getQuestion(quiz).extra.useRubric"
+                                           ng-model="getQuestion(quiz).is_correct">
+                                </div>
+                            </div>
+                            <div class="question-feedback-wrapper" ng-if="getQuestion(quiz) && (getQuestion(quiz).feedback || graderView) && getQuestion(quiz).type!='information'">
+                                <b>Feedback:</b>
+                                <div ng-if="graderView">
+                                    <textarea ckeditor="" custom-options="ckeditorOptions" ng-if="getQuestion(quiz)" class="form-control" data-ng-model="getQuestion(quiz).feedback" placeholder="Feedback"></textarea>
+                                    <async-button color-style="primary" text="Save Changes" flash-text="Saved!" loading="loading.question" ng-click="saveChanges(quiz)"></async-button>
+                                    <button class="btn btn-primary btn-sm" ng-show="!isArchive && canFinishGrading(quiz)" ng-disabled="loading.question==1" ng-click="finishGrading(quiz)">
+                                        Finish grading
+                                    </button>
+                                </div>
+
+                                <div class="question-feedback" ng-if="!graderView" ng-bind-html="safeHtml(getQuestion(quiz).feedback)"></div>
+                                <span ng-if="!graderView" ng-controller="EmailController"  ng-init="specificUser=true">
+                                  <a ng-click="open(getQuestion(quiz).teacher)">{{getQuestion(quiz).teacher.fname}} {{getQuestion(quiz).teacher.lname}}</a>
+                                    <span style="color:#888888">{{getQuestion(quiz).feedback_date}}</span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--message by Student end-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<ul class="pagination">
+    <li ng-class="{disabled: quizInfo.currentPage == 0}">
+        <a ng-click="previousPage()">« Prev</a>
+    </li>
+    <li ng-repeat="n in pageNumberButtons"
+        ng-class="{active: n == quizInfo.currentPage}"
+        ng-click="quizInfo.currentPage=n">
+        <a ng-bind="n + 1"></a>
+    </li>
+    <li ng-class="{disabled: quizInfo.currentPage == pagedItems - 1}" clas="next-page">
+        <a ng-click="nextPage()">Next »</a>
+    </li>
+</ul>

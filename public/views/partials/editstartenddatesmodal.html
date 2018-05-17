@@ -1,0 +1,15 @@
+<div class="modal-header" style="height: 50px">
+    <button type="button" class="close " ng-click="$dismiss()">
+        <div class="btn btn-danger btn-sm">
+            <span aria-hidden="true" class="fa fa-times" style="font-size:15px"></span><span class="sr-only">Close</span>
+        </div>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="fa fa-spinner fa-pulse" ng-show="loading"></div>
+    <div edit-start-end-dates ng-if="options" ng-hide="loading" options="options"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" data-ng-click="$dismiss()">Cancel</button>
+    <button class="btn btn-primary" data-ng-click="save()">Save</button>
+</div>

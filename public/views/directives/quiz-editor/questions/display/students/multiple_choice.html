@@ -1,0 +1,8 @@
+<div style="margin-bottom:1em" bind-html-compile="question.prompt"></div>
+<div ng-repeat="option in question.options track by $index" class="radio quiz-option">
+    <br>
+    <label>
+        <input type="radio" name="{{question.question_id}}" ng-model="question.attemptedanswers" value="{{$index}}">
+        <span ng-bind-html="trustAsHtml(option.text)"></span>
+    </label>
+</div>

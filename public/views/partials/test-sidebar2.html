@@ -1,0 +1,143 @@
+<style>
+    .unit-button-inactive,.sidebar-nav-item {
+        background-color: #f3f3f4;
+        color: #428bca !important;
+    }
+    .unit-button-active,.sidebar-nav-item.active {
+        color: #fff;
+        background-color: #428bca !important;
+        position: relative;
+    }
+
+    .sidebar-nav-item.active a{
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .unit-button-active:after,.has-arrow .sidebar-nav-item:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .unit-button-active:after,.has-arrow  .sidebar-nav-item:after {
+        border-color: rgba(136, 183, 213, 0);
+        border-top-color: #428bca;
+        border-width: 15px;
+        margin-left: -15px;
+    }
+    .menu-table{
+        margin-bottom: 15px;
+        border-spacing: 4px 0;
+    }
+    .menu-table td{
+        width: 25%;
+    }
+    .top-nav-menu .table-bordered{
+        border: none;
+        border-collapse: separate;
+    }
+    .top-nav-menu td{
+        border-radius: 4px;
+        border:none !important;
+    }
+
+</style>
+<script>
+    window.calculateWidth = function(numberOfCols){
+        return 100/numberOfCols + '%'
+    }
+</script>
+<div class="row-fluid" style="padding-top: 15px;">
+    <div class="col-xs-4">
+        <div class="dropdown course-dropdown" ng-controller="CourseController" ng-class="{'with-edit-class':showEditClassButton()}">
+            <table style="margin: auto;" >
+                <tr>
+                    <td>
+                        <select selectize ng-model="currentCourseID"
+                                style="width:100%"
+                                ng-options="course.id as course.name for course in courses | orderBy:'name'"
+                                ng-change="changeCourse(currentCourseID)">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="progress progressV2" ng-controller="ProgressBarController" ng-show="ProgressBarControllerNo === false">
+        <span class="avg-grade-wrapper" ng-show="class.show_grades==1">
+            <span class="grade-text" ng-bind="gradeText()"></span>
+            <span class="avg-grade" ng-bind="formatGrade()"></span>
+            <span class="grade-text secondary" ng-show="showSecondaryGrade()"> Current grade: <span style="font-weight:300" ng-bind="secondaryGrade()"></span></span>
+        </span>
+        <span class="progress-val-wrapper" ng-class="{'full-width':class.show_grades==0}">
+            <span class="progress-val">Completed: {{progress_perc}}%</span>
+        </span>
+        <span class="progress-bar" ng-class="{'full-width':class.show_grades==0}">
+
+            <span class="progress-in" ng-style="{width: progress_perc+'%',background: barBackground()}"></span>
+            <span class="expected-tasks"  ng-show="shouldUseCustomProgressBar()" ng-style="{left: progressReport.percExpectedTasks+'%'}"></span>
+        </span>
+        <span class="expected-current-progress" ng-show="shouldUseCustomProgressBar()">
+            <span class="expected-progress">Expected: {{progressReport.percExpectedTasks}}%</span>
+            <span class="current-progress"> <span ng-class="currentProgressVsExpected()<0?'text-danger':'text-success'" ng-bind="currentProgressText()"></span></span>
+        </span>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div ng-controller="TeacherInfoMenuController">
+            <div  ng-if="me.data.show_for_student.meta_value">
+                <div data-ng-include="'/public/views/partials/teacher_info_horizontal.html?v=2'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+<div class="row-fluid" style="padding: 0 20px;">
+    <table class="table table-bordered menu-table"  >
+        <tr>
+            <td ng-if="useSuperUnits" ng-hide="hideFromStudent" ng-controller="SuperUnitController">
+                <select selectize ng-model="superUnit.currentUnit"
+                        style="width:100%"
+                        ng-options="unit as unit.name for unit in superUnit.units | orderBy:'position'">
+                </select>
+            </td>
+            <td>
+                <select selectize ng-model="current_unit_id"
+                        ng-options="unit.id as unit.description for unit in navData.units"
+                        data-ng-change="changeToUnit(current_unit_id)"
+                        ></select>
+            </td>
+            <td>
+                <select selectize ng-model="navService.currentHeaderId"
+                        ng-options="nav.id as nav.label for nav in getPages()"
+                        data-ng-change="expandHeader2(navService.currentHeaderId, $event,$index)"
+                        ></select>
+
+            </td>
+            <td>
+                <select selectize ng-model="activePage.id"
+                        ng-options="nav.id as nav.label for nav in subPages"
+                        data-ng-change="goToPage(activePage.id)"
+                        ng-disabled="subPages.length<2"
+                        ></select>
+
+            </td>
+        </tr>
+    </table>
+    <!--<table class="table table-bordered menu-table">-->
+        <!--<tr>-->
+            <!--<td data-ng-repeat="nav in subPages track by $index" ng-class="navItemClasses(nav,$index)"  style="width: 100px">-->
+                <!--<a ng-href="{{getHref(nav,$index)}}" ng-bind="nav.label"></a>-->
+            <!--</td>-->
+        <!--</tr>-->
+    <!--</table>-->
+</div>  
+    
+</div>

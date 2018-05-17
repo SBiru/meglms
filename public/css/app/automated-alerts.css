@@ -1,0 +1,139 @@
+.automated-alerts-modal .modal-dialog{
+    width: 90%;
+}
+
+.alerts_ul{
+    padding-left: 0;
+}
+.alert-disabled{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background-color: rgba(255,255,255,0.4);
+}
+.automated-alert{
+    list-style: none;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.05);
+    background-image: linear-gradient( 90deg, #2E60FF 5px, #EEE 5px, #EEE 11px, transparent 11px);
+    padding: 10px 15px 10px 15px;
+    border: 1px solid #CCC;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5);
+    margin-bottom: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.automated-alert table{
+    width: 100%;
+
+}
+.automated-alert .alert-checkbox{
+    z-index: 2;
+    position: relative;
+    width: 30px;
+}
+.automated-alert .alert-name{
+    padding: 0 5px;
+    border-right: 1px solid #ddd;
+    width: 240px;
+    color: #427fed;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: arial,sans-serif;
+}
+.automated-alert .alert-test-email{
+    width: 100px;
+}
+.alert-frequency,.alert-options{
+    padding:0 5px;
+    width: 200px;
+}
+.alert-frequency{
+    min-width: 370px;
+    border-right: 1px solid #ccc
+}
+.alert-frequency .period,.alert-frequency .time,.alert-frequency .timezone{
+    display: table-cell;
+    vertical-align: middle;
+    padding:0 5px;
+}
+.alert-frequency .timezone{
+    padding: 0;
+    font-size: 9px;
+}
+.alert-frequency .time .timepicker td{
+    max-width: 40px !important;
+}
+.alert-frequency .time .timepicker .btn-link{
+    padding:0;
+}
+.alert-frequency .time .timepicker input{
+    height: 22px;
+    font-size: 12px;
+    width: 40px;
+    padding: 0;
+}
+.automated-alert .tooltip-inner{
+    font-size: 14px;
+}
+.testing-badge{
+    position: absolute;
+    top:0;
+    left:3px;
+}
+#percBehind{
+    width:30px
+}
+.automated-alert input.ng-dirty.ng-invalid {
+    border-color: red
+}
+.alert-addressees{
+    width: 135px;
+    padding: 0 5px;
+    border-right: 1px solid #ccc
+
+}
+alert-addressees{
+    width: 135px;
+    display: block;
+}
+alert-addressees .dropdown-menu{
+    width: 250px;
+}
+.addressees-top-button{
+    font-size: 14px;
+    width: 100%;
+}
+.addressees-top-button.open{
+    border-bottom: 1px solid #ddd;
+}
+.addressees-container{
+    padding:3px
+}
+.addressee{
+    padding: 2px 0;
+}
+.addressee-name{
+    width: calc(100% - 10px);
+    position: relative;
+    float: left;
+    padding: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.remove-addressee{
+    color:indianred;
+}
+.ask-for-test-email{
+    padding-left: 5px;
+}
+.modal-90 .modal-dialog{
+    width: 90%;
+}
+.toast.preview-warning{
+    font-size: 15px;
+}

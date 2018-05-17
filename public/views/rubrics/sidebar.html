@@ -1,0 +1,18 @@
+
+
+<ul class="nav nav-pills nav-stacked" role="tablist">
+    <li role="presentation" ><a ui-sref="rubrics.create()"><span class="glyphicon glyphicon-plus"></span> Add New Rubric</a></li>
+    <li role="presentation" class="nav-divider"></li>
+    <testbank-filters ng-model="filter"></testbank-filters>
+    <li role="presentation" class="nav-divider"></li>
+    <li role="presentation" >
+        <input class="form-control" ng-model="rubricFilter" placeholder="Search for a rubric">
+    </li>
+    <li ng-if="!loading" ng-hide="rubrics">No rubrics</li>
+    <li ng-if="loading && org_id">Loading..</li>
+    <li ng-if="!loading" role="presentation" class="rubric-item-list" ng-repeat="rubric in rubrics | filter:rubricFilter | orderBy:'name'">
+
+        <span class="fa fa-trash" ng-click="delete(rubric.id)"></span> <a href="#/rubrics/{{rubric.id}}">{{rubric.name}}</a>
+
+    </li>
+</ul>

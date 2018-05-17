@@ -1,0 +1,202 @@
+<div ng-show="checktoshowF($index,currentShow)" >
+    <div class="panel panel-default" style="margin-bottom:3em" data-ng-mouseover="createCKEditor(question)">
+        <div class="panel-heading" style="">
+
+            <div>
+                <span style="font-size:1.5em" ng-hide="options.hideQuestionNumber">Question {{$index + 1}}</span> &nbsp;&nbsp;
+                <span class="label label-info" title="{{question.id}}">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span>
+                <span ng-if="question.type === 'wordmatching'"style="font-size: xx-small;font-style: italic">"Drag and Drop to Match"</span>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <div >
+                <!--If we have Mathjax in content-->
+                <div  ng-if="question.contentPlusMathjac">
+        <span ng-repeat="obj in question.contentPlusMathjac">
+        <span ng-if="obj.html"dynamic="obj.html"></span>
+        <span  ng-if="obj.maths" mathjax-bind="obj.maths"></span>
+        </span>
+                </div>
+                <div style="margin-bottom:1em" ng-bind-html="question.htmlSafeprompt" ng-if="question.type!=='blank' && !question.contentPlusMathjac"></div>
+                <div style="margin-bottom:1em" my-blank ng-if="question.type==='blank'"></div>
+                <div compile="html"></div>
+            </div>
+
+            <div ng-repeat="optiontext in question.options track by $index" class="radio quiz-option" ng-click="sendResponse($index, question, optiontext)" ng-if="question.type === 'single' || question.type === 'truefalse'">
+                <br>
+                <label>
+
+                    <input type="radio" name="{{question.id}}" ng-if="!teacher_true" ng-model="question.attemptedanswers" value="{{$index}}">
+                    <input type="radio" name="{{question.id}}" ng-attr-class="{{Trimthis(question.solution) == Trimthis(optiontext) && 'tobechecked' || '' }}" ng-if="teacher_true">
+                    <span ng-if="!question.optionsMathJax" ng-bind-html="trustAsHtml(optiontext)"></span>
+            <span ng-if="question.optionsMathJax" ng-repeat="obj in question.optionsMathJax[$index]">
+                <span ng-if="obj.html && obj.html !== ''" dynamic="obj.html"></span>
+                <span  ng-if="obj.maths  && obj.maths !== ''" mathjax-bind="obj.maths"></span>
+            </span>
+                </label>
+            </div>
+
+
+            <div class="radio quiz-option" ng-if="question.type === 'oneword'">
+                <label>Write your answer</label>
+                <input type="text" ng-dblclick="question.text = question.solution;sendResponse(question.text, question)" name="A{{question.id}}"   ng-attr-class="{{teacher_true == true && 'tobeDoubleClicked tobekeyup' || '' }}" ng-model="question.text" ng-keyup="sendResponse(question.text, question)">
+            </div>
+
+            <!--ng-repeat="optiontext in question.options track by $index"-->
+            <div  class="radio quiz-option" ng-if="question.type === 'essay'">
+                <textarea name="A{{question.id}}" ng-mouseenter="createCKEditor(question)" id="A{{question.id}}" ng-model="question.text" ng-keyup="sendResponse(question.text, question)" class="form-control" rows="6" ng-model="values.prompt"></textarea>
+            </div>
+
+            <div ng-repeat="optiontext in question.options track by $index" class="checkbox quiz-option" ng-if="question.type === 'multiple'">
+                <label>
+                    <input style="cursor:pointer" type="checkbox" name="{{question.id}}{{optiontext}}" id="{{question.id}}{{optiontext}}" ng-click="multipleAnswers(question)" ><span ng-bind-html="trustAsHtml(optiontext)"></span>
+                </label>
+            </div>
+            <!--Matching Start-->
+            <div ng-if="question.type === 'matching'" style="position:relative">
+                <img ng-src="{{question.imgdata.matching.matchedImage.baselocation}}" alt="" class="pull-left">
+
+                <div  id="{{corods.name}}" ng-repeat="corods in question.imgdata.matching.imagesCordinates" style="cursor:help;top:{{corods.y1}}px;left:{{corods.x1}}px;height:{{corods.matchedImageheight}}px;width:{{corods.matchedImagewidth}}px;position:absolute" ui-on-Drop="onDrop(question,corods.name,$index)" drop-channel="here" ng-class="{
+displaymatching:question.imgdata.matching.imagesCordinates,
+        'glyfborder glyfbgw':question.imgdata.matching.matchedImage.selectedtick == 'blank',
+        'glyfborder opacity50 glyfbgw':question.imgdata.matching.matchedImage.selectedtick == 'transparentw',
+        'glyfborder opacity50 glyfbgb':question.imgdata.matching.matchedImage.selectedtick == 'transparentb',
+}">
+
+<span class="glyphicon" aria-hidden="true"
+      ng-class="{
+glyficonmatching :question.imgdata.matching.imagesCordinates,
+        'glyfred glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starr',
+        'glyfblue glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starb',
+        'glyfgreen glyphicon-asterisk':question.imgdata.matching.matchedImage.selectedtick == 'starg',
+
+        'glyfred glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropr',
+        'glyfblue glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropb',
+        'glyfgreen glyphicon-tint':question.imgdata.matching.matchedImage.selectedtick == 'dropg',
+
+        'glyfred glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushpinr',
+        'glyfblue glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushpinb',
+        'glyfgreen glyphicon-pushpin':question.imgdata.matching.matchedImage.selectedtick == 'pushping',
+
+        'glyfred glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetr',
+        'glyfblue glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetb',
+        'glyfgreen glyphicon-screenshot':question.imgdata.matching.matchedImage.selectedtick == 'targetg',
+}">
+</span>
+                </div>
+
+                <div style="margin-left:10px" class="pull-left">
+                    <!--Dragable elements start-->
+                    <div ng-repeat="c in question.imgdata.matching.imagesCordinates"  drop-channel="here" style="cursor:move;margin-bottom:5px;border: 1px solid black;padding:1px" ng-if="c.dropped!=1">
+
+                        <img ng-if="c.matchedImagewidth" name="{{c.name}}" ui-draggable="true" drag-channel="here" on-drop-success="dropSuccessHandler(question,c.name,$index)" src="../quiz/crop?img={{c.img}}&width={{c.matchedImagewidth}}&height={{c.matchedImageheight}}&x={{c.x1}}&y={{c.y1}}&show={{c.show}}&text={{c.textvalue}}&imgtext={{question.imgdata.matching.matchedImage.imgtext}}&selectcolortext={{question.imgdata.matching.matchedImage.selectcolortext}}&longest={{question.longest}}">
+                    </div>
+                    <!--Dragable elements end-->
+                </div>
+            </div>
+            <!--Matching End-->
+
+            <!--wordmatching Start-->
+            <section ng-if="question.type === 'wordmatching'" >
+                <style>
+                    section {
+                        width: 100%;
+                        margin: auto;
+                        padding: 10px;
+                    }
+
+                    div#two {
+                        text-align: center;
+                    }
+                </style>
+
+                <div id="two" style="max-height:400px;overflow-y: auto">
+                    <div ng-repeat="wmindex in question.wordmatchingLeft[0]"  style="margin-bottom: 5px;" >
+        <span class="btn btn-sm btn-warning" data-ng-click="unMatch(question,$index)" ng-show="wmindex.matched">
+        <span class="fa fa-expand" ></span>
+        </span>
+                        <div type="button" class="btn btn-default btn-wordmatch"
+                             name="{{wmindex.name}}"
+                             id="{{wmindex.name}}"
+                             style="cursor:move;min-width: 50px;text-align: left;width:25%"
+                             ui-draggable="true"
+                             drag-channel="wordmatching"
+                             on-drop-success="dropSuccesswordmatching(question,wmindex.name,$index)"
+                             draggable="true"
+                             title="drag and drop me to the right"
+                             ng-bind-html="wmindex.value"
+                             use-drag-move="true"
+                             ng-show="!wmindex.matched"
+                                >
+                        </div>
+                        <div
+                                ng-if = "!question.wordmatchingRight[0][$index].noSafe"
+                                type="button" class="btn btn-default btn-wordmatch"
+                                name="{{question.wordmatchingRight[0][$index].name}}"
+                                id="{{question.wordmatchingRight[0][$index].name}}"
+                                style="cursor:help;min-width: 35%;text-align: left;margin-left:100px;width:35%;visibility:{{question.wordmatchingRight[0][$index].show}}"
+                                ui-on-drop="onDrop(question,'{{question.wordmatchingRight[0][$index].name}}',$index)"
+                                drop-channel="wordmatching"
+                                title="drop answer on me"
+                                ng-bind-html="question.wordmatchingRight[0][$index].value"
+                                >
+                        </div>
+                        <div
+                                ng-if = "question.wordmatchingRight[0][$index].noSafe"
+                                type="button" class="btn btn-default btn-wordmatch"
+                                name="{{question.wordmatchingRight[0][$index].name}}"
+                                id="{{question.wordmatchingRight[0][$index].name}}"
+                                style="cursor:help;min-width: 35%;text-align: left;margin-left:100px;width:{{lettercounter}}px;visibility:{{question.wordmatchingRight[0][$index].show}}"
+                                ui-on-drop="onDrop(question,'{{question.wordmatchingRight[0][$index].name}}',$index)"
+                                drop-channel="wordmatching"
+                                >
+                            {{question.wordmatchingRight[0][$index].value}}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!--wordmatching END-->
+            <div ng-if="question.type === 'klosequestions'" dynamic="question.klosequestion" ng-bind-html="question.klosequestion" compile-template></div>
+            <div ng-if="question.type === 'multipart'"  ng-bind-html="question.multipartquestion" compile-template>  </div>
+            <div ng-if="question.type === 'studentvideoresponse'">
+                <button ng-if="!question.answered" type="button" class="btn btn-primary btn-sm " data-toggle="modal" data-backdrop="static" data-target="#basicFileUploadModal" ng-click="newPost(question)">Your Answer</button>
+
+                <div ng-if="question.answered">
+                    <div><p><em style="color:red">Waiting to be graded </em></p></div>
+                    <em style="color:green">Your Answer </em>:</span>
+                </div>
+
+                <div ng-if="question.answered" style="  border: 1px solid #a1a1a1;padding: 10px 40px;background: #cccccc;border-radius: 5px;margin:auto;width:420px">
+                    <video width="320" height="255" controls="">
+                        <source ng-src="{{question.videofilename}}" type="video/mp4">Your browser does not support the video tag!
+                    </video>
+                    <div  ng-bind-html="question.videoCommentSafe"> </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>-->
+    </div>
+</div>
+</div>
+<!--End Basic Boot Strap Modal-->
+<!--End Basic Boot Strap File UPload Modal-->
+</div>
+</div>
+</div><!--Repeater END-->
+<style>
+    #donotremovesecret
+    {
+        position: absolute;
+        visibility: hidden;
+        height: auto;
+        width: auto;
+        white-space: nowrap; /* Thanks to Herb Caudill comment */
+    }
+</style>
+<div id="donotremovesecret">
+    a
+</div>

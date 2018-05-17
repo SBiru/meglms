@@ -1,0 +1,60 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Areas of proficiency
+            </th>
+            <th>
+                Level
+            </th>
+            <th>
+                Min
+            </th>
+            <th>
+                Max
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+    </thead>
+    <tbody data-ng-repeat="category in categories track by $index">
+        <tr data-ng-repeat="range in category.ranges track by $index">
+            <td ng-if="$first" rowspan="{{category.ranges.length}}" height="75px">
+                <input ng-model="category.name" data-ng-change="categoryChanged(category)">
+                <div class="btn-bottom" >
+                    <div class="add-new-btn btn btn-sm btn-success" ng-click="addCategory($parent.$parent.$index)">
+                        <span class="fa fa-plus"></span>
+                    </div>
+                    <div class="add-new-btn btn btn-sm btn-danger" ng-click="removeCategory($parent.$parent.$index)">
+                        <span class="fa fa-trash"></span>
+                    </div>
+                </div>
+
+            </td>
+            <td height="75px">
+                <input ng-model="range.name" data-ng-change="levelChanged(range,category.id)">
+                <div class="btn-bottom" >
+                    <div class="add-new-btn btn btn-sm btn-success" ng-click="addLevel(category,$index)">
+                        <span class="fa fa-plus"></span>
+                    </div>
+                    <div class="add-new-btn btn btn-sm btn-danger" ng-click="removeLevel(category,$index)">
+                        <span class="fa fa-trash"></span>
+                    </div>
+                </div>
+            </td>
+            <td class="number">
+                <input ng-model="range.min" type="number" ng-change="validateRange('min',$index,$parent.$index,$event)">
+            </td>
+            <td class="number">
+                <input ng-model="range.max" type="number" ng-change="validateRange('max',$index,$parent.$index,$event)">
+            </td>
+            <td class="details">
+                <textarea ng-model="range.details" data-ng-change="levelChanged(range,category.id)"></textarea>
+            </td>
+
+
+        </tr>
+    </tbody>
+
+</table>

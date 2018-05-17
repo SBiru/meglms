@@ -1,0 +1,15 @@
+<div class="small-heading">Form options</div>
+<div ng-repeat="option in formOptions">
+    <input type="checkbox" ng-model="pageOptions[option.key]">
+    <span ng-bind="option.label"></span>
+</div>
+
+<style>
+    user-form-options{
+        display: block;
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px #ccc solid;
+
+    }
+</style>

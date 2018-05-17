@@ -1,0 +1,33 @@
+<div>
+    <br />
+    <strong>Select Site:</strong>
+    <select ng-model="site" ng-options="site as site.name for site in sites" style="min-width: 200px;"></select>
+</div>
+
+<div class="row action-lists" ng-show="site">
+    <div class="col-sm-6">
+        <div class="small-heading">Users in organization</div>
+        <div class="filter-box">
+            <input ng-model="userFilter" placeholder="Filter by ..." />
+            <i class="fa fa-search"></i>
+        </div>
+        <div class="students-list">
+            <div ng-repeat="user in users | orderBy:'lastName' | filter:userFilter" ng-click="addToSite(user)" ng-hide="isInSite(user)">
+                <span ng-bind="user.lastName + ', ' + user.firstName"></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="small-heading">Site admins</div>
+        <div class="filter-box">
+            <input ng-model="addedFilter" placeholder="Filter by ..." />
+            <i class="fa fa-search"></i>
+        </div>
+        <div class="students-list">
+            <div ng-repeat="user in site.admins | orderBy:'lastName' | filter:addedFilter track by $index"  ng-click="removeFromSite(user)">
+                <span ng-bind="user.lastName + ', ' + user.firstName"></span>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,25 @@
+<div>
+    <h3 style="margin-left: 20px;">{{ className }} Class</h3>
+    <div style="margin-top: 15px; margin-bottom: 15px; margin-left: 20px;"><a href="#/addcourseclassuser/{{ classId }}">+enroll user</a></div>
+    <table class="table table-hover" data-height="400" data-row-style="rowStyle" data-toggle="table">
+        <thead>
+            <tr>
+                <th data-halign="left" style="width:15px;"></th>
+                <th data-halign="left">First Name</th>
+                <th data-halign="left">Last Name</th>
+                <th data-halign="left">Type</th>
+                <th data-halign="left">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat='user in users'>
+                <td data-halign="left" style="width:15px;"><a href="#/editorganizationuser/{{ user.id }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td data-halign="left">{{ user.fname }}</td>    
+                <td data-halign="left">{{ user.lname }}</td>
+                <td data-halign="left">{{ user.type}}</td>
+                <td data-halign="left">{{ user.email }}</td>
+            </tr>
+        </tbody> 
+    </table>
+
+</div>

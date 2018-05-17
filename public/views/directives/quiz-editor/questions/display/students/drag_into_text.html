@@ -1,0 +1,20 @@
+<div style="margin-bottom:1em" >
+    <div class="prompt"></div>
+</div>
+<ul class="list-inline" ng-hide="hideChoices">
+    <li ng-repeat="option in question.options"
+        class="option"
+        ng-style="{'min-width':fixedSize.width}">
+    <span ng-bind="option.text"
+          ui-draggable="true"
+          on-drop-success="choiceWasDropped($event)"
+          drag-channel="{{question.id}}"
+          drag="option"
+          class="option-text btn btn-default btn-xs"
+          ng-hide="option.isDropped"
+          ng-style="{'min-height':fixedSize.height}"
+          ng-init="updateFixedSizeIfLast($last)"
+        >
+    </span>
+    </li>
+</ul>

@@ -1,0 +1,23 @@
+<div ng-controller="ContentController">
+
+    <div ng-if="need_password">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="You must enter a password to access this activity" ng-model="user_password">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" data-ng-click="checkPassword()">Ok</button>
+                </span>
+            </div>
+            <!-- /input-group -->
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
+    <div class="" ng-if="!need_password">
+        <div ng-controller="ObjectivesController" ng-class="{'bordered-page':pageinfo.meta.page_border_color}" ng-style="{'border-color':pageinfo.meta.page_border_color}">
+            <div id="objectivesTable" ng-include="'/public/views/partials/student/objectives_table.html'"> </div>
+            <div data-ng-bind-html="contenthtml" ng-show="$state.is('forum.topics')"></div>
+
+            <div ui-view></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+    <div style="margin:10px">
+        <div ng-bind-html="$root.safeHtml(question.prompt)"></div>
+        <p>
+            <b>Student answer:</b>
+            <span id="eqGrader-answer">{{question.response}}</span>
+        </p>
+        <!--<b ng-if="question.extra.gradeType == 'automatic'" >Posssible Solutions:</b>
+        <div id="eqGrader-static-math-{{$index}}" ng-repeat="solution in question.extra.solutions track by $index">{{solution}}</div>-->
+
+        <div ng-if="question.extra.solutions" class="form-group" >
+            <label>Possible Solutions:</label>
+            <div class="eq-solutions" ng-repeat="solution in question.extra.solutions track by $index">
+                Solution <span ng-bind="($index+1)+':'"></span>
+
+                <!--<span id="static-math-{{$index}}" ng-bind-html="$root.safeHtml(staticEls[$index])">{{solution}}</span>-->
+                <span  id="eqGrader-static-math-{{$index}}" ng-bind-html="getMathEl($index)"></span>
+            </div>
+        </div>
+        <span id="eqGrader-static-hidden" style="opacity: 0"></span>
+    </div>
+</div>

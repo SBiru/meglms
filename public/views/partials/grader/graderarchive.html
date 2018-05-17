@@ -1,0 +1,8 @@
+<div ng-controller="GraderAllController">
+  <div ng-controller="GraderPostController">
+    <ng-include src=" '/public/views/partials/grader/bootstrapmodal.html' "></ng-include>
+    <div ng-controller="GraderArchiveController"  ng-style="style()">
+      <ng-include src=" '/public/views/partials/grader/graderpostcontroller.html?v=2' "></ng-include>
+    </div>
+  </div>
+</div>

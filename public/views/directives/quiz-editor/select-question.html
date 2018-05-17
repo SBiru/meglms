@@ -1,0 +1,22 @@
+
+    <div class="panel panel-default" style="margin-bottom:3em">
+
+        <div class="panel-heading">
+            <div class="row" style="padding:0 1em">
+                <div style="float:left">
+                    <span style="font-size:1.5em"><!--<span class="label label-default">{{$index + 1}}</span>-->&nbsp;Question&nbsp;{{$index + 1}}</span> &nbsp;&nbsp;<span class="label label-info">{{ (question.type == 'single') ? 'Multiple Choice' : question.type }}</span>
+                </div>
+                <div style="float:right" ng-controller="ModalSelectQuestionController" ng-switch on="question.selected">
+                    <a ng-click="selectquestion({singlequestion:question })" class="btn btn-sm btn-default" ng-switch-default><span class="glyphicon glyphicon-off"></span>&nbsp;Select</a>
+                    <a ng-click="selectquestion({singlequestion:question })" class="btn btn-sm btn-success" ng-switch-when="1"><span class="glyphicon glyphicon-ok"></span>&nbsp;Selected</a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div question-tags question="question"></div>
+        </div>
+
+        <div class="panel-body">
+            <display-question where="'editor'" question="question"></display-question>
+        </div>
+
+    </div>
